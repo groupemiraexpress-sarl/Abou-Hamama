@@ -1,0 +1,73 @@
+{% extends "transport/base.html" %}
+
+{% block titre %}Rechercher un voyage — TransTchad{% endblock %}
+{% block entete %}Rechercher un voyage{% endblock %}
+
+{% block contenu %}
+
+<div class="card" style="margin-bottom:20px;">
+    <form action="{% url 'transport:recherche_voyage' %}" method="get">
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151;">Ville de départ</label>
+        <select name="depart" style="width:100%; padding:12px; font-size:1rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:14px;">
+            <option value="">-- Toutes --</option>
+            {% for ville in villes_depart %}
+                <option value="{{ ville }}" {% if ville == depart %}selected{% endif %}>{{ ville }}</option>
+            {% endfor %}
+        </select>
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151;">Ville d'arrivée</label>
+        <select name="arrivee" style="width:100%; padding:12px; font-size:1rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:14px;">
+            <option value="">-- Toutes --</option>
+            {% for ville in villes_arrivee %}
+                <option value="{{ ville }}" {% if ville == arrivee %}selected{% endif %}>{{ ville }}</option>
+            {% endfor %}
+        </select>
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151;">Date (optionnel)</label>
+        <input type="date" name="date" value="{{ date }}" style="width:100%; padding:12px; font-size:1rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:18px;">
+
+        <button type="submit" class="btn" style="width:100%;">Rechercher</button>
+    </form>
+</div>
+
+{% if recherche_faite %}
+    {% if voyages %}
+        <h2 style="font-size:1.1rem; margin-bottom:14px; color:#1F3864;">
+            {{ voyages|length }} voyage(s) disponible(s)
+        </h2>
+
+        {% for voyage in voyages %}
+        <div class="card" style="margin-bottom:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <h3 style="color:#1F3864; font-size:1.05rem;">
+                    {{ voyage.trajet.ville_depart }} → {{ voyage.trajet.ville_arrivee }}
+                </h3>
+                <span style="font-weight:600; color:#1F3864;">{{ voyage.prix }} FCFA</span>
+            </div>
+            <table style="width:100%;">
+                <tr><td style="color:#6b7280; padding:4px 0;">Date</td>
+                    <td style="text-align:right;">{{ voyage.date_depart|date:"d/m/Y" }}</td></tr>
+                <tr><td style="color:#6b7280; padding:4px 0;">Heure de départ</td>
+                    <td style="text-align:right;">{{ voyage.heure_depart|time:"H:i" }}</td></tr>
+                <tr><td style="color:#6b7280; padding:4px 0;">Places disponibles</td>
+                    <td style="text-align:right; font-weight:600;">{{ voyage.places_disponibles }}</td></tr>
+                <tr><td style="color:#6b7280; padding:4px 0;">Bus</td>
+                    <td style="text-align:right;">{{ voyage.bus.marque }} ({{ voyage.bus.immatriculation }})</td></tr>
+            </table>
+        </div>
+        {% endfor %}
+
+    {% else %}
+        <div class="card" style="text-align:center;">
+            <h2 style="color:#b91c1c; margin-bottom:8px;">Aucun voyage trouvé</h2>
+            <p style="color:#6b7280;">Aucun voyage disponible pour ces critères.</p>
+        </div>
+    {% endif %}
+{% endif %}
+
+<div style="text-align:center; margin-top:20px;">
+    <a href="{% url 'transport:accueil' %}" class="btn" style="background:#6b7280;">Retour à l'accueil</a>
+</div>
+
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "transport/base.html" %}
+
+{% block titre %}Enregistrer un plein — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}Plein de carburant{% endblock %}
+
+{% block contenu %}
+
+{% if erreur %}
+<div style="background:#fef2f2; color:#b91c1c; padding:12px; border-radius:8px; margin-bottom:16px; font-size:.9rem; text-align:center;">
+    <i class="fa-solid fa-circle-exclamation"></i> {{ erreur }}
+</div>
+{% endif %}
+
+<div class="card">
+    <form method="post" action="{% url 'transport:gerer_carburant' %}">
+        {% csrf_token %}
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Bus</label>
+        <select name="bus" required>
+            <option value="">-- Choisir un bus --</option>
+            {% for bus in bus_list %}
+                <option value="{{ bus.id }}">{{ bus.immatriculation }} ({{ bus.marque }} {{ bus.modele }})</option>
+            {% endfor %}
+        </select>
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Voyage (optionnel)</label>
+        <select name="voyage">
+            <option value="">-- Aucun voyage précis --</option>
+            {% for v in voyages %}
+                <option value="{{ v.id }}">{{ v.trajet.ville_depart }} → {{ v.trajet.ville_arrivee }} | {{ v.date_depart|date:"d/m/Y" }}</option>
+            {% endfor %}
+        </select>
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Date du plein</label>
+        <input type="date" name="date_plein" required
+               style="width:100%; padding:14px; font-size:1rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:14px;">
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Litres</label>
+        <input type="number" step="0.1" name="litres" placeholder="Ex : 80" min="0" value="0"
+               style="width:100%; padding:14px; font-size:1rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:14px;">
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Montant (FCFA)</label>
+        <input type="number" name="montant" placeholder="Ex : 60000" min="0" value="0"
+               style="width:100%; padding:14px; font-size:1rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:14px;">
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Kilométrage (optionnel)</label>
+        <input type="number" name="kilometrage" placeholder="Ex : 125000" min="0"
+               style="width:100%; padding:14px; font-size:1rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:14px;">
+
+        <button type="submit" class="btn" style="width:100%; margin-top:8px;">
+            <i class="fa-solid fa-gas-pump"></i> Enregistrer le plein
+        </button>
+    </form>
+</div>
+
+<div style="text-align:center; margin-top:20px;">
+    <a href="{% url 'transport:tableau_bord' %}" class="btn" style="background:#6b7280;">
+        <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
+    </a>
+</div>
+
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "transport/base.html" %}
+
+{% block titre %}Vendre un billet — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}Vendre un billet{% endblock %}
+
+{% block contenu %}
+
+{% if erreur %}
+<div style="background:#fef2f2; color:#b91c1c; padding:12px; border-radius:8px; margin-bottom:16px; font-size:.9rem; text-align:center;">
+    <i class="fa-solid fa-circle-exclamation"></i> {{ erreur }}
+</div>
+{% endif %}
+
+{% if voyages %}
+<div class="card">
+    <form method="post" action="{% url 'transport:vendre_billet' %}">
+        {% csrf_token %}
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Voyage</label>
+        <select name="voyage" required>
+            <option value="">-- Choisir un voyage --</option>
+            {% for voyage in voyages %}
+                <option value="{{ voyage.id }}">
+                    {{ voyage.trajet.ville_depart }} → {{ voyage.trajet.ville_arrivee }}
+                    | {{ voyage.date_depart|date:"d/m/Y" }} {{ voyage.heure_depart|time:"H:i" }}
+                    | {{ voyage.prix }} FCFA
+                    | {{ voyage.places_disponibles }} place(s)
+                </option>
+            {% endfor %}
+        </select>
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Nom du client</label>
+        <input type="text" name="client_nom" placeholder="Nom et prénom" required>
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Téléphone du client</label>
+        <input type="text" name="client_telephone" placeholder="66 00 00 00" required>
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Nombre de places</label>
+        <input type="number" name="nombre_places" value="1" min="1"
+               style="width:100%; padding:14px; font-size:1rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:14px;">
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Mode de paiement</label>
+        <select name="mode_paiement">
+            <option value="especes">Espèces</option>
+            <option value="mobile_money">Mobile Money</option>
+            <option value="virement">Virement bancaire</option>
+            <option value="carte">Carte bancaire</option>
+        </select>
+
+        <button type="submit" class="btn" style="width:100%; margin-top:8px;">
+            <i class="fa-solid fa-ticket"></i> Valider la vente
+        </button>
+    </form>
+</div>
+
+{% else %}
+<div class="card" style="text-align:center; color:#6b7280;">
+    Aucun voyage disponible à la vente pour le moment.
+</div>
+{% endif %}
+
+<div style="text-align:center; margin-top:20px;">
+    <a href="{% url 'transport:tableau_bord' %}" class="btn" style="background:#6b7280;">
+        <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
+    </a>
+</div>
+
+{% endblock %}

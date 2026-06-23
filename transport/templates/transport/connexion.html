@@ -1,0 +1,40 @@
+{% extends "transport/base.html" %}
+
+{% block titre %}Connexion employé — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}Espace employé{% endblock %}
+
+{% block contenu %}
+<div class="card" style="max-width:400px; margin:0 auto;">
+    <h2 style="font-size:1.1rem; margin-bottom:6px; text-align:center;">Connexion</h2>
+    <p style="color:#6b7280; font-size:.9rem; margin-bottom:18px; text-align:center;">
+        Réservé au personnel de l'agence
+    </p>
+
+    {% if erreur %}
+    <div style="background:#fef2f2; color:#b91c1c; padding:12px; border-radius:8px; margin-bottom:16px; font-size:.9rem; text-align:center;">
+        <i class="fa-solid fa-circle-exclamation"></i> {{ erreur }}
+    </div>
+    {% endif %}
+
+    <form method="post" action="{% url 'transport:connexion' %}">
+        {% csrf_token %}
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151;">Identifiant (email)</label>
+        <input type="text" name="identifiant" placeholder="email@entreprise.com" required>
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151;">Mot de passe</label>
+        <input type="password" name="mot_de_passe" placeholder="••••••••" required
+               style="width:100%; padding:14px; font-size:1rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:18px;">
+
+        <button type="submit" class="btn" style="width:100%;">
+            <i class="fa-solid fa-right-to-bracket"></i> Se connecter
+        </button>
+    </form>
+</div>
+
+<div style="text-align:center; margin-top:20px;">
+    <a href="{% url 'transport:accueil' %}" style="color:#6b7280; text-decoration:none; font-size:.9rem;">
+        <i class="fa-solid fa-arrow-left"></i> Retour à l'accueil
+    </a>
+</div>
+{% endblock %}

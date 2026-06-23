@@ -1,0 +1,109 @@
+{% extends "transport/base.html" %}
+
+{% block titre %}Résultat du suivi — TransTchad{% endblock %}
+{% block entete %}Résultat du suivi{% endblock %}
+
+{% block contenu %}
+
+{% if type == 'colis' %}
+<div class="card">
+    <p style="color:#6b7280; font-size:.85rem;">Colis</p>
+    <h2 style="color:#1F3864; margin-bottom:24px;">{{ colis.code_suivi }}</h2>
+
+    {% if etape_actuelle > 0 %}
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:28px; position:relative;">
+
+        <div style="position:absolute; top:20px; left:12%; right:12%; height:3px; background:#e5e7eb; z-index:0;"></div>
+
+        <div style="flex:1; text-align:center; position:relative; z-index:1;">
+            <div style="width:40px; height:40px; border-radius:50%; margin:0 auto 8px; display:flex; align-items:center; justify-content:center; {% if etape_actuelle >= 1 %}background:#1F3864; color:#fff;{% else %}background:#e5e7eb; color:#9ca3af;{% endif %}">
+                <i class="fa-solid fa-clipboard-check"></i>
+            </div>
+            <span style="font-size:.72rem; {% if etape_actuelle >= 1 %}color:#1F3864; font-weight:600;{% else %}color:#9ca3af;{% endif %}">Enregistré</span>
+        </div>
+
+        <div style="flex:1; text-align:center; position:relative; z-index:1;">
+            <div style="width:40px; height:40px; border-radius:50%; margin:0 auto 8px; display:flex; align-items:center; justify-content:center; {% if etape_actuelle >= 2 %}background:#1F3864; color:#fff;{% else %}background:#e5e7eb; color:#9ca3af;{% endif %}">
+                <i class="fa-solid fa-truck"></i>
+            </div>
+            <span style="font-size:.72rem; {% if etape_actuelle >= 2 %}color:#1F3864; font-weight:600;{% else %}color:#9ca3af;{% endif %}">En transit</span>
+        </div>
+
+        <div style="flex:1; text-align:center; position:relative; z-index:1;">
+            <div style="width:40px; height:40px; border-radius:50%; margin:0 auto 8px; display:flex; align-items:center; justify-content:center; {% if etape_actuelle >= 3 %}background:#1F3864; color:#fff;{% else %}background:#e5e7eb; color:#9ca3af;{% endif %}">
+                <i class="fa-solid fa-warehouse"></i>
+            </div>
+            <span style="font-size:.72rem; {% if etape_actuelle >= 3 %}color:#1F3864; font-weight:600;{% else %}color:#9ca3af;{% endif %}">Arrivé</span>
+        </div>
+
+        <div style="flex:1; text-align:center; position:relative; z-index:1;">
+            <div style="width:40px; height:40px; border-radius:50%; margin:0 auto 8px; display:flex; align-items:center; justify-content:center; {% if etape_actuelle >= 4 %}background:#16a34a; color:#fff;{% else %}background:#e5e7eb; color:#9ca3af;{% endif %}">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <span style="font-size:.72rem; {% if etape_actuelle >= 4 %}color:#16a34a; font-weight:600;{% else %}color:#9ca3af;{% endif %}">Livré</span>
+        </div>
+
+    </div>
+    {% endif %}
+
+    {% if colis.statut == 'retourne' %}
+    <div style="background:#fef2f2; color:#b91c1c; padding:12px; border-radius:8px; text-align:center; margin-bottom:20px; font-size:.9rem;">
+        <i class="fa-solid fa-rotate-left"></i> Ce colis a été retourné.
+    </div>
+    {% endif %}
+
+    <table style="width:100%; border-collapse:collapse;">
+        <tr><td style="padding:8px 0; color:#6b7280;">Statut</td>
+            <td style="padding:8px 0; text-align:right; font-weight:600;">{{ colis.get_statut_display }}</td></tr>
+        <tr><td style="padding:8px 0; color:#6b7280;">Expéditeur</td>
+            <td style="padding:8px 0; text-align:right;">{{ colis.expediteur_nom }}</td></tr>
+        <tr><td style="padding:8px 0; color:#6b7280;">Destinataire</td>
+            <td style="padding:8px 0; text-align:right;">{{ colis.destinataire_nom }}</td></tr>
+        <tr><td style="padding:8px 0; color:#6b7280;">Départ</td>
+            <td style="padding:8px 0; text-align:right;">{{ colis.agence_depart }}</td></tr>
+        <tr><td style="padding:8px 0; color:#6b7280;">Arrivée</td>
+            <td style="padding:8px 0; text-align:right;">{{ colis.agence_arrivee }}</td></tr>
+        <tr><td style="padding:8px 0; color:#6b7280;">Poids</td>
+            <td style="padding:8px 0; text-align:right;">{{ colis.poids_kg }} kg</td></tr>
+        <tr><td style="padding:8px 0; color:#6b7280;">Enregistré le</td>
+            <td style="padding:8px 0; text-align:right;">{{ colis.date_enregistrement|date:"d/m/Y H:i" }}</td></tr>
+    </table>
+</div>
+
+{% elif type == 'transfert' %}
+<div class="card">
+    <p style="color:#6b7280; font-size:.85rem;">Transfert d'argent</p>
+    <h2 style="color:#1F3864; margin-bottom:16px;">{{ transfert.code_transfert }}</h2>
+
+    <table style="width:100%; border-collapse:collapse;">
+        <tr><td style="padding:8px 0; color:#6b7280;">Statut</td>
+            <td style="padding:8px 0; text-align:right; font-weight:600;">{{ transfert.get_statut_display }}</td></tr>
+        <tr><td style="padding:8px 0; color:#6b7280;">Expéditeur</td>
+            <td style="padding:8px 0; text-align:right;">{{ transfert.expediteur_nom }}</td></tr>
+        <tr><td style="padding:8px 0; color:#6b7280;">Bénéficiaire</td>
+            <td style="padding:8px 0; text-align:right;">{{ transfert.beneficiaire_nom }}</td></tr>
+        <tr><td style="padding:8px 0; color:#6b7280;">Montant</td>
+            <td style="padding:8px 0; text-align:right; font-weight:600;">{{ transfert.montant }} FCFA</td></tr>
+        <tr><td style="padding:8px 0; color:#6b7280;">Départ</td>
+            <td style="padding:8px 0; text-align:right;">{{ transfert.agence_depart }}</td></tr>
+        <tr><td style="padding:8px 0; color:#6b7280;">Retrait</td>
+            <td style="padding:8px 0; text-align:right;">{{ transfert.agence_retrait }}</td></tr>
+        <tr><td style="padding:8px 0; color:#6b7280;">Envoyé le</td>
+            <td style="padding:8px 0; text-align:right;">{{ transfert.date_envoi|date:"d/m/Y H:i" }}</td></tr>
+    </table>
+</div>
+
+{% elif type == 'introuvable' %}
+<div class="card" style="text-align:center;">
+    <h2 style="color:#b91c1c; margin-bottom:8px;">Aucun résultat</h2>
+    <p style="color:#6b7280;">Aucun envoi trouvé pour le code <strong>{{ code }}</strong>.</p>
+    <p style="color:#6b7280; font-size:.85rem; margin-top:6px;">Vérifiez le code et réessayez.</p>
+</div>
+
+{% endif %}
+
+<div style="text-align:center; margin-top:20px;">
+    <a href="{% url 'transport:suivi' %}" class="btn">Nouvelle recherche</a>
+</div>
+
+{% endblock %}

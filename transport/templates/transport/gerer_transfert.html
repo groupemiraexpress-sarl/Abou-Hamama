@@ -1,0 +1,64 @@
+{% extends "transport/base.html" %}
+
+{% block titre %}Transfert d'argent — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}Envoyer de l'argent{% endblock %}
+
+{% block contenu %}
+
+{% if erreur %}
+<div style="background:#fef2f2; color:#b91c1c; padding:12px; border-radius:8px; margin-bottom:16px; font-size:.9rem; text-align:center;">
+    <i class="fa-solid fa-circle-exclamation"></i> {{ erreur }}
+</div>
+{% endif %}
+
+<div class="card">
+    <form method="post" action="{% url 'transport:gerer_transfert' %}">
+        {% csrf_token %}
+
+        <h3 style="font-size:1rem; color:#1F3864; margin-bottom:12px;">Expéditeur</h3>
+        <input type="text" name="expediteur_nom" placeholder="Nom de l'expéditeur" required>
+        <input type="text" name="expediteur_telephone" placeholder="Téléphone expéditeur" required>
+
+        <h3 style="font-size:1rem; color:#1F3864; margin:16px 0 12px;">Bénéficiaire</h3>
+        <input type="text" name="beneficiaire_nom" placeholder="Nom du bénéficiaire" required>
+        <input type="text" name="beneficiaire_telephone" placeholder="Téléphone bénéficiaire" required>
+
+        <h3 style="font-size:1rem; color:#1F3864; margin:16px 0 12px;">Agences</h3>
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151;">Agence de dépôt</label>
+        <select name="agence_depart" required>
+            <option value="">-- Choisir --</option>
+            {% for agence in agences %}
+                <option value="{{ agence.id }}">{{ agence.nom }} ({{ agence.ville }})</option>
+            {% endfor %}
+        </select>
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151;">Agence de retrait</label>
+        <select name="agence_retrait" required>
+            <option value="">-- Choisir --</option>
+            {% for agence in agences %}
+                <option value="{{ agence.id }}">{{ agence.nom }} ({{ agence.ville }})</option>
+            {% endfor %}
+        </select>
+
+        <h3 style="font-size:1rem; color:#1F3864; margin:16px 0 12px;">Montant</h3>
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151;">Montant à envoyer (FCFA)</label>
+        <input type="number" name="montant" placeholder="Ex : 50000" min="0" required
+               style="width:100%; padding:14px; font-size:1rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:14px;">
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151;">Frais de transfert (FCFA)</label>
+        <input type="number" name="frais" placeholder="Ex : 1000" min="0" value="0"
+               style="width:100%; padding:14px; font-size:1rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:14px;">
+
+        <button type="submit" class="btn" style="width:100%; margin-top:8px;">
+            <i class="fa-solid fa-money-bill-transfer"></i> Envoyer l'argent
+        </button>
+    </form>
+</div>
+
+<div style="text-align:center; margin-top:20px;">
+    <a href="{% url 'transport:tableau_bord' %}" class="btn" style="background:#6b7280;">
+        <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
+    </a>
+</div>
+
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "transport/base.html" %}
+
+{% block titre %}Enregistrer un entretien — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}Enregistrer un entretien{% endblock %}
+
+{% block contenu %}
+
+{% if erreur %}
+<div style="background:#fef2f2; color:#b91c1c; padding:12px; border-radius:8px; margin-bottom:16px; font-size:.9rem; text-align:center;">
+    <i class="fa-solid fa-circle-exclamation"></i> {{ erreur }}
+</div>
+{% endif %}
+
+<div class="card">
+    <form method="post" action="{% url 'transport:gerer_entretien' %}">
+        {% csrf_token %}
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Bus</label>
+        <select name="bus" required>
+            <option value="">-- Choisir un bus --</option>
+            {% for bus in bus_list %}
+                <option value="{{ bus.id }}">{{ bus.immatriculation }} ({{ bus.marque }} {{ bus.modele }})</option>
+            {% endfor %}
+        </select>
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Type d'entretien</label>
+        <select name="type_entretien" required>
+            <option value="">-- Choisir --</option>
+            {% for valeur, libelle in types %}
+                <option value="{{ valeur }}">{{ libelle }}</option>
+            {% endfor %}
+        </select>
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Date de l'entretien</label>
+        <input type="date" name="date_entretien" required
+               style="width:100%; padding:14px; font-size:1rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:14px;">
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Kilométrage du bus</label>
+        <input type="number" name="kilometrage" placeholder="Ex : 125000" min="0" value="0"
+               style="width:100%; padding:14px; font-size:1rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:14px;">
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Coût (FCFA)</label>
+        <input type="number" name="cout" placeholder="Ex : 35000" min="0" value="0"
+               style="width:100%; padding:14px; font-size:1rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:14px;">
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Détails / pièces changées</label>
+        <input type="text" name="description" placeholder="Optionnel">
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Prochaine échéance (km) — optionnel</label>
+        <input type="number" name="prochain_km" placeholder="Ex : 130000" min="0"
+               style="width:100%; padding:14px; font-size:1rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:14px;">
+
+        <button type="submit" class="btn" style="width:100%; margin-top:8px;">
+            <i class="fa-solid fa-wrench"></i> Enregistrer l'entretien
+        </button>
+    </form>
+</div>
+
+<div style="text-align:center; margin-top:20px;">
+    <a href="{% url 'transport:tableau_bord' %}" class="btn" style="background:#6b7280;">
+        <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
+    </a>
+</div>
+
+{% endblock %}

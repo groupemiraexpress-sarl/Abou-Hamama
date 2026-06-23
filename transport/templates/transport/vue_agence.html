@@ -1,0 +1,71 @@
+{% extends "transport/base.html" %}
+
+{% block titre %}Ma vue agence — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}Ma vue agence{% endblock %}
+
+{% block contenu %}
+
+{% if pas_agence %}
+<div class="card" style="text-align:center; color:#6b7280;">
+    Votre compte n'est rattaché à aucune agence.<br>
+    Cette vue est réservée aux responsables d'agence.
+</div>
+
+{% else %}
+
+<div class="card" style="text-align:center; margin-bottom:20px;">
+    <p style="color:#6b7280; font-size:.85rem;">Agence</p>
+    <h2 style="color:#1F3864;">{{ agence.nom }}</h2>
+    <p style="color:#6b7280; font-size:.85rem;">{{ agence.ville }}</p>
+</div>
+
+<div class="card" style="text-align:center; margin-bottom:20px; background:#1F3864; color:#fff;">
+    <p style="font-size:.85rem; opacity:.85;">Recette de l'agence ce mois</p>
+    <p style="font-size:2.2rem; font-weight:700; margin:4px 0;">{{ recette_mois }} FCFA</p>
+</div>
+
+<div class="card" style="margin-bottom:20px;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr><td style="padding:8px 0; color:#6b7280;"><i class="fa-solid fa-ticket"></i> Billets</td>
+            <td style="padding:8px 0; text-align:right; font-weight:600;">{{ billets_mois }} FCFA</td></tr>
+        <tr><td style="padding:8px 0; color:#6b7280;"><i class="fa-solid fa-box"></i> Colis</td>
+            <td style="padding:8px 0; text-align:right; font-weight:600;">{{ colis_mois }} FCFA</td></tr>
+        <tr><td style="padding:8px 0; color:#6b7280;"><i class="fa-solid fa-money-bill-transfer"></i> Transferts (frais)</td>
+            <td style="padding:8px 0; text-align:right; font-weight:600;">{{ transferts_mois }} FCFA</td></tr>
+    </table>
+</div>
+
+<p style="color:#6b7280; margin-bottom:12px; font-weight:600;">Activité de l'agence</p>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+    <div class="card" style="text-align:center;">
+        <i class="fa-solid fa-receipt" style="font-size:1.4rem; color:#1F3864;"></i>
+        <p style="font-size:1.6rem; font-weight:700; color:#1F3864; margin-top:6px;">{{ nb_reservations }}</p>
+        <p style="font-size:.75rem; color:#6b7280;">Billets vendus</p>
+    </div>
+    <div class="card" style="text-align:center;">
+        <i class="fa-solid fa-box" style="font-size:1.4rem; color:#1F3864;"></i>
+        <p style="font-size:1.6rem; font-weight:700; color:#1F3864; margin-top:6px;">{{ nb_colis }}</p>
+        <p style="font-size:.75rem; color:#6b7280;">Colis</p>
+    </div>
+    <div class="card" style="text-align:center;">
+        <i class="fa-solid fa-money-bill-transfer" style="font-size:1.4rem; color:#1F3864;"></i>
+        <p style="font-size:1.6rem; font-weight:700; color:#1F3864; margin-top:6px;">{{ nb_transferts }}</p>
+        <p style="font-size:.75rem; color:#6b7280;">Transferts</p>
+    </div>
+    <div class="card" style="text-align:center;">
+        <i class="fa-solid fa-users" style="font-size:1.4rem; color:#1F3864;"></i>
+        <p style="font-size:1.6rem; font-weight:700; color:#1F3864; margin-top:6px;">{{ nb_employes }}</p>
+        <p style="font-size:.75rem; color:#6b7280;">Employés</p>
+    </div>
+</div>
+
+{% endif %}
+
+<div style="text-align:center; margin-top:24px;">
+    <a href="{% url 'transport:tableau_bord' %}" class="btn" style="background:#6b7280;">
+        <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
+    </a>
+</div>
+
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "transport/base.html" %}
+
+{% block titre %}Enregistrer un colis — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}Enregistrer un colis{% endblock %}
+
+{% block contenu %}
+
+{% if erreur %}
+<div style="background:#fef2f2; color:#b91c1c; padding:12px; border-radius:8px; margin-bottom:16px; font-size:.9rem; text-align:center;">
+    <i class="fa-solid fa-circle-exclamation"></i> {{ erreur }}
+</div>
+{% endif %}
+
+<div class="card">
+    <form method="post" action="{% url 'transport:gerer_colis' %}">
+        {% csrf_token %}
+
+        <h3 style="font-size:1rem; color:#1F3864; margin-bottom:12px;">Expéditeur</h3>
+        <input type="text" name="expediteur_nom" placeholder="Nom de l'expéditeur" required>
+        <input type="text" name="expediteur_telephone" placeholder="Téléphone expéditeur" required>
+
+        <h3 style="font-size:1rem; color:#1F3864; margin:16px 0 12px;">Destinataire</h3>
+        <input type="text" name="destinataire_nom" placeholder="Nom du destinataire" required>
+        <input type="text" name="destinataire_telephone" placeholder="Téléphone destinataire" required>
+
+        <h3 style="font-size:1rem; color:#1F3864; margin:16px 0 12px;">Trajet du colis</h3>
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151;">Agence de départ</label>
+        <select name="agence_depart" required>
+            <option value="">-- Choisir --</option>
+            {% for agence in agences %}
+                <option value="{{ agence.id }}">{{ agence.nom }} ({{ agence.ville }})</option>
+            {% endfor %}
+        </select>
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151;">Agence d'arrivée</label>
+        <select name="agence_arrivee" required>
+            <option value="">-- Choisir --</option>
+            {% for agence in agences %}
+                <option value="{{ agence.id }}">{{ agence.nom }} ({{ agence.ville }})</option>
+            {% endfor %}
+        </select>
+
+        <h3 style="font-size:1rem; color:#1F3864; margin:16px 0 12px;">Détails du colis</h3>
+        <input type="text" name="description" placeholder="Contenu du colis" required>
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151;">Poids (kg)</label>
+        <input type="number" step="0.1" name="poids_kg" placeholder="Ex : 2.5" min="0" required
+               style="width:100%; padding:14px; font-size:1rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:14px;">
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151;">Prix (FCFA)</label>
+        <input type="number" name="prix" placeholder="Ex : 5000" min="0" required
+               style="width:100%; padding:14px; font-size:1rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:14px;">
+
+        <button type="submit" class="btn" style="width:100%; margin-top:8px;">
+            <i class="fa-solid fa-box"></i> Enregistrer le colis
+        </button>
+    </form>
+</div>
+
+<div style="text-align:center; margin-top:20px;">
+    <a href="{% url 'transport:tableau_bord' %}" class="btn" style="background:#6b7280;">
+        <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
+    </a>
+</div>
+
+{% endblock %}

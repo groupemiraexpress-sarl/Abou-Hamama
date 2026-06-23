@@ -1,0 +1,127 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titre %}{{ branding.nom_entreprise }}{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --couleur-principale: {{ branding.couleur_principale }};
+            --couleur-hover: {{ branding.couleur_hover }};
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+            background: #f4f6f9;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+        header {
+            background: var(--couleur-principale);
+            color: #fff;
+            padding: 18px 20px;
+            text-align: center;
+            position: relative;
+        }
+        header h1 { font-size: 1.4rem; letter-spacing: .5px; }
+        header p { font-size: .85rem; opacity: .85; margin-top: 2px; }
+        .langues {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            display: flex;
+            gap: 6px;
+        }
+        .langues button {
+            background: rgba(255,255,255,.15);
+            color: #fff;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: .75rem;
+            cursor: pointer;
+        }
+        .langues button:hover { background: rgba(255,255,255,.3); }
+        .container { max-width: 640px; margin: 0 auto; padding: 24px 16px; }
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: .8rem;
+            color: #6b7280;
+        }
+        .btn {
+            display: inline-block;
+            background: var(--couleur-principale);
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background .2s;
+        }
+        .btn:hover { background: var(--couleur-hover); }
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 4px rgba(0,0,0,.06);
+        }
+        input[type="text"], input[type="date"], select {
+            width: 100%;
+            padding: 14px;
+            font-size: 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            margin-bottom: 14px;
+        }
+        input:focus, select:focus { outline: 2px solid var(--couleur-principale); border-color: transparent; }
+    </style>
+
+    <link rel="manifest" href="{% static 'transport/manifest.json' %}">
+    <meta name="theme-color" content="#1F3864">
+    <link rel="apple-touch-icon" href="{% static 'transport/icon-192.png' %}">
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/static/transport/service-worker.js')
+                    .then(function() { console.log('Service worker enregistré'); })
+                    .catch(function(err) { console.log('Erreur service worker:', err); });
+            });
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="langues">
+            <form action="{% url 'set_language' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <input name="next" type="hidden" value="{{ request.path }}">
+                <button type="submit" name="language" value="fr">FR</button>
+            </form>
+            <form action="{% url 'set_language' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <input name="next" type="hidden" value="{{ request.path }}">
+                <button type="submit" name="language" value="en">EN</button>
+            </form>
+            <form action="{% url 'set_language' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <input name="next" type="hidden" value="{{ request.path }}">
+                <button type="submit" name="language" value="ar">ع</button>
+            </form>
+        </div>
+        <h1>{% block entete %}{{ branding.nom_entreprise }}{% endblock %}</h1>
+        <p>{{ branding.slogan }}</p>
+    </header>
+    <div class="container">
+        {% block contenu %}{% endblock %}
+    </div>
+    <footer>
+        &copy; {% now "Y" %} {{ branding.nom_entreprise }} &mdash; {{ branding.pied_de_page }}
+    </footer>
+</body>
+</html>

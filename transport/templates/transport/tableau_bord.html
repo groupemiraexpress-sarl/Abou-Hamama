@@ -1,0 +1,148 @@
+{% extends "transport/base.html" %}
+
+{% block titre %}Tableau de bord — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}Tableau de bord{% endblock %}
+
+{% block contenu %}
+
+<div class="card" style="margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
+    <div>
+        {% if employe %}
+            <h2 style="font-size:1.1rem; color:#1F3864;">{{ employe.prenom }} {{ employe.nom }}</h2>
+            <p style="color:#6b7280; font-size:.9rem;">{{ poste_libelle }}{% if employe.agence %} — {{ employe.agence }}{% endif %}</p>
+        {% elif est_superuser %}
+            <h2 style="font-size:1.1rem; color:#1F3864;">Administrateur</h2>
+            <p style="color:#6b7280; font-size:.9rem;">Accès complet</p>
+        {% else %}
+            <h2 style="font-size:1.1rem; color:#1F3864;">{{ request.user.username }}</h2>
+            <p style="color:#6b7280; font-size:.9rem;">Compte sans fiche employé</p>
+        {% endif %}
+    </div>
+    <a href="{% url 'transport:deconnexion' %}" class="btn" style="background:#6b7280; padding:8px 16px; font-size:.85rem;">
+        <i class="fa-solid fa-right-from-bracket"></i> Déconnexion
+    </a>
+</div>
+
+{% if not employe and not est_superuser %}
+<div class="card" style="text-align:center; color:#6b7280;">
+    Votre compte n'est pas encore relié à une fiche employé.
+    Contactez votre responsable.
+</div>
+{% else %}
+
+<p style="color:#6b7280; margin-bottom:16px;">Vos outils</p>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+
+    {% if est_superuser or poste == 'pdg' or poste == 'responsable' or poste == 'guichetier' %}
+    <a href="{% url 'transport:vendre_billet' %}" style="text-decoration:none;">
+        <div class="card" style="text-align:center;">
+            <i class="fa-solid fa-ticket" style="font-size:1.6rem; color:#1F3864;"></i>
+            <h3 style="font-size:1rem; margin-top:8px;">Vendre un billet</h3>
+        </div>
+    </a>
+    {% endif %}
+
+    {% if est_superuser or poste == 'pdg' or poste == 'responsable' or poste == 'guichetier' %}
+    <a href="{% url 'transport:liste_billets' %}" style="text-decoration:none;">
+        <div class="card" style="text-align:center;">
+            <i class="fa-solid fa-list" style="font-size:1.6rem; color:#1F3864;"></i>
+            <h3 style="font-size:1rem; margin-top:8px;">Liste des billets</h3>
+        </div>
+    </a>
+    {% endif %}
+
+    {% if est_superuser or poste == 'pdg' or poste == 'responsable' or poste == 'agent_colis' %}
+    <a href="{% url 'transport:gerer_colis' %}" style="text-decoration:none;">
+        <div class="card" style="text-align:center;">
+            <i class="fa-solid fa-box" style="font-size:1.6rem; color:#1F3864;"></i>
+            <h3 style="font-size:1rem; margin-top:8px;">Gérer les colis</h3>
+        </div>
+    </a>
+    {% endif %}
+
+    {% if est_superuser or poste == 'pdg' or poste == 'responsable' or poste == 'agent_colis' %}
+    <a href="{% url 'transport:liste_colis' %}" style="text-decoration:none;">
+        <div class="card" style="text-align:center;">
+            <i class="fa-solid fa-boxes-stacked" style="font-size:1.6rem; color:#1F3864;"></i>
+            <h3 style="font-size:1rem; margin-top:8px;">Liste des colis</h3>
+        </div>
+    </a>
+    {% endif %}
+
+    {% if est_superuser or poste == 'pdg' or poste == 'responsable' or poste == 'agent_transfert' %}
+    <a href="{% url 'transport:gerer_transfert' %}" style="text-decoration:none;">
+        <div class="card" style="text-align:center;">
+            <i class="fa-solid fa-money-bill-transfer" style="font-size:1.6rem; color:#1F3864;"></i>
+            <h3 style="font-size:1rem; margin-top:8px;">Transferts d'argent</h3>
+        </div>
+    </a>
+    {% endif %}
+
+    {% if est_superuser or poste == 'pdg' or poste == 'responsable' or poste == 'agent_transfert' %}
+    <a href="{% url 'transport:liste_transferts' %}" style="text-decoration:none;">
+        <div class="card" style="text-align:center;">
+            <i class="fa-solid fa-list-check" style="font-size:1.6rem; color:#1F3864;"></i>
+            <h3 style="font-size:1rem; margin-top:8px;">Liste des transferts</h3>
+        </div>
+    </a>
+    {% endif %}
+
+    {% if est_superuser or poste == 'pdg' or poste == 'responsable' or poste == 'comptable' %}
+    <a href="{% url 'transport:caisse_finances' %}" style="text-decoration:none;">
+        <div class="card" style="text-align:center;">
+            <i class="fa-solid fa-cash-register" style="font-size:1.6rem; color:#1F3864;"></i>
+            <h3 style="font-size:1rem; margin-top:8px;">Caisse &amp; finances</h3>
+        </div>
+    </a>
+    {% endif %}
+
+    {% if est_superuser or poste == 'pdg' or poste == 'responsable' or poste == 'resp_maintenance' %}
+    <a href="{% url 'transport:gerer_entretien' %}" style="text-decoration:none;">
+        <div class="card" style="text-align:center;">
+            <i class="fa-solid fa-wrench" style="font-size:1.6rem; color:#1F3864;"></i>
+            <h3 style="font-size:1rem; margin-top:8px;">Enregistrer entretien</h3>
+        </div>
+    </a>
+    {% endif %}
+
+    {% if est_superuser or poste == 'pdg' or poste == 'responsable' or poste == 'resp_maintenance' %}
+    <a href="{% url 'transport:liste_carburant' %}" style="text-decoration:none;">
+        <div class="card" style="text-align:center;">
+            <i class="fa-solid fa-gas-pump" style="font-size:1.6rem; color:#1F3864;"></i>
+            <h3 style="font-size:1rem; margin-top:8px;">Suivi carburant</h3>
+        </div>
+    </a>
+    {% endif %}
+
+    {% if est_superuser or poste == 'pdg' or poste == 'responsable' or poste == 'resp_maintenance' %}
+    <a href="{% url 'transport:liste_entretiens' %}" style="text-decoration:none;">
+        <div class="card" style="text-align:center;">
+            <i class="fa-solid fa-bus" style="font-size:1.6rem; color:#1F3864;"></i>
+            <h3 style="font-size:1rem; margin-top:8px;">État de la flotte</h3>
+        </div>
+    </a>
+    {% endif %}
+
+    {% if est_superuser or poste == 'pdg' or poste == 'responsable' or poste == 'rh' %}
+    <a href="{% url 'transport:recruter_chauffeur' %}" style="text-decoration:none;">
+        <div class="card" style="text-align:center;">
+            <i class="fa-solid fa-user-plus" style="font-size:1.6rem; color:#1F3864;"></i>
+            <h3 style="font-size:1rem; margin-top:8px;">Recruter chauffeurs</h3>
+        </div>
+    </a>
+    {% endif %}
+
+    {% if est_superuser or poste == 'pdg' or poste == 'responsable' %}
+    <a href="{% url 'transport:vue_agence' %}" style="text-decoration:none;">
+        <div class="card" style="text-align:center;">
+            <i class="fa-solid fa-building" style="font-size:1.6rem; color:#1F3864;"></i>
+            <h3 style="font-size:1rem; margin-top:8px;">Ma vue agence</h3>
+        </div>
+    </a>
+    {% endif %}
+
+</div>
+{% endif %}
+
+{% endblock %}

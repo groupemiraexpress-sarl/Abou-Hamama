@@ -1,0 +1,80 @@
+{% extends "transport/base.html" %}
+
+{% block titre %}Liste des transferts — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}Liste des transferts{% endblock %}
+
+{% block contenu %}
+
+{% if not peut_modifier %}
+<p style="color:#6b7280; font-size:.85rem; margin-bottom:12px; text-align:center;">
+    <i class="fa-solid fa-eye"></i> Consultation seule
+</p>
+{% endif %}
+
+<!-- À RETIRER -->
+<p style="color:#1F3864; margin-bottom:10px; font-weight:600;">
+    <i class="fa-solid fa-hand-holding-dollar"></i> À retirer ({{ a_retirer|length }})
+</p>
+{% if a_retirer %}
+<div class="card" style="padding:0; overflow:hidden; margin-bottom:20px;">
+    <table style="width:100%; border-collapse:collapse;">
+        <thead>
+            <tr style="background:#f4f6f9;">
+                <th style="padding:10px; text-align:left; font-size:.8rem; color:#374151;">Code</th>
+                <th style="padding:10px; text-align:left; font-size:.8rem; color:#374151;">Bénéficiaire</th>
+                <th style="padding:10px; text-align:right; font-size:.8rem; color:#374151;">Montant</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in a_retirer %}
+            <tr style="border-top:1px solid #e5e7eb;">
+                <td style="padding:10px; font-size:.8rem;">{{ t.code_transfert }}</td>
+                <td style="padding:10px; font-size:.85rem;">{{ t.beneficiaire_nom }}</td>
+                <td style="padding:10px; text-align:right; font-size:.85rem; font-weight:600; color:#1F3864;">{{ t.montant }} F</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p style="color:#6b7280; font-size:.85rem; margin-bottom:20px;">Aucun transfert à retirer.</p>
+{% endif %}
+
+<!-- ENVOYÉS -->
+<p style="color:#1F3864; margin-bottom:10px; font-weight:600;">
+    <i class="fa-solid fa-paper-plane"></i> Envoyés ({{ envoyes|length }})
+</p>
+{% if envoyes %}
+<div class="card" style="padding:0; overflow:hidden; margin-bottom:20px;">
+    <table style="width:100%; border-collapse:collapse;">
+        <thead>
+            <tr style="background:#f4f6f9;">
+                <th style="padding:10px; text-align:left; font-size:.8rem; color:#374151;">Code</th>
+                <th style="padding:10px; text-align:left; font-size:.8rem; color:#374151;">Bénéficiaire</th>
+                <th style="padding:10px; text-align:left; font-size:.8rem; color:#374151;">Statut</th>
+                <th style="padding:10px; text-align:right; font-size:.8rem; color:#374151;">Montant</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in envoyes %}
+            <tr style="border-top:1px solid #e5e7eb;">
+                <td style="padding:10px; font-size:.8rem;">{{ t.code_transfert }}</td>
+                <td style="padding:10px; font-size:.85rem;">{{ t.beneficiaire_nom }}</td>
+                <td style="padding:10px; font-size:.8rem; color:#6b7280;">{{ t.get_statut_display }}</td>
+                <td style="padding:10px; text-align:right; font-size:.85rem; font-weight:600; color:#1F3864;">{{ t.montant }} F</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p style="color:#6b7280; font-size:.85rem; margin-bottom:20px;">Aucun transfert envoyé.</p>
+{% endif %}
+
+<div style="text-align:center; margin-top:20px;">
+    <a href="{% url 'transport:tableau_bord' %}" class="btn" style="background:#6b7280;">
+        <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
+    </a>
+</div>
+
+{% endblock %}

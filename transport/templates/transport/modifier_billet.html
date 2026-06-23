@@ -1,0 +1,57 @@
+{% extends "transport/base.html" %}
+
+{% block titre %}Modifier un billet — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}Modifier un billet{% endblock %}
+
+{% block contenu %}
+
+{% if erreur %}
+<div style="background:#fef2f2; color:#b91c1c; padding:12px; border-radius:8px; margin-bottom:16px; font-size:.9rem; text-align:center;">
+    <i class="fa-solid fa-circle-exclamation"></i> {{ erreur }}
+</div>
+{% endif %}
+
+<div class="card" style="margin-bottom:20px;">
+    <h3 style="font-size:1rem; color:#1F3864; margin-bottom:12px;">{{ reservation.numero_reservation }}</h3>
+    <table style="width:100%; border-collapse:collapse;">
+        <tr><td style="padding:6px 0; color:#6b7280;">Client</td>
+            <td style="padding:6px 0; text-align:right; font-weight:600;">{{ reservation.client.nom }}</td></tr>
+        <tr><td style="padding:6px 0; color:#6b7280;">Trajet</td>
+            <td style="padding:6px 0; text-align:right;">{{ reservation.voyage.trajet.ville_depart }} → {{ reservation.voyage.trajet.ville_arrivee }}</td></tr>
+        <tr><td style="padding:6px 0; color:#6b7280;">Montant</td>
+            <td style="padding:6px 0; text-align:right; font-weight:600;">{{ reservation.montant_total }} FCFA</td></tr>
+        <tr><td style="padding:6px 0; color:#6b7280;">Statut actuel</td>
+            <td style="padding:6px 0; text-align:right;">{{ reservation.get_statut_display }}</td></tr>
+    </table>
+</div>
+
+<div class="card">
+    <form method="post" action="{% url 'transport:modifier_billet' reservation.id %}">
+        {% csrf_token %}
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Nouveau statut</label>
+        <select name="statut" required>
+            {% for valeur, libelle in statuts %}
+                <option value="{{ valeur }}" {% if reservation.statut == valeur %}selected{% endif %}>{{ libelle }}</option>
+            {% endfor %}
+        </select>
+
+        {% if not peut_rembourser %}
+        <p style="color:#6b7280; font-size:.8rem; margin-bottom:14px;">
+            <i class="fa-solid fa-circle-info"></i> Le remboursement est réservé à la direction.
+        </p>
+        {% endif %}
+
+        <button type="submit" class="btn" style="width:100%; margin-top:8px;">
+            <i class="fa-solid fa-floppy-disk"></i> Enregistrer la modification
+        </button>
+    </form>
+</div>
+
+<div style="text-align:center; margin-top:20px;">
+    <a href="{% url 'transport:liste_billets' %}" class="btn" style="background:#6b7280;">
+        <i class="fa-solid fa-arrow-left"></i> Retour à la liste
+    </a>
+</div>
+
+{% endblock %}

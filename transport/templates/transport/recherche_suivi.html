@@ -1,0 +1,21 @@
+{% extends "transport/base.html" %}
+
+{% block titre %}Suivi de colis et transfert — TransTchad{% endblock %}
+{% block entete %}Suivre mon envoi{% endblock %}
+
+{% block contenu %}
+<div class="card">
+    <h2 style="font-size:1.1rem; margin-bottom:6px;">Entrez votre code de suivi</h2>
+    <p style="color:#6b7280; font-size:.9rem; margin-bottom:18px;">
+        Code colis (COL-...) ou transfert d'argent (TRF-...)
+    </p>
+    <form action="{% url 'transport:suivi' %}" method="get">
+        <input type="text" name="code" placeholder="Ex : COL-2026-0001" required>
+        <button type="submit" class="btn" style="width:100%;">Rechercher</button>
+    </form>
+</div>
+
+<div style="text-align:center; margin-top:20px;">
+    <a href="{% url 'transport:accueil' %}" class="btn" style="background:#6b7280;">Retour à l'accueil</a>
+</div>
+{% endblock %}

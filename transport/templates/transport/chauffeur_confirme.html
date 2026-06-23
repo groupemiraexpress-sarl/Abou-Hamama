@@ -1,0 +1,46 @@
+{% extends "transport/base.html" %}
+
+{% block titre %}Chauffeur enregistré — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}Chauffeur enregistré{% endblock %}
+
+{% block contenu %}
+
+{% if chauffeur %}
+<div class="card">
+    <div style="text-align:center; margin-bottom:20px;">
+        <i class="fa-solid fa-circle-check" style="font-size:2.5rem; color:#16a34a;"></i>
+        <h2 style="color:#16a34a; margin-top:8px;">Chauffeur recruté</h2>
+        <p style="font-size:1.2rem; font-weight:600; color:#1F3864; margin-top:4px;">{{ chauffeur.prenom }} {{ chauffeur.nom }}</p>
+    </div>
+
+    <table style="width:100%; border-collapse:collapse;">
+        <tr><td style="padding:8px 0; color:#6b7280;">Téléphone</td>
+            <td style="padding:8px 0; text-align:right; font-weight:600;">{{ chauffeur.telephone }}</td></tr>
+        <tr><td style="padding:8px 0; color:#6b7280;">Numéro de permis</td>
+            <td style="padding:8px 0; text-align:right;">{{ chauffeur.numero_permis }}</td></tr>
+        <tr><td style="padding:8px 0; color:#6b7280;">Expérience</td>
+            <td style="padding:8px 0; text-align:right;">{{ chauffeur.annees_experience }} an(s)</td></tr>
+        <tr><td style="padding:8px 0; color:#6b7280;">Statut</td>
+            <td style="padding:8px 0; text-align:right;">{{ chauffeur.get_statut_display }}</td></tr>
+    </table>
+</div>
+
+<div style="display:flex; gap:12px; margin-top:20px;">
+    <a href="{% url 'transport:recruter_chauffeur' %}" class="btn" style="flex:1;">
+        <i class="fa-solid fa-plus"></i> Nouveau chauffeur
+    </a>
+</div>
+
+{% else %}
+<div class="card" style="text-align:center; color:#b91c1c;">
+    Chauffeur introuvable.
+</div>
+{% endif %}
+
+<div style="text-align:center; margin-top:16px;">
+    <a href="{% url 'transport:tableau_bord' %}" style="color:#6b7280; text-decoration:none; font-size:.9rem;">
+        <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
+    </a>
+</div>
+
+{% endblock %}

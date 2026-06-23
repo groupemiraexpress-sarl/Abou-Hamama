@@ -1,0 +1,56 @@
+{% extends "transport/base.html" %}
+
+{% block titre %}Caisse & finances — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}Caisse & finances{% endblock %}
+
+{% block contenu %}
+
+<div class="card" style="text-align:center; margin-bottom:20px; background:#1F3864; color:#fff;">
+    <p style="font-size:.85rem; opacity:.85;">Recette totale du jour</p>
+    <p style="font-size:2.2rem; font-weight:700; margin:4px 0;">{{ total_jour }} FCFA</p>
+    <p style="font-size:.8rem; opacity:.75;">{{ date_jour|date:"d/m/Y" }}</p>
+</div>
+
+<p style="color:#6b7280; margin-bottom:12px; font-weight:600;">Détail du jour</p>
+
+<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:24px;">
+    <div class="card" style="text-align:center;">
+        <i class="fa-solid fa-ticket" style="font-size:1.4rem; color:#1F3864;"></i>
+        <p style="font-size:1.2rem; font-weight:700; color:#1F3864; margin-top:6px;">{{ billets_jour_total }}</p>
+        <p style="font-size:.75rem; color:#6b7280;">Billets ({{ billets_jour_nb }})</p>
+    </div>
+    <div class="card" style="text-align:center;">
+        <i class="fa-solid fa-box" style="font-size:1.4rem; color:#1F3864;"></i>
+        <p style="font-size:1.2rem; font-weight:700; color:#1F3864; margin-top:6px;">{{ colis_jour_total }}</p>
+        <p style="font-size:.75rem; color:#6b7280;">Colis ({{ colis_jour_nb }})</p>
+    </div>
+    <div class="card" style="text-align:center;">
+        <i class="fa-solid fa-money-bill-transfer" style="font-size:1.4rem; color:#1F3864;"></i>
+        <p style="font-size:1.2rem; font-weight:700; color:#1F3864; margin-top:6px;">{{ transferts_jour_total }}</p>
+        <p style="font-size:.75rem; color:#6b7280;">Transferts ({{ transferts_jour_nb }})</p>
+    </div>
+</div>
+
+<p style="color:#6b7280; margin-bottom:12px; font-weight:600;">Recettes du mois en cours</p>
+
+<div class="card">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr><td style="padding:10px 0; color:#6b7280;"><i class="fa-solid fa-ticket"></i> Billets</td>
+            <td style="padding:10px 0; text-align:right; font-weight:600;">{{ billets_mois_total }} FCFA</td></tr>
+        <tr><td style="padding:10px 0; color:#6b7280;"><i class="fa-solid fa-box"></i> Colis</td>
+            <td style="padding:10px 0; text-align:right; font-weight:600;">{{ colis_mois_total }} FCFA</td></tr>
+        <tr><td style="padding:10px 0; color:#6b7280;"><i class="fa-solid fa-money-bill-transfer"></i> Transferts (frais)</td>
+            <td style="padding:10px 0; text-align:right; font-weight:600;">{{ transferts_mois_total }} FCFA</td></tr>
+        <tr style="border-top:2px solid #e5e7eb;">
+            <td style="padding:14px 0 0; color:#1F3864; font-weight:600;">Total du mois</td>
+            <td style="padding:14px 0 0; text-align:right; font-weight:700; font-size:1.3rem; color:#1F3864;">{{ total_mois }} FCFA</td></tr>
+    </table>
+</div>
+
+<div style="text-align:center; margin-top:20px;">
+    <a href="{% url 'transport:tableau_bord' %}" class="btn" style="background:#6b7280;">
+        <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
+    </a>
+</div>
+
+{% endblock %}

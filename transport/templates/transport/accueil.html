@@ -1,0 +1,52 @@
+{% extends "transport/base.html" %}
+
+{% block titre %}TransTchad — Accueil{% endblock %}
+{% block entete %}Bienvenue chez TransTchad{% endblock %}
+
+{% block contenu %}
+
+<p style="text-align:center; color:#6b7280; margin-bottom:24px;">
+    Choisissez un service
+</p>
+
+<div style="display:flex; flex-direction:column; gap:16px;">
+
+    <a href="{% url 'transport:recherche_voyage' %}" style="text-decoration:none;">
+        <div class="card" style="display:flex; align-items:center; gap:18px;">
+            <div style="width:52px; height:52px; background:#e8edf6; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <i class="fa-solid fa-bus" style="font-size:1.4rem; color:#1F3864;"></i>
+            </div>
+            <div>
+                <h2 style="color:#1F3864; font-size:1.1rem;">Voyager</h2>
+                <p style="color:#6b7280; font-size:.9rem;">Rechercher un voyage et voir les places disponibles</p>
+            </div>
+        </div>
+    </a>
+
+    <a href="{% url 'transport:suivi' %}" style="text-decoration:none;">
+        <div class="card" style="display:flex; align-items:center; gap:18px;">
+            <div style="width:52px; height:52px; background:#e8edf6; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <i class="fa-solid fa-box" style="font-size:1.4rem; color:#1F3864;"></i>
+            </div>
+            <div>
+                <h2 style="color:#1F3864; font-size:1.1rem;">Suivre un colis</h2>
+                <p style="color:#6b7280; font-size:.9rem;">Entrez votre code COL- pour suivre votre colis</p>
+            </div>
+        </div>
+    </a>
+
+    <a href="{% url 'transport:suivi' %}" style="text-decoration:none;">
+        <div class="card" style="display:flex; align-items:center; gap:18px;">
+            <div style="width:52px; height:52px; background:#e8edf6; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <i class="fa-solid fa-money-bill-transfer" style="font-size:1.4rem; color:#1F3864;"></i>
+            </div>
+            <div>
+                <h2 style="color:#1F3864; font-size:1.1rem;">Suivre un transfert</h2>
+                <p style="color:#6b7280; font-size:.9rem;">Entrez votre code TRF- pour suivre votre argent</p>
+            </div>
+        </div>
+    </a>
+
+</div>
+
+{% endblock %}

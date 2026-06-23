@@ -1,0 +1,1 @@
+print("Bonjour, je m'appelle Sadikhe et je vais créer un système de gestion d'agences de bus au Tchad !")

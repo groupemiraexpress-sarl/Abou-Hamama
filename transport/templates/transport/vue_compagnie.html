@@ -1,0 +1,75 @@
+{% extends "transport/base.html" %}
+
+{% block titre %}Vue compagnie — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}Vue compagnie{% endblock %}
+
+{% block contenu %}
+
+<div class="card" style="text-align:center; margin-bottom:20px; background:#1F3864; color:#fff;">
+    <p style="font-size:.85rem; opacity:.85;">Recette de la compagnie ce mois</p>
+    <p style="font-size:2.2rem; font-weight:700; margin:4px 0;">{{ recette_mois }} FCFA</p>
+</div>
+
+<div class="card" style="margin-bottom:20px;">
+    <table style="width:100%; border-collapse:collapse;">
+        <tr><td style="padding:8px 0; color:#6b7280;"><i class="fa-solid fa-ticket"></i> Billets</td>
+            <td style="padding:8px 0; text-align:right; font-weight:600;">{{ billets_mois }} FCFA</td></tr>
+        <tr><td style="padding:8px 0; color:#6b7280;"><i class="fa-solid fa-box"></i> Colis</td>
+            <td style="padding:8px 0; text-align:right; font-weight:600;">{{ colis_mois }} FCFA</td></tr>
+        <tr><td style="padding:8px 0; color:#6b7280;"><i class="fa-solid fa-money-bill-transfer"></i> Transferts (frais)</td>
+            <td style="padding:8px 0; text-align:right; font-weight:600;">{{ transferts_mois }} FCFA</td></tr>
+    </table>
+</div>
+
+<p style="color:#6b7280; margin-bottom:12px; font-weight:600;">Activité</p>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:24px;">
+    <div class="card" style="text-align:center;">
+        <i class="fa-solid fa-bus" style="font-size:1.4rem; color:#1F3864;"></i>
+        <p style="font-size:1.6rem; font-weight:700; color:#1F3864; margin-top:6px;">{{ nb_voyages }}</p>
+        <p style="font-size:.75rem; color:#6b7280;">Voyages programmés</p>
+    </div>
+    <div class="card" style="text-align:center;">
+        <i class="fa-solid fa-receipt" style="font-size:1.4rem; color:#1F3864;"></i>
+        <p style="font-size:1.6rem; font-weight:700; color:#1F3864; margin-top:6px;">{{ nb_reservations }}</p>
+        <p style="font-size:.75rem; color:#6b7280;">Billets vendus</p>
+    </div>
+    <div class="card" style="text-align:center;">
+        <i class="fa-solid fa-box" style="font-size:1.4rem; color:#1F3864;"></i>
+        <p style="font-size:1.6rem; font-weight:700; color:#1F3864; margin-top:6px;">{{ nb_colis }}</p>
+        <p style="font-size:.75rem; color:#6b7280;">Colis</p>
+    </div>
+    <div class="card" style="text-align:center;">
+        <i class="fa-solid fa-money-bill-transfer" style="font-size:1.4rem; color:#1F3864;"></i>
+        <p style="font-size:1.6rem; font-weight:700; color:#1F3864; margin-top:6px;">{{ nb_transferts }}</p>
+        <p style="font-size:.75rem; color:#6b7280;">Transferts</p>
+    </div>
+</div>
+
+<p style="color:#6b7280; margin-bottom:12px; font-weight:600;">Ressources</p>
+
+<div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;">
+    <div class="card" style="text-align:center;">
+        <i class="fa-solid fa-building" style="font-size:1.3rem; color:#1F3864;"></i>
+        <p style="font-size:1.4rem; font-weight:700; color:#1F3864; margin-top:6px;">{{ nb_agences }}</p>
+        <p style="font-size:.75rem; color:#6b7280;">Agences</p>
+    </div>
+    <div class="card" style="text-align:center;">
+        <i class="fa-solid fa-id-card" style="font-size:1.3rem; color:#1F3864;"></i>
+        <p style="font-size:1.4rem; font-weight:700; color:#1F3864; margin-top:6px;">{{ nb_chauffeurs }}</p>
+        <p style="font-size:.75rem; color:#6b7280;">Chauffeurs</p>
+    </div>
+    <div class="card" style="text-align:center;">
+        <i class="fa-solid fa-users" style="font-size:1.3rem; color:#1F3864;"></i>
+        <p style="font-size:1.4rem; font-weight:700; color:#1F3864; margin-top:6px;">{{ nb_employes }}</p>
+        <p style="font-size:.75rem; color:#6b7280;">Employés</p>
+    </div>
+</div>
+
+<div style="text-align:center; margin-top:24px;">
+    <a href="{% url 'transport:tableau_bord' %}" class="btn" style="background:#6b7280;">
+        <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
+    </a>
+</div>
+
+{% endblock %}

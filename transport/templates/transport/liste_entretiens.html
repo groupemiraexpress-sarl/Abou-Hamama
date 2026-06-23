@@ -1,0 +1,94 @@
+{% extends "transport/base.html" %}
+
+{% block titre %}État de la flotte — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}État de la flotte{% endblock %}
+
+{% block contenu %}
+
+<div style="text-align:center; margin-bottom:20px;">
+    <a href="{% url 'transport:gerer_entretien' %}" class="btn">
+        <i class="fa-solid fa-plus"></i> Enregistrer un entretien
+    </a>
+</div>
+
+<p style="color:#1F3864; margin-bottom:12px; font-weight:600;">
+    <i class="fa-solid fa-bus"></i> Vidanges par bus
+</p>
+
+{% if flotte %}
+<div style="display:grid; gap:12px; margin-bottom:24px;">
+    {% for item in flotte %}
+    <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <h3 style="font-size:1rem; color:#1F3864;">{{ item.bus.immatriculation }}</h3>
+                <p style="color:#6b7280; font-size:.8rem;">{{ item.bus.marque }} {{ item.bus.modele }}</p>
+            </div>
+            <div style="text-align:right;">
+                {% if item.jours_depuis_vidange is not None %}
+                    {% if item.jours_depuis_vidange >= 90 %}
+                        <span style="background:#fef2f2; color:#b91c1c; padding:6px 12px; border-radius:20px; font-size:.85rem; font-weight:600;">
+                            <i class="fa-solid fa-triangle-exclamation"></i> {{ item.jours_depuis_vidange }} jours
+                        </span>
+                    {% elif item.jours_depuis_vidange >= 60 %}
+                        <span style="background:#fffbeb; color:#b45309; padding:6px 12px; border-radius:20px; font-size:.85rem; font-weight:600;">
+                            {{ item.jours_depuis_vidange }} jours
+                        </span>
+                    {% else %}
+                        <span style="background:#f0fdf4; color:#15803d; padding:6px 12px; border-radius:20px; font-size:.85rem; font-weight:600;">
+                            {{ item.jours_depuis_vidange }} jours
+                        </span>
+                    {% endif %}
+                    <p style="color:#6b7280; font-size:.75rem; margin-top:4px;">depuis dernière vidange</p>
+                {% else %}
+                    <span style="background:#f4f6f9; color:#6b7280; padding:6px 12px; border-radius:20px; font-size:.85rem;">
+                        Aucune vidange
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card" style="text-align:center; color:#6b7280;">Aucun bus enregistré.</div>
+{% endif %}
+
+<p style="color:#1F3864; margin-bottom:12px; font-weight:600;">
+    <i class="fa-solid fa-clock-rotate-left"></i> Derniers entretiens
+</p>
+
+{% if derniers %}
+<div class="card" style="padding:0; overflow:hidden;">
+    <table style="width:100%; border-collapse:collapse;">
+        <thead>
+            <tr style="background:#f4f6f9;">
+                <th style="padding:10px; text-align:left; font-size:.8rem; color:#374151;">Bus</th>
+                <th style="padding:10px; text-align:left; font-size:.8rem; color:#374151;">Type</th>
+                <th style="padding:10px; text-align:left; font-size:.8rem; color:#374151;">Date</th>
+                <th style="padding:10px; text-align:right; font-size:.8rem; color:#374151;">Coût</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for e in derniers %}
+            <tr style="border-top:1px solid #e5e7eb;">
+                <td style="padding:10px; font-size:.8rem;">{{ e.bus.immatriculation }}</td>
+                <td style="padding:10px; font-size:.85rem;">{{ e.get_type_entretien_display }}</td>
+                <td style="padding:10px; font-size:.8rem; color:#6b7280;">{{ e.date_entretien|date:"d/m/Y" }}</td>
+                <td style="padding:10px; text-align:right; font-size:.85rem; font-weight:600; color:#1F3864;">{{ e.cout }} F</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="card" style="text-align:center; color:#6b7280;">Aucun entretien enregistré.</div>
+{% endif %}
+
+<div style="text-align:center; margin-top:20px;">
+    <a href="{% url 'transport:tableau_bord' %}" class="btn" style="background:#6b7280;">
+        <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
+    </a>
+</div>
+
+{% endblock %}

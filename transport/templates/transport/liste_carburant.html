@@ -1,0 +1,56 @@
+{% extends "transport/base.html" %}
+
+{% block titre %}Carburant — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}Suivi carburant{% endblock %}
+
+{% block contenu %}
+
+<div class="card" style="text-align:center; margin-bottom:20px; background:#1F3864; color:#fff;">
+    <p style="font-size:.85rem; opacity:.85;">Dépense carburant ce mois</p>
+    <p style="font-size:2rem; font-weight:700; margin:4px 0;">{{ total_mois }} FCFA</p>
+</div>
+
+<div style="text-align:center; margin-bottom:20px;">
+    <a href="{% url 'transport:gerer_carburant' %}" class="btn">
+        <i class="fa-solid fa-plus"></i> Enregistrer un plein
+    </a>
+</div>
+
+<p style="color:#1F3864; margin-bottom:12px; font-weight:600;">
+    <i class="fa-solid fa-gas-pump"></i> Derniers pleins
+</p>
+
+{% if pleins %}
+<div class="card" style="padding:0; overflow:hidden;">
+    <table style="width:100%; border-collapse:collapse;">
+        <thead>
+            <tr style="background:#f4f6f9;">
+                <th style="padding:10px; text-align:left; font-size:.8rem; color:#374151;">Bus</th>
+                <th style="padding:10px; text-align:left; font-size:.8rem; color:#374151;">Date</th>
+                <th style="padding:10px; text-align:right; font-size:.8rem; color:#374151;">Litres</th>
+                <th style="padding:10px; text-align:right; font-size:.8rem; color:#374151;">Montant</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in pleins %}
+            <tr style="border-top:1px solid #e5e7eb;">
+                <td style="padding:10px; font-size:.8rem;">{{ p.bus.immatriculation }}</td>
+                <td style="padding:10px; font-size:.8rem; color:#6b7280;">{{ p.date_plein|date:"d/m/Y" }}</td>
+                <td style="padding:10px; text-align:right; font-size:.85rem;">{{ p.litres }} L</td>
+                <td style="padding:10px; text-align:right; font-size:.85rem; font-weight:600; color:#1F3864;">{{ p.montant }} F</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="card" style="text-align:center; color:#6b7280;">Aucun plein enregistré.</div>
+{% endif %}
+
+<div style="text-align:center; margin-top:20px;">
+    <a href="{% url 'transport:tableau_bord' %}" class="btn" style="background:#6b7280;">
+        <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
+    </a>
+</div>
+
+{% endblock %}
