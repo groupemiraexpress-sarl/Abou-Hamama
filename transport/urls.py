@@ -64,4 +64,5 @@ urlpatterns = [
     path('api/connexion/', TokenObtainPairView.as_view(), name='api_connexion'),
     path('api/token-refresh/', TokenRefreshView.as_view(), name='api_token_refresh'),
     path('api/mon-profil/', api_views.api_mon_profil, name='api_mon_profil'),
+    path('api/valider-email/<str:uidb64>/<str:token>/', api_views.api_valider_email, name='api_valider_email'),
 ]

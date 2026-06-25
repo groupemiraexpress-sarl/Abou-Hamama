@@ -148,3 +148,13 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }
+
+
+# --- Configuration de l'envoi d'emails ---
+# Mode console : les emails s'affichent dans le terminal (développement).
+# Pour de vrais emails, on remplacera EMAIL_BACKEND par la config SMTP (Gmail/Brevo).
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'Express Abou Hamama <noreply@abouhamama.com>'
+
+# Adresse de base du site (pour construire les liens de validation)
+SITE_URL = os.environ.get('SITE_URL', 'http://127.0.0.1:8000')
