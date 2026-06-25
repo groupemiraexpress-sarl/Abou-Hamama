@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from . import api_views
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 app_name = 'transport'
 
@@ -51,4 +53,15 @@ urlpatterns = [
     path('espace/carburant/', views.gerer_carburant, name='gerer_carburant'),
     path('espace/liste-carburant/', views.liste_carburant, name='liste_carburant'),
     path('espace/billet/<int:reservation_id>/modifier/', views.modifier_billet, name='modifier_billet'),
+
+    # API (pour la future application mobile)
+    path('api/voyages/', api_views.api_voyages, name='api_voyages'),
+    path('api/colis/<str:code_suivi>/', api_views.api_suivi_colis, name='api_suivi_colis'),
+    path('api/transfert/<str:code_transfert>/', api_views.api_suivi_transfert, name='api_suivi_transfert'),
+
+    # API — Authentification des comptes clients (JWT)
+    path('api/inscription/', api_views.api_inscription, name='api_inscription'),
+    path('api/connexion/', TokenObtainPairView.as_view(), name='api_connexion'),
+    path('api/token-refresh/', TokenRefreshView.as_view(), name='api_token_refresh'),
+    path('api/mon-profil/', api_views.api_mon_profil, name='api_mon_profil'),
 ]
