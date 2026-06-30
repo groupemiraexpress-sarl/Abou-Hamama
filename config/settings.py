@@ -153,8 +153,19 @@ SIMPLE_JWT = {
 # --- Configuration de l'envoi d'emails ---
 # Mode console : les emails s'affichent dans le terminal (développement).
 # Pour de vrais emails, on remplacera EMAIL_BACKEND par la config SMTP (Gmail/Brevo).
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = 'Express Abou Hamama <noreply@abouhamama.com>'
+# Email : envoi réel via Gmail si les identifiants sont fournis, sinon mode console
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+
+if EMAIL_HOST_USER and EMAIL_HOST_PASSWORD:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    DEFAULT_FROM_EMAIL = f'Express Abou Hamama <{EMAIL_HOST_USER}>'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    DEFAULT_FROM_EMAIL = 'Express Abou Hamama <noreply@abouhamama.com>'
 
 # Adresse de base du site (pour construire les liens de validation)
 SITE_URL = os.environ.get('SITE_URL', 'http://127.0.0.1:8000')
