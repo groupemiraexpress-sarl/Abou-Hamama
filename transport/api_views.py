@@ -10,7 +10,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 
 from .models import Voyage, Colis, TransfertArgent, Client, Reservation
-from .serializers import VoyageSerializer, ColisSerializer, TransfertArgentSerializer
+from .serializers import VoyageSerializer, ColisSerializer, TransfertArgentSerializer, ReservationSerializer
 
 
 @api_view(['GET'])
@@ -139,3 +139,16 @@ def api_reserver(request):
         'statut': reservation.statut,
         'places': reservation.nombre_places,
     }, status=201)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def api_mes_billets(request):
+    user = request.user
+    client = Client.objects.filter(user=user).first()
+    if not client:
+        return Response([])
+    reservations = Reservation.objects.filter(client=client).select_related(
+        'voyage', 'voyage__trajet'
+    ).order_by('-date_reservation')
+    return Response(ReservationSerializer(reservations, many=True).data)

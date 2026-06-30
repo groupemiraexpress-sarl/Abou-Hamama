@@ -7,3 +7,4 @@ staticfiles/
 .env
 *.log
 test_reservation.py
+test_mes_billets.py
