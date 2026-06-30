@@ -131,6 +131,7 @@ class Client(models.Model):
         ('entreprise', 'Entreprise'),
     ]
 
+    user = models.OneToOneField('auth.User', on_delete=models.SET_NULL, null=True, blank=True, related_name='client', help_text="Compte de connexion lié à cette fiche client (app mobile)")
     nom = models.CharField(max_length=100)
     prenom = models.CharField(max_length=100, blank=True)
     telephone = models.CharField(max_length=20, unique=True)

@@ -6,3 +6,4 @@ db_sauvegarde_*.sqlite3
 staticfiles/
 .env
 *.log
+test_reservation.py
