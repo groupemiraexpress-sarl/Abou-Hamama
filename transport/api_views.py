@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
@@ -9,8 +9,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 
-from .models import Voyage, Colis, TransfertArgent, Client, Reservation
-from .serializers import VoyageSerializer, ColisSerializer, TransfertArgentSerializer, ReservationSerializer
+from .models import Voyage, Colis, TransfertArgent, Client, Reservation, Siege
+from .serializers import VoyageSerializer, ColisSerializer, TransfertArgentSerializer, ReservationSerializer, SiegeSerializer
 
 
 @api_view(['GET'])
@@ -95,6 +95,15 @@ def api_valider_email(request, uidb64, token):
     return Response({'erreur': 'Lien invalide ou expire.'}, status=400)
 
 
+@api_view(['GET'])
+def api_sieges_voyage(request, voyage_id):
+    voyage = Voyage.objects.filter(id=voyage_id).first()
+    if not voyage:
+        return Response({'erreur': 'Voyage introuvable.'}, status=404)
+    sieges = Siege.objects.filter(voyage=voyage).order_by('numero')
+    return Response(SiegeSerializer(sieges, many=True).data)
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def api_reserver(request):
@@ -138,6 +147,56 @@ def api_reserver(request):
         'montant_total': reservation.montant_total,
         'statut': reservation.statut,
         'places': reservation.nombre_places,
+    }, status=201)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def api_reserver_siege(request):
+    user = request.user
+    voyage_id = request.data.get('voyage_id')
+    numero_siege = request.data.get('numero_siege')
+    nom = request.data.get('nom', '').strip()
+    telephone = request.data.get('telephone', '').strip()
+    if not voyage_id or not numero_siege or not nom or not telephone:
+        return Response({'erreur': 'voyage_id, numero_siege, nom et telephone obligatoires.'}, status=400)
+    try:
+        numero_siege = int(numero_siege)
+    except (ValueError, TypeError):
+        return Response({'erreur': 'numero_siege doit etre un nombre.'}, status=400)
+    voyage = Voyage.objects.filter(id=voyage_id).first()
+    if not voyage:
+        return Response({'erreur': 'Voyage introuvable.'}, status=404)
+    siege = Siege.objects.filter(voyage=voyage, numero=numero_siege).first()
+    if not siege:
+        return Response({'erreur': 'Siege introuvable.'}, status=404)
+    if siege.occupe:
+        return Response({'erreur': 'Ce siege est deja occupe.'}, status=400)
+    client = Client.objects.filter(user=user).first()
+    if not client:
+        client = Client.objects.filter(telephone=telephone).first()
+        if not client:
+            client = Client.objects.create(nom=nom, telephone=telephone, email=user.email)
+        client.user = user
+        client.save()
+    try:
+        reservation = Reservation.objects.create(
+            client=client,
+            voyage=voyage,
+            nombre_places=1,
+            statut='en_attente',
+        )
+    except ValueError as e:
+        return Response({'erreur': str(e)}, status=400)
+    siege.occupe = True
+    siege.reservation = reservation
+    siege.save()
+    return Response({
+        'message': 'Siege reserve avec succes.',
+        'numero_reservation': reservation.numero_reservation,
+        'numero_siege': siege.numero,
+        'montant_total': reservation.montant_total,
+        'statut': reservation.statut,
     }, status=201)
 
 

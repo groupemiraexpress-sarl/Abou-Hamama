@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Colis, TransfertArgent, Voyage, Reservation
+from .models import Colis, TransfertArgent, Voyage, Reservation, Siege
 
 
 class ColisSerializer(serializers.ModelSerializer):
@@ -60,3 +60,9 @@ class ReservationSerializer(serializers.ModelSerializer):
             'date_depart', 'heure_depart', 'nombre_places',
             'montant_total', 'statut', 'statut_libelle', 'date_reservation',
         ]
+
+
+class SiegeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Siege
+        fields = ['numero', 'occupe']
