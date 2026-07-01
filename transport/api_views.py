@@ -157,9 +157,14 @@ def api_reserver_siege(request):
     voyage_id = request.data.get('voyage_id')
     numero_siege = request.data.get('numero_siege')
     nom = request.data.get('nom', '').strip()
+    prenom = request.data.get('prenom', '').strip()
     telephone = request.data.get('telephone', '').strip()
+    type_piece = request.data.get('type_piece', '').strip()
+    numero_piece = request.data.get('numero_piece', '').strip()
     if not voyage_id or not numero_siege or not nom or not telephone:
         return Response({'erreur': 'voyage_id, numero_siege, nom et telephone obligatoires.'}, status=400)
+    if not type_piece or not numero_piece:
+        return Response({'erreur': 'Piece d\'identite obligatoire (type et numero).'}, status=400)
     try:
         numero_siege = int(numero_siege)
     except (ValueError, TypeError):
@@ -178,7 +183,12 @@ def api_reserver_siege(request):
         if not client:
             client = Client.objects.create(nom=nom, telephone=telephone, email=user.email)
         client.user = user
-        client.save()
+    client.nom = nom
+    client.prenom = prenom
+    client.telephone = telephone
+    client.type_piece = type_piece
+    client.cni = numero_piece
+    client.save()
     try:
         reservation = Reservation.objects.create(
             client=client,

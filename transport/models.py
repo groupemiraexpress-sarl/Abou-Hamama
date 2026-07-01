@@ -139,13 +139,23 @@ class Client(models.Model):
         ('entreprise', 'Entreprise'),
     ]
 
+    TYPE_PIECE_CHOICES = [
+        ('cni', 'Carte nationale d\'identite'),
+        ('passeport', 'Passeport'),
+        ('acte_naissance', 'Acte de naissance'),
+        ('carte_pro', 'Carte professionnelle'),
+        ('permis', 'Permis de conduire'),
+        ('autre', 'Autre piece'),
+    ]
+
     user = models.OneToOneField('auth.User', on_delete=models.SET_NULL, null=True, blank=True, related_name='client', help_text="Compte de connexion lie a cette fiche client (app mobile)")
     nom = models.CharField(max_length=100)
     prenom = models.CharField(max_length=100, blank=True)
     telephone = models.CharField(max_length=20, unique=True)
     email = models.EmailField(blank=True)
     type_client = models.CharField(max_length=20, choices=TYPE_CHOICES, default='particulier')
-    cni = models.CharField(max_length=50, blank=True, help_text="Numero de carte d'identite")
+    type_piece = models.CharField(max_length=20, choices=TYPE_PIECE_CHOICES, blank=True, help_text="Type de piece d'identite")
+    cni = models.CharField(max_length=50, blank=True, help_text="Numero de la piece d'identite")
     ville_residence = models.CharField(max_length=50, blank=True)
     date_inscription = models.DateTimeField(auto_now_add=True)
     nombre_voyages = models.IntegerField(default=0, help_text="Nombre total de voyages effectues")
