@@ -52,6 +52,10 @@ class ReservationSerializer(serializers.ModelSerializer):
     ville_arrivee = serializers.CharField(source='voyage.trajet.ville_arrivee', read_only=True)
     date_depart = serializers.DateField(source='voyage.date_depart', read_only=True)
     heure_depart = serializers.TimeField(source='voyage.heure_depart', read_only=True)
+    numeros_sieges = serializers.SerializerMethodField()
+
+    def get_numeros_sieges(self, obj):
+        return list(obj.sieges.order_by('numero').values_list('numero', flat=True))
 
     class Meta:
         model = Reservation
@@ -59,6 +63,7 @@ class ReservationSerializer(serializers.ModelSerializer):
             'numero_reservation', 'ville_depart', 'ville_arrivee',
             'date_depart', 'heure_depart', 'nombre_places',
             'montant_total', 'statut', 'statut_libelle', 'date_reservation',
+            'numeros_sieges',
         ]
 
 
