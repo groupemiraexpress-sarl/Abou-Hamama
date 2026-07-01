@@ -185,10 +185,16 @@ def api_reserver_siege(request):
         client.user = user
     client.nom = nom
     client.prenom = prenom
-    client.telephone = telephone
     client.type_piece = type_piece
     client.cni = numero_piece
-    client.save()
+    # Mettre a jour le telephone seulement s'il n'appartient pas deja a un autre client
+    autre = Client.objects.filter(telephone=telephone).exclude(pk=client.pk).first()
+    if not autre:
+        client.telephone = telephone
+    try:
+        client.save()
+    except Exception:
+        return Response({'erreur': 'Ce numero de telephone est deja utilise par un autre compte.'}, status=400)
     try:
         reservation = Reservation.objects.create(
             client=client,
