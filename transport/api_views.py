@@ -104,6 +104,21 @@ def api_sieges_voyage(request, voyage_id):
     return Response(SiegeSerializer(sieges, many=True).data)
 
 
+def _get_ou_cree_client_du_compte(user):
+    """Retourne la fiche Client rattachee au compte connecte (la cree si besoin)."""
+    client = Client.objects.filter(user=user).first()
+    if not client:
+        # Chercher par email, sinon creer une fiche minimale pour le compte
+        client = Client.objects.create(
+            nom=user.username,
+            telephone="compte-" + str(user.id),
+            email=user.email,
+        )
+        client.user = user
+        client.save()
+    return client
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def api_reserver(request):
@@ -125,18 +140,14 @@ def api_reserver(request):
         return Response({'erreur': 'Voyage introuvable.'}, status=404)
     if nombre_places > voyage.places_disponibles:
         return Response({'erreur': 'Pas assez de places disponibles.'}, status=400)
-    client = Client.objects.filter(user=user).first()
-    if not client:
-        client = Client.objects.filter(telephone=telephone).first()
-        if not client:
-            client = Client.objects.create(nom=nom, telephone=telephone, email=user.email)
-        client.user = user
-        client.save()
+    client = _get_ou_cree_client_du_compte(user)
     try:
         reservation = Reservation.objects.create(
             client=client,
             voyage=voyage,
             nombre_places=nombre_places,
+            voyageur_nom=nom,
+            voyageur_telephone=telephone,
             statut='en_attente',
         )
     except ValueError as e:
@@ -177,29 +188,17 @@ def api_reserver_siege(request):
         return Response({'erreur': 'Siege introuvable.'}, status=404)
     if siege.occupe:
         return Response({'erreur': 'Ce siege est deja occupe.'}, status=400)
-    client = Client.objects.filter(user=user).first()
-    if not client:
-        client = Client.objects.filter(telephone=telephone).first()
-        if not client:
-            client = Client.objects.create(nom=nom, telephone=telephone, email=user.email)
-        client.user = user
-    client.nom = nom
-    client.prenom = prenom
-    client.type_piece = type_piece
-    client.cni = numero_piece
-    # Mettre a jour le telephone seulement s'il n'appartient pas deja a un autre client
-    autre = Client.objects.filter(telephone=telephone).exclude(pk=client.pk).first()
-    if not autre:
-        client.telephone = telephone
-    try:
-        client.save()
-    except Exception:
-        return Response({'erreur': 'Ce numero de telephone est deja utilise par un autre compte.'}, status=400)
+    client = _get_ou_cree_client_du_compte(user)
     try:
         reservation = Reservation.objects.create(
             client=client,
             voyage=voyage,
             nombre_places=1,
+            voyageur_nom=nom,
+            voyageur_prenom=prenom,
+            voyageur_telephone=telephone,
+            voyageur_type_piece=type_piece,
+            voyageur_numero_piece=numero_piece,
             statut='en_attente',
         )
     except ValueError as e:
@@ -211,6 +210,7 @@ def api_reserver_siege(request):
         'message': 'Siege reserve avec succes.',
         'numero_reservation': reservation.numero_reservation,
         'numero_siege': siege.numero,
+        'voyageur': nom,
         'montant_total': reservation.montant_total,
         'statut': reservation.statut,
     }, status=201)
