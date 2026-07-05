@@ -71,12 +71,65 @@ def api_inscription(request):
 @permission_classes([IsAuthenticated])
 def api_mon_profil(request):
     user = request.user
+    client = Client.objects.filter(user=user).first()
     return Response({
-        'id': user.id,
         'username': user.username,
         'email': user.email,
+        'nom': client.nom if client else '',
+        'prenom': client.prenom if client else '',
+        'telephone': client.telephone if (client and not client.telephone.startswith('compte-')) else '',
         'date_inscription': user.date_joined,
     })
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def api_modifier_profil(request):
+    user = request.user
+    nom = request.data.get('nom', '').strip()
+    prenom = request.data.get('prenom', '').strip()
+    telephone = request.data.get('telephone', '').strip()
+    email = request.data.get('email', '').strip()
+
+    client = Client.objects.filter(user=user).first()
+    if not client:
+        client = Client.objects.create(nom=nom or user.username, telephone="compte-" + str(user.id), email=user.email)
+        client.user = user
+
+    if nom:
+        client.nom = nom
+    client.prenom = prenom
+    if telephone:
+        autre = Client.objects.filter(telephone=telephone).exclude(pk=client.pk).first()
+        if autre:
+            return Response({'erreur': 'Ce numero est deja utilise par un autre compte.'}, status=400)
+        client.telephone = telephone
+    if email:
+        client.email = email
+        user.email = email
+        user.save()
+    try:
+        client.save()
+    except Exception:
+        return Response({'erreur': 'Impossible d\'enregistrer le profil.'}, status=400)
+    return Response({'message': 'Profil mis a jour avec succes.'})
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def api_changer_mot_de_passe(request):
+    user = request.user
+    ancien = request.data.get('ancien', '')
+    nouveau = request.data.get('nouveau', '')
+    if not ancien or not nouveau:
+        return Response({'erreur': 'Ancien et nouveau mot de passe obligatoires.'}, status=400)
+    if not user.check_password(ancien):
+        return Response({'erreur': 'Ancien mot de passe incorrect.'}, status=400)
+    if len(nouveau) < 6:
+        return Response({'erreur': 'Nouveau mot de passe trop court (min 6).'}, status=400)
+    user.set_password(nouveau)
+    user.save()
+    return Response({'message': 'Mot de passe change avec succes.'})
 
 
 @api_view(['GET'])
@@ -105,10 +158,8 @@ def api_sieges_voyage(request, voyage_id):
 
 
 def _get_ou_cree_client_du_compte(user):
-    """Retourne la fiche Client rattachee au compte connecte (la cree si besoin)."""
     client = Client.objects.filter(user=user).first()
     if not client:
-        # Chercher par email, sinon creer une fiche minimale pour le compte
         client = Client.objects.create(
             nom=user.username,
             telephone="compte-" + str(user.id),
