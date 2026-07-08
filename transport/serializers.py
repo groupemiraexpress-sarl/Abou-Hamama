@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Colis, TransfertArgent, Voyage, Reservation, Siege
+from .models import Colis, TransfertArgent, Voyage, Reservation, Siege, Promotion
 
 
 class ColisSerializer(serializers.ModelSerializer):
@@ -76,3 +76,19 @@ class SiegeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Siege
         fields = ['numero', 'occupe']
+
+
+class PromotionSerializer(serializers.ModelSerializer):
+    image_url = serializers.SerializerMethodField()
+
+    def get_image_url(self, obj):
+        if obj.image:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.image.url)
+            return obj.image.url
+        return None
+
+    class Meta:
+        model = Promotion
+        fields = ['id', 'titre', 'texte', 'image_url', 'date_debut', 'date_fin']

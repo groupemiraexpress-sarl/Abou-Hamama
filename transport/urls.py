@@ -56,6 +56,7 @@ urlpatterns = [
 
     # API (pour la future application mobile)
     path('api/voyages/', api_views.api_voyages, name='api_voyages'),
+    path('api/promotions/', api_views.api_promotions, name='api_promotions'),
     path('api/colis/<str:code_suivi>/', api_views.api_suivi_colis, name='api_suivi_colis'),
     path('api/transfert/<str:code_transfert>/', api_views.api_suivi_transfert, name='api_suivi_transfert'),
 

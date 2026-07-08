@@ -439,3 +439,20 @@ class Siege(models.Model):
     class Meta:
         ordering = ['voyage', 'numero']
         unique_together = ['voyage', 'numero']
+
+class Promotion(models.Model):
+    titre = models.CharField(max_length=120, help_text="Titre de la promotion")
+    texte = models.TextField(help_text="Description de la promotion")
+    image = models.ImageField(upload_to='promotions/', null=True, blank=True, help_text="Image de la promotion")
+    date_debut = models.DateField(help_text="Date de debut de validite")
+    date_fin = models.DateField(help_text="Date de fin de validite")
+    actif = models.BooleanField(default=True, help_text="Decochez pour masquer")
+    date_creation = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.titre
+
+    class Meta:
+        verbose_name = "Promotion"
+        verbose_name_plural = "Promotions"
+        ordering = ['-date_creation']

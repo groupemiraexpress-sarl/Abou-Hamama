@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (
     Compagnie, Agence, Bus, Chauffeur, Trajet, Voyage,
     Client, Reservation, Colis, Employe, TransfertArgent,
-    Entretien, PleinCarburant
+    Entretien, PleinCarburant, Promotion
 )
 
 
@@ -146,3 +146,11 @@ class PleinCarburantAdmin(admin.ModelAdmin):
     search_fields = ('bus__immatriculation',)
     ordering = ('-date_plein',)
     autocomplete_fields = ('bus', 'voyage', 'cree_par')
+
+
+@admin.register(Promotion)
+class PromotionAdmin(admin.ModelAdmin):
+    list_display = ('titre', 'date_debut', 'date_fin', 'actif')
+    list_filter = ('actif',)
+    search_fields = ('titre', 'texte')
+    ordering = ('-date_creation',)

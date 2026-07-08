@@ -9,8 +9,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 
-from .models import Voyage, Colis, TransfertArgent, Client, Reservation, Siege
-from .serializers import VoyageSerializer, ColisSerializer, TransfertArgentSerializer, ReservationSerializer, SiegeSerializer
+from .models import Voyage, Colis, TransfertArgent, Client, Reservation, Siege, Promotion
+from .serializers import VoyageSerializer, ColisSerializer, TransfertArgentSerializer, ReservationSerializer, SiegeSerializer, PromotionSerializer
 
 
 @api_view(['GET'])
@@ -295,3 +295,14 @@ def api_mes_billets(request):
         'voyage', 'voyage__trajet'
     ).order_by('-date_reservation')
     return Response(ReservationSerializer(reservations, many=True).data)
+
+
+@api_view(['GET'])
+def api_promotions(request):
+    aujourd_hui = timezone.now().date()
+    promotions = Promotion.objects.filter(
+        actif=True,
+        date_debut__lte=aujourd_hui,
+        date_fin__gte=aujourd_hui,
+    )
+    return Response(PromotionSerializer(promotions, many=True, context={'request': request}).data)
