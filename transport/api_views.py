@@ -41,19 +41,33 @@ def api_suivi_transfert(request, code_transfert):
 @api_view(['POST'])
 def api_inscription(request):
     username = request.data.get('username', '').strip()
-    email = request.data.get('email', '').strip()
+    email = request.data.get('email', '').strip().lower()
+    telephone = request.data.get('telephone', '').strip()
     password = request.data.get('password', '')
     if not username or not password:
         return Response({'erreur': 'Nom et mot de passe obligatoires.'}, status=400)
     if not email:
         return Response({'erreur': 'Email obligatoire.'}, status=400)
+    if not telephone:
+        return Response({'erreur': 'Numero de telephone obligatoire.'}, status=400)
     if len(password) < 6:
         return Response({'erreur': 'Mot de passe trop court (min 6).'}, status=400)
     if User.objects.filter(username=username).exists():
-        return Response({'erreur': 'Nom deja pris.'}, status=400)
+        return Response({'erreur': 'Ce nom d\'utilisateur est deja pris.'}, status=400)
+    if User.objects.filter(email__iexact=email).exists():
+        return Response({'erreur': 'Un compte existe deja avec cet email.'}, status=400)
+    if Client.objects.filter(telephone=telephone).exists():
+        return Response({'erreur': 'Un compte existe deja avec ce numero de telephone.'}, status=400)
+
     user = User.objects.create_user(username=username, email=email, password=password)
     user.is_active = False
     user.save()
+
+    # Creer la fiche client avec le vrai numero
+    client = Client.objects.create(nom=username, telephone=telephone, email=email)
+    client.user = user
+    client.save()
+
     uid = urlsafe_base64_encode(force_bytes(user.pk))
     token = default_token_generator.make_token(user)
     lien = settings.SITE_URL + '/api/valider-email/' + uid + '/' + token + '/'
@@ -105,6 +119,9 @@ def api_modifier_profil(request):
             return Response({'erreur': 'Ce numero est deja utilise par un autre compte.'}, status=400)
         client.telephone = telephone
     if email:
+        autre_user = User.objects.filter(email__iexact=email).exclude(pk=user.pk).first()
+        if autre_user:
+            return Response({'erreur': 'Cet email est deja utilise par un autre compte.'}, status=400)
         client.email = email
         user.email = email
         user.save()
