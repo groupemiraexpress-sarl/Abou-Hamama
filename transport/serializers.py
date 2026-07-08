@@ -91,4 +91,4 @@ class PromotionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Promotion
-        fields = ['id', 'titre', 'texte', 'image_url', 'date_debut', 'date_fin']
+        fields = ['id', 'titre', 'texte', 'image_url', 'date_debut', 'date_fin', 'service']

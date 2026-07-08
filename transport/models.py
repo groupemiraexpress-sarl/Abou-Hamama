@@ -448,6 +448,7 @@ class Promotion(models.Model):
     date_fin = models.DateField(help_text="Date de fin de validite")
     actif = models.BooleanField(default=True, help_text="Decochez pour masquer")
     date_creation = models.DateTimeField(auto_now_add=True)
+    service = models.CharField(max_length=20, choices=[('voyage', 'Reservation de voyage'), ('colis', 'Envoi de colis'), ('transfert', "Transfert d'argent"), ('aucun', 'Aucun')], default='aucun', help_text="Vers quel service renvoie la promotion")
 
     def __str__(self):
         return self.titre
