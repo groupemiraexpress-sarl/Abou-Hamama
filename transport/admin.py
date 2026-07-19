@@ -158,8 +158,43 @@ class PromotionAdmin(admin.ModelAdmin):
 
 @admin.register(DemandeColis)
 class DemandeColisAdmin(admin.ModelAdmin):
-    list_display = ('numero_demande', 'expediteur_nom', 'destinataire_nom', 'agence_depart', 'agence_arrivee', 'poids_estime', 'statut', 'date_demande')
+    list_display = ('numero_demande', 'expediteur_nom', 'destinataire_nom', 'agence_depart', 'agence_arrivee', 'poids_estime', 'poids_reel', 'prix', 'statut', 'date_demande')
     list_filter = ('statut', 'agence_depart', 'agence_arrivee')
     search_fields = ('numero_demande', 'expediteur_nom', 'expediteur_telephone', 'destinataire_nom')
-    list_editable = ('statut',)
+    list_editable = ('poids_reel', 'prix', 'statut')
     ordering = ('-date_demande',)
+    actions = ['valider_et_creer_colis']
+
+    @admin.action(description="Valider et creer le colis")
+    def valider_et_creer_colis(self, request, queryset):
+        crees = 0
+        ignorees = 0
+        for demande in queryset:
+            if demande.statut != 'en_attente':
+                ignorees += 1
+                continue
+            if not demande.poids_reel or not demande.prix:
+                ignorees += 1
+                continue
+            compagnie = demande.agence_depart.compagnie
+            colis = Colis.objects.create(
+                compagnie=compagnie,
+                expediteur_nom=demande.expediteur_nom,
+                expediteur_telephone=demande.expediteur_telephone,
+                destinataire_nom=demande.destinataire_nom,
+                destinataire_telephone=demande.destinataire_telephone,
+                agence_depart=demande.agence_depart,
+                agence_arrivee=demande.agence_arrivee,
+                description=demande.description,
+                poids_kg=demande.poids_reel,
+                prix=demande.prix,
+                statut='enregistre',
+            )
+            demande.colis = colis
+            demande.statut = 'validee'
+            demande.save()
+            crees += 1
+        if crees:
+            self.message_user(request, f"{crees} colis cree(s) avec succes.")
+        if ignorees:
+            self.message_user(request, f"{ignorees} demande(s) ignoree(s) : deja traitee ou poids/prix manquant.", level='warning')

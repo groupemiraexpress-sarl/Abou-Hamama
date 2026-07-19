@@ -476,6 +476,8 @@ class DemandeColis(models.Model):
     description = models.CharField(max_length=200)
     poids_estime = models.FloatField(help_text="Poids estime en kg")
     valeur_declaree = models.IntegerField(default=0, help_text="Valeur declaree en FCFA")
+    poids_reel = models.FloatField(null=True, blank=True, help_text="Poids reel pese a l'agence (kg)")
+    prix = models.IntegerField(null=True, blank=True, help_text="Prix fixe par l'agence (FCFA)")
     statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='en_attente')
     colis = models.ForeignKey('Colis', on_delete=models.SET_NULL, null=True, blank=True, related_name='demande_origine')
     date_demande = models.DateTimeField(auto_now_add=True)
