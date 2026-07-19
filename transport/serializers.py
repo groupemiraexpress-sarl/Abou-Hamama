@@ -104,17 +104,25 @@ class DemandeColisSerializer(serializers.ModelSerializer):
     statut_libelle = serializers.CharField(source='get_statut_display', read_only=True)
     agence_depart_nom = serializers.CharField(source='agence_depart.__str__', read_only=True)
     agence_arrivee_nom = serializers.CharField(source='agence_arrivee.__str__', read_only=True)
+    code_suivi = serializers.SerializerMethodField()
+
+    def get_code_suivi(self, obj):
+        return obj.colis.code_suivi if obj.colis else None
 
     class Meta:
         model = DemandeColis
-        fields = ['numero_demande', 'expediteur_nom', 'expediteur_telephone', 'destinataire_nom', 'destinataire_telephone', 'agence_depart_nom', 'agence_arrivee_nom', 'description', 'poids_estime', 'valeur_declaree', 'statut', 'statut_libelle', 'date_demande']
+        fields = ['numero_demande', 'expediteur_nom', 'expediteur_telephone', 'destinataire_nom', 'destinataire_telephone', 'agence_depart_nom', 'agence_arrivee_nom', 'description', 'poids_estime', 'valeur_declaree', 'statut', 'statut_libelle', 'date_demande', 'code_suivi']
 
 
 class DemandeTransfertSerializer(serializers.ModelSerializer):
     statut_libelle = serializers.CharField(source='get_statut_display', read_only=True)
     agence_depart_nom = serializers.CharField(source='agence_depart.__str__', read_only=True)
     agence_retrait_nom = serializers.CharField(source='agence_retrait.__str__', read_only=True)
+    code_suivi = serializers.SerializerMethodField()
+
+    def get_code_suivi(self, obj):
+        return obj.transfert.code_transfert if obj.transfert else None
 
     class Meta:
         model = DemandeTransfert
-        fields = ['numero_demande', 'expediteur_nom', 'expediteur_telephone', 'beneficiaire_nom', 'beneficiaire_telephone', 'agence_depart_nom', 'agence_retrait_nom', 'montant', 'frais', 'statut', 'statut_libelle', 'date_demande']
+        fields = ['numero_demande', 'expediteur_nom', 'expediteur_telephone', 'beneficiaire_nom', 'beneficiaire_telephone', 'agence_depart_nom', 'agence_retrait_nom', 'montant', 'frais', 'statut', 'statut_libelle', 'date_demande', 'code_suivi']
