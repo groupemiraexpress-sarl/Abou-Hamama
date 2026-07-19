@@ -9,8 +9,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 
-from .models import Voyage, Colis, TransfertArgent, Client, Reservation, Siege, Promotion
-from .serializers import VoyageSerializer, ColisSerializer, TransfertArgentSerializer, ReservationSerializer, SiegeSerializer, PromotionSerializer
+from .models import Voyage, Colis, TransfertArgent, Client, Reservation, Siege, Promotion, DemandeColis, Agence
+from .serializers import VoyageSerializer, ColisSerializer, TransfertArgentSerializer, ReservationSerializer, SiegeSerializer, PromotionSerializer, DemandeColisSerializer, AgenceSerializer
 
 
 @api_view(['GET'])
@@ -306,3 +306,65 @@ def api_promotions(request):
         date_fin__gte=aujourd_hui,
     )
     return Response(PromotionSerializer(promotions, many=True, context={'request': request}).data)
+
+
+@api_view(['GET'])
+def api_agences(request):
+    agences = Agence.objects.filter(actif=True).order_by('ville', 'nom')
+    return Response(AgenceSerializer(agences, many=True).data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def api_creer_demande_colis(request):
+    user = request.user
+    expediteur_nom = request.data.get('expediteur_nom', '').strip()
+    expediteur_telephone = request.data.get('expediteur_telephone', '').strip()
+    destinataire_nom = request.data.get('destinataire_nom', '').strip()
+    destinataire_telephone = request.data.get('destinataire_telephone', '').strip()
+    agence_depart_id = request.data.get('agence_depart')
+    agence_arrivee_id = request.data.get('agence_arrivee')
+    description = request.data.get('description', '').strip()
+    poids_estime = request.data.get('poids_estime')
+    valeur_declaree = request.data.get('valeur_declaree', 0)
+
+    if not expediteur_nom or not expediteur_telephone or not destinataire_nom or not destinataire_telephone:
+        return Response({'erreur': 'Informations expediteur et destinataire obligatoires.'}, status=400)
+    if not agence_depart_id or not agence_arrivee_id:
+        return Response({'erreur': 'Agences de depart et arrivee obligatoires.'}, status=400)
+    if not description or not poids_estime:
+        return Response({'erreur': 'Description et poids obligatoires.'}, status=400)
+
+    agence_depart = Agence.objects.filter(id=agence_depart_id).first()
+    agence_arrivee = Agence.objects.filter(id=agence_arrivee_id).first()
+    if not agence_depart or not agence_arrivee:
+        return Response({'erreur': 'Agence introuvable.'}, status=404)
+
+    client = Client.objects.filter(user=user).first()
+
+    demande = DemandeColis.objects.create(
+        client=client,
+        expediteur_nom=expediteur_nom,
+        expediteur_telephone=expediteur_telephone,
+        destinataire_nom=destinataire_nom,
+        destinataire_telephone=destinataire_telephone,
+        agence_depart=agence_depart,
+        agence_arrivee=agence_arrivee,
+        description=description,
+        poids_estime=float(poids_estime),
+        valeur_declaree=int(valeur_declaree or 0),
+    )
+    return Response({
+        'message': 'Demande enregistree.',
+        'numero_demande': demande.numero_demande,
+    }, status=201)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def api_mes_demandes_colis(request):
+    client = Client.objects.filter(user=request.user).first()
+    if not client:
+        return Response([])
+    demandes = DemandeColis.objects.filter(client=client).order_by('-date_demande')
+    return Response(DemandeColisSerializer(demandes, many=True).data)

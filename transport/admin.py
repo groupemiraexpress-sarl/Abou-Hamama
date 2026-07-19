@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (
     Compagnie, Agence, Bus, Chauffeur, Trajet, Voyage,
     Client, Reservation, Colis, Employe, TransfertArgent,
-    Entretien, PleinCarburant, Promotion
+    Entretien, PleinCarburant, Promotion, DemandeColis
 )
 
 
@@ -154,3 +154,12 @@ class PromotionAdmin(admin.ModelAdmin):
     list_filter = ('actif',)
     search_fields = ('titre', 'texte')
     ordering = ('-date_creation',)
+
+
+@admin.register(DemandeColis)
+class DemandeColisAdmin(admin.ModelAdmin):
+    list_display = ('numero_demande', 'expediteur_nom', 'destinataire_nom', 'agence_depart', 'agence_arrivee', 'poids_estime', 'statut', 'date_demande')
+    list_filter = ('statut', 'agence_depart', 'agence_arrivee')
+    search_fields = ('numero_demande', 'expediteur_nom', 'expediteur_telephone', 'destinataire_nom')
+    list_editable = ('statut',)
+    ordering = ('-date_demande',)

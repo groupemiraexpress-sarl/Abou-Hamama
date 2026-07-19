@@ -457,3 +457,42 @@ class Promotion(models.Model):
         verbose_name = "Promotion"
         verbose_name_plural = "Promotions"
         ordering = ['-date_creation']
+
+    
+class DemandeColis(models.Model):
+    STATUT_CHOICES = [
+        ('en_attente', 'En attente de validation'),
+        ('validee', 'Validee (colis cree)'),
+        ('annulee', 'Annulee'),
+    ]
+    numero_demande = models.CharField(max_length=20, unique=True, blank=True)
+    client = models.ForeignKey('Client', on_delete=models.SET_NULL, null=True, blank=True, related_name='demandes_colis')
+    expediteur_nom = models.CharField(max_length=100)
+    expediteur_telephone = models.CharField(max_length=20)
+    destinataire_nom = models.CharField(max_length=100)
+    destinataire_telephone = models.CharField(max_length=20)
+    agence_depart = models.ForeignKey('Agence', on_delete=models.PROTECT, related_name='demandes_colis_depart')
+    agence_arrivee = models.ForeignKey('Agence', on_delete=models.PROTECT, related_name='demandes_colis_arrivee')
+    description = models.CharField(max_length=200)
+    poids_estime = models.FloatField(help_text="Poids estime en kg")
+    valeur_declaree = models.IntegerField(default=0, help_text="Valeur declaree en FCFA")
+    statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='en_attente')
+    colis = models.ForeignKey('Colis', on_delete=models.SET_NULL, null=True, blank=True, related_name='demande_origine')
+    date_demande = models.DateTimeField(auto_now_add=True)
+    notes = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"{self.numero_demande} - {self.expediteur_nom}"
+
+    def save(self, *args, **kwargs):
+        if not self.numero_demande:
+            from datetime import datetime
+            annee = datetime.now().year
+            dernier = DemandeColis.objects.filter(numero_demande__startswith=f"DC-{annee}-").count()
+            self.numero_demande = f"DC-{annee}-{dernier + 1:04d}"
+        super().save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = "Demande de colis"
+        verbose_name_plural = "Demandes de colis"
+        ordering = ['-date_demande']
