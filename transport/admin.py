@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (
     Compagnie, Agence, Bus, Chauffeur, Trajet, Voyage,
     Client, Reservation, Colis, Employe, TransfertArgent,
-    Entretien, PleinCarburant, Promotion, DemandeColis
+    Entretien, PleinCarburant, Promotion, DemandeColis, DemandeTransfert
 )
 
 
@@ -198,3 +198,47 @@ class DemandeColisAdmin(admin.ModelAdmin):
             self.message_user(request, f"{crees} colis cree(s) avec succes.")
         if ignorees:
             self.message_user(request, f"{ignorees} demande(s) ignoree(s) : deja traitee ou poids/prix manquant.", level='warning')
+
+
+@admin.register(DemandeTransfert)
+class DemandeTransfertAdmin(admin.ModelAdmin):
+    list_display = ('numero_demande', 'expediteur_nom', 'beneficiaire_nom', 'agence_depart', 'agence_retrait', 'montant', 'frais', 'statut', 'date_demande')
+    list_filter = ('statut', 'agence_depart', 'agence_retrait')
+    search_fields = ('numero_demande', 'expediteur_nom', 'expediteur_telephone', 'beneficiaire_nom')
+    list_editable = ('frais',)
+    ordering = ('-date_demande',)
+    readonly_fields = ('numero_demande', 'date_demande', 'transfert')
+    actions = ['valider_et_creer_transfert']
+
+    @admin.action(description="Valider et creer le transfert")
+    def valider_et_creer_transfert(self, request, queryset):
+        crees = 0
+        ignorees = 0
+        for demande in queryset:
+            if demande.statut != 'en_attente':
+                ignorees += 1
+                continue
+            if demande.frais is None:
+                ignorees += 1
+                continue
+            compagnie = demande.agence_depart.compagnie
+            transfert = TransfertArgent.objects.create(
+                compagnie=compagnie,
+                expediteur_nom=demande.expediteur_nom,
+                expediteur_telephone=demande.expediteur_telephone,
+                beneficiaire_nom=demande.beneficiaire_nom,
+                beneficiaire_telephone=demande.beneficiaire_telephone,
+                agence_depart=demande.agence_depart,
+                agence_retrait=demande.agence_retrait,
+                montant=demande.montant,
+                frais=demande.frais,
+                statut='en_attente',
+            )
+            demande.transfert = transfert
+            demande.statut = 'validee'
+            demande.save()
+            crees += 1
+        if crees:
+            self.message_user(request, f"{crees} transfert(s) cree(s) avec succes.")
+        if ignorees:
+            self.message_user(request, f"{ignorees} demande(s) ignoree(s) : deja validee, ou frais manquants.", level='warning')

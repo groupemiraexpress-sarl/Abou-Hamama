@@ -9,8 +9,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 
-from .models import Voyage, Colis, TransfertArgent, Client, Reservation, Siege, Promotion, DemandeColis, Agence
-from .serializers import VoyageSerializer, ColisSerializer, TransfertArgentSerializer, ReservationSerializer, SiegeSerializer, PromotionSerializer, DemandeColisSerializer, AgenceSerializer
+from .models import Voyage, Colis, TransfertArgent, Client, Reservation, Siege, Promotion, DemandeColis, Agence, DemandeTransfert
+from .serializers import VoyageSerializer, ColisSerializer, TransfertArgentSerializer, ReservationSerializer, SiegeSerializer, PromotionSerializer, DemandeColisSerializer, AgenceSerializer, DemandeTransfertSerializer
 
 
 @api_view(['GET'])
@@ -368,3 +368,62 @@ def api_mes_demandes_colis(request):
         return Response([])
     demandes = DemandeColis.objects.filter(client=client).order_by('-date_demande')
     return Response(DemandeColisSerializer(demandes, many=True).data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def api_creer_demande_transfert(request):
+    user = request.user
+    expediteur_nom = request.data.get('expediteur_nom', '').strip()
+    expediteur_telephone = request.data.get('expediteur_telephone', '').strip()
+    beneficiaire_nom = request.data.get('beneficiaire_nom', '').strip()
+    beneficiaire_telephone = request.data.get('beneficiaire_telephone', '').strip()
+    agence_depart_id = request.data.get('agence_depart')
+    agence_retrait_id = request.data.get('agence_retrait')
+    montant = request.data.get('montant')
+
+    if not expediteur_nom or not expediteur_telephone or not beneficiaire_nom or not beneficiaire_telephone:
+        return Response({'erreur': 'Informations expediteur et beneficiaire obligatoires.'}, status=400)
+    if not agence_depart_id or not agence_retrait_id:
+        return Response({'erreur': 'Agences de depart et de retrait obligatoires.'}, status=400)
+    if not montant:
+        return Response({'erreur': 'Montant obligatoire.'}, status=400)
+
+    try:
+        montant = int(montant)
+    except (ValueError, TypeError):
+        return Response({'erreur': 'Montant invalide.'}, status=400)
+    if montant < 1:
+        return Response({'erreur': 'Montant invalide.'}, status=400)
+
+    agence_depart = Agence.objects.filter(id=agence_depart_id).first()
+    agence_retrait = Agence.objects.filter(id=agence_retrait_id).first()
+    if not agence_depart or not agence_retrait:
+        return Response({'erreur': 'Agence introuvable.'}, status=404)
+
+    client = Client.objects.filter(user=user).first()
+
+    demande = DemandeTransfert.objects.create(
+        client=client,
+        expediteur_nom=expediteur_nom,
+        expediteur_telephone=expediteur_telephone,
+        beneficiaire_nom=beneficiaire_nom,
+        beneficiaire_telephone=beneficiaire_telephone,
+        agence_depart=agence_depart,
+        agence_retrait=agence_retrait,
+        montant=montant,
+    )
+    return Response({
+        'message': 'Demande enregistree.',
+        'numero_demande': demande.numero_demande,
+    }, status=201)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def api_mes_demandes_transfert(request):
+    client = Client.objects.filter(user=request.user).first()
+    if not client:
+        return Response([])
+    demandes = DemandeTransfert.objects.filter(client=client).order_by('-date_demande')
+    return Response(DemandeTransfertSerializer(demandes, many=True).data)

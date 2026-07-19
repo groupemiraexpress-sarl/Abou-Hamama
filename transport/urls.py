@@ -60,6 +60,8 @@ urlpatterns = [
     path('api/agences/', api_views.api_agences, name='api_agences'),
     path('api/demande-colis/', api_views.api_creer_demande_colis, name='api_creer_demande_colis'),
     path('api/mes-demandes-colis/', api_views.api_mes_demandes_colis, name='api_mes_demandes_colis'),
+    path('api/demande-transfert/', api_views.api_creer_demande_transfert, name='api_creer_demande_transfert'),
+    path('api/mes-demandes-transfert/', api_views.api_mes_demandes_transfert, name='api_mes_demandes_transfert'),
     path('api/colis/<str:code_suivi>/', api_views.api_suivi_colis, name='api_suivi_colis'),
     path('api/transfert/<str:code_transfert>/', api_views.api_suivi_transfert, name='api_suivi_transfert'),
 
