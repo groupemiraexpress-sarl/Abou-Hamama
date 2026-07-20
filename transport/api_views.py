@@ -427,3 +427,49 @@ def api_mes_demandes_transfert(request):
         return Response([])
     demandes = DemandeTransfert.objects.filter(client=client).order_by('-date_demande')
     return Response(DemandeTransfertSerializer(demandes, many=True).data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def api_payer_reservation(request):
+    """Simulation de paiement mobile money (aucun argent reel n'est encaisse)."""
+    user = request.user
+    numeros = request.data.get('numeros_reservation', [])
+    operateur = request.data.get('operateur', '').strip()
+    telephone = request.data.get('telephone', '').strip()
+
+    if not numeros:
+        return Response({'erreur': 'Aucune reservation a payer.'}, status=400)
+    if not operateur or not telephone:
+        return Response({'erreur': 'Operateur et numero obligatoires.'}, status=400)
+
+    client = Client.objects.filter(user=user).first()
+    if not client:
+        return Response({'erreur': 'Client introuvable.'}, status=404)
+
+    from django.utils import timezone as tz
+    payees = 0
+    total = 0
+    for numero in numeros:
+        reservation = Reservation.objects.filter(
+            numero_reservation=numero,
+            client=client,
+            statut='en_attente',
+        ).first()
+        if reservation:
+            reservation.statut = 'payee'
+            reservation.mode_paiement = 'mobile_money'
+            reservation.date_paiement = tz.now()
+            reservation.notes = (reservation.notes or '') + f"\n[SIMULATION] Paiement {operateur} depuis {telephone}"
+            reservation.save()
+            payees += 1
+            total += reservation.montant_total
+
+    if payees == 0:
+        return Response({'erreur': 'Aucune reservation en attente trouvee.'}, status=404)
+
+    return Response({
+        'message': 'Paiement enregistre (simulation).',
+        'reservations_payees': payees,
+        'montant_total': total,
+    }, status=200)
