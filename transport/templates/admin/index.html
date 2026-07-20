@@ -1,0 +1,254 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <style>
+    .stats-zone { margin-bottom: 30px; }
+    .stats-titre {
+      font-size: 15px;
+      font-weight: bold;
+      color: #1F3864;
+      margin: 0 0 12px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .stats-grille {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+    .stat-carte {
+      background: #ffffff;
+      border: 1px solid #dfe3e8;
+      border-left: 4px solid #1F3864;
+      border-radius: 6px;
+      padding: 14px 16px;
+    }
+    .stat-carte.alerte { border-left-color: #b45309; }
+    .stat-carte.succes { border-left-color: #059669; }
+    .stat-valeur {
+      font-size: 26px;
+      font-weight: bold;
+      color: #1F3864;
+      line-height: 1.1;
+    }
+    .stat-carte.alerte .stat-valeur { color: #b45309; }
+    .stat-carte.succes .stat-valeur { color: #059669; }
+    .stat-label {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .groupe-metier { margin-bottom: 26px; }
+    .groupe-titre {
+      background: #1F3864;
+      color: #ffffff;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-radius: 6px 6px 0 0;
+      margin: 0;
+    }
+    .groupe-liste {
+      border: 1px solid #dfe3e8;
+      border-top: none;
+      border-radius: 0 0 6px 6px;
+      overflow: hidden;
+      background: #ffffff;
+    }
+    .groupe-ligne {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-bottom: 1px solid #eef0f3;
+    }
+    .groupe-ligne:last-child { border-bottom: none; }
+    .groupe-ligne a.nom { font-weight: 600; text-decoration: none; }
+    .groupe-actions a { font-size: 12px; margin-left: 12px; text-decoration: none; }
+  </style>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+
+  <div class="stats-zone">
+    <h2 class="stats-titre">Aujourd'hui</h2>
+    <div class="stats-grille">
+      <div class="stat-carte">
+        <div class="stat-valeur">{{ stats.voyages_aujourd_hui }}</div>
+        <div class="stat-label">Voyages du jour</div>
+      </div>
+      <div class="stat-carte">
+        <div class="stat-valeur">{{ stats.reservations_jour }}</div>
+        <div class="stat-label">Reservations du jour</div>
+      </div>
+      <div class="stat-carte succes">
+        <div class="stat-valeur">{{ stats.recette_jour }}</div>
+        <div class="stat-label">Recette du jour (FCFA)</div>
+      </div>
+      <div class="stat-carte">
+        <div class="stat-valeur">{{ stats.voyages_a_venir }}</div>
+        <div class="stat-label">Voyages a venir</div>
+      </div>
+    </div>
+
+    <h2 class="stats-titre">A traiter</h2>
+    <div class="stats-grille">
+      <div class="stat-carte alerte">
+        <div class="stat-valeur">{{ stats.demandes_colis_attente }}</div>
+        <div class="stat-label">Demandes colis en attente</div>
+      </div>
+      <div class="stat-carte alerte">
+        <div class="stat-valeur">{{ stats.demandes_transfert_attente }}</div>
+        <div class="stat-label">Demandes transfert en attente</div>
+      </div>
+      <div class="stat-carte alerte">
+        <div class="stat-valeur">{{ stats.reservations_attente }}</div>
+        <div class="stat-label">Reservations non payees</div>
+      </div>
+      <div class="stat-carte alerte">
+        <div class="stat-valeur">{{ stats.transferts_attente }}</div>
+        <div class="stat-label">Transferts a retirer</div>
+      </div>
+    </div>
+
+    <h2 class="stats-titre">Activite</h2>
+    <div class="stats-grille">
+      <div class="stat-carte">
+        <div class="stat-valeur">{{ stats.colis_transit }}</div>
+        <div class="stat-label">Colis en transit</div>
+      </div>
+      <div class="stat-carte">
+        <div class="stat-valeur">{{ stats.colis_arrives }}</div>
+        <div class="stat-label">Colis arrives</div>
+      </div>
+      <div class="stat-carte">
+        <div class="stat-valeur">{{ stats.bus_service }}</div>
+        <div class="stat-label">Bus en service</div>
+      </div>
+      <div class="stat-carte">
+        <div class="stat-valeur">{{ stats.total_clients }}</div>
+        <div class="stat-label">Clients actifs</div>
+      </div>
+    </div>
+  </div>
+
+{% if app_list %}
+  {% for app in app_list %}
+    {% if app.app_label == 'transport' %}
+
+      <div class="groupe-metier">
+        <h2 class="groupe-titre">Exploitation</h2>
+        <div class="groupe-liste">
+          {% for model in app.models %}
+            {% if model.object_name == 'Voyage' or model.object_name == 'Reservation' or model.object_name == 'Trajet' or model.object_name == 'Bus' or model.object_name == 'Chauffeur' or model.object_name == 'Siege' %}
+              <div class="groupe-ligne">
+                <a class="nom" href="{{ model.admin_url }}">{{ model.name }}</a>
+                <span class="groupe-actions">
+                  {% if model.add_url %}<a href="{{ model.add_url }}">+ Ajouter</a>{% endif %}
+                  {% if model.admin_url %}<a href="{{ model.admin_url }}">Modifier</a>{% endif %}
+                </span>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="groupe-metier">
+        <h2 class="groupe-titre">Colis et transferts</h2>
+        <div class="groupe-liste">
+          {% for model in app.models %}
+            {% if model.object_name == 'Colis' or model.object_name == 'TransfertArgent' or model.object_name == 'DemandeColis' or model.object_name == 'DemandeTransfert' %}
+              <div class="groupe-ligne">
+                <a class="nom" href="{{ model.admin_url }}">{{ model.name }}</a>
+                <span class="groupe-actions">
+                  {% if model.add_url %}<a href="{{ model.add_url }}">+ Ajouter</a>{% endif %}
+                  {% if model.admin_url %}<a href="{{ model.admin_url }}">Modifier</a>{% endif %}
+                </span>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="groupe-metier">
+        <h2 class="groupe-titre">Clients et personnel</h2>
+        <div class="groupe-liste">
+          {% for model in app.models %}
+            {% if model.object_name == 'Client' or model.object_name == 'Employe' %}
+              <div class="groupe-ligne">
+                <a class="nom" href="{{ model.admin_url }}">{{ model.name }}</a>
+                <span class="groupe-actions">
+                  {% if model.add_url %}<a href="{{ model.add_url }}">+ Ajouter</a>{% endif %}
+                  {% if model.admin_url %}<a href="{{ model.admin_url }}">Modifier</a>{% endif %}
+                </span>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="groupe-metier">
+        <h2 class="groupe-titre">Maintenance du parc</h2>
+        <div class="groupe-liste">
+          {% for model in app.models %}
+            {% if model.object_name == 'Entretien' or model.object_name == 'PleinCarburant' %}
+              <div class="groupe-ligne">
+                <a class="nom" href="{{ model.admin_url }}">{{ model.name }}</a>
+                <span class="groupe-actions">
+                  {% if model.add_url %}<a href="{{ model.add_url }}">+ Ajouter</a>{% endif %}
+                  {% if model.admin_url %}<a href="{{ model.admin_url }}">Modifier</a>{% endif %}
+                </span>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="groupe-metier">
+        <h2 class="groupe-titre">Configuration</h2>
+        <div class="groupe-liste">
+          {% for model in app.models %}
+            {% if model.object_name == 'Compagnie' or model.object_name == 'Agence' or model.object_name == 'Promotion' %}
+              <div class="groupe-ligne">
+                <a class="nom" href="{{ model.admin_url }}">{{ model.name }}</a>
+                <span class="groupe-actions">
+                  {% if model.add_url %}<a href="{{ model.add_url }}">+ Ajouter</a>{% endif %}
+                  {% if model.admin_url %}<a href="{{ model.admin_url }}">Modifier</a>{% endif %}
+                </span>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+    {% else %}
+
+      <div class="groupe-metier">
+        <h2 class="groupe-titre">{{ app.name }}</h2>
+        <div class="groupe-liste">
+          {% for model in app.models %}
+            <div class="groupe-ligne">
+              <a class="nom" href="{{ model.admin_url }}">{{ model.name }}</a>
+              <span class="groupe-actions">
+                {% if model.add_url %}<a href="{{ model.add_url }}">+ Ajouter</a>{% endif %}
+                {% if model.admin_url %}<a href="{{ model.admin_url }}">Modifier</a>{% endif %}
+              </span>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+</div>
+{% endblock %}

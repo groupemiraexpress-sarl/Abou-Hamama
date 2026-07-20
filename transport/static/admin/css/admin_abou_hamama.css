@@ -1,0 +1,105 @@
+:root {
+  --primary: #1F3864;
+  --secondary: #1F3864;
+  --accent: #FECB00;
+  --primary-fg: #ffffff;
+  --header-color: #ffffff;
+  --header-branding-color: #ffffff;
+  --header-bg: #1F3864;
+  --header-link-color: #ffffff;
+  --breadcrumbs-bg: #2a4a7f;
+  --breadcrumbs-fg: #ffffff;
+  --breadcrumbs-link-fg: #cdd5e0;
+  --link-fg: #1F3864;
+  --link-hover-color: #2a4a7f;
+  --button-bg: #1F3864;
+  --button-hover-bg: #2a4a7f;
+  --default-button-bg: #1F3864;
+  --default-button-hover-bg: #2a4a7f;
+  --close-button-bg: #6b7280;
+  --delete-button-bg: #b91c1c;
+  --object-tools-bg: #1F3864;
+  --object-tools-hover-bg: #2a4a7f;
+}
+
+#header {
+  background: #1F3864;
+  color: #ffffff;
+}
+
+#branding h1 {
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+#branding h1 a:link, #branding h1 a:visited {
+  color: #ffffff;
+}
+
+div.breadcrumbs {
+  background: #2a4a7f;
+  color: #ffffff;
+}
+
+div.breadcrumbs a {
+  color: #cdd5e0;
+}
+
+.module h2, .module caption, .inline-group h2 {
+  background: #1F3864;
+  color: #ffffff;
+}
+
+.button, input[type=submit], input[type=button], .submit-row input {
+  background: #1F3864;
+  color: #ffffff;
+  border-radius: 6px;
+}
+
+.button:hover, input[type=submit]:hover, input[type=button]:hover {
+  background: #2a4a7f;
+}
+
+.submit-row input.default {
+  background: #1F3864;
+}
+
+.submit-row input.default:hover {
+  background: #2a4a7f;
+}
+
+a:link, a:visited {
+  color: #1F3864;
+}
+
+.selector-chosen h2 {
+  background: #1F3864;
+}
+
+.object-tools a:link, .object-tools a:visited {
+  background: #1F3864;
+  border-radius: 6px;
+}
+
+.object-tools a:hover {
+  background: #2a4a7f;
+}
+
+#changelist-filter h2 {
+  background: #1F3864;
+  color: #ffffff;
+}
+
+.paginator a:link, .paginator a:visited {
+  background: #1F3864;
+  color: #ffffff;
+  border-radius: 4px;
+}
+
+#user-tools a {
+  border-bottom-color: #FECB00;
+}
+
+.dashboard .module table th {
+  background: #f4f6f9;
+}

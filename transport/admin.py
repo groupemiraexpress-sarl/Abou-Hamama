@@ -5,6 +5,10 @@ from .models import (
     Entretien, PleinCarburant, Promotion, DemandeColis, DemandeTransfert
 )
 
+admin.site.site_header = "Express Abou Hamama"
+admin.site.site_title = "Gestion Abou Hamama"
+admin.site.index_title = "Tableau de bord"
+
 
 @admin.register(Compagnie)
 class CompagnieAdmin(admin.ModelAdmin):
@@ -242,3 +246,18 @@ class DemandeTransfertAdmin(admin.ModelAdmin):
             self.message_user(request, f"{crees} transfert(s) cree(s) avec succes.")
         if ignorees:
             self.message_user(request, f"{ignorees} demande(s) ignoree(s) : deja validee, ou frais manquants.", level='warning')
+
+
+            
+from django.contrib.admin import AdminSite
+from .admin_stats import statistiques_tableau_bord
+
+_ancien_index = AdminSite.index
+
+
+def _index_avec_stats(self, request, extra_context=None):
+    extra_context = extra_context or {}
+    extra_context['stats'] = statistiques_tableau_bord()
+    return _ancien_index(self, request, extra_context)
+
+AdminSite.index = _index_avec_stats

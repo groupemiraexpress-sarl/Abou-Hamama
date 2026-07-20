@@ -1,0 +1,13 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'admin/css/admin_abou_hamama.css' %}">
+{% endblock %}
+
+{% block title %}{{ title }} | Express Abou Hamama{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">Express Abou Hamama</a></h1>
+{% endblock %}
