@@ -82,4 +82,6 @@ urlpatterns = [
     path('api/voyage/<int:voyage_id>/sieges/', api_views.api_sieges_voyage, name='api_sieges_voyage'),
     path('api/reserver-siege/', api_views.api_reserver_siege, name='api_reserver_siege'),
     path('api/payer-reservation/', api_views.api_payer_reservation, name='api_payer_reservation'),
+    path('api/annuler-demande-colis/', api_views.api_annuler_demande_colis, name='api_annuler_demande_colis'),
+    path('api/annuler-demande-transfert/', api_views.api_annuler_demande_transfert, name='api_annuler_demande_transfert'),
 ]

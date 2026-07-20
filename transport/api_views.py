@@ -473,3 +473,41 @@ def api_payer_reservation(request):
         'reservations_payees': payees,
         'montant_total': total,
     }, status=200)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def api_annuler_demande_colis(request):
+    numero = request.data.get('numero_demande', '').strip()
+    if not numero:
+        return Response({'erreur': 'Numero de demande obligatoire.'}, status=400)
+    client = Client.objects.filter(user=request.user).first()
+    if not client:
+        return Response({'erreur': 'Client introuvable.'}, status=404)
+    demande = DemandeColis.objects.filter(numero_demande=numero, client=client).first()
+    if not demande:
+        return Response({'erreur': 'Demande introuvable.'}, status=404)
+    if demande.statut != 'en_attente':
+        return Response({'erreur': 'Cette demande ne peut plus etre annulee.'}, status=400)
+    demande.statut = 'annulee'
+    demande.save()
+    return Response({'message': 'Demande annulee.'})
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def api_annuler_demande_transfert(request):
+    numero = request.data.get('numero_demande', '').strip()
+    if not numero:
+        return Response({'erreur': 'Numero de demande obligatoire.'}, status=400)
+    client = Client.objects.filter(user=request.user).first()
+    if not client:
+        return Response({'erreur': 'Client introuvable.'}, status=404)
+    demande = DemandeTransfert.objects.filter(numero_demande=numero, client=client).first()
+    if not demande:
+        return Response({'erreur': 'Demande introuvable.'}, status=404)
+    if demande.statut != 'en_attente':
+        return Response({'erreur': 'Cette demande ne peut plus etre annulee.'}, status=400)
+    demande.statut = 'annulee'
+    demande.save()
+    return Response({'message': 'Demande annulee.'})
