@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Colis, TransfertArgent, Voyage, Reservation, Siege, Promotion, DemandeColis, Agence, DemandeTransfert
+from .models import Colis, TransfertArgent, Voyage, Reservation, Siege, Promotion, DemandeColis, Agence, DemandeTransfert,  ArretLigne
 
 
 class ColisSerializer(serializers.ModelSerializer):
@@ -36,6 +36,25 @@ class VoyageSerializer(serializers.ModelSerializer):
     ville_depart = serializers.CharField(source='trajet.ville_depart', read_only=True)
     ville_arrivee = serializers.CharField(source='trajet.ville_arrivee', read_only=True)
     bus_immatriculation = serializers.CharField(source='bus.immatriculation', read_only=True)
+    ligne_nom = serializers.SerializerMethodField()
+    destinations = serializers.SerializerMethodField()
+
+    def get_ligne_nom(self, obj):
+        return obj.ligne.nom if obj.ligne else None
+
+    def get_destinations(self, obj):
+        if not obj.ligne:
+            return []
+        arrets = obj.ligne.arrets.all().order_by('ordre')
+        return [
+            {
+                'ordre': a.ordre,
+                'ville': a.agence.ville,
+                'agence_id': a.agence.id,
+                'prix': a.prix_depuis_depart,
+            }
+            for a in arrets
+        ]
 
     class Meta:
         model = Voyage
@@ -43,6 +62,7 @@ class VoyageSerializer(serializers.ModelSerializer):
             'id', 'ville_depart', 'ville_arrivee',
             'date_depart', 'heure_depart', 'prix',
             'places_disponibles', 'bus_immatriculation', 'statut',
+            'ligne_nom', 'destinations',
         ]
 
 

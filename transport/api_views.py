@@ -240,6 +240,7 @@ def api_reserver_siege(request):
     telephone = request.data.get('telephone', '').strip()
     type_piece = request.data.get('type_piece', '').strip()
     numero_piece = request.data.get('numero_piece', '').strip()
+    agence_destination_id = request.data.get('agence_destination')
     if not voyage_id or not numero_siege or not nom or not telephone:
         return Response({'erreur': 'voyage_id, numero_siege, nom et telephone obligatoires.'}, status=400)
     if not type_piece or not numero_piece:
@@ -258,6 +259,9 @@ def api_reserver_siege(request):
         return Response({'erreur': 'Ce siege est deja occupe.'}, status=400)
     client = _get_ou_cree_client_du_compte(user)
     try:
+        destination = None
+        if agence_destination_id:
+            destination = Agence.objects.filter(id=agence_destination_id).first()
         reservation = Reservation.objects.create(
             client=client,
             voyage=voyage,
@@ -267,8 +271,14 @@ def api_reserver_siege(request):
             voyageur_telephone=telephone,
             voyageur_type_piece=type_piece,
             voyageur_numero_piece=numero_piece,
+            agence_destination=destination,
             statut='en_attente',
         )
+        if destination and voyage.ligne:
+            arret = voyage.ligne.arrets.filter(agence=destination).first()
+            if arret and arret.prix_depuis_depart > 0:
+                reservation.montant_total = arret.prix_depuis_depart
+                reservation.save()
     except ValueError as e:
         return Response({'erreur': str(e)}, status=400)
     siege.occupe = True

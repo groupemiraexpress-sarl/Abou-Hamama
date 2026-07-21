@@ -1,8 +1,9 @@
 from django.contrib import admin
+from .admin_filtres import FiltreAgenceMixin
 from .models import (
     Compagnie, Agence, Bus, Chauffeur, Trajet, Voyage,
     Client, Reservation, Colis, Employe, TransfertArgent,
-    Entretien, PleinCarburant, Promotion, DemandeColis, DemandeTransfert
+    Entretien, PleinCarburant, Promotion, DemandeColis, DemandeTransfert, Ligne, ArretLigne
 )
 
 admin.site.site_header = "Express Abou Hamama"
@@ -74,7 +75,8 @@ class ClientAdmin(admin.ModelAdmin):
 
 
 @admin.register(Reservation)
-class ReservationAdmin(admin.ModelAdmin):
+class ReservationAdmin(FiltreAgenceMixin, admin.ModelAdmin):
+    champs_agence = ['agence']
     list_display = ('numero_reservation', 'client', 'voyage', 'nombre_places', 'montant_total', 'statut', 'mode_paiement', 'date_reservation')
     list_filter = ('statut', 'mode_paiement', 'voyage__date_depart', 'agence')
     search_fields = ('numero_reservation', 'client__nom', 'client__telephone')
@@ -84,7 +86,8 @@ class ReservationAdmin(admin.ModelAdmin):
 
 
 @admin.register(Colis)
-class ColisAdmin(admin.ModelAdmin):
+class ColisAdmin(FiltreAgenceMixin, admin.ModelAdmin):
+    champs_agence = ['agence_depart', 'agence_arrivee']
     list_display = ('code_suivi', 'expediteur_nom', 'destinataire_nom', 'agence_depart', 'agence_arrivee', 'poids_kg', 'prix', 'statut', 'date_enregistrement')
     list_filter = ('statut', 'agence_depart', 'agence_arrivee', 'compagnie')
     search_fields = ('code_suivi', 'expediteur_nom', 'expediteur_telephone', 'destinataire_nom', 'destinataire_telephone')
@@ -94,7 +97,8 @@ class ColisAdmin(admin.ModelAdmin):
 
 
 @admin.register(Employe)
-class EmployeAdmin(admin.ModelAdmin):
+class EmployeAdmin(FiltreAgenceMixin, admin.ModelAdmin):
+    champs_agence = ['agence']
     list_display = ('nom', 'prenom', 'poste', 'agence', 'telephone', 'compte_lie', 'compagnie', 'actif')
     list_filter = ('poste', 'actif', 'compagnie', 'agence')
     search_fields = ('nom', 'prenom', 'telephone', 'cni')
@@ -125,7 +129,8 @@ class EmployeAdmin(admin.ModelAdmin):
 
 
 @admin.register(TransfertArgent)
-class TransfertArgentAdmin(admin.ModelAdmin):
+class TransfertArgentAdmin(FiltreAgenceMixin, admin.ModelAdmin):
+    champs_agence = ['agence_depart', 'agence_retrait']
     list_display = ('code_transfert', 'expediteur_nom', 'beneficiaire_nom', 'montant', 'frais', 'agence_depart', 'agence_retrait', 'statut', 'date_envoi')
     list_filter = ('statut', 'agence_depart', 'agence_retrait', 'compagnie')
     search_fields = ('code_transfert', 'expediteur_nom', 'expediteur_telephone', 'beneficiaire_nom', 'beneficiaire_telephone', 'code_retrait')
@@ -161,7 +166,8 @@ class PromotionAdmin(admin.ModelAdmin):
 
 
 @admin.register(DemandeColis)
-class DemandeColisAdmin(admin.ModelAdmin):
+class DemandeColisAdmin(FiltreAgenceMixin, admin.ModelAdmin):
+    champs_agence = ['agence_depart', 'agence_arrivee']
     list_display = ('numero_demande', 'expediteur_nom', 'destinataire_nom', 'agence_depart', 'agence_arrivee', 'poids_estime', 'poids_reel', 'prix', 'statut', 'date_demande')
     list_filter = ('statut', 'agence_depart', 'agence_arrivee')
     search_fields = ('numero_demande', 'expediteur_nom', 'expediteur_telephone', 'destinataire_nom')
@@ -205,7 +211,8 @@ class DemandeColisAdmin(admin.ModelAdmin):
 
 
 @admin.register(DemandeTransfert)
-class DemandeTransfertAdmin(admin.ModelAdmin):
+class DemandeTransfertAdmin(FiltreAgenceMixin, admin.ModelAdmin):
+    champs_agence = ['agence_depart', 'agence_retrait']
     list_display = ('numero_demande', 'expediteur_nom', 'beneficiaire_nom', 'agence_depart', 'agence_retrait', 'montant', 'frais', 'statut', 'date_demande')
     list_filter = ('statut', 'agence_depart', 'agence_retrait')
     search_fields = ('numero_demande', 'expediteur_nom', 'expediteur_telephone', 'beneficiaire_nom')
@@ -261,3 +268,24 @@ def _index_avec_stats(self, request, extra_context=None):
     return _ancien_index(self, request, extra_context)
 
 AdminSite.index = _index_avec_stats
+
+
+class ArretLigneInline(admin.TabularInline):
+    model = ArretLigne
+    extra = 3
+    fields = ('ordre', 'agence', 'prix_depuis_depart')
+    ordering = ('ordre',)
+
+
+@admin.register(Ligne)
+class LigneAdmin(admin.ModelAdmin):
+    list_display = ('nom', 'compagnie', 'apercu_villes', 'actif')
+    list_filter = ('compagnie', 'actif')
+    search_fields = ('nom',)
+    list_editable = ('actif',)
+    inlines = [ArretLigneInline]
+
+    @admin.display(description="Villes desservies")
+    def apercu_villes(self, obj):
+        villes = obj.villes()
+        return " -> ".join(villes) if villes else "(aucun arret)"

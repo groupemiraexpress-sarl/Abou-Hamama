@@ -107,6 +107,7 @@ class Voyage(models.Model):
     ]
 
     trajet = models.ForeignKey(Trajet, on_delete=models.PROTECT, related_name='voyages')
+    ligne = models.ForeignKey('Ligne', on_delete=models.PROTECT, related_name='voyages', null=True, blank=True, help_text="Ligne desservie (si le voyage dessert plusieurs villes)")
     bus = models.ForeignKey(Bus, on_delete=models.PROTECT, related_name='voyages')
     chauffeur = models.ForeignKey(Chauffeur, on_delete=models.PROTECT, related_name='voyages')
     date_depart = models.DateField()
@@ -196,6 +197,7 @@ class Reservation(models.Model):
     voyageur_telephone = models.CharField(max_length=20, blank=True, help_text="Telephone du voyageur")
     voyageur_type_piece = models.CharField(max_length=20, blank=True, help_text="Type de piece du voyageur")
     voyageur_numero_piece = models.CharField(max_length=50, blank=True, help_text="Numero de piece du voyageur")
+    agence_destination = models.ForeignKey('Agence', on_delete=models.SET_NULL, null=True, blank=True, related_name='reservations_destination', help_text="Ou le voyageur descend (si ligne multi-arrets)")
     montant_total = models.IntegerField(default=0, blank=True, help_text="Calcule automatiquement")
     statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='en_attente')
     mode_paiement = models.CharField(max_length=20, choices=MODE_PAIEMENT_CHOICES, blank=True)
@@ -536,3 +538,38 @@ class DemandeTransfert(models.Model):
         verbose_name = "Demande de transfert"
         verbose_name_plural = "Demandes de transfert"
         ordering = ['-date_demande']
+
+
+        
+class Ligne(models.Model):
+    compagnie = models.ForeignKey('Compagnie', on_delete=models.CASCADE, related_name='lignes')
+    nom = models.CharField(max_length=120, help_text="Ex : Ndjamena - Abeche (axe Est)")
+    actif = models.BooleanField(default=True)
+    date_creation = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.nom
+
+    def villes(self):
+        return [a.agence.ville for a in self.arrets.all().order_by('ordre')]
+
+    class Meta:
+        verbose_name = "Ligne"
+        verbose_name_plural = "Lignes"
+        ordering = ['nom']
+
+
+class ArretLigne(models.Model):
+    ligne = models.ForeignKey('Ligne', on_delete=models.CASCADE, related_name='arrets')
+    agence = models.ForeignKey('Agence', on_delete=models.PROTECT, related_name='arrets')
+    ordre = models.IntegerField(help_text="1 = ville de depart, puis 2, 3, 4...")
+    prix_depuis_depart = models.IntegerField(default=0, help_text="Prix en FCFA depuis la ville de depart")
+
+    def __str__(self):
+        return f"{self.ordre}. {self.agence.ville} ({self.prix_depuis_depart} FCFA)"
+
+    class Meta:
+        verbose_name = "Arret de ligne"
+        verbose_name_plural = "Arrets de ligne"
+        ordering = ['ligne', 'ordre']
+        unique_together = ['ligne', 'ordre']
