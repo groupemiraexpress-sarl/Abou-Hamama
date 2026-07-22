@@ -197,7 +197,9 @@ class Reservation(models.Model):
     voyageur_telephone = models.CharField(max_length=20, blank=True, help_text="Telephone du voyageur")
     voyageur_type_piece = models.CharField(max_length=20, blank=True, help_text="Type de piece du voyageur")
     voyageur_numero_piece = models.CharField(max_length=50, blank=True, help_text="Numero de piece du voyageur")
-    agence_destination = models.ForeignKey('Agence', on_delete=models.SET_NULL, null=True, blank=True, related_name='reservations_destination', help_text="Ou le voyageur descend (si ligne multi-arrets)")
+    siege = models.ForeignKey('Siege', on_delete=models.PROTECT, null=True, blank=True, related_name='reservations', help_text="Siege physique reserve")
+    arret_montee = models.ForeignKey('ArretLigne', on_delete=models.SET_NULL, null=True, blank=True, related_name='reservations_montee', help_text="Arret ou le voyageur monte (si ligne multi-arrets)")
+    arret_descente = models.ForeignKey('ArretLigne', on_delete=models.SET_NULL, null=True, blank=True, related_name='reservations_descente', help_text="Arret ou le voyageur descend (si ligne multi-arrets)")
     montant_total = models.IntegerField(default=0, blank=True, help_text="Calcule automatiquement")
     statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='en_attente')
     mode_paiement = models.CharField(max_length=20, choices=MODE_PAIEMENT_CHOICES, blank=True)
@@ -210,12 +212,6 @@ class Reservation(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            if self.nombre_places > self.voyage.places_disponibles:
-                raise ValueError(
-                    f"Pas assez de places ! Demande : {self.nombre_places}, "
-                    f"Disponible : {self.voyage.places_disponibles}"
-                )
-
             if not self.numero_reservation:
                 from datetime import datetime
                 annee = datetime.now().year
@@ -225,10 +221,19 @@ class Reservation(models.Model):
                 nouveau_numero = dernier_numero + 1
                 self.numero_reservation = f"RES-{annee}-{nouveau_numero:04d}"
 
-            self.montant_total = self.voyage.prix * self.nombre_places
+            if self.arret_montee and self.arret_descente:
+                self.montant_total = self.arret_descente.prix_depuis_depart - self.arret_montee.prix_depuis_depart
+            else:
+                self.montant_total = self.voyage.prix * self.nombre_places
 
-            self.voyage.places_disponibles -= self.nombre_places
-            self.voyage.save()
+            if not self.voyage.ligne_id:
+                if self.nombre_places > self.voyage.places_disponibles:
+                    raise ValueError(
+                        f"Pas assez de places ! Demande : {self.nombre_places}, "
+                        f"Disponible : {self.voyage.places_disponibles}"
+                    )
+                self.voyage.places_disponibles -= self.nombre_places
+                self.voyage.save()
 
         super().save(*args, **kwargs)
 
@@ -431,12 +436,26 @@ class PleinCarburant(models.Model):
 class Siege(models.Model):
     voyage = models.ForeignKey('Voyage', on_delete=models.CASCADE, related_name='sieges')
     numero = models.IntegerField(help_text="Numero du siege")
-    occupe = models.BooleanField(default=False)
-    reservation = models.ForeignKey('Reservation', on_delete=models.SET_NULL, null=True, blank=True, related_name='sieges')
 
     def __str__(self):
-        etat = "occupe" if self.occupe else "libre"
-        return f"Siege {self.numero} - {self.voyage} ({etat})"
+        return f"Siege {self.numero} - {self.voyage}"
+
+    def est_libre(self, ordre_montee, ordre_descente):
+        """
+        Verifie si ce siege est libre sur le segment [ordre_montee, ordre_descente[.
+        Deux segments se chevauchent si depart_A < arrivee_B ET depart_B < arrivee_A.
+        """
+        reservations_actives = self.reservations.exclude(statut__in=['annulee', 'remboursee'])
+
+        if not self.voyage.ligne_id:
+            return not reservations_actives.exists()
+
+        for resa in reservations_actives:
+            depart_existant = resa.arret_montee.ordre if resa.arret_montee else 1
+            arrivee_existante = resa.arret_descente.ordre if resa.arret_descente else 999999
+            if depart_existant < ordre_descente and ordre_montee < arrivee_existante:
+                return False
+        return True
 
     class Meta:
         ordering = ['voyage', 'numero']

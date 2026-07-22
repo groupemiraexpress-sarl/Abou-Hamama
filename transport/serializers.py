@@ -48,6 +48,7 @@ class VoyageSerializer(serializers.ModelSerializer):
         arrets = obj.ligne.arrets.all().order_by('ordre')
         return [
             {
+                'id': a.id,
                 'ordre': a.ordre,
                 'ville': a.agence.ville,
                 'agence_id': a.agence.id,
@@ -74,9 +75,17 @@ class ReservationSerializer(serializers.ModelSerializer):
     heure_depart = serializers.TimeField(source='voyage.heure_depart', read_only=True)
     numeros_sieges = serializers.SerializerMethodField()
     voyageur = serializers.SerializerMethodField()
+    ville_montee = serializers.SerializerMethodField()
+    ville_descente = serializers.SerializerMethodField()
 
     def get_numeros_sieges(self, obj):
-        return list(obj.sieges.order_by('numero').values_list('numero', flat=True))
+        return [obj.siege.numero] if obj.siege else []
+
+    def get_ville_montee(self, obj):
+        return obj.arret_montee.agence.ville if obj.arret_montee else None
+
+    def get_ville_descente(self, obj):
+        return obj.arret_descente.agence.ville if obj.arret_descente else None
 
     def get_voyageur(self, obj):
         nom_complet = (obj.voyageur_prenom + ' ' + obj.voyageur_nom).strip()
@@ -89,13 +98,14 @@ class ReservationSerializer(serializers.ModelSerializer):
             'date_depart', 'heure_depart', 'nombre_places',
             'montant_total', 'statut', 'statut_libelle', 'date_reservation',
             'numeros_sieges', 'voyageur', 'voyageur_telephone',
+            'ville_montee', 'ville_descente',
         ]
 
 
 class SiegeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Siege
-        fields = ['numero', 'occupe']
+        fields = ['id', 'numero']
 
 
 class PromotionSerializer(serializers.ModelSerializer):

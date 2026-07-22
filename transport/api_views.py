@@ -170,8 +170,37 @@ def api_sieges_voyage(request, voyage_id):
     voyage = Voyage.objects.filter(id=voyage_id).first()
     if not voyage:
         return Response({'erreur': 'Voyage introuvable.'}, status=404)
+
+    ordre_montee = request.GET.get('arret_montee')
+    ordre_descente = request.GET.get('arret_descente')
+
     sieges = Siege.objects.filter(voyage=voyage).order_by('numero')
-    return Response(SiegeSerializer(sieges, many=True).data)
+
+    if voyage.ligne_id and ordre_montee and ordre_descente:
+        try:
+            ordre_montee = int(ordre_montee)
+            ordre_descente = int(ordre_descente)
+        except (ValueError, TypeError):
+            return Response({'erreur': 'arret_montee et arret_descente doivent etre des nombres.'}, status=400)
+        resultat = []
+        for siege in sieges:
+            resultat.append({
+                'id': siege.id,
+                'numero': siege.numero,
+                'occupe': not siege.est_libre(ordre_montee, ordre_descente),
+            })
+        return Response(resultat)
+
+    # Pas de ligne, ou arrets pas encore choisis : etat global du siege
+    resultat = []
+    for siege in sieges:
+        a_une_resa_active = siege.reservations.exclude(statut__in=['annulee', 'remboursee']).exists()
+        resultat.append({
+            'id': siege.id,
+            'numero': siege.numero,
+            'occupe': a_une_resa_active,
+        })
+    return Response(resultat)
 
 
 def _get_ou_cree_client_du_compte(user):
@@ -240,7 +269,9 @@ def api_reserver_siege(request):
     telephone = request.data.get('telephone', '').strip()
     type_piece = request.data.get('type_piece', '').strip()
     numero_piece = request.data.get('numero_piece', '').strip()
-    agence_destination_id = request.data.get('agence_destination')
+    arret_montee_id = request.data.get('arret_montee')
+    arret_descente_id = request.data.get('arret_descente')
+
     if not voyage_id or not numero_siege or not nom or not telephone:
         return Response({'erreur': 'voyage_id, numero_siege, nom et telephone obligatoires.'}, status=400)
     if not type_piece or not numero_piece:
@@ -249,41 +280,50 @@ def api_reserver_siege(request):
         numero_siege = int(numero_siege)
     except (ValueError, TypeError):
         return Response({'erreur': 'numero_siege doit etre un nombre.'}, status=400)
+
     voyage = Voyage.objects.filter(id=voyage_id).first()
     if not voyage:
         return Response({'erreur': 'Voyage introuvable.'}, status=404)
     siege = Siege.objects.filter(voyage=voyage, numero=numero_siege).first()
     if not siege:
         return Response({'erreur': 'Siege introuvable.'}, status=404)
-    if siege.occupe:
-        return Response({'erreur': 'Ce siege est deja occupe.'}, status=400)
+
+    arret_montee = None
+    arret_descente = None
+    if voyage.ligne_id:
+        if not arret_montee_id or not arret_descente_id:
+            return Response({'erreur': 'arret_montee et arret_descente obligatoires pour cette ligne.'}, status=400)
+        arret_montee = voyage.ligne.arrets.filter(id=arret_montee_id).first()
+        arret_descente = voyage.ligne.arrets.filter(id=arret_descente_id).first()
+        if not arret_montee or not arret_descente:
+            return Response({'erreur': 'Arret introuvable sur cette ligne.'}, status=404)
+        if arret_montee.ordre >= arret_descente.ordre:
+            return Response({'erreur': 'L\'arret de descente doit etre apres l\'arret de montee.'}, status=400)
+        if not siege.est_libre(arret_montee.ordre, arret_descente.ordre):
+            return Response({'erreur': 'Ce siege n\'est pas disponible sur ce trajet.'}, status=400)
+    else:
+        if siege.reservations.exclude(statut__in=['annulee', 'remboursee']).exists():
+            return Response({'erreur': 'Ce siege est deja occupe.'}, status=400)
+
     client = _get_ou_cree_client_du_compte(user)
     try:
-        destination = None
-        if agence_destination_id:
-            destination = Agence.objects.filter(id=agence_destination_id).first()
         reservation = Reservation.objects.create(
             client=client,
             voyage=voyage,
+            siege=siege,
             nombre_places=1,
             voyageur_nom=nom,
             voyageur_prenom=prenom,
             voyageur_telephone=telephone,
             voyageur_type_piece=type_piece,
             voyageur_numero_piece=numero_piece,
-            agence_destination=destination,
+            arret_montee=arret_montee,
+            arret_descente=arret_descente,
             statut='en_attente',
         )
-        if destination and voyage.ligne:
-            arret = voyage.ligne.arrets.filter(agence=destination).first()
-            if arret and arret.prix_depuis_depart > 0:
-                reservation.montant_total = arret.prix_depuis_depart
-                reservation.save()
     except ValueError as e:
         return Response({'erreur': str(e)}, status=400)
-    siege.occupe = True
-    siege.reservation = reservation
-    siege.save()
+
     return Response({
         'message': 'Siege reserve avec succes.',
         'numero_reservation': reservation.numero_reservation,
