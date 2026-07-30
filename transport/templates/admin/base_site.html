@@ -9,5 +9,10 @@
 {% block title %}{{ title }} | Express Abou Hamama{% endblock %}
 
 {% block branding %}
-<h1 id="site-name"><a href="{% url 'admin:index' %}">Express Abou Hamama</a></h1>
+<h1 id="site-name" style="float:none; width:100%; height:auto; line-height:normal; margin:0; padding:0; display:flex; justify-content:center;">
+  <a href="{% url 'admin:index' %}" style="float:none; display:flex !important; flex-direction:column; align-items:center; justify-content:center; gap:8px; color:#ffffff !important; text-align:center;">
+    <img src="{% static 'transport/logo_abou_hamama.png' %}" alt="Express Abou Hamama" class="logo-abou-hamama">
+    <span class="nom-abou-hamama">Express Abou Hamama</span>
+  </a>
+</h1>
 {% endblock %}

@@ -103,3 +103,120 @@ a:link, a:visited {
 .dashboard .module table th {
   background: #f4f6f9;
 }
+
+/* --- Logo, toutes les pages admin --- */
+.logo-abou-hamama {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.nom-abou-hamama {
+  font-size: 15px;
+  font-weight: bold;
+  color: #ffffff;
+  letter-spacing: 0.3px;
+}
+
+.login .nom-abou-hamama {
+  font-size: 18px;
+}
+
+/* --- Page de connexion --- */
+body.login {
+  background: linear-gradient(135deg, #1F3864 0%, #2a4a7f 60%, #1F3864 100%);
+  min-height: 100vh;
+}
+
+.login #header {
+  background: transparent;
+  box-shadow: none;
+  padding: 40px 0 20px 0;
+  display: flex;
+  justify-content: center;
+  min-height: auto;
+}
+
+.login #branding {
+  width: 100%;
+  max-width: 380px;
+  float: none;
+}
+
+.login .logo-abou-hamama {
+  width: 90px;
+  height: 90px;
+}
+
+.login #content {
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  padding: 30px 28px;
+  margin: 0 auto;
+  max-width: 380px;
+  overflow: hidden;
+}
+
+.login #content-main {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+}
+
+.login .form-row {
+  margin-bottom: 14px;
+}
+
+.login .form-row label {
+  color: #1F3864;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.login .form-row input {
+  box-sizing: border-box;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  padding: 10px 12px;
+  width: 100%;
+}
+
+.login .submit-row {
+  padding: 0;
+  margin: 20px 0 0 0;
+  text-align: left;
+}
+
+.login .submit-row input[type="submit"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  font-weight: bold;
+  border-radius: 8px;
+  border: none;
+}
+
+.login .errornote {
+  border-radius: 8px;
+  border-color: #b91c1c;
+}
+
+/* --- Page de deconnexion --- */
+.content a[href*="login"] {
+  display: inline-block;
+  background: #1F3864;
+  color: #ffffff !important;
+  padding: 10px 20px;
+  border-radius: 8px;
+  margin-top: 12px;
+  font-weight: bold;
+}
+
+.content a[href*="login"]:hover {
+  background: #2a4a7f;
+}
