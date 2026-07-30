@@ -171,3 +171,4 @@ else:
 
 # Adresse de base du site (pour construire les liens de validation)
 SITE_URL = os.environ.get('SITE_URL', 'http://127.0.0.1:8000')
+LOGOUT_REDIRECT_URL = '/admin/login/'
