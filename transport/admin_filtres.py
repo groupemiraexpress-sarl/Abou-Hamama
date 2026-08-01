@@ -1,14 +1,19 @@
 """
-Cloisonnement par agence pour l'admin Express Abou Hamama.
+Cloisonnement par agence et par employe pour l'admin Express Abou Hamama.
 
 Regle generale :
-  - superutilisateur      -> voit tout
-  - poste 'pdg'           -> voit tout
-  - employe avec agence   -> voit uniquement les operations de son agence
-  - employe sans agence   -> ne voit rien
+  - superutilisateur / poste 'pdg'      -> voit tout
+  - roles de terrain (guichetier,
+    agent colis, agent transfert)       -> voient uniquement ce qu'ils
+                                            ont personnellement cree
+  - les autres employes avec une agence -> voient tout ce qui se passe
+                                            dans leur agence
+  - employe sans agence                 -> ne voit rien
 """
-
 from django.db.models import Q
+
+# Postes qui ne voient que ce qu'ils ont eux-memes enregistre
+POSTES_PERSONNEL = ('guichetier', 'agent_colis', 'agent_transfert')
 
 
 def agence_de(user):
@@ -31,29 +36,64 @@ def voit_tout(user):
 
 class FiltreAgenceMixin:
     """
-    Mixin a ajouter aux ModelAdmin pour filtrer par agence.
+    Mixin a ajouter aux ModelAdmin pour filtrer par agence et/ou par createur.
 
-    Definir 'champs_agence' dans la classe :
-      champs_agence = ['agence']                        (un seul champ)
-      champs_agence = ['agence_depart', 'agence_arrivee']  (plusieurs)
+    champs_agence = ['agence']  ou  ['agence_depart', 'agence_arrivee']
+
+    champ_createur : nom du champ FK vers Employe qui a cree l'objet
+      (ex: 'cree_par'). Mettre None si le modele n'a pas cette notion
+      -> dans ce cas le filtre par agence s'applique toujours,
+      quel que soit le poste.
     """
-
     champs_agence = []
+    champ_createur = 'cree_par'
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
+        user = request.user
 
-        if voit_tout(request.user):
+        if voit_tout(user):
             return qs
 
-        agence = agence_de(request.user)
+        employe = getattr(user, 'employe', None)
+        agence = agence_de(user)
         if agence is None:
             return qs.none()
 
+        poste = employe.poste if employe else None
+
+        if self.champ_createur and poste in POSTES_PERSONNEL:
+            return qs.filter(**{self.champ_createur: employe})
+
         if not self.champs_agence:
             return qs
-
         condition = Q()
         for champ in self.champs_agence:
             condition |= Q(**{champ: agence})
         return qs.filter(condition)
+
+from django.contrib import admin
+
+
+class FiltreAgenceListFilter(admin.SimpleListFilter):
+    """
+    Filtre 'Agence' personnalise : ne propose que les agences
+    que l'utilisateur a le droit de voir (au lieu de toutes les agences).
+    A utiliser dans list_filter a la place du nom de champ brut 'agence'.
+    """
+    title = 'agence'
+    parameter_name = 'agence_id'
+
+    def lookups(self, request, model_admin):
+        from .models import Agence
+        if voit_tout(request.user):
+            agences = Agence.objects.filter(actif=True).order_by('ville', 'nom')
+        else:
+            agence = agence_de(request.user)
+            agences = Agence.objects.filter(id=agence.id) if agence else Agence.objects.none()
+        return [(a.id, str(a)) for a in agences]
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(agence_id=self.value())
+        return queryset

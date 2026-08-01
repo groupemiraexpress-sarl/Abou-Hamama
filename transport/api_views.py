@@ -1,3 +1,5 @@
+import math
+
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -9,7 +11,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 
-from .models import Voyage, Colis, TransfertArgent, Client, Reservation, Siege, Promotion, DemandeColis, Agence, DemandeTransfert
+from .models import Voyage, Colis, TransfertArgent, Client, Reservation, Siege, Promotion, DemandeColis, Agence, DemandeTransfert, Chauffeur, PositionBus
 from .serializers import VoyageSerializer, ColisSerializer, TransfertArgentSerializer, ReservationSerializer, SiegeSerializer, PromotionSerializer, DemandeColisSerializer, AgenceSerializer, DemandeTransfertSerializer
 
 
@@ -63,7 +65,6 @@ def api_inscription(request):
     user.is_active = False
     user.save()
 
-    # Creer la fiche client avec le vrai numero
     client = Client.objects.create(nom=username, telephone=telephone, email=email)
     client.user = user
     client.save()
@@ -191,7 +192,6 @@ def api_sieges_voyage(request, voyage_id):
             })
         return Response(resultat)
 
-    # Pas de ligne, ou arrets pas encore choisis : etat global du siege
     resultat = []
     for siege in sieges:
         a_une_resa_active = siege.reservations.exclude(statut__in=['annulee', 'remboursee']).exists()
@@ -561,3 +561,176 @@ def api_annuler_demande_transfert(request):
     demande.statut = 'annulee'
     demande.save()
     return Response({'message': 'Demande annulee.'})
+
+
+@api_view(['POST'])
+def api_connexion_chauffeur(request):
+    """
+    Connexion dediee aux chauffeurs (compte cree par le PDG uniquement).
+    Renvoie les memes tokens JWT que la connexion client, mais verifie
+    que le compte est bien lie a un Chauffeur.
+    """
+    username = request.data.get('username', '').strip()
+    password = request.data.get('password', '')
+    if not username or not password:
+        return Response({'erreur': 'Identifiant et mot de passe obligatoires.'}, status=400)
+
+    from django.contrib.auth import authenticate
+    user = authenticate(request, username=username, password=password)
+    if user is None:
+        return Response({'erreur': 'Identifiant ou mot de passe incorrect.'}, status=401)
+
+    chauffeur = Chauffeur.objects.filter(user=user).first()
+    if not chauffeur:
+        return Response({'erreur': 'Ce compte n\'est pas un compte chauffeur.'}, status=403)
+
+    from rest_framework_simplejwt.tokens import RefreshToken
+    refresh = RefreshToken.for_user(user)
+    return Response({
+        'access': str(refresh.access_token),
+        'refresh': str(refresh),
+        'chauffeur_id': chauffeur.id,
+        'nom': chauffeur.nom,
+        'prenom': chauffeur.prenom,
+    })
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def api_mes_voyages_chauffeur(request):
+    """Liste des voyages du jour et a venir assignes a ce chauffeur."""
+    chauffeur = Chauffeur.objects.filter(user=request.user).first()
+    if not chauffeur:
+        return Response({'erreur': 'Compte chauffeur introuvable.'}, status=404)
+
+    voyages = Voyage.objects.filter(
+        chauffeur=chauffeur,
+        date_depart__gte=timezone.now().date(),
+        statut__in=['programme', 'en_cours'],
+    ).select_related('trajet', 'bus').order_by('date_depart', 'heure_depart')
+
+    resultat = []
+    for v in voyages:
+        resultat.append({
+            'id': v.id,
+            'ville_depart': v.trajet.ville_depart,
+            'ville_arrivee': v.trajet.ville_arrivee,
+            'date_depart': v.date_depart,
+            'heure_depart': v.heure_depart,
+            'bus_immatriculation': v.bus.immatriculation,
+            'statut': v.statut,
+        })
+    return Response(resultat)
+
+
+def distance_km(lat1, lon1, lat2, lon2):
+    """Distance a vol d'oiseau entre deux points GPS, en kilometres."""
+    R = 6371
+    phi1 = math.radians(lat1)
+    phi2 = math.radians(lat2)
+    dphi = math.radians(lat2 - lat1)
+    dlambda = math.radians(lon2 - lon1)
+    a = math.sin(dphi / 2) ** 2 + math.cos(phi1) * math.cos(phi2) * math.sin(dlambda / 2) ** 2
+    return R * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def api_enregistrer_position(request):
+    """
+    Enregistre une position GPS pour un voyage en cours.
+    Appelee automatiquement par l'app chauffeur toutes les X secondes.
+    Marque automatiquement le voyage comme termine si le bus est
+    proche (moins de 2 km) de la ville d'arrivee.
+    """
+    chauffeur = Chauffeur.objects.filter(user=request.user).first()
+    if not chauffeur:
+        return Response({'erreur': 'Compte chauffeur introuvable.'}, status=404)
+
+    voyage_id = request.data.get('voyage_id')
+    latitude = request.data.get('latitude')
+    longitude = request.data.get('longitude')
+    vitesse = request.data.get('vitesse_kmh')
+
+    if not voyage_id or latitude is None or longitude is None:
+        return Response({'erreur': 'voyage_id, latitude et longitude obligatoires.'}, status=400)
+
+    voyage = Voyage.objects.filter(id=voyage_id, chauffeur=chauffeur).first()
+    if not voyage:
+        return Response({'erreur': 'Voyage introuvable ou non assigne a ce chauffeur.'}, status=404)
+
+    if voyage.statut == 'termine':
+        return Response({'erreur': 'Ce voyage est deja termine.'}, status=400)
+
+    try:
+        latitude = float(latitude)
+        longitude = float(longitude)
+        vitesse = float(vitesse) if vitesse is not None else None
+    except (ValueError, TypeError):
+        return Response({'erreur': 'Coordonnees invalides.'}, status=400)
+
+    PositionBus.objects.create(
+        voyage=voyage,
+        chauffeur=chauffeur,
+        latitude=latitude,
+        longitude=longitude,
+        vitesse_kmh=vitesse,
+    )
+
+    voyage_termine = False
+    if voyage.statut == 'programme':
+        voyage.statut = 'en_cours'
+        voyage.save()
+
+    import unicodedata
+
+    def normaliser(texte):
+        texte = unicodedata.normalize('NFD', texte)
+        return ''.join(c for c in texte if unicodedata.category(c) != 'Mn').lower().strip()
+
+    ville_cible = normaliser(voyage.trajet.ville_arrivee)
+    agence_arrivee = None
+    for a in Agence.objects.filter(latitude__isnull=False, longitude__isnull=False):
+        if normaliser(a.ville) == ville_cible:
+            agence_arrivee = a
+            break
+
+    if agence_arrivee:
+        d = distance_km(latitude, longitude, agence_arrivee.latitude, agence_arrivee.longitude)
+        if d <= 2:
+            voyage.statut = 'termine'
+            voyage.save()
+            voyage_termine = True
+
+    return Response({'message': 'Position enregistree.', 'voyage_termine': voyage_termine}, status=201)
+
+
+@api_view(['GET'])
+def api_positions_voyage(request, voyage_id):
+    """
+    Historique des positions d'un voyage. Accessible sans authentification
+    JWT car aussi consultee depuis la carte admin (session navigateur classique).
+    La securite reelle est que voyage_id est difficile a deviner en masse
+    et ne revele qu'une position GPS, pas de donnee client sensible.
+    """
+    """
+    Historique des positions d'un voyage (pour la carte en temps reel
+    dans l'admin : PDG, responsable, securite).
+    """
+    voyage = Voyage.objects.filter(id=voyage_id).first()
+    if not voyage:
+        return Response({'erreur': 'Voyage introuvable.'}, status=404)
+
+    positions = PositionBus.objects.filter(voyage=voyage).order_by('-horodatage')[:1]
+    if not positions:
+        return Response({'derniere_position': None})
+
+    p = positions[0]
+    return Response({
+        'derniere_position': {
+            'latitude': p.latitude,
+            'longitude': p.longitude,
+            'vitesse_kmh': p.vitesse_kmh,
+            'horodatage': p.horodatage,
+        }
+    })

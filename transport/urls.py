@@ -6,55 +6,20 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 app_name = 'transport'
 
 urlpatterns = [
-    # Espace client (public)
-    path('', views.accueil, name='accueil'),
-    path('suivi/', views.suivi, name='suivi'),
-    path('voyages/', views.recherche_voyage, name='recherche_voyage'),
-
-    # Espace employé (connexion requise)
-    path('espace/connexion/', views.connexion_employe, name='connexion'),
-    path('espace/deconnexion/', views.deconnexion_employe, name='deconnexion'),
-    path('espace/', views.tableau_bord, name='tableau_bord'),
-
-    # Guichetier — vente de billets
+    # Guichetier - vente de billets (connexion via admin Django)
     path('espace/vendre-billet/', views.vendre_billet, name='vendre_billet'),
+    path('espace/mon-profil/', views.mon_profil, name='mon_profil'),
+    path('espace/rapport-agence/', views.rapport_agence, name='rapport_agence'),
+    path('espace/rapport-finances/', views.rapport_finances_agence, name='rapport_finances_agence'),
+    path('espace/rapport-maintenance/', views.rapport_maintenance_agence, name='rapport_maintenance_agence'),
+    path('espace/rapport-mon-agence/', views.rapport_mon_agence, name='rapport_mon_agence'),
+    path('espace/carte-bus/', views.carte_bus_temps_reel, name='carte_bus_temps_reel'),
     path('espace/billet/<int:reservation_id>/', views.billet_confirme, name='billet_confirme'),
-
-    # Agent colis — enregistrement de colis
-    path('espace/gerer-colis/', views.gerer_colis, name='gerer_colis'),
-    path('espace/colis/<int:colis_id>/', views.colis_confirme, name='colis_confirme'),
-
-    # Agent transfert — envoi d'argent
-    path('espace/gerer-transfert/', views.gerer_transfert, name='gerer_transfert'),
-    path('espace/transfert/<int:transfert_id>/', views.transfert_confirme, name='transfert_confirme'),
-
-    # Comptable — caisse & finances
-    path('espace/caisse/', views.caisse_finances, name='caisse_finances'),
-
-    # RH — recrutement chauffeur
-    path('espace/recruter-chauffeur/', views.recruter_chauffeur, name='recruter_chauffeur'),
-    path('espace/chauffeur/<int:chauffeur_id>/', views.chauffeur_confirme, name='chauffeur_confirme'),
-
-    # PDG — vue compagnie
-    path('espace/vue-compagnie/', views.vue_compagnie, name='vue_compagnie'),
-
-    # Responsable d'agence — vue agence
-    path('espace/vue-agence/', views.vue_agence, name='vue_agence'),
-
-    # Listes de consultation
+    path('espace/billets-confirmes/', views.billets_confirmes, name='billets_confirmes'),
     path('espace/liste-billets/', views.liste_billets, name='liste_billets'),
-    path('espace/liste-colis/', views.liste_colis, name='liste_colis'),
-    path('espace/liste-transferts/', views.liste_transferts, name='liste_transferts'),
-
-    # Maintenance des véhicules
-    path('espace/entretien/', views.gerer_entretien, name='gerer_entretien'),
-    path('espace/flotte/', views.liste_entretiens, name='liste_entretiens'),
-
-    path('espace/carburant/', views.gerer_carburant, name='gerer_carburant'),
-    path('espace/liste-carburant/', views.liste_carburant, name='liste_carburant'),
     path('espace/billet/<int:reservation_id>/modifier/', views.modifier_billet, name='modifier_billet'),
 
-    # API (pour la future application mobile)
+    # API (pour l'application mobile)
     path('api/voyages/', api_views.api_voyages, name='api_voyages'),
     path('api/promotions/', api_views.api_promotions, name='api_promotions'),
     path('api/agences/', api_views.api_agences, name='api_agences'),
@@ -65,7 +30,7 @@ urlpatterns = [
     path('api/colis/<str:code_suivi>/', api_views.api_suivi_colis, name='api_suivi_colis'),
     path('api/transfert/<str:code_transfert>/', api_views.api_suivi_transfert, name='api_suivi_transfert'),
 
-    # API — Authentification des comptes clients (JWT)
+    # API - Authentification des comptes clients (JWT)
     path('api/inscription/', api_views.api_inscription, name='api_inscription'),
     path('api/connexion/', TokenObtainPairView.as_view(), name='api_connexion'),
     path('api/token-refresh/', TokenRefreshView.as_view(), name='api_token_refresh'),
@@ -74,14 +39,20 @@ urlpatterns = [
     path('api/changer-mot-de-passe/', api_views.api_changer_mot_de_passe, name='api_changer_mot_de_passe'),
     path('api/valider-email/<str:uidb64>/<str:token>/', api_views.api_valider_email, name='api_valider_email'),
 
-    # API — Réservations (client connecté)
+    # API - Reservations (client connecte)
     path('api/reserver/', api_views.api_reserver, name='api_reserver'),
     path('api/mes-billets/', api_views.api_mes_billets, name='api_mes_billets'),
 
-    # API — Sièges
+    # API - Sieges
     path('api/voyage/<int:voyage_id>/sieges/', api_views.api_sieges_voyage, name='api_sieges_voyage'),
     path('api/reserver-siege/', api_views.api_reserver_siege, name='api_reserver_siege'),
     path('api/payer-reservation/', api_views.api_payer_reservation, name='api_payer_reservation'),
     path('api/annuler-demande-colis/', api_views.api_annuler_demande_colis, name='api_annuler_demande_colis'),
     path('api/annuler-demande-transfert/', api_views.api_annuler_demande_transfert, name='api_annuler_demande_transfert'),
+
+# API - Chauffeurs et suivi GPS
+    path('api/chauffeur/connexion/', api_views.api_connexion_chauffeur, name='api_connexion_chauffeur'),
+    path('api/chauffeur/mes-voyages/', api_views.api_mes_voyages_chauffeur, name='api_mes_voyages_chauffeur'),
+    path('api/chauffeur/position/', api_views.api_enregistrer_position, name='api_enregistrer_position'),
+    path('api/voyage/<int:voyage_id>/positions/', api_views.api_positions_voyage, name='api_positions_voyage'),
 ]

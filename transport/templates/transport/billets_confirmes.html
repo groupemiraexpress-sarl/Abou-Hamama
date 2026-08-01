@@ -1,4 +1,4 @@
-{% extends "transport/base.html" %}
+﻿{% extends "transport/base.html" %}
 {% load static %}
 {% block titre %}Billets confirmes — {{ branding.nom_entreprise }}{% endblock %}
 {% block entete %}Billets confirmes{% endblock %}
@@ -12,7 +12,6 @@
         <h2 style="color:#16a34a; margin-top:8px;">Vente reussie</h2>
         <p style="color:#6b7280; font-size:.9rem;">{{ reservations|length }} billet(s)</p>
     </div>
-
     {% for reservation in reservations %}
     <div style="border-top:1px solid #e5e7eb; padding-top:14px; margin-top:14px;">
         <p style="font-weight:600; color:#1F3864;">Reservation {{ reservation.numero_reservation }}</p>
@@ -34,7 +33,6 @@
         </table>
     </div>
     {% endfor %}
-
     <div style="border-top:2px solid #1F3864; margin-top:16px; padding-top:12px; text-align:right;">
         <span style="color:#1F3864; font-weight:600;">Total : </span>
         <span style="color:#1F3864; font-weight:700; font-size:1.2rem;">{{ montant_total }} FCFA</span>

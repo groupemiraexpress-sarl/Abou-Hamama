@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .admin_filtres import FiltreAgenceMixin
+from .admin_filtres import FiltreAgenceMixin, FiltreAgenceListFilter
 from .models import (
     Compagnie, Agence, Bus, Chauffeur, Trajet, Voyage,
     Client, Reservation, Colis, Employe, TransfertArgent,
@@ -31,20 +32,20 @@ class AgenceAdmin(admin.ModelAdmin):
 
 @admin.register(Bus)
 class BusAdmin(admin.ModelAdmin):
-    list_display = ('immatriculation', 'marque', 'modele', 'capacite', 'statut', 'compagnie', 'kilometrage')
-    list_filter = ('statut', 'compagnie', 'marque')
+    list_display = ('immatriculation', 'agence', 'marque', 'modele', 'capacite', 'statut', 'kilometrage')
+    list_filter = ('statut', 'agence', 'compagnie', 'marque')
     search_fields = ('immatriculation', 'marque', 'modele')
     list_editable = ('statut',)
-    ordering = ('immatriculation',)
+    ordering = ('agence__ville', 'agence__nom', 'immatriculation')
 
 
 @admin.register(Chauffeur)
 class ChauffeurAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'prenom', 'telephone', 'numero_permis', 'date_expiration_permis', 'statut', 'compagnie', 'actif')
-    list_filter = ('statut', 'compagnie', 'actif')
+    list_display = ('nom', 'prenom', 'agence', 'telephone', 'numero_permis', 'date_expiration_permis', 'statut', 'actif')
+    list_filter = ('statut', 'agence', 'compagnie', 'actif')
     search_fields = ('nom', 'prenom', 'numero_permis', 'telephone')
     list_editable = ('statut',)
-    ordering = ('nom', 'prenom')
+    ordering = ('agence__ville', 'agence__nom', 'nom')
 
 
 @admin.register(Trajet)
@@ -77,51 +78,92 @@ class ClientAdmin(admin.ModelAdmin):
 @admin.register(Reservation)
 class ReservationAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     champs_agence = ['agence']
-    list_display = ('numero_reservation', 'client', 'voyage', 'nombre_places', 'montant_total', 'statut', 'mode_paiement', 'date_reservation')
+    list_display = ('numero_reservation', 'client', 'voyage', 'nombre_places', 'montant_total', 'statut', 'mode_paiement', 'cree_par', 'modifie_par', 'date_reservation')
     list_filter = ('statut', 'mode_paiement', 'voyage__date_depart', 'agence')
     search_fields = ('numero_reservation', 'client__nom', 'client__telephone')
-    list_editable = ('statut',)
     ordering = ('-date_reservation',)
     date_hierarchy = 'date_reservation'
+
+    def get_readonly_fields(self, request, obj=None):
+        employe = getattr(request.user, 'employe', None)
+        poste = employe.poste if employe else None
+        if request.user.is_superuser or poste in ('pdg', 'responsable'):
+            return ('cree_par', 'modifie_par', 'numero_reservation', 'date_reservation')
+        return ('cree_par', 'modifie_par', 'numero_reservation', 'date_reservation', 'montant_total')
+
+    def save_model(self, request, obj, form, change):
+        employe = getattr(request.user, 'employe', None)
+        if employe:
+            obj.modifie_par = employe
+            if not change:
+                obj.cree_par = employe
+        super().save_model(request, obj, form, change)
 
 
 @admin.register(Colis)
 class ColisAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     champs_agence = ['agence_depart', 'agence_arrivee']
-    list_display = ('code_suivi', 'expediteur_nom', 'destinataire_nom', 'agence_depart', 'agence_arrivee', 'poids_kg', 'prix', 'statut', 'date_enregistrement')
+    list_display = ('code_suivi', 'expediteur_nom', 'destinataire_nom', 'agence_depart', 'agence_arrivee', 'poids_kg', 'prix', 'statut', 'cree_par', 'modifie_par', 'date_enregistrement')
     list_filter = ('statut', 'agence_depart', 'agence_arrivee', 'compagnie')
     search_fields = ('code_suivi', 'expediteur_nom', 'expediteur_telephone', 'destinataire_nom', 'destinataire_telephone')
-    list_editable = ('statut',)
     ordering = ('-date_enregistrement',)
     date_hierarchy = 'date_enregistrement'
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'agence_depart':
+            from .admin_filtres import voit_tout, agence_de
+            if not voit_tout(request.user):
+                agence = agence_de(request.user)
+                if agence:
+                    kwargs['queryset'] = Agence.objects.filter(id=agence.id)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def get_readonly_fields(self, request, obj=None):
+        employe = getattr(request.user, 'employe', None)
+        poste = employe.poste if employe else None
+        base = ('cree_par', 'modifie_par', 'code_suivi', 'date_enregistrement')
+        if request.user.is_superuser or poste in ('pdg', 'responsable'):
+            return base
+        if obj is not None:
+            return base + ('prix',)
+        return base
+
+    def save_model(self, request, obj, form, change):
+        employe = getattr(request.user, 'employe', None)
+        if employe:
+            obj.modifie_par = employe
+            if not change:
+                obj.cree_par = employe
+        super().save_model(request, obj, form, change)
 
 
 @admin.register(Employe)
 class EmployeAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     champs_agence = ['agence']
-    list_display = ('nom', 'prenom', 'poste', 'agence', 'telephone', 'compte_lie', 'compagnie', 'actif')
-    list_filter = ('poste', 'actif', 'compagnie', 'agence')
+    champ_createur = None  # pas de notion de "createur" pour un employe
+    list_display = ('agence', 'poste_badge', 'nom', 'prenom', 'telephone', 'compte_lie', 'actif')
+    list_filter = (FiltreAgenceListFilter, 'poste', 'actif', 'compagnie')
     search_fields = ('nom', 'prenom', 'telephone', 'cni')
     list_editable = ('actif',)
-    ordering = ('nom', 'prenom')
-    autocomplete_fields = ('user',)
-    fieldsets = (
-        ("Compte de connexion", {
-            'fields': ('user',),
-            'description': "Liez ici le compte de connexion de l'employé. "
-                           "Créez d'abord le compte dans Utilisateurs (avec son email comme identifiant), "
-                           "puis sélectionnez-le ici.",
-        }),
-        ("Informations personnelles", {
-            'fields': ('nom', 'prenom', 'telephone', 'cni'),
-        }),
-        ("Poste et affectation", {
-            'fields': ('poste', 'compagnie', 'agence'),
-        }),
-        ("Emploi", {
-            'fields': ('date_embauche', 'salaire', 'actif'),
-        }),
-    )
+    ordering = ('agence__ville', 'agence__nom', 'poste', 'nom')
+
+    @admin.display(description="Poste", ordering='poste')
+    def poste_badge(self, obj):
+        from django.utils.html import format_html
+        couleurs = {
+            'pdg': '#1F3864',
+            'responsable': '#7c3aed',
+            'secretaire': '#db2777',
+            'guichetier': '#059669',
+            'caissier': '#0891b2',
+            'agent_colis': '#b45309',
+            'agent_transfert': '#b45309',
+        }
+        couleur = couleurs.get(obj.poste, '#6b7280')
+        return format_html(
+            '<span style="background:{}; color:#fff; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:600;">{}</span>',
+            couleur, obj.get_poste_display()
+        )
 
     @admin.display(description="Compte lié")
     def compte_lie(self, obj):
@@ -131,13 +173,38 @@ class EmployeAdmin(FiltreAgenceMixin, admin.ModelAdmin):
 @admin.register(TransfertArgent)
 class TransfertArgentAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     champs_agence = ['agence_depart', 'agence_retrait']
-    list_display = ('code_transfert', 'expediteur_nom', 'beneficiaire_nom', 'montant', 'frais', 'agence_depart', 'agence_retrait', 'statut', 'date_envoi')
+    list_display = ('code_transfert', 'expediteur_nom', 'beneficiaire_nom', 'montant', 'frais', 'agence_depart', 'agence_retrait', 'statut', 'cree_par', 'modifie_par', 'date_envoi')
     list_filter = ('statut', 'agence_depart', 'agence_retrait', 'compagnie')
     search_fields = ('code_transfert', 'expediteur_nom', 'expediteur_telephone', 'beneficiaire_nom', 'beneficiaire_telephone', 'code_retrait')
-    readonly_fields = ('code_transfert', 'code_retrait', 'date_envoi')
-    list_editable = ('statut',)
     ordering = ('-date_envoi',)
     date_hierarchy = 'date_envoi'
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'agence_depart':
+            from .admin_filtres import voit_tout, agence_de
+            if not voit_tout(request.user):
+                agence = agence_de(request.user)
+                if agence:
+                    kwargs['queryset'] = Agence.objects.filter(id=agence.id)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def get_readonly_fields(self, request, obj=None):
+        employe = getattr(request.user, 'employe', None)
+        poste = employe.poste if employe else None
+        base = ('cree_par', 'modifie_par', 'code_transfert', 'code_retrait', 'date_envoi')
+        if request.user.is_superuser or poste in ('pdg', 'responsable'):
+            return base
+        if obj is not None:
+            return base + ('montant', 'frais')
+        return base
+
+    def save_model(self, request, obj, form, change):
+        employe = getattr(request.user, 'employe', None)
+        if employe:
+            obj.modifie_par = employe
+            if not change:
+                obj.cree_par = employe
+        super().save_model(request, obj, form, change)
 
 @admin.register(Entretien)
 class EntretienAdmin(admin.ModelAdmin):
@@ -168,6 +235,7 @@ class PromotionAdmin(admin.ModelAdmin):
 @admin.register(DemandeColis)
 class DemandeColisAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     champs_agence = ['agence_depart', 'agence_arrivee']
+    champ_createur = None  # demandes soumises par les clients, pas par un employe
     list_display = ('numero_demande', 'expediteur_nom', 'destinataire_nom', 'agence_depart', 'agence_arrivee', 'poids_estime', 'poids_reel', 'prix', 'statut', 'date_demande')
     list_filter = ('statut', 'agence_depart', 'agence_arrivee')
     search_fields = ('numero_demande', 'expediteur_nom', 'expediteur_telephone', 'destinataire_nom')
@@ -213,6 +281,7 @@ class DemandeColisAdmin(FiltreAgenceMixin, admin.ModelAdmin):
 @admin.register(DemandeTransfert)
 class DemandeTransfertAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     champs_agence = ['agence_depart', 'agence_retrait']
+    champ_createur = None
     list_display = ('numero_demande', 'expediteur_nom', 'beneficiaire_nom', 'agence_depart', 'agence_retrait', 'montant', 'frais', 'statut', 'date_demande')
     list_filter = ('statut', 'agence_depart', 'agence_retrait')
     search_fields = ('numero_demande', 'expediteur_nom', 'expediteur_telephone', 'beneficiaire_nom')
@@ -264,7 +333,7 @@ _ancien_index = AdminSite.index
 
 def _index_avec_stats(self, request, extra_context=None):
     extra_context = extra_context or {}
-    extra_context['stats'] = statistiques_tableau_bord()
+    extra_context['stats'] = statistiques_tableau_bord(request.user)
     return _ancien_index(self, request, extra_context)
 
 AdminSite.index = _index_avec_stats

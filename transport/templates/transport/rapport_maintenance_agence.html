@@ -1,0 +1,125 @@
+{% extends "transport/base.html" %}
+{% load static %}
+{% block titre %}Rapport maintenance — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}Rapport maintenance par agence{% endblock %}
+{% block contenu %}
+
+<div class="card no-print">
+    <form method="get">
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Agence</label>
+        <select name="agence" onchange="this.form.submit()" style="width:100%; padding:12px; font-size:1rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:14px;">
+            <option value="">-- Selectionner --</option>
+            {% for a in agences %}
+                <option value="{{ a.id }}" {% if agence_choisie.id == a.id %}selected{% endif %}>{{ a.nom }} ({{ a.ville }})</option>
+            {% endfor %}
+        </select>
+
+        {% if agence_choisie %}
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Sections a inclure</label>
+        <div style="display:flex; flex-wrap:wrap; gap:14px; margin-bottom:14px;">
+            <label style="font-size:.9rem;"><input type="checkbox" name="sec_bus" value="1" {% if sections.bus %}checked{% endif %}> Liste des bus</label>
+            <label style="font-size:.9rem;"><input type="checkbox" name="sec_carburant" value="1" {% if sections.carburant %}checked{% endif %}> Total carburant</label>
+            <label style="font-size:.9rem;"><input type="checkbox" name="sec_entretiens" value="1" {% if sections.entretiens %}checked{% endif %}> Historique entretiens</label>
+        </div>
+
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Un seul bus (facultatif)</label>
+        <select name="bus" style="width:100%; padding:12px; font-size:1rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:14px;">
+            <option value="">-- Tous les bus --</option>
+            {% for b in tous_bus_agence %}
+                <option value="{{ b.id }}" {% if bus_cible.id == b.id %}selected{% endif %}>{{ b.immatriculation }} ({{ b.marque }})</option>
+            {% endfor %}
+        </select>
+
+        <input type="hidden" name="agence" value="{{ agence_choisie.id }}">
+        <button type="submit" class="btn" style="width:100%;">Mettre a jour le rapport</button>
+        {% endif %}
+    </form>
+</div>
+
+{% if agence_choisie %}
+<div class="card" id="zone-impression">
+    <div style="text-align:center; margin-bottom:20px;">
+        <img src="{% static 'transport/logo_abou_hamama.png' %}" alt="Express Abou Hamama" style="width:60px; height:60px; border-radius:50%; box-shadow:0 2px 6px rgba(0,0,0,.2);">
+        <h2 style="color:#1F3864; margin-top:10px;">Rapport maintenance — {{ agence_choisie.nom }}</h2>
+        <p style="color:#6b7280; font-size:.85rem;">genere le {% now "d/m/Y a H:i" %}</p>
+        {% if bus_cible %}
+        <p style="color:#1F3864; font-weight:600; margin-top:6px;">Fiche individuelle : {{ bus_cible.immatriculation }}</p>
+        {% endif %}
+    </div>
+
+    {% if sections.bus %}
+    <h3 style="color:#1F3864; font-size:1rem; margin-bottom:10px; border-bottom:2px solid #1F3864; padding-bottom:6px;">
+        {% if bus_cible %}Fiche bus{% else %}Bus de l'agence ({{ bus_agence|length }}){% endif %}
+    </h3>
+    {% if bus_agence %}
+    <table style="width:100%; border-collapse:collapse; margin-bottom:24px; font-size:.9rem;">
+        <tr style="background:#f4f6f9; text-align:left;">
+            <th style="padding:8px;">Immatriculation</th>
+            <th style="padding:8px;">Marque</th>
+            <th style="padding:8px;">Kilometrage</th>
+            <th style="padding:8px;">Statut</th>
+        </tr>
+        {% for bus in bus_agence %}
+        <tr style="border-bottom:1px solid #eef0f3;">
+            <td style="padding:8px;">{{ bus.immatriculation }}</td>
+            <td style="padding:8px;">{{ bus.marque }} {{ bus.modele }}</td>
+            <td style="padding:8px;">{{ bus.kilometrage }} km</td>
+            <td style="padding:8px;">{{ bus.get_statut_display }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p style="color:#6b7280; margin-bottom:24px;">Aucun bus rattache a cette agence.</p>
+    {% endif %}
+    {% endif %}
+
+    {% if sections.carburant %}
+    <h3 style="color:#1F3864; font-size:1rem; margin-bottom:10px; border-bottom:2px solid #1F3864; padding-bottom:6px;">Total carburant</h3>
+    <p style="font-size:1.3rem; font-weight:700; color:#1F3864; margin-bottom:24px;">{{ total_carburant }} FCFA</p>
+    {% endif %}
+
+    {% if sections.entretiens %}
+    <h3 style="color:#1F3864; font-size:1rem; margin-bottom:10px; border-bottom:2px solid #1F3864; padding-bottom:6px;">Historique entretiens ({{ entretiens_agence|length }})</h3>
+    {% if entretiens_agence %}
+    <table style="width:100%; border-collapse:collapse; font-size:.9rem;">
+        <tr style="background:#f4f6f9; text-align:left;">
+            <th style="padding:8px;">Bus</th>
+            <th style="padding:8px;">Type</th>
+            <th style="padding:8px;">Date</th>
+            <th style="padding:8px;">Cout</th>
+        </tr>
+        {% for e in entretiens_agence %}
+        <tr style="border-bottom:1px solid #eef0f3;">
+            <td style="padding:8px;">{{ e.bus.immatriculation }}</td>
+            <td style="padding:8px;">{{ e.get_type_entretien_display }}</td>
+            <td style="padding:8px;">{{ e.date_entretien|date:"d/m/Y" }}</td>
+            <td style="padding:8px;">{{ e.cout }} FCFA</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p style="color:#6b7280;">Aucun entretien enregistre.</p>
+    {% endif %}
+    {% endif %}
+</div>
+
+<div class="no-print" style="display:flex; gap:12px; margin-top:20px;">
+    <button onclick="window.print()" class="btn" style="flex:1; background:#16a34a;">
+        <i class="fa-solid fa-print"></i> Imprimer ce rapport
+    </button>
+</div>
+{% endif %}
+
+<div class="no-print" style="text-align:center; margin-top:20px;">
+    <a href="{% url 'admin:index' %}" class="btn" style="background:#6b7280;">
+        <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
+    </a>
+</div>
+
+<style>
+@media print {
+    .no-print { display: none !important; }
+    header, footer { display: none !important; }
+}
+</style>
+{% endblock %}

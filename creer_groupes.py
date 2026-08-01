@@ -88,6 +88,17 @@ ROLES = {
         'agence': LIRE,
     },
 
+    "Secretaire d'agence": {
+        'client': LIRE_ECRIRE,
+        'reservation': LIRE,
+        'colis': LIRE,
+        'transfertargent': LIRE,
+        'demandecolis': LIRE_ECRIRE,
+        'demandetransfert': LIRE_ECRIRE,
+        'voyage': LIRE,
+        'agence': LIRE,
+    },
+
     "Agent colis": {
         'colis': LIRE_ECRIRE,
         'demandecolis': LIRE_ECRIRE,

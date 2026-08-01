@@ -96,10 +96,6 @@ a:link, a:visited {
   border-radius: 4px;
 }
 
-#user-tools a {
-  border-bottom-color: #FECB00;
-}
-
 .dashboard .module table th {
   background: #f4f6f9;
 }
@@ -219,4 +215,142 @@ body.login {
 
 .content a[href*="login"]:hover {
   background: #2a4a7f;
+}
+
+/* --- Menu utilisateur (haut a droite) --- */
+.menu-utilisateur {
+  position: relative;
+  float: right;
+}
+
+.menu-compte {
+  position: relative;
+}
+
+.menu-compte-bouton {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  list-style: none;
+  padding: 6px 14px 6px 6px;
+  border-radius: 24px;
+  color: #ffffff;
+  background: rgba(255, 255, 255, .08);
+  border: 1px solid rgba(255, 255, 255, .2);
+  transition: background .15s;
+}
+
+.menu-compte-bouton::-webkit-details-marker {
+  display: none;
+}
+
+.menu-compte-bouton::marker {
+  content: "";
+}
+
+.menu-compte-bouton:hover {
+  background: rgba(255, 255, 255, .18);
+}
+
+.avatar-initiales {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #FECB00;
+  color: #1F3864;
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.menu-compte-nom {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: .2px;
+}
+
+.menu-compte-fleche {
+  font-size: 11px;
+  color: #ffffff;
+  opacity: .85;
+  margin-left: 2px;
+}
+
+.menu-compte-liste {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .25);
+  min-width: 260px;
+  padding: 0 0 8px 0;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.menu-compte-entete {
+  padding: 18px 18px 16px 18px;
+  background: linear-gradient(135deg, #1F3864 0%, #2a4a7f 100%);
+  margin-bottom: 6px;
+}
+
+.menu-compte-entete strong {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  display: block;
+  letter-spacing: .2px;
+}
+
+.menu-compte-role {
+  display: inline-block;
+  color: #1F3864;
+  background: #FECB00;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  padding: 3px 10px;
+  border-radius: 10px;
+  margin-top: 8px;
+}
+
+.menu-compte-liste a:link,
+.menu-compte-liste a:visited,
+.menu-compte-liste a:hover,
+.menu-compte-liste a:active,
+.bouton-deconnexion {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 18px;
+  color: #1F3864 !important;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  width: 100%;
+  box-sizing: border-box;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.menu-compte-liste a:hover,
+.bouton-deconnexion:hover {
+  background: #f4f6f9;
+}
+
+.bouton-deconnexion {
+  color: #b91c1c;
+  border-top: 1px solid #eef0f3;
+  margin-top: 4px;
+  padding-top: 13px;
 }

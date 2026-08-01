@@ -1,21 +1,16 @@
 {% extends "transport/base.html" %}
-
 {% block titre %}Vendre un billet — {{ branding.nom_entreprise }}{% endblock %}
 {% block entete %}Vendre un billet{% endblock %}
-
 {% block contenu %}
-
 {% if erreur %}
 <div style="background:#fef2f2; color:#b91c1c; padding:12px; border-radius:8px; margin-bottom:16px; font-size:.9rem; text-align:center;">
     <i class="fa-solid fa-circle-exclamation"></i> {{ erreur }}
 </div>
 {% endif %}
-
 {% if voyages %}
 <div class="card">
-    <form method="post" action="{% url 'transport:vendre_billet' %}">
+    <form method="post" action="{% url 'transport:vendre_billet' %}" id="form-vente">
         {% csrf_token %}
-
         <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Voyage</label>
         <select name="voyage" required>
             <option value="">-- Choisir un voyage --</option>
@@ -29,40 +24,83 @@
             {% endfor %}
         </select>
 
-        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Nom du client</label>
-        <input type="text" name="client_nom" placeholder="Nom et prénom" required>
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Nom de l'acheteur</label>
+        <input type="text" name="client_nom" placeholder="Nom et prenom" required>
 
-        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Téléphone du client</label>
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Telephone de l'acheteur</label>
         <input type="text" name="client_telephone" placeholder="66 00 00 00" required>
 
         <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Nombre de places</label>
-        <input type="number" name="nombre_places" value="1" min="1"
+        <input type="number" name="nombre_places" id="nombre_places" value="1" min="1"
                style="width:100%; padding:14px; font-size:1rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:14px;">
 
         <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Mode de paiement</label>
         <select name="mode_paiement">
-            <option value="especes">Espèces</option>
+            <option value="especes">Especes</option>
             <option value="mobile_money">Mobile Money</option>
             <option value="virement">Virement bancaire</option>
             <option value="carte">Carte bancaire</option>
         </select>
+
+        <div id="zone-passagers" style="margin-top:18px;"></div>
 
         <button type="submit" class="btn" style="width:100%; margin-top:8px;">
             <i class="fa-solid fa-ticket"></i> Valider la vente
         </button>
     </form>
 </div>
-
 {% else %}
 <div class="card" style="text-align:center; color:#6b7280;">
-    Aucun voyage disponible à la vente pour le moment.
+    Aucun voyage disponible a la vente pour le moment.
 </div>
 {% endif %}
-
 <div style="text-align:center; margin-top:20px;">
-    <a href="{% url 'transport:tableau_bord' %}" class="btn" style="background:#6b7280;">
+    <a href="{% url 'admin:index' %}" class="btn" style="background:#6b7280;">
         <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
     </a>
 </div>
 
+<script>
+const TYPES_PIECE = [
+    ['cni', "Carte nationale d'identite"],
+    ['passeport', 'Passeport'],
+    ['acte_naissance', 'Acte de naissance'],
+    ['carte_pro', 'Carte professionnelle'],
+    ['permis', 'Permis de conduire'],
+    ['autre', 'Autre piece'],
+];
+
+function optionsPiece() {
+    return TYPES_PIECE.map(function(t) {
+        return '<option value="' + t[0] + '">' + t[1] + '</option>';
+    }).join('');
+}
+
+function genererPassagers() {
+    const n = parseInt(document.getElementById('nombre_places').value, 10) || 1;
+    const zone = document.getElementById('zone-passagers');
+    zone.innerHTML = '';
+    for (let i = 1; i <= n; i++) {
+        const bloc = document.createElement('div');
+        bloc.style.cssText = 'border:1px solid #e5e7eb; border-radius:10px; padding:14px; margin-bottom:12px; background:#f9fafb;';
+        bloc.innerHTML =
+            '<p style="font-weight:600; color:#1F3864; margin-bottom:10px;">Passager ' + i + '</p>' +
+            '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">Nom</label>' +
+            '<input type="text" name="passager_nom_' + i + '" placeholder="Nom du passager" style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">' +
+            '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">Prenom</label>' +
+            '<input type="text" name="passager_prenom_' + i + '" placeholder="Prenom" style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">' +
+            '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">Telephone</label>' +
+            '<input type="text" name="passager_telephone_' + i + '" placeholder="66 00 00 00" style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">' +
+            '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">Type de piece</label>' +
+            '<select name="passager_type_piece_' + i + '" style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">' +
+            '<option value="">-- Choisir --</option>' + optionsPiece() + '</select>' +
+            '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">Numero de piece</label>' +
+            '<input type="text" name="passager_numero_piece_' + i + '" placeholder="Numero" style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px;">';
+        zone.appendChild(bloc);
+    }
+}
+
+document.getElementById('nombre_places').addEventListener('input', genererPassagers);
+document.addEventListener('DOMContentLoaded', genererPassagers);
+</script>
 {% endblock %}

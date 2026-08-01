@@ -1,0 +1,127 @@
+{% extends "transport/base.html" %}
+{% load static %}
+{% block titre %}Carte des bus — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}Bus en temps reel{% endblock %}
+{% block contenu %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+<div style="position:relative; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; width:100vw; padding:0 16px; box-sizing:border-box;">
+    <div class="card" style="padding:0; overflow:hidden; max-width:1400px; margin:0 auto;">
+        <div id="carte" style="height:600px; width:100%;"></div>
+    </div>
+</div>
+
+<div class="card" style="margin-top:16px;">
+    <h3 style="color:#1F3864; font-size:1rem; margin-bottom:10px;">Bus en cours de voyage ({{ voyages_data|length }})</h3>
+    {% if voyages_data %}
+    <table style="width:100%; border-collapse:collapse; font-size:.9rem;">
+        <tr style="background:#f4f6f9; text-align:left;">
+            <th style="padding:8px;">Trajet</th>
+            <th style="padding:8px;">Bus</th>
+            <th style="padding:8px;">Chauffeur</th>
+            <th style="padding:8px;">Derniere position</th>
+        </tr>
+        {% for item in voyages_data %}
+        <tr style="border-bottom:1px solid #eef0f3;">
+            <td style="padding:8px;">{{ item.voyage.trajet.ville_depart }} → {{ item.voyage.trajet.ville_arrivee }}</td>
+            <td style="padding:8px;">{{ item.voyage.bus.immatriculation }}</td>
+            <td style="padding:8px;">{{ item.voyage.chauffeur.prenom }} {{ item.voyage.chauffeur.nom }}</td>
+            <td style="padding:8px;">
+                {% if item.derniere_position %}
+                    <span id="temps-{{ item.voyage.id }}">il y a ...</span>
+                {% else %}
+                    <span style="color:#b91c1c;">Aucun signal</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p style="color:#6b7280;">Aucun bus en cours de voyage actuellement.</p>
+    {% endif %}
+</div>
+
+<div style="text-align:center; margin-top:20px;">
+    <a href="{% url 'admin:index' %}" class="btn" style="background:#6b7280;">
+        <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
+    </a>
+</div>
+
+{{ voyages_json|json_script:"voyages-data" }}
+
+<script>
+const carte = L.map('carte').setView([12.1, 15.05], 6);
+setTimeout(function() { carte.invalidateSize(); }, 200);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap'
+}).addTo(carte);
+
+const voyagesData = JSON.parse(document.getElementById('voyages-data').textContent);
+
+let marqueurs = {};
+
+function busIcon() {
+    return L.divIcon({
+        html: '<div style="background:#1F3864; color:#fff; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-size:16px; box-shadow:0 2px 6px rgba(0,0,0,.4);">🚌</div>',
+        className: '',
+        iconSize: [32, 32],
+        iconAnchor: [16, 16],
+    });
+}
+
+function afficherMarqueurs() {
+    voyagesData.forEach(function(v) {
+        if (v.lat === null || v.lng === null) return;
+        if (marqueurs[v.voyageId]) {
+            marqueurs[v.voyageId].setLatLng([v.lat, v.lng]);
+        } else {
+            marqueurs[v.voyageId] = L.marker([v.lat, v.lng], { icon: busIcon() })
+                .addTo(carte)
+                .bindPopup(v.trajet + '<br>Bus ' + v.bus);
+        }
+    });
+}
+
+function tempsEcoule(iso) {
+    if (!iso) return 'Aucun signal';
+    const diffSec = Math.floor((new Date() - new Date(iso)) / 1000);
+    if (diffSec < 60) return 'il y a ' + diffSec + ' sec';
+    const diffMin = Math.floor(diffSec / 60);
+    if (diffMin < 60) return 'il y a ' + diffMin + ' min';
+    return 'il y a ' + Math.floor(diffMin / 60) + ' h';
+}
+
+function majTemps() {
+    voyagesData.forEach(function(v) {
+        const el = document.getElementById('temps-' + v.voyageId);
+        if (el) el.textContent = tempsEcoule(v.horodatage);
+    });
+}
+
+afficherMarqueurs();
+majTemps();
+setInterval(majTemps, 5000);
+
+async function rafraichirPositions() {
+    for (const v of voyagesData) {
+        try {
+            const reponse = await fetch('/api/voyage/' + v.voyageId + '/positions/');
+            const data = await reponse.json();
+            if (data.derniere_position) {
+                v.lat = data.derniere_position.latitude;
+                v.lng = data.derniere_position.longitude;
+                v.horodatage = data.derniere_position.horodatage;
+            }
+        } catch (e) {
+            // ignore les erreurs reseau ponctuelles
+        }
+    }
+    afficherMarqueurs();
+    majTemps();
+}
+
+setInterval(rafraichirPositions, 15000);
+</script>
+{% endblock %}

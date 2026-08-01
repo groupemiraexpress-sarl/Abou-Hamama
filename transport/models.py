@@ -37,6 +37,7 @@ class Bus(models.Model):
     ]
 
     compagnie = models.ForeignKey(Compagnie, on_delete=models.CASCADE, related_name='bus')
+    agence = models.ForeignKey('Agence', on_delete=models.SET_NULL, null=True, blank=True, related_name='bus', help_text="Agence de rattachement du bus")
     immatriculation = models.CharField(max_length=20, unique=True)
     marque = models.CharField(max_length=50)
     modele = models.CharField(max_length=50, blank=True)
@@ -62,7 +63,9 @@ class Chauffeur(models.Model):
         ('inactif', 'Inactif'),
     ]
 
+    user = models.OneToOneField('auth.User', on_delete=models.SET_NULL, null=True, blank=True, related_name='chauffeur', help_text="Compte de connexion de ce chauffeur (cree par le PDG)")
     compagnie = models.ForeignKey(Compagnie, on_delete=models.CASCADE, related_name='chauffeurs')
+    agence = models.ForeignKey('Agence', on_delete=models.SET_NULL, null=True, blank=True, related_name='chauffeurs', help_text="Agence de rattachement du chauffeur")
     nom = models.CharField(max_length=100)
     prenom = models.CharField(max_length=100)
     telephone = models.CharField(max_length=20)
@@ -191,6 +194,7 @@ class Reservation(models.Model):
     voyage = models.ForeignKey(Voyage, on_delete=models.PROTECT, related_name='reservations')
     agence = models.ForeignKey(Agence, on_delete=models.PROTECT, related_name='reservations', null=True, blank=True, help_text="Agence ou la reservation a ete faite")
     cree_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='reservations_creees', verbose_name="Cree par")
+    modifie_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='reservations_modifiees', verbose_name="Modifie par")
     nombre_places = models.IntegerField(default=1)
     voyageur_nom = models.CharField(max_length=100, blank=True, help_text="Nom du voyageur de ce billet")
     voyageur_prenom = models.CharField(max_length=100, blank=True, help_text="Prenom du voyageur")
@@ -261,6 +265,7 @@ class Colis(models.Model):
     agence_depart = models.ForeignKey(Agence, on_delete=models.PROTECT, related_name='colis_envoyes')
     agence_arrivee = models.ForeignKey(Agence, on_delete=models.PROTECT, related_name='colis_recus')
     cree_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='colis_crees', verbose_name="Cree par")
+    modifie_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='colis_modifies', verbose_name="Modifie par")
 
     description = models.CharField(max_length=200, help_text="Contenu du colis")
     poids_kg = models.FloatField(help_text="Poids en kilogrammes")
@@ -296,6 +301,7 @@ class Employe(models.Model):
     POSTE_CHOICES = [
         ('pdg', 'PDG / Directeur general'),
         ('responsable', "Responsable d'agence"),
+        ('secretaire', "Secretaire d'agence"),
         ('guichetier', 'Guichetier / billettiste'),
         ('caissier', 'Caissier'),
         ('agent_colis', 'Agent colis'),
@@ -347,6 +353,7 @@ class TransfertArgent(models.Model):
     agence_depart = models.ForeignKey(Agence, on_delete=models.PROTECT, related_name='transferts_envoyes')
     agence_retrait = models.ForeignKey(Agence, on_delete=models.PROTECT, related_name='transferts_recus')
     cree_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='transferts_crees', verbose_name="Cree par")
+    modifie_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='transferts_modifies', verbose_name="Modifie par")
 
     montant = models.IntegerField(help_text="Montant envoye en FCFA")
     frais = models.IntegerField(default=0, help_text="Frais de transfert en FCFA")
@@ -592,3 +599,21 @@ class ArretLigne(models.Model):
         verbose_name_plural = "Arrets de ligne"
         ordering = ['ligne', 'ordre']
         unique_together = ['ligne', 'ordre']
+
+
+class PositionBus(models.Model):
+    """Position GPS d'un bus en cours de voyage, envoyee par le telephone du chauffeur."""
+    voyage = models.ForeignKey('Voyage', on_delete=models.CASCADE, related_name='positions')
+    chauffeur = models.ForeignKey('Chauffeur', on_delete=models.SET_NULL, null=True, blank=True, related_name='positions')
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    vitesse_kmh = models.FloatField(null=True, blank=True, help_text="Vitesse en km/h si disponible")
+    horodatage = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.voyage} - {self.horodatage:%d/%m/%Y %H:%M}"
+
+    class Meta:
+        verbose_name = "Position bus"
+        verbose_name_plural = "Positions bus"
+        ordering = ['-horodatage']

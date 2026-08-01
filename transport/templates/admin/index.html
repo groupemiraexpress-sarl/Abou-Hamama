@@ -72,11 +72,53 @@
     .groupe-ligne:last-child { border-bottom: none; }
     .groupe-ligne a.nom { font-weight: 600; text-decoration: none; }
     .groupe-actions a { font-size: 12px; margin-left: 12px; text-decoration: none; }
+    .raccourci-vente {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .btn-vente {
+      background: #1F3864;
+      color: #ffffff;
+      padding: 14px 22px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 14px;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-vente:hover {
+      background: #2a4a7f;
+      color: #ffffff;
+    }
+    .btn-vente-secondaire {
+      background: #ffffff;
+      border: 1px solid #1F3864;
+      color: #1F3864;
+      padding: 14px 22px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 14px;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-vente-secondaire:hover {
+      background: #f4f6f9;
+    }
   </style>
 {% endblock %}
 
 {% block content %}
 <div id="content-main">
+
+  <div class="raccourci-vente">
+    <a href="{% url 'transport:vendre_billet' %}" class="btn-vente">
+      🎫 Vendre un billet
+    </a>
+    <a href="{% url 'transport:liste_billets' %}" class="btn-vente-secondaire">
+      Voir les billets vendus
+    </a>
+  </div>
 
   <div class="stats-zone">
     <h2 class="stats-titre">Aujourd'hui</h2>

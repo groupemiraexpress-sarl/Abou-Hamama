@@ -16,3 +16,57 @@
   </a>
 </h1>
 {% endblock %}
+
+{% block usertools %}
+  {% if has_permission %}
+  <div id="user-tools" class="menu-utilisateur">
+    <details class="menu-compte">
+      <summary class="menu-compte-bouton">
+        <span class="avatar-initiales">{{ request.user.username|slice:":2"|upper }}</span>
+        <span class="menu-compte-nom">{{ request.user.get_short_name|default:request.user.get_username }}</span>
+        <span class="menu-compte-fleche">&#9662;</span>
+      </summary>
+      <div class="menu-compte-liste">
+        <div class="menu-compte-entete">
+          <strong>{{ request.user.get_short_name|default:request.user.get_username }}</strong>
+          {% with employe=request.user.employe|default_if_none:None %}
+            {% if employe %}
+              <div class="menu-compte-role">{{ employe.get_poste_display }}{% if employe.agence %} — {{ employe.agence.nom }}{% endif %}</div>
+            {% elif request.user.is_superuser %}
+              <div class="menu-compte-role">Administrateur</div>
+            {% endif %}
+          {% endwith %}
+        </div>
+        <a href="{% url 'transport:mon_profil' %}">Mon profil</a>
+        {% with employe=request.user.employe|default_if_none:None %}
+          {% if request.user.is_superuser or employe.poste == 'pdg' or employe.poste == 'rh' %}
+            <a href="{% url 'transport:rapport_agence' %}">Rapport RH par agence</a>
+          {% endif %}
+          {% if request.user.is_superuser or employe.poste == 'pdg' or employe.poste == 'comptable' %}
+            <a href="{% url 'transport:rapport_finances_agence' %}">Rapport financier par agence</a>
+          {% endif %}
+          {% if request.user.is_superuser or employe.poste == 'pdg' or employe.poste == 'resp_maintenance' %}
+            <a href="{% url 'transport:rapport_maintenance_agence' %}">Rapport maintenance par agence</a>
+          {% endif %}
+          {% if request.user.is_superuser or employe.poste == 'pdg' or employe.poste == 'responsable' or employe.poste == 'securite' %}
+            <a href="{% url 'transport:carte_bus_temps_reel' %}">Carte des bus en direct</a>
+          {% endif %}
+        {% endwith %}
+        {% if request.user.is_superuser %}
+          <a href="{% url 'admin:password_change' %}">Modifier le mot de passe</a>
+        {% else %}
+          {% with employe=request.user.employe|default_if_none:None %}
+            {% if employe and employe.poste == 'pdg' %}
+              <a href="{% url 'admin:password_change' %}">Modifier le mot de passe</a>
+            {% endif %}
+          {% endwith %}
+        {% endif %}
+        <form action="{% url 'admin:logout' %}" method="post" style="margin:0;">
+          {% csrf_token %}
+          <button type="submit" class="bouton-deconnexion">Deconnexion</button>
+        </form>
+      </div>
+    </details>
+  </div>
+  {% endif %}
+{% endblock %}
