@@ -55,4 +55,5 @@ urlpatterns = [
     path('api/chauffeur/mes-voyages/', api_views.api_mes_voyages_chauffeur, name='api_mes_voyages_chauffeur'),
     path('api/chauffeur/position/', api_views.api_enregistrer_position, name='api_enregistrer_position'),
     path('api/voyage/<int:voyage_id>/positions/', api_views.api_positions_voyage, name='api_positions_voyage'),
+    path('api/chauffeur/terminer-voyage/', api_views.api_terminer_voyage, name='api_terminer_voyage'),
 ]

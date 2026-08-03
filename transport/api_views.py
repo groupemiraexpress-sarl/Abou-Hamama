@@ -734,3 +734,24 @@ def api_positions_voyage(request, voyage_id):
             'horodatage': p.horodatage,
         }
     })
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def api_terminer_voyage(request):
+    """Le chauffeur termine manuellement son voyage."""
+    chauffeur = Chauffeur.objects.filter(user=request.user).first()
+    if not chauffeur:
+        return Response({'erreur': 'Compte chauffeur introuvable.'}, status=404)
+
+    voyage_id = request.data.get('voyage_id')
+    if not voyage_id:
+        return Response({'erreur': 'voyage_id obligatoire.'}, status=400)
+
+    voyage = Voyage.objects.filter(id=voyage_id, chauffeur=chauffeur).first()
+    if not voyage:
+        return Response({'erreur': 'Voyage introuvable ou non assigne a ce chauffeur.'}, status=404)
+
+    voyage.statut = 'termine'
+    voyage.save()
+
+    return Response({'message': 'Voyage termine avec succes.'})
