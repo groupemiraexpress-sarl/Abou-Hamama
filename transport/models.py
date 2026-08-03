@@ -302,6 +302,7 @@ class Employe(models.Model):
         ('pdg', 'PDG / Directeur general'),
         ('responsable', "Responsable d'agence"),
         ('secretaire', "Secretaire d'agence"),
+        ('resp_planning', "Responsable planning"),
         ('guichetier', 'Guichetier / billettiste'),
         ('caissier', 'Caissier'),
         ('agent_colis', 'Agent colis'),

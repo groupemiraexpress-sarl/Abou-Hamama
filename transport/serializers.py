@@ -36,6 +36,14 @@ class VoyageSerializer(serializers.ModelSerializer):
     ville_depart = serializers.CharField(source='trajet.ville_depart', read_only=True)
     ville_arrivee = serializers.CharField(source='trajet.ville_arrivee', read_only=True)
     bus_immatriculation = serializers.CharField(source='bus.immatriculation', read_only=True)
+    agence_depart_nom = serializers.SerializerMethodField()
+    agence_depart_adresse = serializers.SerializerMethodField()
+
+    def get_agence_depart_nom(self, obj):
+        return obj.bus.agence.nom if obj.bus.agence else None
+
+    def get_agence_depart_adresse(self, obj):
+        return obj.bus.agence.adresse if obj.bus.agence else None
     ligne_nom = serializers.SerializerMethodField()
     destinations = serializers.SerializerMethodField()
 
@@ -64,6 +72,7 @@ class VoyageSerializer(serializers.ModelSerializer):
             'date_depart', 'heure_depart', 'prix',
             'places_disponibles', 'bus_immatriculation', 'statut',
             'ligne_nom', 'destinations',
+            'agence_depart_nom', 'agence_depart_adresse',
         ]
 
 

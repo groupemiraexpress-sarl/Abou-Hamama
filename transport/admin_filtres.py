@@ -3,6 +3,8 @@ Cloisonnement par agence et par employe pour l'admin Express Abou Hamama.
 
 Regle generale :
   - superutilisateur / poste 'pdg'      -> voit tout
+  - postes "siege" (comptable, rh,
+    maintenance, planning)              -> voient tout, toutes agences
   - roles de terrain (guichetier,
     agent colis, agent transfert)       -> voient uniquement ce qu'ils
                                             ont personnellement cree
@@ -11,9 +13,13 @@ Regle generale :
   - employe sans agence                 -> ne voit rien
 """
 from django.db.models import Q
+from django.contrib import admin
 
 # Postes qui ne voient que ce qu'ils ont eux-memes enregistre
 POSTES_PERSONNEL = ('guichetier', 'agent_colis', 'agent_transfert')
+
+# Postes "siege" : un seul titulaire pour toute la compagnie, voient tout
+POSTES_SIEGE = ('comptable', 'rh', 'resp_maintenance', 'resp_planning')
 
 
 def agence_de(user):
@@ -29,7 +35,7 @@ def voit_tout(user):
     if user.is_superuser:
         return True
     employe = getattr(user, 'employe', None)
-    if employe is not None and employe.poste == 'pdg':
+    if employe is not None and employe.poste in ('pdg',) + POSTES_SIEGE:
         return True
     return False
 
@@ -71,8 +77,6 @@ class FiltreAgenceMixin:
         for champ in self.champs_agence:
             condition |= Q(**{champ: agence})
         return qs.filter(condition)
-
-from django.contrib import admin
 
 
 class FiltreAgenceListFilter(admin.SimpleListFilter):

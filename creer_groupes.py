@@ -18,7 +18,7 @@ MODELES = [
     'compagnie', 'agence', 'bus', 'chauffeur', 'trajet', 'voyage',
     'client', 'reservation', 'colis', 'employe', 'transfertargent',
     'entretien', 'pleincarburant', 'siege', 'promotion',
-    'demandecolis', 'demandetransfert',
+    'demandecolis', 'demandetransfert', 'ligne',
 ]
 
 
@@ -53,13 +53,13 @@ ROLES = {
     },
 
     "Responsable d'agence": {
-        'voyage': LIRE_ECRIRE,
+        'voyage': LIRE,
         'reservation': LIRE_ECRIRE,
         'colis': LIRE_ECRIRE,
         'transfertargent': LIRE_ECRIRE,
         'demandecolis': LIRE_ECRIRE,
         'demandetransfert': LIRE_ECRIRE,
-        'client': LIRE_ECRIRE,
+        'client': LIRE,
         'employe': LIRE,
         'bus': LIRE,
         'chauffeur': LIRE,
@@ -69,11 +69,19 @@ ROLES = {
         'promotion': LIRE,
     },
 
+    "Responsable planning": {
+        'voyage': LIRE_ECRIRE,
+        'trajet': LIRE_ECRIRE,
+        'bus': LIRE,
+        'chauffeur': LIRE,
+        'ligne': LIRE_ECRIRE,
+        'agence': LIRE,
+    },
+
     "Guichetier / billettiste": {
         'voyage': LIRE,
         'reservation': LIRE_ECRIRE,
-        'client': LIRE_ECRIRE,
-        'siege': LIRE_ECRIRE,
+        'client': LIRE,
         'trajet': LIRE,
         'bus': LIRE,
         'agence': LIRE,
