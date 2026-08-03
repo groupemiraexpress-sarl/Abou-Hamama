@@ -1,16 +1,18 @@
 """
-Cloisonnement par agence et par employe pour l'admin Express Abou Hamama.
+Cloisonnement par agence, par zone et par employe pour l'admin Express Abou Hamama.
 
 Regle generale :
   - superutilisateur / poste 'pdg'      -> voit tout
   - postes "siege" (comptable, rh,
-    maintenance, planning)              -> voient tout, toutes agences
+    maintenance)                        -> voient tout, toutes agences
+  - poste 'resp_planning'               -> voit sa zone (Nord ou Sud),
+                                            toutes les agences de cette zone
   - roles de terrain (guichetier,
     agent colis, agent transfert)       -> voient uniquement ce qu'ils
                                             ont personnellement cree
   - les autres employes avec une agence -> voient tout ce qui se passe
                                             dans leur agence
-  - employe sans agence                 -> ne voit rien
+  - employe sans agence ni zone         -> ne voit rien
 """
 from django.db.models import Q
 from django.contrib import admin
@@ -19,7 +21,7 @@ from django.contrib import admin
 POSTES_PERSONNEL = ('guichetier', 'agent_colis', 'agent_transfert')
 
 # Postes "siege" : un seul titulaire pour toute la compagnie, voient tout
-POSTES_SIEGE = ('comptable', 'rh', 'resp_maintenance', 'resp_planning')
+POSTES_SIEGE = ('comptable', 'rh', 'resp_maintenance')
 
 
 def agence_de(user):
@@ -30,8 +32,16 @@ def agence_de(user):
     return employe.agence
 
 
+def zone_de(user):
+    """Retourne la zone geree par l'employe (Responsable planning), ou None."""
+    employe = getattr(user, 'employe', None)
+    if employe is None:
+        return None
+    return employe.zone or None
+
+
 def voit_tout(user):
-    """Vrai si l'utilisateur doit voir toutes les agences."""
+    """Vrai si l'utilisateur doit voir toutes les agences (toutes zones)."""
     if user.is_superuser:
         return True
     employe = getattr(user, 'employe', None)
@@ -42,14 +52,12 @@ def voit_tout(user):
 
 class FiltreAgenceMixin:
     """
-    Mixin a ajouter aux ModelAdmin pour filtrer par agence et/ou par createur.
+    Mixin a ajouter aux ModelAdmin pour filtrer par agence, zone et/ou par createur.
 
     champs_agence = ['agence']  ou  ['agence_depart', 'agence_arrivee']
 
     champ_createur : nom du champ FK vers Employe qui a cree l'objet
-      (ex: 'cree_par'). Mettre None si le modele n'a pas cette notion
-      -> dans ce cas le filtre par agence s'applique toujours,
-      quel que soit le poste.
+      (ex: 'cree_par'). Mettre None si le modele n'a pas cette notion.
     """
     champs_agence = []
     champ_createur = 'cree_par'
@@ -62,11 +70,21 @@ class FiltreAgenceMixin:
             return qs
 
         employe = getattr(user, 'employe', None)
+        poste = employe.poste if employe else None
+
+        # Responsable planning : voit toutes les agences de sa zone
+        if poste == 'resp_planning':
+            zone = zone_de(user)
+            if not zone or not self.champs_agence:
+                return qs.none()
+            condition = Q()
+            for champ in self.champs_agence:
+                condition |= Q(**{f"{champ}__zone": zone})
+            return qs.filter(condition)
+
         agence = agence_de(user)
         if agence is None:
             return qs.none()
-
-        poste = employe.poste if employe else None
 
         if self.champ_createur and poste in POSTES_PERSONNEL:
             return qs.filter(**{self.champ_createur: employe})
@@ -83,7 +101,6 @@ class FiltreAgenceListFilter(admin.SimpleListFilter):
     """
     Filtre 'Agence' personnalise : ne propose que les agences
     que l'utilisateur a le droit de voir (au lieu de toutes les agences).
-    A utiliser dans list_filter a la place du nom de champ brut 'agence'.
     """
     title = 'agence'
     parameter_name = 'agence_id'
@@ -93,8 +110,14 @@ class FiltreAgenceListFilter(admin.SimpleListFilter):
         if voit_tout(request.user):
             agences = Agence.objects.filter(actif=True).order_by('ville', 'nom')
         else:
-            agence = agence_de(request.user)
-            agences = Agence.objects.filter(id=agence.id) if agence else Agence.objects.none()
+            employe = getattr(request.user, 'employe', None)
+            poste = employe.poste if employe else None
+            if poste == 'resp_planning':
+                zone = zone_de(request.user)
+                agences = Agence.objects.filter(actif=True, zone=zone).order_by('ville', 'nom') if zone else Agence.objects.none()
+            else:
+                agence = agence_de(request.user)
+                agences = Agence.objects.filter(id=agence.id) if agence else Agence.objects.none()
         return [(a.id, str(a)) for a in agences]
 
     def queryset(self, request, queryset):

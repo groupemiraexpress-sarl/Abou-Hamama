@@ -68,7 +68,7 @@ def trouver_agences():
     return agences
 
 
-def creer_compte(username, poste_code, groupe_nom, agence=None, compagnie=None):
+def creer_compte(username, poste_code, groupe_nom, agence=None, compagnie=None, zone=''):
     user, cree_user = User.objects.get_or_create(
         username=username,
         defaults={'is_staff': True},
@@ -92,18 +92,21 @@ def creer_compte(username, poste_code, groupe_nom, agence=None, compagnie=None):
             'poste': poste_code,
             'agence': agence,
             'compagnie': compagnie,
+            'zone': zone,
         },
     )
     if not cree_emp:
         employe.poste = poste_code
         employe.agence = agence
         employe.compagnie = compagnie
+        employe.zone = zone
         employe.nom = username
         employe.save()
 
     etat = "cree" if cree_user else "mis a jour"
-    lieu = agence.nom if agence else "(siege, toutes agences)"
+    lieu = agence.nom if agence else (f"zone {zone}" if zone else "(siege, toutes agences)")
     print(f"  {username} : {etat} — {groupe_nom} — {lieu}")
+    return employe
 
 
 print("=== CREATION DES COMPTES DE TEST ===\n")
@@ -124,6 +127,10 @@ if not compagnie:
 else:
     print("--- Compte PDG (unique, sans agence, voit tout) ---")
     creer_compte("test_pdg", 'pdg', "PDG / Direction", agence=None, compagnie=compagnie)
+
+    print("\n--- Comptes Responsable planning (un par zone) ---")
+    creer_compte("test_planning_nord", 'resp_planning', "Responsable planning", agence=None, compagnie=compagnie, zone='nord')
+    creer_compte("test_planning_sud", 'resp_planning', "Responsable planning", agence=None, compagnie=compagnie, zone='sud')
 
     print("\n--- Postes lies a une agence (un compte par agence) ---")
     for poste_code, groupe_nom in POSTES_PAR_AGENCE.items():

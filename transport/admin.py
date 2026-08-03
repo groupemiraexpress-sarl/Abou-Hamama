@@ -31,7 +31,9 @@ class AgenceAdmin(admin.ModelAdmin):
 
 
 @admin.register(Bus)
-class BusAdmin(admin.ModelAdmin):
+class BusAdmin(FiltreAgenceMixin, admin.ModelAdmin):
+    champs_agence = ['agence']
+    champ_createur = None
     list_display = ('immatriculation', 'agence', 'marque', 'modele', 'capacite', 'statut', 'kilometrage')
     list_filter = ('statut', 'agence', 'compagnie', 'marque')
     search_fields = ('immatriculation', 'marque', 'modele')
@@ -40,7 +42,9 @@ class BusAdmin(admin.ModelAdmin):
 
 
 @admin.register(Chauffeur)
-class ChauffeurAdmin(admin.ModelAdmin):
+class ChauffeurAdmin(FiltreAgenceMixin, admin.ModelAdmin):
+    champs_agence = ['agence']
+    champ_createur = None
     list_display = ('nom', 'prenom', 'agence', 'telephone', 'numero_permis', 'date_expiration_permis', 'statut', 'actif')
     list_filter = ('statut', 'agence', 'compagnie', 'actif')
     search_fields = ('nom', 'prenom', 'numero_permis', 'telephone')
@@ -58,7 +62,9 @@ class TrajetAdmin(admin.ModelAdmin):
 
 
 @admin.register(Voyage)
-class VoyageAdmin(admin.ModelAdmin):
+class VoyageAdmin(FiltreAgenceMixin, admin.ModelAdmin):
+    champs_agence = ['bus__agence']
+    champ_createur = None
     list_display = ('trajet', 'date_depart', 'heure_depart', 'bus', 'chauffeur', 'prix', 'places_disponibles', 'statut')
     list_filter = ('statut', 'date_depart', 'trajet__compagnie', 'bus')
     search_fields = ('trajet__ville_depart', 'trajet__ville_arrivee', 'bus__immatriculation')
@@ -347,7 +353,9 @@ class ArretLigneInline(admin.TabularInline):
 
 
 @admin.register(Ligne)
-class LigneAdmin(admin.ModelAdmin):
+class LigneAdmin(FiltreAgenceMixin, admin.ModelAdmin):
+    champs_agence = ['arrets__agence']
+    champ_createur = None
     list_display = ('nom', 'compagnie', 'apercu_villes', 'actif')
     list_filter = ('compagnie', 'actif')
     search_fields = ('nom',)

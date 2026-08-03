@@ -15,7 +15,13 @@ class Compagnie(models.Model):
 
 
 class Agence(models.Model):
+    ZONE_CHOICES = [
+        ('nord', 'Nord'),
+        ('sud', 'Sud'),
+    ]
+
     compagnie = models.ForeignKey(Compagnie, on_delete=models.CASCADE, related_name='agences')
+    zone = models.CharField(max_length=10, choices=ZONE_CHOICES, blank=True, help_text="Zone geographique (pour le planning)")
     nom = models.CharField(max_length=100)
     ville = models.CharField(max_length=50)
     adresse = models.CharField(max_length=200)
@@ -318,6 +324,8 @@ class Employe(models.Model):
     user = models.OneToOneField('auth.User', on_delete=models.SET_NULL, related_name='employe', null=True, blank=True, help_text="Compte de connexion lie a cet employe")
     compagnie = models.ForeignKey(Compagnie, on_delete=models.CASCADE, related_name='employes')
     agence = models.ForeignKey(Agence, on_delete=models.SET_NULL, related_name='employes', null=True, blank=True, help_text="Laisser vide pour un PDG (toute la compagnie)")
+    agence = models.ForeignKey(Agence, on_delete=models.SET_NULL, related_name='employes', null=True, blank=True, help_text="Laisser vide pour un PDG (toute la compagnie)")
+    zone = models.CharField(max_length=10, choices=Agence.ZONE_CHOICES, blank=True, help_text="Zone geographique geree (uniquement pour Responsable planning)")
     nom = models.CharField(max_length=100)
     prenom = models.CharField(max_length=100)
     telephone = models.CharField(max_length=20)
