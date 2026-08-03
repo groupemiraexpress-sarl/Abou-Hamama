@@ -708,12 +708,6 @@ def api_enregistrer_position(request):
 @api_view(['GET'])
 def api_positions_voyage(request, voyage_id):
     """
-    Historique des positions d'un voyage. Accessible sans authentification
-    JWT car aussi consultee depuis la carte admin (session navigateur classique).
-    La securite reelle est que voyage_id est difficile a deviner en masse
-    et ne revele qu'une position GPS, pas de donnee client sensible.
-    """
-    """
     Historique des positions d'un voyage (pour la carte en temps reel
     dans l'admin : PDG, responsable, securite).
     """
@@ -723,7 +717,7 @@ def api_positions_voyage(request, voyage_id):
 
     positions = PositionBus.objects.filter(voyage=voyage).order_by('-horodatage')[:1]
     if not positions:
-        return Response({'derniere_position': None})
+        return Response({'derniere_position': None, 'statut': voyage.statut})
 
     p = positions[0]
     return Response({
@@ -732,7 +726,8 @@ def api_positions_voyage(request, voyage_id):
             'longitude': p.longitude,
             'vitesse_kmh': p.vitesse_kmh,
             'horodatage': p.horodatage,
-        }
+        },
+        'statut': voyage.statut,
     })
 
 @api_view(['POST'])

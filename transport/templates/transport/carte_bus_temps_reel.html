@@ -24,7 +24,7 @@
             <th style="padding:8px;">Derniere position</th>
         </tr>
         {% for item in voyages_data %}
-        <tr style="border-bottom:1px solid #eef0f3;">
+        <tr id="ligne-{{ item.voyage.id }}" style="border-bottom:1px solid #eef0f3;">
             <td style="padding:8px;">{{ item.voyage.trajet.ville_depart }} → {{ item.voyage.trajet.ville_arrivee }}</td>
             <td style="padding:8px;">{{ item.voyage.bus.immatriculation }}</td>
             <td style="padding:8px;">{{ item.voyage.chauffeur.prenom }} {{ item.voyage.chauffeur.nom }}</td>
@@ -109,6 +109,18 @@ async function rafraichirPositions() {
         try {
             const reponse = await fetch('/api/voyage/' + v.voyageId + '/positions/');
             const data = await reponse.json();
+            if (data.statut === 'termine') {
+                if (marqueurs[v.voyageId]) {
+                    carte.removeLayer(marqueurs[v.voyageId]);
+                    delete marqueurs[v.voyageId];
+                }
+                const ligneTableau = document.getElementById('ligne-' + v.voyageId);
+                if (ligneTableau) {
+                    ligneTableau.remove();
+                }
+                v.termine = true;
+                continue;
+            }
             if (data.derniere_position) {
                 v.lat = data.derniere_position.latitude;
                 v.lng = data.derniere_position.longitude;
