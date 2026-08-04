@@ -11,7 +11,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 
-from .models import Voyage, Colis, TransfertArgent, Client, Reservation, Siege, Promotion, DemandeColis, Agence, DemandeTransfert, Chauffeur, PositionBus
+from .models import Voyage, Colis, TransfertArgent, Client, Reservation, Siege, Promotion, DemandeColis, Agence, DemandeTransfert, Chauffeur, PositionBus, Employe
 from .serializers import VoyageSerializer, ColisSerializer, TransfertArgentSerializer, ReservationSerializer, SiegeSerializer, PromotionSerializer, DemandeColisSerializer, AgenceSerializer, DemandeTransfertSerializer
 
 
@@ -750,3 +750,82 @@ def api_terminer_voyage(request):
     voyage.save()
 
     return Response({'message': 'Voyage termine avec succes.'})
+
+@api_view(['POST'])
+def api_connexion_securite(request):
+    """Connexion dediee aux agents de securite, pour scanner les billets."""
+    username = request.data.get('username', '').strip()
+    password = request.data.get('password', '')
+    if not username or not password:
+        return Response({'erreur': 'Identifiant et mot de passe obligatoires.'}, status=400)
+
+    from django.contrib.auth import authenticate
+    user = authenticate(request, username=username, password=password)
+    if user is None:
+        return Response({'erreur': 'Identifiant ou mot de passe incorrect.'}, status=401)
+
+    employe = Employe.objects.filter(user=user, poste='securite').first()
+    if not employe:
+        return Response({'erreur': 'Ce compte n\'est pas un compte agent de securite.'}, status=403)
+
+    from rest_framework_simplejwt.tokens import RefreshToken
+    refresh = RefreshToken.for_user(user)
+    return Response({
+        'access': str(refresh.access_token),
+        'refresh': str(refresh),
+        'nom': employe.nom,
+        'prenom': employe.prenom,
+        'agence': employe.agence.nom if employe.agence else None,
+    })
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def api_scanner_billet(request):
+    """
+    Scanne un billet au controle avant embarquement.
+    L'agent ne peut scanner que les billets des voyages partant de sa propre agence.
+    """
+    employe = Employe.objects.filter(user=request.user, poste='securite').first()
+    if not employe:
+        return Response({'erreur': 'Compte agent de securite introuvable.'}, status=404)
+    if not employe.agence:
+        return Response({'erreur': 'Aucune agence rattachee a ce compte.'}, status=403)
+
+    numero_reservation = request.data.get('numero_reservation', '').strip()
+    if not numero_reservation:
+        return Response({'erreur': 'Numero de reservation obligatoire.'}, status=400)
+
+    reservation = Reservation.objects.filter(numero_reservation=numero_reservation).select_related('voyage__bus__agence', 'client').first()
+    if not reservation:
+        return Response({'erreur': 'Billet introuvable.', 'valide': False}, status=404)
+
+    if not reservation.voyage.bus.agence or reservation.voyage.bus.agence_id != employe.agence_id:
+        return Response({'erreur': 'Ce billet ne concerne pas votre agence.', 'valide': False}, status=403)
+
+    if reservation.statut not in ('payee',):
+        return Response({'erreur': 'Ce billet n\'est pas paye.', 'valide': False, 'statut': reservation.statut}, status=400)
+
+    if reservation.embarque:
+        return Response({
+            'erreur': 'Ce billet a deja ete scanne.',
+            'valide': False,
+            'deja_scanne': True,
+            'date_embarquement': reservation.date_embarquement,
+        }, status=400)
+
+    from django.utils import timezone as tz
+    reservation.embarque = True
+    reservation.date_embarquement = tz.now()
+    reservation.scanne_par = employe
+    reservation.save()
+
+    nom_voyageur = (reservation.voyageur_prenom + ' ' + reservation.voyageur_nom).strip() or reservation.client.nom
+
+    return Response({
+        'valide': True,
+        'message': 'Embarquement confirme.',
+        'voyageur': nom_voyageur,
+        'trajet': f"{reservation.voyage.trajet.ville_depart} -> {reservation.voyage.trajet.ville_arrivee}",
+        'siege': reservation.siege.numero if reservation.siege else None,
+    })

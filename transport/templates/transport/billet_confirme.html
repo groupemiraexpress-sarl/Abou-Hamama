@@ -32,6 +32,10 @@
             <tr><td style="padding:6px 0 0; color:#1F3864; font-weight:600;">Montant</td>
                 <td style="padding:6px 0 0; text-align:right; font-weight:700; color:#1F3864;">{{ reservation.montant_total }} FCFA</td></tr>
         </table>
+        <div style="text-align:center; margin-top:14px; padding-top:14px; border-top:1px dashed #d1d5db;">
+            <p style="color:#6b7280; font-size:.8rem; margin-bottom:8px;">Presenter ce code au controle</p>
+            <div id="qr-{{ reservation.id }}" style="display:inline-block;"></div>
+        </div>
     </div>
     {% endfor %}
 
@@ -58,4 +62,14 @@
         <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
     </a>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+    {% for reservation in reservations %}
+    new QRCode(document.getElementById("qr-{{ reservation.id }}"), {
+    text: "{{ reservation.numero_reservation }}",
+    width: 140,
+    height: 140,
+});
+{% endfor %}
+</script>
 {% endblock %}
