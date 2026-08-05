@@ -87,6 +87,8 @@ class ReservationSerializer(serializers.ModelSerializer):
     ville_montee = serializers.SerializerMethodField()
     ville_descente = serializers.SerializerMethodField()
 
+    voyage_id = serializers.IntegerField(source='voyage.id', read_only=True)
+
     def get_numeros_sieges(self, obj):
         return [obj.siege.numero] if obj.siege else []
 
@@ -107,7 +109,7 @@ class ReservationSerializer(serializers.ModelSerializer):
             'date_depart', 'heure_depart', 'nombre_places',
             'montant_total', 'statut', 'statut_libelle', 'date_reservation',
             'numeros_sieges', 'voyageur', 'voyageur_telephone',
-            'ville_montee', 'ville_descente',
+            'ville_montee', 'ville_descente', 'voyage_id',
         ]
 
 

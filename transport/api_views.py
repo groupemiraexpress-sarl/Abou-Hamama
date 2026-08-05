@@ -709,17 +709,42 @@ def api_enregistrer_position(request):
 def api_positions_voyage(request, voyage_id):
     """
     Historique des positions d'un voyage (pour la carte en temps reel
-    dans l'admin : PDG, responsable, securite).
+    dans l'admin : PDG, responsable, securite) et estimation d'arrivee.
     """
-    voyage = Voyage.objects.filter(id=voyage_id).first()
+    import unicodedata
+
+    def normaliser(texte):
+        texte = unicodedata.normalize('NFD', texte)
+        return ''.join(c for c in texte if unicodedata.category(c) != 'Mn').lower().strip()
+
+    voyage = Voyage.objects.filter(id=voyage_id).select_related('trajet').first()
     if not voyage:
         return Response({'erreur': 'Voyage introuvable.'}, status=404)
 
     positions = PositionBus.objects.filter(voyage=voyage).order_by('-horodatage')[:1]
     if not positions:
-        return Response({'derniere_position': None, 'statut': voyage.statut})
+        return Response({'derniere_position': None, 'statut': voyage.statut, 'estimation': None})
 
     p = positions[0]
+
+    estimation = None
+    ville_cible = normaliser(voyage.trajet.ville_arrivee)
+    agence_arrivee = None
+    for a in Agence.objects.filter(latitude__isnull=False, longitude__isnull=False):
+        if normaliser(a.ville) == ville_cible:
+            agence_arrivee = a
+            break
+
+    if agence_arrivee and voyage.statut == 'en_cours':
+        distance_restante = distance_km(p.latitude, p.longitude, agence_arrivee.latitude, agence_arrivee.longitude)
+        vitesse_estimee = p.vitesse_kmh if p.vitesse_kmh and p.vitesse_kmh > 10 else 50
+        heures_restantes = distance_restante / vitesse_estimee
+        minutes_restantes = round(heures_restantes * 60)
+        estimation = {
+            'distance_restante_km': round(distance_restante, 1),
+            'minutes_restantes': minutes_restantes,
+        }
+
     return Response({
         'derniere_position': {
             'latitude': p.latitude,
@@ -728,6 +753,7 @@ def api_positions_voyage(request, voyage_id):
             'horodatage': p.horodatage,
         },
         'statut': voyage.statut,
+        'estimation': estimation,
     })
 
 @api_view(['POST'])

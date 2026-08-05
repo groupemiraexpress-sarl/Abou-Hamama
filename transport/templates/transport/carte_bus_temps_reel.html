@@ -22,6 +22,7 @@
             <th style="padding:8px;">Bus</th>
             <th style="padding:8px;">Chauffeur</th>
             <th style="padding:8px;">Derniere position</th>
+            <th style="padding:8px;">Arrivee estimee</th>
         </tr>
         {% for item in voyages_data %}
         <tr id="ligne-{{ item.voyage.id }}" style="border-bottom:1px solid #eef0f3;">
@@ -35,6 +36,7 @@
                     <span style="color:#b91c1c;">Aucun signal</span>
                 {% endif %}
             </td>
+            <td style="padding:8px;" id="estimation-{{ item.voyage.id }}">—</td>
         </tr>
         {% endfor %}
     </table>
@@ -125,6 +127,15 @@ async function rafraichirPositions() {
                 v.lat = data.derniere_position.latitude;
                 v.lng = data.derniere_position.longitude;
                 v.horodatage = data.derniere_position.horodatage;
+            }
+            v.estimation = data.estimation;
+            const cellEstimation = document.getElementById('estimation-' + v.voyageId);
+            if (cellEstimation) {
+                if (data.estimation) {
+                    cellEstimation.textContent = 'Environ ' + data.estimation.minutes_restantes + ' min (' + data.estimation.distance_restante_km + ' km)';
+                } else {
+                    cellEstimation.textContent = '—';
+                }
             }
         } catch (e) {
             // ignore les erreurs reseau ponctuelles
