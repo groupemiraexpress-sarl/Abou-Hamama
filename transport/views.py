@@ -525,3 +525,49 @@ def carte_bus_temps_reel(request):
         'voyages_data': voyages_data,
         'voyages_json': voyages_json,
     })
+
+
+@staff_member_required
+def manifeste_bord(request):
+    """
+    Manifeste de bord imprimable : liste des passagers d'un voyage,
+    avec leur statut d'embarquement (scanne ou non).
+    Accessible au PDG, Responsable, et Securite.
+    """
+    employe = getattr(request.user, 'employe', None)
+    poste = employe.poste if employe else None
+    autorise = request.user.is_superuser or poste in ('pdg', 'responsable', 'securite')
+
+    if not autorise:
+        return redirect('admin:index')
+
+    voyage_choisi = None
+    reservations = []
+
+    voyages_disponibles = Voyage.objects.filter(
+        statut__in=['programme', 'en_cours', 'termine']
+    ).select_related('trajet', 'bus').order_by('-date_depart', '-heure_depart')[:50]
+
+    if not (request.user.is_superuser or poste == 'pdg'):
+        agence = employe.agence if employe else None
+        if agence:
+            voyages_disponibles = voyages_disponibles.filter(bus__agence=agence)
+        else:
+            voyages_disponibles = voyages_disponibles.none()
+
+    voyage_id = request.GET.get('voyage')
+    if voyage_id:
+        voyage_choisi = Voyage.objects.filter(id=voyage_id).select_related('trajet', 'bus', 'chauffeur').first()
+        if voyage_choisi:
+            reservations = Reservation.objects.filter(
+                voyage=voyage_choisi, statut='payee'
+            ).select_related('client', 'siege').order_by('embarque', 'voyageur_nom')
+
+    nombre_embarques = reservations.filter(embarque=True).count() if voyage_choisi else 0
+
+    return render(request, 'transport/manifeste_bord.html', {
+        'voyages_disponibles': voyages_disponibles,
+        'voyage_choisi': voyage_choisi,
+        'reservations': reservations,
+        'nombre_embarques': nombre_embarques,
+    })

@@ -9,6 +9,7 @@ from .admin_filtres import voit_tout, agence_de, POSTES_PERSONNEL
 
 
 def statistiques_tableau_bord(user=None):
+    from .models import AlerteVoyage
     aujourd_hui = timezone.now().date()
 
     employe = getattr(user, 'employe', None) if user else None
@@ -67,9 +68,12 @@ def statistiques_tableau_bord(user=None):
     colis_arrives = colis_qs.filter(statut='arrive').count()
     transferts_attente = transferts_qs.filter(statut='en_attente').count()
 
+    alertes_non_resolues = AlerteVoyage.objects.filter(resolue=False).count()
+
     return {
         'voyages_aujourd_hui': voyages_aujourd_hui,
         'voyages_a_venir': voyages_a_venir,
+        'alertes_non_resolues': alertes_non_resolues,
         'reservations_jour': reservations_jour,
         'reservations_attente': reservations_attente,
         'recette_jour': recette_jour,

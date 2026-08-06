@@ -1,0 +1,87 @@
+{% extends "transport/base.html" %}
+{% load static %}
+{% block titre %}Manifeste de bord — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}Manifeste de bord{% endblock %}
+{% block contenu %}
+
+<div class="card no-print">
+    <form method="get">
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Choisir un voyage</label>
+        <select name="voyage" onchange="this.form.submit()" style="width:100%; padding:12px; font-size:1rem; border:1px solid #d1d5db; border-radius:8px;">
+            <option value="">-- Selectionner --</option>
+            {% for v in voyages_disponibles %}
+                <option value="{{ v.id }}" {% if voyage_choisi.id == v.id %}selected{% endif %}>
+                    {{ v.trajet.ville_depart }} → {{ v.trajet.ville_arrivee }} — {{ v.date_depart|date:"d/m/Y" }} {{ v.heure_depart|time:"H:i" }} ({{ v.bus.immatriculation }})
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
+
+{% if voyage_choisi %}
+<div class="card" id="zone-impression">
+    <div style="text-align:center; margin-bottom:20px;">
+        <img src="{% static 'transport/logo_abou_hamama.png' %}" alt="Express Abou Hamama" style="width:60px; height:60px; border-radius:50%; box-shadow:0 2px 6px rgba(0,0,0,.2);">
+        <h2 style="color:#1F3864; margin-top:10px;">Manifeste de bord</h2>
+        <p style="color:#6b7280; font-size:.9rem;">{{ voyage_choisi.trajet.ville_depart }} → {{ voyage_choisi.trajet.ville_arrivee }}</p>
+        <p style="color:#6b7280; font-size:.85rem;">{{ voyage_choisi.date_depart|date:"d/m/Y" }} a {{ voyage_choisi.heure_depart|time:"H:i" }} — Bus {{ voyage_choisi.bus.immatriculation }}</p>
+        {% if voyage_choisi.chauffeur %}
+        <p style="color:#6b7280; font-size:.85rem;">Chauffeur : {{ voyage_choisi.chauffeur.prenom }} {{ voyage_choisi.chauffeur.nom }}</p>
+        {% endif %}
+    </div>
+
+    <div style="display:flex; justify-content:space-between; margin-bottom:14px; padding:10px; background:#f4f6f9; border-radius:8px;">
+        <span style="color:#374151; font-size:.9rem;">Total billets vendus : <strong>{{ reservations|length }}</strong></span>
+        <span style="color:#059669; font-size:.9rem;">
+            Embarques : <strong>{{ nombre_embarques }}</strong>
+        </span>
+    </div>
+
+    {% if reservations %}
+    <table style="width:100%; border-collapse:collapse; font-size:.9rem;">
+        <tr style="background:#f4f6f9; text-align:left;">
+            <th style="padding:8px;">Passager</th>
+            <th style="padding:8px;">Telephone</th>
+            <th style="padding:8px;">Siege</th>
+            <th style="padding:8px;">Statut</th>
+        </tr>
+        {% for r in reservations %}
+        <tr style="border-bottom:1px solid #eef0f3;">
+            <td style="padding:8px;">{{ r.voyageur_prenom }} {{ r.voyageur_nom }}</td>
+            <td style="padding:8px;">{{ r.voyageur_telephone }}</td>
+            <td style="padding:8px;">{{ r.siege.numero|default:"—" }}</td>
+            <td style="padding:8px;">
+                {% if r.embarque %}
+                    <span style="color:#059669; font-weight:600;">✓ Embarque</span>
+                {% else %}
+                    <span style="color:#b91c1c; font-weight:600;">✗ Non embarque</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p style="color:#6b7280; text-align:center;">Aucun billet vendu pour ce voyage.</p>
+    {% endif %}
+</div>
+
+<div class="no-print" style="display:flex; gap:12px; margin-top:20px;">
+    <button onclick="window.print()" class="btn" style="flex:1; background:#16a34a;">
+        <i class="fa-solid fa-print"></i> Imprimer le manifeste
+    </button>
+</div>
+{% endif %}
+
+<div class="no-print" style="text-align:center; margin-top:20px;">
+    <a href="{% url 'admin:index' %}" class="btn" style="background:#6b7280;">
+        <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
+    </a>
+</div>
+
+<style>
+@media print {
+    .no-print { display: none !important; }
+    header, footer { display: none !important; }
+}
+</style>
+{% endblock %}

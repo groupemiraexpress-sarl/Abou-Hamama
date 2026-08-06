@@ -4,7 +4,8 @@ from .admin_filtres import FiltreAgenceMixin, FiltreAgenceListFilter
 from .models import (
     Compagnie, Agence, Bus, Chauffeur, Trajet, Voyage,
     Client, Reservation, Colis, Employe, TransfertArgent,
-    Entretien, PleinCarburant, Promotion, DemandeColis, DemandeTransfert, Ligne, ArretLigne
+    Entretien, PleinCarburant, Promotion, DemandeColis, DemandeTransfert, Ligne, ArretLigne,
+    AlerteVoyage
 )
 
 admin.site.site_header = "Express Abou Hamama"
@@ -366,3 +367,18 @@ class LigneAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     def apercu_villes(self, obj):
         villes = obj.villes()
         return " -> ".join(villes) if villes else "(aucun arret)"
+
+@admin.register(AlerteVoyage)
+class AlerteVoyageAdmin(admin.ModelAdmin):
+    list_display = ('type_alerte', 'voyage', 'message_court', 'date_creation', 'resolue')
+    list_filter = ('type_alerte', 'resolue', 'date_creation')
+    search_fields = ('voyage__bus__immatriculation', 'message')
+    list_editable = ('resolue',)
+    ordering = ('-date_creation',)
+
+    @admin.display(description="Message")
+    def message_court(self, obj):
+        return obj.message[:60] + ('...' if len(obj.message) > 60 else '')
+
+    def has_add_permission(self, request):
+        return False

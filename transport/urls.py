@@ -14,6 +14,7 @@ urlpatterns = [
     path('espace/rapport-maintenance/', views.rapport_maintenance_agence, name='rapport_maintenance_agence'),
     path('espace/rapport-mon-agence/', views.rapport_mon_agence, name='rapport_mon_agence'),
     path('espace/carte-bus/', views.carte_bus_temps_reel, name='carte_bus_temps_reel'),
+    path('espace/manifeste-bord/', views.manifeste_bord, name='manifeste_bord'),
     path('espace/billet/<int:reservation_id>/', views.billet_confirme, name='billet_confirme'),
     path('espace/billets-confirmes/', views.billets_confirmes, name='billets_confirmes'),
     path('espace/liste-billets/', views.liste_billets, name='liste_billets'),

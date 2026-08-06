@@ -630,3 +630,26 @@ class PositionBus(models.Model):
         verbose_name = "Position bus"
         verbose_name_plural = "Positions bus"
         ordering = ['-horodatage']
+
+
+class AlerteVoyage(models.Model):
+    """Alerte automatique quand un bus s'arrete anormalement longtemps hors agence."""
+    TYPE_CHOICES = [
+        ('arret_anormal', 'Arret anormal'),
+    ]
+
+    voyage = models.ForeignKey('Voyage', on_delete=models.CASCADE, related_name='alertes')
+    type_alerte = models.CharField(max_length=20, choices=TYPE_CHOICES, default='arret_anormal')
+    message = models.TextField()
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
+    date_creation = models.DateTimeField(auto_now_add=True)
+    resolue = models.BooleanField(default=False, help_text="Cocher une fois verifiee par un responsable")
+
+    def __str__(self):
+        return f"{self.get_type_alerte_display()} - {self.voyage} ({self.date_creation:%d/%m %H:%M})"
+
+    class Meta:
+        verbose_name = "Alerte voyage"
+        verbose_name_plural = "Alertes voyage"
+        ordering = ['-date_creation']

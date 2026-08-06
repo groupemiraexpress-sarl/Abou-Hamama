@@ -144,6 +144,10 @@
     <h2 class="stats-titre">A traiter</h2>
     <div class="stats-grille">
       <div class="stat-carte alerte">
+        <div class="stat-valeur">{{ stats.alertes_non_resolues }}</div>
+        <div class="stat-label">Alertes de securite</div>
+      </div>
+      <div class="stat-carte alerte">
         <div class="stat-valeur">{{ stats.demandes_colis_attente }}</div>
         <div class="stat-label">Demandes colis en attente</div>
       </div>
@@ -196,6 +200,22 @@
                 <span class="groupe-actions">
                   {% if model.add_url %}<a href="{{ model.add_url }}">+ Ajouter</a>{% endif %}
                   {% if model.admin_url %}<a href="{{ model.admin_url }}">Modifier</a>{% endif %}
+                </span>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="groupe-metier">
+        <h2 class="groupe-titre">Securite</h2>
+        <div class="groupe-liste">
+          {% for model in app.models %}
+            {% if model.object_name == 'AlerteVoyage' %}
+              <div class="groupe-ligne">
+                <a class="nom" href="{{ model.admin_url }}">{{ model.name }}</a>
+                <span class="groupe-actions">
+                  {% if model.admin_url %}<a href="{{ model.admin_url }}">Voir</a>{% endif %}
                 </span>
               </div>
             {% endif %}

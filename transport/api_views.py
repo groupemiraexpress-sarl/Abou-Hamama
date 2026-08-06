@@ -642,7 +642,11 @@ def api_enregistrer_position(request):
     Appelee automatiquement par l'app chauffeur toutes les X secondes.
     Marque automatiquement le voyage comme termine si le bus est
     proche (moins de 2 km) de la ville d'arrivee.
+    Detecte aussi les arrets anormaux (immobile 10+ min hors agence).
     """
+    from .models import AlerteVoyage
+    from datetime import timedelta
+
     chauffeur = Chauffeur.objects.filter(user=request.user).first()
     if not chauffeur:
         return Response({'erreur': 'Compte chauffeur introuvable.'}, status=404)
@@ -701,6 +705,40 @@ def api_enregistrer_position(request):
             voyage.statut = 'termine'
             voyage.save()
             voyage_termine = True
+
+    # --- Detection d'arret anormal (immobile 10+ min, hors de toute agence) ---
+    if not voyage_termine and voyage.statut == 'en_cours':
+        seuil = timezone.now() - timedelta(minutes=10)
+        positions_recentes = PositionBus.objects.filter(
+            voyage=voyage, horodatage__gte=seuil
+        ).order_by('horodatage')
+
+        premiere = positions_recentes.first()
+        if premiere and (timezone.now() - premiere.horodatage) >= timedelta(minutes=10):
+            distance_max = 0
+            for p in positions_recentes:
+                d = distance_km(premiere.latitude, premiere.longitude, p.latitude, p.longitude)
+                distance_max = max(distance_max, d)
+
+            proche_agence = False
+            for a in Agence.objects.filter(latitude__isnull=False, longitude__isnull=False):
+                if distance_km(latitude, longitude, a.latitude, a.longitude) <= 2:
+                    proche_agence = True
+                    break
+
+            if distance_max < 0.5 and not proche_agence:
+                alerte_existante = AlerteVoyage.objects.filter(
+                    voyage=voyage, type_alerte='arret_anormal', resolue=False,
+                    date_creation__gte=seuil,
+                ).exists()
+                if not alerte_existante:
+                    AlerteVoyage.objects.create(
+                        voyage=voyage,
+                        type_alerte='arret_anormal',
+                        message=f"Le bus {voyage.bus.immatriculation} est immobile depuis plus de 10 minutes, hors agence.",
+                        latitude=latitude,
+                        longitude=longitude,
+                    )
 
     return Response({'message': 'Position enregistree.', 'voyage_termine': voyage_termine}, status=201)
 
