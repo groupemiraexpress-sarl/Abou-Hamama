@@ -855,3 +855,26 @@ def api_scanner_billet(request):
         'trajet': f"{reservation.voyage.trajet.ville_depart} -> {reservation.voyage.trajet.ville_arrivee}",
         'siege': reservation.siege.numero if reservation.siege else None,
     })
+
+@api_view(['GET'])
+def api_historique_positions_voyage(request, voyage_id):
+    """
+    Historique complet des positions d'un voyage (pour affichage
+    du trajet reel parcouru, cote client, apres la fin du voyage).
+    """
+    voyage = Voyage.objects.filter(id=voyage_id).first()
+    if not voyage:
+        return Response({'erreur': 'Voyage introuvable.'}, status=404)
+
+    positions = PositionBus.objects.filter(voyage=voyage).order_by('horodatage')
+
+    points = [
+        {'latitude': p.latitude, 'longitude': p.longitude, 'horodatage': p.horodatage}
+        for p in positions
+    ]
+
+    return Response({
+        'statut': voyage.statut,
+        'points': points,
+        'nombre_points': len(points),
+    })
