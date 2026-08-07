@@ -1,5 +1,6 @@
 {% extends "admin/base.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block extrastyle %}
   {{ block.super }}
@@ -33,46 +34,84 @@
             {% if employe %}
               <div class="menu-compte-role">{{ employe.get_poste_display }}{% if employe.agence %} — {{ employe.agence.nom }}{% endif %}</div>
             {% elif request.user.is_superuser %}
-              <div class="menu-compte-role">Administrateur</div>
+              <div class="menu-compte-role">{% trans "Administrateur" %}</div>
             {% endif %}
           {% endwith %}
         </div>
-        <a href="{% url 'transport:mon_profil' %}">Mon profil</a>
+        <a href="{% url 'transport:mon_profil' %}">{% trans "Mon profil" %}</a>
         {% with employe=request.user.employe|default_if_none:None %}
           {% if request.user.is_superuser or employe.poste == 'pdg' or employe.poste == 'rh' %}
-            <a href="{% url 'transport:rapport_agence' %}">Rapport RH par agence</a>
+            <a href="{% url 'transport:rapport_agence' %}">{% trans "Rapport RH par agence" %}</a>
           {% endif %}
           {% if request.user.is_superuser or employe.poste == 'pdg' or employe.poste == 'comptable' %}
-            <a href="{% url 'transport:rapport_finances_agence' %}">Rapport financier par agence</a>
+            <a href="{% url 'transport:rapport_finances_agence' %}">{% trans "Rapport financier par agence" %}</a>
           {% endif %}
           {% if request.user.is_superuser or employe.poste == 'pdg' or employe.poste == 'resp_maintenance' %}
-            <a href="{% url 'transport:rapport_maintenance_agence' %}">Rapport maintenance par agence</a>
+            <a href="{% url 'transport:rapport_maintenance_agence' %}">{% trans "Rapport maintenance par agence" %}</a>
           {% endif %}
           {% if request.user.is_superuser or employe.poste == 'pdg' or employe.poste == 'responsable' or employe.poste == 'securite' %}
-            <a href="{% url 'transport:carte_bus_temps_reel' %}">Carte des bus en direct</a>
+            <a href="{% url 'transport:carte_bus_temps_reel' %}">{% trans "Carte des bus en direct" %}</a>
           {% endif %}
           {% if request.user.is_superuser or employe.poste == 'pdg' or employe.poste == 'responsable' or employe.poste == 'securite' %}
-            <a href="{% url 'transport:manifeste_bord' %}">Manifeste de bord</a>
+            <a href="{% url 'transport:manifeste_bord' %}">{% trans "Manifeste de bord" %}</a>
           {% endif %}
           {% if request.user.is_superuser or employe.poste == 'pdg' %}
-            <a href="{% url 'transport:tableau_bord_pdg' %}">Vue d'ensemble PDG</a>
+            <a href="{% url 'transport:tableau_bord_pdg' %}">{% trans "Vue d'ensemble PDG" %}</a>
           {% endif %}
         {% endwith %}
         {% if request.user.is_superuser %}
-          <a href="{% url 'admin:password_change' %}">Modifier le mot de passe</a>
+          <a href="{% url 'admin:password_change' %}">{% trans "Modifier le mot de passe" %}</a>
         {% else %}
           {% with employe=request.user.employe|default_if_none:None %}
             {% if employe and employe.poste == 'pdg' %}
-              <a href="{% url 'admin:password_change' %}">Modifier le mot de passe</a>
+              <a href="{% url 'admin:password_change' %}">{% trans "Modifier le mot de passe" %}</a>
             {% endif %}
           {% endwith %}
         {% endif %}
+
+        <div class="langue-zone">
+          <div class="langue-titre">Langue / اللغة</div>
+          <form action="{% url 'set_language' %}" method="post" class="langue-form">
+            {% csrf_token %}
+            <input name="next" type="hidden" value="{{ request.path }}">
+            <button type="submit" name="language" value="fr" class="langue-btn {% if LANGUAGE_CODE == 'fr' %}langue-btn-actif{% endif %}">Français</button>
+            <button type="submit" name="language" value="en" class="langue-btn {% if LANGUAGE_CODE == 'en' %}langue-btn-actif{% endif %}">English</button>
+            <button type="submit" name="language" value="ar" class="langue-btn {% if LANGUAGE_CODE == 'ar' %}langue-btn-actif{% endif %}">العربية</button>
+          </form>
+        </div>
+
         <form action="{% url 'admin:logout' %}" method="post" style="margin:0;">
           {% csrf_token %}
-          <button type="submit" class="bouton-deconnexion">Deconnexion</button>
+          <button type="submit" class="bouton-deconnexion">{% trans "Deconnexion" %}</button>
         </form>
       </div>
     </details>
   </div>
   {% endif %}
+{% endblock %}
+
+{% block extrahead %}
+  {{ block.super }}
+  <style>
+    .langue-zone { padding: 8px 12px; border-top: 1px solid #e5e7eb; }
+    .langue-titre { font-size: 11px; color: #6b7280; font-weight: bold; margin-bottom: 6px; }
+    .langue-form { display: flex; gap: 6px; margin: 0; }
+    .langue-btn { flex: 1; padding: 6px 8px; border: 1px solid #d1d5db; border-radius: 8px; background: #ffffff; color: #374151; font-size: 12px; font-weight: bold; cursor: pointer; }
+    .langue-btn:hover { background: #f3f4f6; }
+    .langue-btn-actif { background: #1F3864; color: #ffffff; border-color: #1F3864; }
+
+    /* Correction RTL : en arabe, le bouton du compte passe a gauche de l'ecran,
+       donc son sous-menu doit s'ouvrir vers la gauche (et non deborder a droite). */
+    html[dir="rtl"] .menu-utilisateur {
+      float: left !important;
+    }
+    html[dir="rtl"] .menu-compte-liste {
+      right: auto !important;
+      left: 0 !important;
+    }
+    html[dir="rtl"] .menu-compte-fleche {
+      margin-left: 0;
+      margin-right: 2px;
+    }
+  </style>
 {% endblock %}

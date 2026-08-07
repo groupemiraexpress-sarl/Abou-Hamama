@@ -1,0 +1,1067 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Express Abou Hamama\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+msgid "Français"
+msgstr "الفرنسية"
+
+msgid "English"
+msgstr "الإنجليزية"
+
+msgid "العربية"
+msgstr "العربية"
+
+msgid "Nom"
+msgstr "الاسم"
+
+msgid "Prenom"
+msgstr "الاسم الأول"
+
+msgid "Sigle"
+msgstr "الاختصار"
+
+msgid "Siege social"
+msgstr "المقر الرئيسي"
+
+msgid "Telephone"
+msgstr "الهاتف"
+
+msgid "Email"
+msgstr "البريد الإلكتروني"
+
+msgid "Date de creation"
+msgstr "تاريخ الإنشاء"
+
+msgid "Actif"
+msgstr "نشط"
+
+msgid "Compagnie"
+msgstr "الشركة"
+
+msgid "Compagnies"
+msgstr "الشركات"
+
+msgid "Nord"
+msgstr "الشمال"
+
+msgid "Sud"
+msgstr "الجنوب"
+
+msgid "Zone"
+msgstr "المنطقة"
+
+msgid "Zone geographique (pour le planning)"
+msgstr "المنطقة الجغرافية (للتخطيط)"
+
+msgid "Ville"
+msgstr "المدينة"
+
+msgid "Adresse"
+msgstr "العنوان"
+
+msgid "Latitude"
+msgstr "خط العرض"
+
+msgid "Longitude"
+msgstr "خط الطول"
+
+msgid "Responsable"
+msgstr "المسؤول"
+
+msgid "Agence"
+msgstr "الوكالة"
+
+msgid "Agences"
+msgstr "الوكالات"
+
+msgid "En service"
+msgstr "في الخدمة"
+
+msgid "En maintenance"
+msgstr "قيد الصيانة"
+
+msgid "Hors service"
+msgstr "خارج الخدمة"
+
+msgid "Agence de rattachement du bus"
+msgstr "وكالة انتماء الحافلة"
+
+msgid "Immatriculation"
+msgstr "رقم التسجيل"
+
+msgid "Marque"
+msgstr "الماركة"
+
+msgid "Modele"
+msgstr "الطراز"
+
+msgid "Capacite"
+msgstr "السعة"
+
+msgid "Kilometrage"
+msgstr "عدد الكيلومترات"
+
+msgid "Annee"
+msgstr "السنة"
+
+msgid "Statut"
+msgstr "الحالة"
+
+msgid "Date visite technique"
+msgstr "تاريخ الفحص الفني"
+
+msgid "Date assurance"
+msgstr "تاريخ التأمين"
+
+msgid "Bus"
+msgstr "الحافلة"
+
+msgid "Disponible"
+msgstr "متاح"
+
+msgid "En mission"
+msgstr "في مهمة"
+
+msgid "En repos"
+msgstr "في راحة"
+
+msgid "Inactif"
+msgstr "غير نشط"
+
+msgid "Compte de connexion"
+msgstr "حساب الدخول"
+
+msgid "Compte de connexion de ce chauffeur (cree par le PDG)"
+msgstr "حساب دخول هذا السائق (أنشأه المدير العام)"
+
+msgid "Agence de rattachement du chauffeur"
+msgstr "وكالة انتماء السائق"
+
+msgid "Numero de permis"
+msgstr "رقم رخصة القيادة"
+
+msgid "Date d'expiration du permis"
+msgstr "تاريخ انتهاء الرخصة"
+
+msgid "Date d'embauche"
+msgstr "تاريخ التوظيف"
+
+msgid "Annees d'experience"
+msgstr "سنوات الخبرة"
+
+msgid "Photo"
+msgstr "الصورة"
+
+msgid "Chauffeur"
+msgstr "السائق"
+
+msgid "Chauffeurs"
+msgstr "السائقون"
+
+msgid "Ville de depart"
+msgstr "مدينة الانطلاق"
+
+msgid "Ville d'arrivee"
+msgstr "مدينة الوصول"
+
+msgid "Distance (km)"
+msgstr "المسافة (كم)"
+
+msgid "Distance en kilometres"
+msgstr "المسافة بالكيلومترات"
+
+msgid "Duree estimee (heures)"
+msgstr "المدة المقدرة (ساعات)"
+
+msgid "Duree estimee en heures"
+msgstr "المدة المقدرة بالساعات"
+
+msgid "Prix de base"
+msgstr "السعر الأساسي"
+
+msgid "Prix du billet en FCFA"
+msgstr "سعر التذكرة بالفرنك"
+
+msgid "Trajet"
+msgstr "المسار"
+
+msgid "Trajets"
+msgstr "المسارات"
+
+msgid "Programme"
+msgstr "مبرمج"
+
+msgid "En cours"
+msgstr "جارية"
+
+msgid "Termine"
+msgstr "منتهية"
+
+msgid "Annule"
+msgstr "ملغاة"
+
+msgid "Ligne"
+msgstr "الخط"
+
+msgid "Ligne desservie (si le voyage dessert plusieurs villes)"
+msgstr "الخط المخدوم (إذا كانت الرحلة تخدم عدة مدن)"
+
+msgid "Date de depart"
+msgstr "تاريخ الانطلاق"
+
+msgid "Heure de depart"
+msgstr "ساعة الانطلاق"
+
+msgid "Heure d'arrivee prevue"
+msgstr "ساعة الوصول المتوقعة"
+
+msgid "Prix"
+msgstr "السعر"
+
+msgid "Places disponibles"
+msgstr "المقاعد المتاحة"
+
+msgid "Notes"
+msgstr "ملاحظات"
+
+msgid "Voyage"
+msgstr "الرحلة"
+
+msgid "Voyages"
+msgstr "الرحلات"
+
+msgid "Particulier"
+msgstr "فرد"
+
+msgid "Entreprise"
+msgstr "شركة"
+
+msgid "Carte nationale d'identite"
+msgstr "بطاقة الهوية الوطنية"
+
+msgid "Passeport"
+msgstr "جواز السفر"
+
+msgid "Acte de naissance"
+msgstr "شهادة الميلاد"
+
+msgid "Carte professionnelle"
+msgstr "البطاقة المهنية"
+
+msgid "Permis de conduire"
+msgstr "رخصة القيادة"
+
+msgid "Autre piece"
+msgstr "وثيقة أخرى"
+
+msgid "Bronze"
+msgstr "برونزي"
+
+msgid "Argent"
+msgstr "فضي"
+
+msgid "Or"
+msgstr "ذهبي"
+
+msgid "Compte de connexion lie a cette fiche client (app mobile)"
+msgstr "حساب الدخول المرتبط ببطاقة العميل (تطبيق الجوال)"
+
+msgid "Type de client"
+msgstr "نوع العميل"
+
+msgid "Type de piece"
+msgstr "نوع الوثيقة"
+
+msgid "Type de piece d'identite"
+msgstr "نوع وثيقة الهوية"
+
+msgid "Numero de piece"
+msgstr "رقم الوثيقة"
+
+msgid "Numero de la piece d'identite"
+msgstr "رقم وثيقة الهوية"
+
+msgid "Ville de residence"
+msgstr "مدينة الإقامة"
+
+msgid "Date d'inscription"
+msgstr "تاريخ التسجيل"
+
+msgid "Nombre de voyages"
+msgstr "عدد الرحلات"
+
+msgid "Nombre total de voyages effectues"
+msgstr "العدد الإجمالي للرحلات المنجزة"
+
+msgid "Points de fidelite"
+msgstr "نقاط الولاء"
+
+msgid "1 point par 100 FCFA depense"
+msgstr "نقطة واحدة لكل 100 فرنك"
+
+msgid "Niveau de fidelite"
+msgstr "مستوى الولاء"
+
+msgid "Code de parrainage"
+msgstr "رمز الإحالة"
+
+msgid "Code unique que ce client partage a ses amis"
+msgstr "رمز فريد يشاركه العميل مع أصدقائه"
+
+msgid "Parraine par"
+msgstr "أحاله"
+
+msgid "Client qui a parraine ce client"
+msgstr "العميل الذي أحال هذا العميل"
+
+msgid "Bonus parrainage attribue"
+msgstr "مكافأة الإحالة ممنوحة"
+
+msgid "Vrai si le bonus de parrainage a deja ete donne (au premier billet paye)"
+msgstr "صحيح إذا تم منح مكافأة الإحالة (عند أول تذكرة مدفوعة)"
+
+msgid "Client"
+msgstr "العميل"
+
+msgid "Clients"
+msgstr "العملاء"
+
+msgid "En attente de paiement"
+msgstr "في انتظار الدفع"
+
+msgid "Payee"
+msgstr "مدفوعة"
+
+msgid "Annulee"
+msgstr "ملغاة"
+
+msgid "Remboursee"
+msgstr "مستردة"
+
+msgid "Especes"
+msgstr "نقدا"
+
+msgid "Mobile Money"
+msgstr "موبايل موني"
+
+msgid "Virement bancaire"
+msgstr "تحويل بنكي"
+
+msgid "Carte bancaire"
+msgstr "بطاقة بنكية"
+
+msgid "Numero de reservation"
+msgstr "رقم الحجز"
+
+msgid "Agence ou la reservation a ete faite"
+msgstr "الوكالة التي تم فيها الحجز"
+
+msgid "Cree par"
+msgstr "أنشأه"
+
+msgid "Modifie par"
+msgstr "عدله"
+
+msgid "Embarque"
+msgstr "صعد"
+
+msgid "Coche automatiquement quand le billet est scanne au controle"
+msgstr "يتم تحديده تلقائيا عند مسح التذكرة في المراقبة"
+
+msgid "Date d'embarquement"
+msgstr "تاريخ الصعود"
+
+msgid "Scanne par"
+msgstr "مسحه"
+
+msgid "Points attribues"
+msgstr "النقاط ممنوحة"
+
+msgid "Vrai si les points de fidelite ont deja ete comptes pour cette reservation"
+msgstr "صحيح إذا تم احتساب نقاط الولاء لهذا الحجز"
+
+msgid "Nombre de places"
+msgstr "عدد المقاعد"
+
+msgid "Nom du voyageur"
+msgstr "اسم المسافر"
+
+msgid "Nom du voyageur de ce billet"
+msgstr "اسم المسافر لهذه التذكرة"
+
+msgid "Prenom du voyageur"
+msgstr "الاسم الأول للمسافر"
+
+msgid "Telephone du voyageur"
+msgstr "هاتف المسافر"
+
+msgid "Type de piece du voyageur"
+msgstr "نوع وثيقة المسافر"
+
+msgid "Numero de piece du voyageur"
+msgstr "رقم وثيقة المسافر"
+
+msgid "Siege"
+msgstr "المقعد"
+
+msgid "Sieges"
+msgstr "المقاعد"
+
+msgid "Siege physique reserve"
+msgstr "المقعد المحجوز"
+
+msgid "Arret de montee"
+msgstr "محطة الصعود"
+
+msgid "Arret ou le voyageur monte (si ligne multi-arrets)"
+msgstr "المحطة التي يصعد منها المسافر (للخطوط متعددة المحطات)"
+
+msgid "Arret de descente"
+msgstr "محطة النزول"
+
+msgid "Arret ou le voyageur descend (si ligne multi-arrets)"
+msgstr "المحطة التي ينزل فيها المسافر (للخطوط متعددة المحطات)"
+
+msgid "Montant total"
+msgstr "المبلغ الإجمالي"
+
+msgid "Calcule automatiquement"
+msgstr "يحسب تلقائيا"
+
+msgid "Mode de paiement"
+msgstr "طريقة الدفع"
+
+msgid "Date de reservation"
+msgstr "تاريخ الحجز"
+
+msgid "Date de paiement"
+msgstr "تاريخ الدفع"
+
+msgid "Reservation"
+msgstr "الحجز"
+
+msgid "Reservations"
+msgstr "الحجوزات"
+
+msgid "Enregistre"
+msgstr "مسجل"
+
+msgid "En transit"
+msgstr "في الطريق"
+
+msgid "Arrive a destination"
+msgstr "وصل إلى الوجهة"
+
+msgid "Livre"
+msgstr "مسلم"
+
+msgid "Retourne"
+msgstr "مرتجع"
+
+msgid "Code de suivi"
+msgstr "رمز التتبع"
+
+msgid "Nom de l'expediteur"
+msgstr "اسم المرسل"
+
+msgid "Telephone de l'expediteur"
+msgstr "هاتف المرسل"
+
+msgid "Nom du destinataire"
+msgstr "اسم المستلم"
+
+msgid "Telephone du destinataire"
+msgstr "هاتف المستلم"
+
+msgid "Agence de depart"
+msgstr "وكالة الانطلاق"
+
+msgid "Agence d'arrivee"
+msgstr "وكالة الوصول"
+
+msgid "Description"
+msgstr "الوصف"
+
+msgid "Contenu du colis"
+msgstr "محتوى الطرد"
+
+msgid "Poids (kg)"
+msgstr "الوزن (كغ)"
+
+msgid "Poids en kilogrammes"
+msgstr "الوزن بالكيلوغرامات"
+
+msgid "Prix en FCFA"
+msgstr "السعر بالفرنك"
+
+msgid "Voyage sur lequel le colis est transporte"
+msgstr "الرحلة التي ينقل عليها الطرد"
+
+msgid "Date d'enregistrement"
+msgstr "تاريخ التسجيل"
+
+msgid "Date de livraison"
+msgstr "تاريخ التسليم"
+
+msgid "Colis"
+msgstr "الطرود"
+
+msgid "PDG / Directeur general"
+msgstr "المدير العام"
+
+msgid "Responsable d'agence"
+msgstr "مسؤول الوكالة"
+
+msgid "Secretaire d'agence"
+msgstr "سكرتير الوكالة"
+
+msgid "Responsable planning"
+msgstr "مسؤول التخطيط"
+
+msgid "Guichetier / billettiste"
+msgstr "موظف شباك التذاكر"
+
+msgid "Caissier"
+msgstr "أمين الصندوق"
+
+msgid "Agent colis"
+msgstr "موظف الطرود"
+
+msgid "Agent transfert d'argent"
+msgstr "موظف تحويل الأموال"
+
+msgid "Manutentionnaire / bagagiste"
+msgstr "عامل الأمتعة"
+
+msgid "Comptable"
+msgstr "المحاسب"
+
+msgid "Responsable RH / recrutement"
+msgstr "مسؤول الموارد البشرية"
+
+msgid "Responsable maintenance"
+msgstr "مسؤول الصيانة"
+
+msgid "Agent de securite"
+msgstr "موظف الأمن"
+
+msgid "Autre"
+msgstr "آخر"
+
+msgid "Compte de connexion lie a cet employe"
+msgstr "حساب الدخول المرتبط بهذا الموظف"
+
+msgid "Laisser vide pour un PDG (toute la compagnie)"
+msgstr "اتركه فارغا للمدير العام (كل الشركة)"
+
+msgid "Zone geographique geree (uniquement pour Responsable planning)"
+msgstr "المنطقة الجغرافية المدارة (لمسؤول التخطيط فقط)"
+
+msgid "Poste"
+msgstr "المنصب"
+
+msgid "Numero de carte d'identite"
+msgstr "رقم بطاقة الهوية"
+
+msgid "Salaire"
+msgstr "الراتب"
+
+msgid "Salaire mensuel en FCFA"
+msgstr "الراتب الشهري بالفرنك"
+
+msgid "Employe"
+msgstr "الموظف"
+
+msgid "Employes"
+msgstr "الموظفون"
+
+msgid "En attente de retrait"
+msgstr "في انتظار السحب"
+
+msgid "Retire"
+msgstr "مسحوب"
+
+msgid "Rembourse"
+msgstr "مسترد"
+
+msgid "Code de transfert"
+msgstr "رمز التحويل"
+
+msgid "Nom du beneficiaire"
+msgstr "اسم المستفيد"
+
+msgid "Telephone du beneficiaire"
+msgstr "هاتف المستفيد"
+
+msgid "Agence de retrait"
+msgstr "وكالة السحب"
+
+msgid "Montant"
+msgstr "المبلغ"
+
+msgid "Montant envoye en FCFA"
+msgstr "المبلغ المرسل بالفرنك"
+
+msgid "Frais"
+msgstr "الرسوم"
+
+msgid "Frais de transfert en FCFA"
+msgstr "رسوم التحويل بالفرنك"
+
+msgid "Code de retrait"
+msgstr "رمز السحب"
+
+msgid "Code secret remis au beneficiaire"
+msgstr "الرمز السري المسلم للمستفيد"
+
+msgid "Date d'envoi"
+msgstr "تاريخ الإرسال"
+
+msgid "Date de retrait"
+msgstr "تاريخ السحب"
+
+msgid "Transfert d'argent"
+msgstr "تحويل الأموال"
+
+msgid "Transferts d'argent"
+msgstr "تحويلات الأموال"
+
+msgid "Vidange moteur"
+msgstr "تغيير زيت المحرك"
+
+msgid "Freins"
+msgstr "الفرامل"
+
+msgid "Pneus"
+msgstr "الإطارات"
+
+msgid "Revision generale"
+msgstr "مراجعة عامة"
+
+msgid "Vidange boite de vitesse"
+msgstr "تغيير زيت علبة السرعة"
+
+msgid "Courroie"
+msgstr "الحزام"
+
+msgid "Batterie"
+msgstr "البطارية"
+
+msgid "Climatisation"
+msgstr "التكييف"
+
+msgid "Carrosserie"
+msgstr "الهيكل"
+
+msgid "Type d'entretien"
+msgstr "نوع الصيانة"
+
+msgid "Date de l'entretien"
+msgstr "تاريخ الصيانة"
+
+msgid "Kilometrage du bus"
+msgstr "عدد كيلومترات الحافلة"
+
+msgid "Cout (FCFA)"
+msgstr "التكلفة (فرنك)"
+
+msgid "Details / pieces changees"
+msgstr "التفاصيل / القطع المغيرة"
+
+msgid "Prochaine echeance (km)"
+msgstr "الموعد القادم (كم)"
+
+msgid "Enregistre par"
+msgstr "سجله"
+
+msgid "Entretien"
+msgstr "الصيانة"
+
+msgid "Entretiens"
+msgstr "الصيانات"
+
+msgid "Date du plein"
+msgstr "تاريخ التعبئة"
+
+msgid "Litres"
+msgstr "اللترات"
+
+msgid "Montant (FCFA)"
+msgstr "المبلغ (فرنك)"
+
+msgid "Plein de carburant"
+msgstr "تعبئة الوقود"
+
+msgid "Pleins de carburant"
+msgstr "تعبئات الوقود"
+
+msgid "Numero"
+msgstr "الرقم"
+
+msgid "Numero du siege"
+msgstr "رقم المقعد"
+
+msgid "Reservation de voyage"
+msgstr "حجز رحلة"
+
+msgid "Envoi de colis"
+msgstr "إرسال طرد"
+
+msgid "Aucun"
+msgstr "لا شيء"
+
+msgid "Titre"
+msgstr "العنوان"
+
+msgid "Titre de la promotion"
+msgstr "عنوان العرض"
+
+msgid "Texte"
+msgstr "النص"
+
+msgid "Description de la promotion"
+msgstr "وصف العرض"
+
+msgid "Image"
+msgstr "الصورة"
+
+msgid "Image de la promotion"
+msgstr "صورة العرض"
+
+msgid "Date de debut"
+msgstr "تاريخ البداية"
+
+msgid "Date de debut de validite"
+msgstr "تاريخ بداية الصلاحية"
+
+msgid "Date de fin"
+msgstr "تاريخ النهاية"
+
+msgid "Date de fin de validite"
+msgstr "تاريخ نهاية الصلاحية"
+
+msgid "Decochez pour masquer"
+msgstr "ألغ التحديد للإخفاء"
+
+msgid "Service"
+msgstr "الخدمة"
+
+msgid "Vers quel service renvoie la promotion"
+msgstr "إلى أي خدمة يوجه العرض"
+
+msgid "Promotion"
+msgstr "العرض"
+
+msgid "Promotions"
+msgstr "العروض"
+
+msgid "En attente de validation"
+msgstr "في انتظار التأكيد"
+
+msgid "Validee (colis cree)"
+msgstr "مؤكدة (تم إنشاء الطرد)"
+
+msgid "Validee (transfert cree)"
+msgstr "مؤكدة (تم إنشاء التحويل)"
+
+msgid "Numero de demande"
+msgstr "رقم الطلب"
+
+msgid "Poids estime"
+msgstr "الوزن المقدر"
+
+msgid "Poids estime en kg"
+msgstr "الوزن المقدر بالكغ"
+
+msgid "Valeur declaree"
+msgstr "القيمة المصرح بها"
+
+msgid "Valeur declaree en FCFA"
+msgstr "القيمة المصرح بها بالفرنك"
+
+msgid "Poids reel"
+msgstr "الوزن الحقيقي"
+
+msgid "Poids reel pese a l'agence (kg)"
+msgstr "الوزن الحقيقي الموزون في الوكالة (كغ)"
+
+msgid "Prix fixe par l'agence (FCFA)"
+msgstr "السعر المحدد من الوكالة (فرنك)"
+
+msgid "Date de demande"
+msgstr "تاريخ الطلب"
+
+msgid "Demande de colis"
+msgstr "طلب طرد"
+
+msgid "Demandes de colis"
+msgstr "طلبات الطرود"
+
+msgid "Montant a envoyer en FCFA"
+msgstr "المبلغ المراد إرساله بالفرنك"
+
+msgid "Frais fixes par l'agence"
+msgstr "الرسوم المحددة من الوكالة"
+
+msgid "Transfert"
+msgstr "التحويل"
+
+msgid "Demande de transfert"
+msgstr "طلب تحويل"
+
+msgid "Demandes de transfert"
+msgstr "طلبات التحويل"
+
+msgid "Ex : Ndjamena - Abeche (axe Est)"
+msgstr "مثال: نجامينا - أبشة (المحور الشرقي)"
+
+msgid "Lignes"
+msgstr "الخطوط"
+
+msgid "Ordre"
+msgstr "الترتيب"
+
+msgid "1 = ville de depart, puis 2, 3, 4..."
+msgstr "1 = مدينة الانطلاق، ثم 2، 3، 4..."
+
+msgid "Prix depuis le depart"
+msgstr "السعر من الانطلاق"
+
+msgid "Prix en FCFA depuis la ville de depart"
+msgstr "السعر بالفرنك من مدينة الانطلاق"
+
+msgid "Arret de ligne"
+msgstr "محطة الخط"
+
+msgid "Arrets de ligne"
+msgstr "محطات الخط"
+
+msgid "Vitesse (km/h)"
+msgstr "السرعة (كم/س)"
+
+msgid "Vitesse en km/h si disponible"
+msgstr "السرعة بالكم/س إن وجدت"
+
+msgid "Horodatage"
+msgstr "الوقت والتاريخ"
+
+msgid "Position bus"
+msgstr "موقع الحافلة"
+
+msgid "Positions bus"
+msgstr "مواقع الحافلات"
+
+msgid "Arret anormal"
+msgstr "توقف غير عادي"
+
+msgid "Type d'alerte"
+msgstr "نوع التنبيه"
+
+msgid "Message"
+msgstr "الرسالة"
+
+msgid "Resolue"
+msgstr "معالجة"
+
+msgid "Cocher une fois verifiee par un responsable"
+msgstr "حدد بعد التحقق من قبل مسؤول"
+
+msgid "Alerte voyage"
+msgstr "تنبيه رحلة"
+
+msgid "Alertes voyage"
+msgstr "تنبيهات الرحلات"
+
+msgid "Note"
+msgstr "التقييم"
+
+msgid "Note globale de 1 a 5 etoiles"
+msgstr "تقييم عام من 1 إلى 5 نجوم"
+
+msgid "Commentaire"
+msgstr "التعليق"
+
+msgid "Commentaire facultatif du client"
+msgstr "تعليق اختياري من العميل"
+
+msgid "Bus propre"
+msgstr "الحافلة نظيفة"
+
+msgid "Le bus etait-il propre ?"
+msgstr "هل كانت الحافلة نظيفة؟"
+
+msgid "Climatisation OK"
+msgstr "التكييف يعمل"
+
+msgid "La climatisation fonctionnait-elle ?"
+msgstr "هل كان التكييف يعمل؟"
+
+msgid "Television OK"
+msgstr "التلفزيون يعمل"
+
+msgid "La television fonctionnait-elle ?"
+msgstr "هل كان التلفزيون يعمل؟"
+
+msgid "Connexion OK"
+msgstr "الاتصال يعمل"
+
+msgid "La connexion Starlink fonctionnait-elle ?"
+msgstr "هل كان اتصال ستارلينك يعمل؟"
+
+msgid "Chauffeur poli"
+msgstr "السائق مهذب"
+
+msgid "Le chauffeur etait-il poli ?"
+msgstr "هل كان السائق مهذبا؟"
+
+msgid "Accompagnateur aimable"
+msgstr "المرافق لطيف"
+
+msgid "L'accompagnateur etait-il aimable ?"
+msgstr "هل كان المرافق لطيفا؟"
+
+msgid "Avis voyage"
+msgstr "تقييم رحلة"
+
+msgid "Avis voyages"
+msgstr "تقييمات الرحلات"
+
+msgid "Question"
+msgstr "السؤال"
+
+msgid "La question posee"
+msgstr "السؤال المطروح"
+
+msgid "Reponse"
+msgstr "الجواب"
+
+msgid "La reponse affichee au client"
+msgstr "الجواب المعروض للعميل"
+
+msgid "Ordre d'affichage (petit numero = en haut)"
+msgstr "ترتيب العرض (الرقم الصغير = في الأعلى)"
+
+msgid "Decochez pour masquer sans supprimer"
+msgstr "ألغ التحديد للإخفاء بدون حذف"
+
+msgid "Question FAQ"
+msgstr "سؤال شائع"
+
+msgid "Questions FAQ"
+msgstr "الأسئلة الشائعة"
+
+msgid "Vendre un billet"
+msgstr "بيع تذكرة"
+
+msgid "Voir les billets vendus"
+msgstr "عرض التذاكر المباعة"
+
+msgid "Aujourd'hui"
+msgstr "اليوم"
+
+msgid "Voyages du jour"
+msgstr "رحلات اليوم"
+
+msgid "Reservations du jour"
+msgstr "حجوزات اليوم"
+
+msgid "Recette du jour (FCFA)"
+msgstr "إيرادات اليوم (فرنك)"
+
+msgid "Voyages a venir"
+msgstr "الرحلات القادمة"
+
+msgid "A traiter"
+msgstr "للمعالجة"
+
+msgid "Alertes de securite"
+msgstr "تنبيهات الأمن"
+
+msgid "Demandes colis en attente"
+msgstr "طلبات الطرود المعلقة"
+
+msgid "Demandes transfert en attente"
+msgstr "طلبات التحويل المعلقة"
+
+msgid "Reservations non payees"
+msgstr "الحجوزات غير المدفوعة"
+
+msgid "Transferts a retirer"
+msgstr "التحويلات للسحب"
+
+msgid "Activite"
+msgstr "النشاط"
+
+msgid "Colis en transit"
+msgstr "الطرود في الطريق"
+
+msgid "Colis arrives"
+msgstr "الطرود الواصلة"
+
+msgid "Bus en service"
+msgstr "الحافلات في الخدمة"
+
+msgid "Clients actifs"
+msgstr "العملاء النشطون"
+
+msgid "Exploitation"
+msgstr "التشغيل"
+
+msgid "Securite"
+msgstr "الأمن"
+
+msgid "Colis et transferts"
+msgstr "الطرود والتحويلات"
+
+msgid "Clients et personnel"
+msgstr "العملاء والموظفون"
+
+msgid "Maintenance du parc"
+msgstr "صيانة الأسطول"
+
+msgid "Configuration"
+msgstr "الإعدادات"
+
+msgid "Ajouter"
+msgstr "إضافة"
+
+msgid "Modifier"
+msgstr "تعديل"
+
+msgid "Voir"
+msgstr "عرض"
+
+msgid "Administrateur"
+msgstr "المدير"
+
+msgid "Mon profil"
+msgstr "ملفي الشخصي"
+
+msgid "Rapport RH par agence"
+msgstr "تقرير الموارد البشرية حسب الوكالة"
+
+msgid "Rapport financier par agence"
+msgstr "التقرير المالي حسب الوكالة"
+
+msgid "Rapport maintenance par agence"
+msgstr "تقرير الصيانة حسب الوكالة"
+
+msgid "Carte des bus en direct"
+msgstr "خريطة الحافلات المباشرة"
+
+msgid "Manifeste de bord"
+msgstr "بيان الركاب"
+
+msgid "Vue d'ensemble PDG"
+msgstr "نظرة عامة للمدير العام"
+
+msgid "Modifier le mot de passe"
+msgstr "تغيير كلمة المرور"
+
+msgid "Deconnexion"
+msgstr "تسجيل الخروج"

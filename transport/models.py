@@ -1,132 +1,146 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class Compagnie(models.Model):
-    nom = models.CharField(max_length=100)
-    sigle = models.CharField(max_length=20, blank=True)
-    siege_social = models.CharField(max_length=200)
-    telephone = models.CharField(max_length=20)
-    email = models.EmailField(blank=True)
-    date_creation = models.DateField(null=True, blank=True)
-    actif = models.BooleanField(default=True)
+    nom = models.CharField(_("Nom"), max_length=100)
+    sigle = models.CharField(_("Sigle"), max_length=20, blank=True)
+    siege_social = models.CharField(_("Siege social"), max_length=200)
+    telephone = models.CharField(_("Telephone"), max_length=20)
+    email = models.EmailField(_("Email"), blank=True)
+    date_creation = models.DateField(_("Date de creation"), null=True, blank=True)
+    actif = models.BooleanField(_("Actif"), default=True)
 
     def __str__(self):
         return self.nom
 
+    class Meta:
+        verbose_name = _("Compagnie")
+        verbose_name_plural = _("Compagnies")
+
 
 class Agence(models.Model):
     ZONE_CHOICES = [
-        ('nord', 'Nord'),
-        ('sud', 'Sud'),
+        ('nord', _('Nord')),
+        ('sud', _('Sud')),
     ]
 
-    compagnie = models.ForeignKey(Compagnie, on_delete=models.CASCADE, related_name='agences')
-    zone = models.CharField(max_length=10, choices=ZONE_CHOICES, blank=True, help_text="Zone geographique (pour le planning)")
-    nom = models.CharField(max_length=100)
-    ville = models.CharField(max_length=50)
-    adresse = models.CharField(max_length=200)
-    telephone = models.CharField(max_length=20)
-    latitude = models.FloatField(null=True, blank=True)
-    longitude = models.FloatField(null=True, blank=True)
-    responsable = models.CharField(max_length=100, blank=True)
-    actif = models.BooleanField(default=True)
+    compagnie = models.ForeignKey(Compagnie, on_delete=models.CASCADE, related_name='agences', verbose_name=_("Compagnie"))
+    zone = models.CharField(_("Zone"), max_length=10, choices=ZONE_CHOICES, blank=True, help_text=_("Zone geographique (pour le planning)"))
+    nom = models.CharField(_("Nom"), max_length=100)
+    ville = models.CharField(_("Ville"), max_length=50)
+    adresse = models.CharField(_("Adresse"), max_length=200)
+    telephone = models.CharField(_("Telephone"), max_length=20)
+    latitude = models.FloatField(_("Latitude"), null=True, blank=True)
+    longitude = models.FloatField(_("Longitude"), null=True, blank=True)
+    responsable = models.CharField(_("Responsable"), max_length=100, blank=True)
+    actif = models.BooleanField(_("Actif"), default=True)
 
     def __str__(self):
         return f"{self.nom} ({self.ville})"
 
+    class Meta:
+        verbose_name = _("Agence")
+        verbose_name_plural = _("Agences")
+
 
 class Bus(models.Model):
     STATUT_CHOICES = [
-        ('en_service', 'En service'),
-        ('maintenance', 'En maintenance'),
-        ('hors_service', 'Hors service'),
+        ('en_service', _('En service')),
+        ('maintenance', _('En maintenance')),
+        ('hors_service', _('Hors service')),
     ]
 
-    compagnie = models.ForeignKey(Compagnie, on_delete=models.CASCADE, related_name='bus')
-    agence = models.ForeignKey('Agence', on_delete=models.SET_NULL, null=True, blank=True, related_name='bus', help_text="Agence de rattachement du bus")
-    immatriculation = models.CharField(max_length=20, unique=True)
-    marque = models.CharField(max_length=50)
-    modele = models.CharField(max_length=50, blank=True)
-    capacite = models.IntegerField()
-    kilometrage = models.IntegerField(default=0)
-    annee = models.IntegerField(null=True, blank=True)
-    statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='en_service')
-    date_visite_technique = models.DateField(null=True, blank=True)
-    date_assurance = models.DateField(null=True, blank=True)
+    compagnie = models.ForeignKey(Compagnie, on_delete=models.CASCADE, related_name='bus', verbose_name=_("Compagnie"))
+    agence = models.ForeignKey('Agence', on_delete=models.SET_NULL, null=True, blank=True, related_name='bus', verbose_name=_("Agence"), help_text=_("Agence de rattachement du bus"))
+    immatriculation = models.CharField(_("Immatriculation"), max_length=20, unique=True)
+    marque = models.CharField(_("Marque"), max_length=50)
+    modele = models.CharField(_("Modele"), max_length=50, blank=True)
+    capacite = models.IntegerField(_("Capacite"))
+    kilometrage = models.IntegerField(_("Kilometrage"), default=0)
+    annee = models.IntegerField(_("Annee"), null=True, blank=True)
+    statut = models.CharField(_("Statut"), max_length=20, choices=STATUT_CHOICES, default='en_service')
+    date_visite_technique = models.DateField(_("Date visite technique"), null=True, blank=True)
+    date_assurance = models.DateField(_("Date assurance"), null=True, blank=True)
 
     def __str__(self):
         return f"{self.immatriculation} - {self.marque}"
 
     class Meta:
-        verbose_name_plural = "Bus"
+        verbose_name = _("Bus")
+        verbose_name_plural = _("Bus")
 
 
 class Chauffeur(models.Model):
     STATUT_CHOICES = [
-        ('disponible', 'Disponible'),
-        ('en_mission', 'En mission'),
-        ('repos', 'En repos'),
-        ('inactif', 'Inactif'),
+        ('disponible', _('Disponible')),
+        ('en_mission', _('En mission')),
+        ('repos', _('En repos')),
+        ('inactif', _('Inactif')),
     ]
 
-    user = models.OneToOneField('auth.User', on_delete=models.SET_NULL, null=True, blank=True, related_name='chauffeur', help_text="Compte de connexion de ce chauffeur (cree par le PDG)")
-    compagnie = models.ForeignKey(Compagnie, on_delete=models.CASCADE, related_name='chauffeurs')
-    agence = models.ForeignKey('Agence', on_delete=models.SET_NULL, null=True, blank=True, related_name='chauffeurs', help_text="Agence de rattachement du chauffeur")
-    nom = models.CharField(max_length=100)
-    prenom = models.CharField(max_length=100)
-    telephone = models.CharField(max_length=20)
-    numero_permis = models.CharField(max_length=50, unique=True)
-    date_expiration_permis = models.DateField(null=True, blank=True)
-    date_embauche = models.DateField(null=True, blank=True)
-    annees_experience = models.IntegerField(default=0)
-    statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='disponible')
-    photo = models.ImageField(upload_to='chauffeurs/', null=True, blank=True)
-    actif = models.BooleanField(default=True)
+    user = models.OneToOneField('auth.User', on_delete=models.SET_NULL, null=True, blank=True, related_name='chauffeur', verbose_name=_("Compte de connexion"), help_text=_("Compte de connexion de ce chauffeur (cree par le PDG)"))
+    compagnie = models.ForeignKey(Compagnie, on_delete=models.CASCADE, related_name='chauffeurs', verbose_name=_("Compagnie"))
+    agence = models.ForeignKey('Agence', on_delete=models.SET_NULL, null=True, blank=True, related_name='chauffeurs', verbose_name=_("Agence"), help_text=_("Agence de rattachement du chauffeur"))
+    nom = models.CharField(_("Nom"), max_length=100)
+    prenom = models.CharField(_("Prenom"), max_length=100)
+    telephone = models.CharField(_("Telephone"), max_length=20)
+    numero_permis = models.CharField(_("Numero de permis"), max_length=50, unique=True)
+    date_expiration_permis = models.DateField(_("Date d'expiration du permis"), null=True, blank=True)
+    date_embauche = models.DateField(_("Date d'embauche"), null=True, blank=True)
+    annees_experience = models.IntegerField(_("Annees d'experience"), default=0)
+    statut = models.CharField(_("Statut"), max_length=20, choices=STATUT_CHOICES, default='disponible')
+    photo = models.ImageField(_("Photo"), upload_to='chauffeurs/', null=True, blank=True)
+    actif = models.BooleanField(_("Actif"), default=True)
 
     def __str__(self):
         return f"{self.prenom} {self.nom}"
 
     class Meta:
+        verbose_name = _("Chauffeur")
+        verbose_name_plural = _("Chauffeurs")
         ordering = ['nom', 'prenom']
 
 
 class Trajet(models.Model):
-    compagnie = models.ForeignKey(Compagnie, on_delete=models.CASCADE, related_name='trajets')
-    ville_depart = models.CharField(max_length=50)
-    ville_arrivee = models.CharField(max_length=50)
-    distance_km = models.IntegerField(help_text="Distance en kilometres")
-    duree_estimee_heures = models.FloatField(help_text="Duree estimee en heures")
-    prix_base = models.IntegerField(help_text="Prix du billet en FCFA")
-    actif = models.BooleanField(default=True)
+    compagnie = models.ForeignKey(Compagnie, on_delete=models.CASCADE, related_name='trajets', verbose_name=_("Compagnie"))
+    ville_depart = models.CharField(_("Ville de depart"), max_length=50)
+    ville_arrivee = models.CharField(_("Ville d'arrivee"), max_length=50)
+    distance_km = models.IntegerField(_("Distance (km)"), help_text=_("Distance en kilometres"))
+    duree_estimee_heures = models.FloatField(_("Duree estimee (heures)"), help_text=_("Duree estimee en heures"))
+    prix_base = models.IntegerField(_("Prix de base"), help_text=_("Prix du billet en FCFA"))
+    actif = models.BooleanField(_("Actif"), default=True)
 
     def __str__(self):
         return f"{self.ville_depart} -> {self.ville_arrivee}"
 
     class Meta:
+        verbose_name = _("Trajet")
+        verbose_name_plural = _("Trajets")
         ordering = ['ville_depart', 'ville_arrivee']
         unique_together = ['compagnie', 'ville_depart', 'ville_arrivee']
 
 
 class Voyage(models.Model):
     STATUT_CHOICES = [
-        ('programme', 'Programme'),
-        ('en_cours', 'En cours'),
-        ('termine', 'Termine'),
-        ('annule', 'Annule'),
+        ('programme', _('Programme')),
+        ('en_cours', _('En cours')),
+        ('termine', _('Termine')),
+        ('annule', _('Annule')),
     ]
 
-    trajet = models.ForeignKey(Trajet, on_delete=models.PROTECT, related_name='voyages')
-    ligne = models.ForeignKey('Ligne', on_delete=models.PROTECT, related_name='voyages', null=True, blank=True, help_text="Ligne desservie (si le voyage dessert plusieurs villes)")
-    bus = models.ForeignKey(Bus, on_delete=models.PROTECT, related_name='voyages')
-    chauffeur = models.ForeignKey(Chauffeur, on_delete=models.PROTECT, related_name='voyages')
-    date_depart = models.DateField()
-    heure_depart = models.TimeField()
-    heure_arrivee_prevue = models.TimeField(null=True, blank=True)
-    prix = models.IntegerField(help_text="Prix du billet en FCFA")
-    places_disponibles = models.IntegerField()
-    statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='programme')
-    notes = models.TextField(blank=True)
-    date_creation = models.DateTimeField(auto_now_add=True)
+    trajet = models.ForeignKey(Trajet, on_delete=models.PROTECT, related_name='voyages', verbose_name=_("Trajet"))
+    ligne = models.ForeignKey('Ligne', on_delete=models.PROTECT, related_name='voyages', null=True, blank=True, verbose_name=_("Ligne"), help_text=_("Ligne desservie (si le voyage dessert plusieurs villes)"))
+    bus = models.ForeignKey(Bus, on_delete=models.PROTECT, related_name='voyages', verbose_name=_("Bus"))
+    chauffeur = models.ForeignKey(Chauffeur, on_delete=models.PROTECT, related_name='voyages', verbose_name=_("Chauffeur"))
+    date_depart = models.DateField(_("Date de depart"))
+    heure_depart = models.TimeField(_("Heure de depart"))
+    heure_arrivee_prevue = models.TimeField(_("Heure d'arrivee prevue"), null=True, blank=True)
+    prix = models.IntegerField(_("Prix"), help_text=_("Prix du billet en FCFA"))
+    places_disponibles = models.IntegerField(_("Places disponibles"))
+    statut = models.CharField(_("Statut"), max_length=20, choices=STATUT_CHOICES, default='programme')
+    notes = models.TextField(_("Notes"), blank=True)
+    date_creation = models.DateTimeField(_("Date de creation"), auto_now_add=True)
 
     def __str__(self):
         return f"{self.trajet} - {self.date_depart} a {self.heure_depart}"
@@ -140,6 +154,8 @@ class Voyage(models.Model):
             Siege.objects.bulk_create(sieges)
 
     class Meta:
+        verbose_name = _("Voyage")
+        verbose_name_plural = _("Voyages")
         ordering = ['-date_depart', '-heure_depart']
 
 
@@ -147,47 +163,47 @@ def generer_code_parrainage():
     """Genere un code du type AH-X7K2P9 (sans lettres/chiffres ambigus)."""
     import random
     caracteres = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
-    return 'AH-' + ''.join(random.choice(caracteres) for _ in range(6))
+    return 'AH-' + ''.join(random.choice(caracteres) for _lettre in range(6))
 
 
 class Client(models.Model):
     TYPE_CHOICES = [
-        ('particulier', 'Particulier'),
-        ('entreprise', 'Entreprise'),
+        ('particulier', _('Particulier')),
+        ('entreprise', _('Entreprise')),
     ]
 
     TYPE_PIECE_CHOICES = [
-        ('cni', 'Carte nationale d\'identite'),
-        ('passeport', 'Passeport'),
-        ('acte_naissance', 'Acte de naissance'),
-        ('carte_pro', 'Carte professionnelle'),
-        ('permis', 'Permis de conduire'),
-        ('autre', 'Autre piece'),
+        ('cni', _('Carte nationale d\'identite')),
+        ('passeport', _('Passeport')),
+        ('acte_naissance', _('Acte de naissance')),
+        ('carte_pro', _('Carte professionnelle')),
+        ('permis', _('Permis de conduire')),
+        ('autre', _('Autre piece')),
     ]
 
     NIVEAU_CHOICES = [
-        ('bronze', 'Bronze'),
-        ('argent', 'Argent'),
-        ('or', 'Or'),
+        ('bronze', _('Bronze')),
+        ('argent', _('Argent')),
+        ('or', _('Or')),
     ]
 
-    user = models.OneToOneField('auth.User', on_delete=models.SET_NULL, null=True, blank=True, related_name='client', help_text="Compte de connexion lie a cette fiche client (app mobile)")
-    nom = models.CharField(max_length=100)
-    prenom = models.CharField(max_length=100, blank=True)
-    telephone = models.CharField(max_length=20, unique=True)
-    email = models.EmailField(blank=True)
-    type_client = models.CharField(max_length=20, choices=TYPE_CHOICES, default='particulier')
-    type_piece = models.CharField(max_length=20, choices=TYPE_PIECE_CHOICES, blank=True, help_text="Type de piece d'identite")
-    cni = models.CharField(max_length=50, blank=True, help_text="Numero de la piece d'identite")
-    ville_residence = models.CharField(max_length=50, blank=True)
-    date_inscription = models.DateTimeField(auto_now_add=True)
-    nombre_voyages = models.IntegerField(default=0, help_text="Nombre total de voyages effectues")
-    points_fidelite = models.IntegerField(default=0, help_text="1 point par 100 FCFA depense")
-    niveau_fidelite = models.CharField(max_length=10, choices=NIVEAU_CHOICES, default='bronze')
-    code_parrainage = models.CharField(max_length=12, unique=True, blank=True, null=True, help_text="Code unique que ce client partage a ses amis")
-    parraine_par = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='filleuls', help_text="Client qui a parraine ce client")
-    bonus_parrainage_attribue = models.BooleanField(default=False, help_text="Vrai si le bonus de parrainage a deja ete donne (au premier billet paye)")
-    actif = models.BooleanField(default=True)
+    user = models.OneToOneField('auth.User', on_delete=models.SET_NULL, null=True, blank=True, related_name='client', verbose_name=_("Compte de connexion"), help_text=_("Compte de connexion lie a cette fiche client (app mobile)"))
+    nom = models.CharField(_("Nom"), max_length=100)
+    prenom = models.CharField(_("Prenom"), max_length=100, blank=True)
+    telephone = models.CharField(_("Telephone"), max_length=20, unique=True)
+    email = models.EmailField(_("Email"), blank=True)
+    type_client = models.CharField(_("Type de client"), max_length=20, choices=TYPE_CHOICES, default='particulier')
+    type_piece = models.CharField(_("Type de piece"), max_length=20, choices=TYPE_PIECE_CHOICES, blank=True, help_text=_("Type de piece d'identite"))
+    cni = models.CharField(_("Numero de piece"), max_length=50, blank=True, help_text=_("Numero de la piece d'identite"))
+    ville_residence = models.CharField(_("Ville de residence"), max_length=50, blank=True)
+    date_inscription = models.DateTimeField(_("Date d'inscription"), auto_now_add=True)
+    nombre_voyages = models.IntegerField(_("Nombre de voyages"), default=0, help_text=_("Nombre total de voyages effectues"))
+    points_fidelite = models.IntegerField(_("Points de fidelite"), default=0, help_text=_("1 point par 100 FCFA depense"))
+    niveau_fidelite = models.CharField(_("Niveau de fidelite"), max_length=10, choices=NIVEAU_CHOICES, default='bronze')
+    code_parrainage = models.CharField(_("Code de parrainage"), max_length=12, unique=True, blank=True, null=True, help_text=_("Code unique que ce client partage a ses amis"))
+    parraine_par = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='filleuls', verbose_name=_("Parraine par"), help_text=_("Client qui a parraine ce client"))
+    bonus_parrainage_attribue = models.BooleanField(_("Bonus parrainage attribue"), default=False, help_text=_("Vrai si le bonus de parrainage a deja ete donne (au premier billet paye)"))
+    actif = models.BooleanField(_("Actif"), default=True)
 
     def mettre_a_jour_niveau(self):
         if self.points_fidelite >= 2000:
@@ -211,49 +227,51 @@ class Client(models.Model):
         return f"{self.nom} ({self.telephone})"
 
     class Meta:
+        verbose_name = _("Client")
+        verbose_name_plural = _("Clients")
         ordering = ['nom', 'prenom']
 
 
 class Reservation(models.Model):
     STATUT_CHOICES = [
-        ('en_attente', 'En attente de paiement'),
-        ('payee', 'Payee'),
-        ('annulee', 'Annulee'),
-        ('remboursee', 'Remboursee'),
+        ('en_attente', _('En attente de paiement')),
+        ('payee', _('Payee')),
+        ('annulee', _('Annulee')),
+        ('remboursee', _('Remboursee')),
     ]
 
     MODE_PAIEMENT_CHOICES = [
-        ('especes', 'Especes'),
-        ('mobile_money', 'Mobile Money'),
-        ('virement', 'Virement bancaire'),
-        ('carte', 'Carte bancaire'),
+        ('especes', _('Especes')),
+        ('mobile_money', _('Mobile Money')),
+        ('virement', _('Virement bancaire')),
+        ('carte', _('Carte bancaire')),
     ]
 
-    numero_reservation = models.CharField(max_length=20, unique=True, blank=True)
-    client = models.ForeignKey(Client, on_delete=models.PROTECT, related_name='reservations')
-    voyage = models.ForeignKey(Voyage, on_delete=models.PROTECT, related_name='reservations')
-    agence = models.ForeignKey(Agence, on_delete=models.PROTECT, related_name='reservations', null=True, blank=True, help_text="Agence ou la reservation a ete faite")
-    cree_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='reservations_creees', verbose_name="Cree par")
-    modifie_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='reservations_modifiees', verbose_name="Modifie par")
-    embarque = models.BooleanField(default=False, help_text="Coche automatiquement quand le billet est scanne au controle")
-    date_embarquement = models.DateTimeField(null=True, blank=True)
-    scanne_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='reservations_scannees', verbose_name="Scanne par")
-    points_attribues = models.BooleanField(default=False, help_text="Vrai si les points de fidelite ont deja ete comptes pour cette reservation")
-    nombre_places = models.IntegerField(default=1)
-    voyageur_nom = models.CharField(max_length=100, blank=True, help_text="Nom du voyageur de ce billet")
-    voyageur_prenom = models.CharField(max_length=100, blank=True, help_text="Prenom du voyageur")
-    voyageur_telephone = models.CharField(max_length=20, blank=True, help_text="Telephone du voyageur")
-    voyageur_type_piece = models.CharField(max_length=20, blank=True, help_text="Type de piece du voyageur")
-    voyageur_numero_piece = models.CharField(max_length=50, blank=True, help_text="Numero de piece du voyageur")
-    siege = models.ForeignKey('Siege', on_delete=models.PROTECT, null=True, blank=True, related_name='reservations', help_text="Siege physique reserve")
-    arret_montee = models.ForeignKey('ArretLigne', on_delete=models.SET_NULL, null=True, blank=True, related_name='reservations_montee', help_text="Arret ou le voyageur monte (si ligne multi-arrets)")
-    arret_descente = models.ForeignKey('ArretLigne', on_delete=models.SET_NULL, null=True, blank=True, related_name='reservations_descente', help_text="Arret ou le voyageur descend (si ligne multi-arrets)")
-    montant_total = models.IntegerField(default=0, blank=True, help_text="Calcule automatiquement")
-    statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='en_attente')
-    mode_paiement = models.CharField(max_length=20, choices=MODE_PAIEMENT_CHOICES, blank=True)
-    date_reservation = models.DateTimeField(auto_now_add=True)
-    date_paiement = models.DateTimeField(null=True, blank=True)
-    notes = models.TextField(blank=True)
+    numero_reservation = models.CharField(_("Numero de reservation"), max_length=20, unique=True, blank=True)
+    client = models.ForeignKey(Client, on_delete=models.PROTECT, related_name='reservations', verbose_name=_("Client"))
+    voyage = models.ForeignKey(Voyage, on_delete=models.PROTECT, related_name='reservations', verbose_name=_("Voyage"))
+    agence = models.ForeignKey(Agence, on_delete=models.PROTECT, related_name='reservations', null=True, blank=True, verbose_name=_("Agence"), help_text=_("Agence ou la reservation a ete faite"))
+    cree_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='reservations_creees', verbose_name=_("Cree par"))
+    modifie_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='reservations_modifiees', verbose_name=_("Modifie par"))
+    embarque = models.BooleanField(_("Embarque"), default=False, help_text=_("Coche automatiquement quand le billet est scanne au controle"))
+    date_embarquement = models.DateTimeField(_("Date d'embarquement"), null=True, blank=True)
+    scanne_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='reservations_scannees', verbose_name=_("Scanne par"))
+    points_attribues = models.BooleanField(_("Points attribues"), default=False, help_text=_("Vrai si les points de fidelite ont deja ete comptes pour cette reservation"))
+    nombre_places = models.IntegerField(_("Nombre de places"), default=1)
+    voyageur_nom = models.CharField(_("Nom du voyageur"), max_length=100, blank=True, help_text=_("Nom du voyageur de ce billet"))
+    voyageur_prenom = models.CharField(_("Prenom du voyageur"), max_length=100, blank=True, help_text=_("Prenom du voyageur"))
+    voyageur_telephone = models.CharField(_("Telephone du voyageur"), max_length=20, blank=True, help_text=_("Telephone du voyageur"))
+    voyageur_type_piece = models.CharField(_("Type de piece du voyageur"), max_length=20, blank=True, help_text=_("Type de piece du voyageur"))
+    voyageur_numero_piece = models.CharField(_("Numero de piece du voyageur"), max_length=50, blank=True, help_text=_("Numero de piece du voyageur"))
+    siege = models.ForeignKey('Siege', on_delete=models.PROTECT, null=True, blank=True, related_name='reservations', verbose_name=_("Siege"), help_text=_("Siege physique reserve"))
+    arret_montee = models.ForeignKey('ArretLigne', on_delete=models.SET_NULL, null=True, blank=True, related_name='reservations_montee', verbose_name=_("Arret de montee"), help_text=_("Arret ou le voyageur monte (si ligne multi-arrets)"))
+    arret_descente = models.ForeignKey('ArretLigne', on_delete=models.SET_NULL, null=True, blank=True, related_name='reservations_descente', verbose_name=_("Arret de descente"), help_text=_("Arret ou le voyageur descend (si ligne multi-arrets)"))
+    montant_total = models.IntegerField(_("Montant total"), default=0, blank=True, help_text=_("Calcule automatiquement"))
+    statut = models.CharField(_("Statut"), max_length=20, choices=STATUT_CHOICES, default='en_attente')
+    mode_paiement = models.CharField(_("Mode de paiement"), max_length=20, choices=MODE_PAIEMENT_CHOICES, blank=True)
+    date_reservation = models.DateTimeField(_("Date de reservation"), auto_now_add=True)
+    date_paiement = models.DateTimeField(_("Date de paiement"), null=True, blank=True)
+    notes = models.TextField(_("Notes"), blank=True)
 
     def __str__(self):
         return f"Reservation {self.numero_reservation} - {self.client.nom}"
@@ -299,41 +317,43 @@ class Reservation(models.Model):
         super().save(*args, **kwargs)
 
     class Meta:
+        verbose_name = _("Reservation")
+        verbose_name_plural = _("Reservations")
         ordering = ['-date_reservation']
 
 
 class Colis(models.Model):
     STATUT_CHOICES = [
-        ('enregistre', 'Enregistre'),
-        ('en_transit', 'En transit'),
-        ('arrive', 'Arrive a destination'),
-        ('livre', 'Livre'),
-        ('retourne', 'Retourne'),
+        ('enregistre', _('Enregistre')),
+        ('en_transit', _('En transit')),
+        ('arrive', _('Arrive a destination')),
+        ('livre', _('Livre')),
+        ('retourne', _('Retourne')),
     ]
 
-    code_suivi = models.CharField(max_length=20, unique=True, blank=True)
-    compagnie = models.ForeignKey(Compagnie, on_delete=models.PROTECT, related_name='colis')
+    code_suivi = models.CharField(_("Code de suivi"), max_length=20, unique=True, blank=True)
+    compagnie = models.ForeignKey(Compagnie, on_delete=models.PROTECT, related_name='colis', verbose_name=_("Compagnie"))
 
-    expediteur_nom = models.CharField(max_length=100)
-    expediteur_telephone = models.CharField(max_length=20)
-    destinataire_nom = models.CharField(max_length=100)
-    destinataire_telephone = models.CharField(max_length=20)
+    expediteur_nom = models.CharField(_("Nom de l'expediteur"), max_length=100)
+    expediteur_telephone = models.CharField(_("Telephone de l'expediteur"), max_length=20)
+    destinataire_nom = models.CharField(_("Nom du destinataire"), max_length=100)
+    destinataire_telephone = models.CharField(_("Telephone du destinataire"), max_length=20)
 
-    agence_depart = models.ForeignKey(Agence, on_delete=models.PROTECT, related_name='colis_envoyes')
-    agence_arrivee = models.ForeignKey(Agence, on_delete=models.PROTECT, related_name='colis_recus')
-    cree_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='colis_crees', verbose_name="Cree par")
-    modifie_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='colis_modifies', verbose_name="Modifie par")
+    agence_depart = models.ForeignKey(Agence, on_delete=models.PROTECT, related_name='colis_envoyes', verbose_name=_("Agence de depart"))
+    agence_arrivee = models.ForeignKey(Agence, on_delete=models.PROTECT, related_name='colis_recus', verbose_name=_("Agence d'arrivee"))
+    cree_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='colis_crees', verbose_name=_("Cree par"))
+    modifie_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='colis_modifies', verbose_name=_("Modifie par"))
 
-    description = models.CharField(max_length=200, help_text="Contenu du colis")
-    poids_kg = models.FloatField(help_text="Poids en kilogrammes")
-    prix = models.IntegerField(help_text="Prix en FCFA")
+    description = models.CharField(_("Description"), max_length=200, help_text=_("Contenu du colis"))
+    poids_kg = models.FloatField(_("Poids (kg)"), help_text=_("Poids en kilogrammes"))
+    prix = models.IntegerField(_("Prix"), help_text=_("Prix en FCFA"))
 
-    voyage = models.ForeignKey(Voyage, on_delete=models.SET_NULL, related_name='colis', null=True, blank=True, help_text="Voyage sur lequel le colis est transporte")
+    voyage = models.ForeignKey(Voyage, on_delete=models.SET_NULL, related_name='colis', null=True, blank=True, verbose_name=_("Voyage"), help_text=_("Voyage sur lequel le colis est transporte"))
 
-    statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='enregistre')
-    date_enregistrement = models.DateTimeField(auto_now_add=True)
-    date_livraison = models.DateTimeField(null=True, blank=True)
-    notes = models.TextField(blank=True)
+    statut = models.CharField(_("Statut"), max_length=20, choices=STATUT_CHOICES, default='enregistre')
+    date_enregistrement = models.DateTimeField(_("Date d'enregistrement"), auto_now_add=True)
+    date_livraison = models.DateTimeField(_("Date de livraison"), null=True, blank=True)
+    notes = models.TextField(_("Notes"), blank=True)
 
     def __str__(self):
         return f"{self.code_suivi} - {self.expediteur_nom} -> {self.destinataire_nom}"
@@ -350,78 +370,80 @@ class Colis(models.Model):
         super().save(*args, **kwargs)
 
     class Meta:
-        verbose_name_plural = "Colis"
+        verbose_name = _("Colis")
+        verbose_name_plural = _("Colis")
         ordering = ['-date_enregistrement']
 
 
 class Employe(models.Model):
     POSTE_CHOICES = [
-        ('pdg', 'PDG / Directeur general'),
-        ('responsable', "Responsable d'agence"),
-        ('secretaire', "Secretaire d'agence"),
-        ('resp_planning', "Responsable planning"),
-        ('guichetier', 'Guichetier / billettiste'),
-        ('caissier', 'Caissier'),
-        ('agent_colis', 'Agent colis'),
-        ('agent_transfert', "Agent transfert d'argent"),
-        ('manutentionnaire', 'Manutentionnaire / bagagiste'),
-        ('comptable', 'Comptable'),
-        ('rh', 'Responsable RH / recrutement'),
-        ('resp_maintenance', 'Responsable maintenance'),
-        ('securite', 'Agent de securite'),
-        ('autre', 'Autre'),
+        ('pdg', _('PDG / Directeur general')),
+        ('responsable', _("Responsable d'agence")),
+        ('secretaire', _("Secretaire d'agence")),
+        ('resp_planning', _("Responsable planning")),
+        ('guichetier', _('Guichetier / billettiste')),
+        ('caissier', _('Caissier')),
+        ('agent_colis', _('Agent colis')),
+        ('agent_transfert', _("Agent transfert d'argent")),
+        ('manutentionnaire', _('Manutentionnaire / bagagiste')),
+        ('comptable', _('Comptable')),
+        ('rh', _('Responsable RH / recrutement')),
+        ('resp_maintenance', _('Responsable maintenance')),
+        ('securite', _('Agent de securite')),
+        ('autre', _('Autre')),
     ]
 
-    user = models.OneToOneField('auth.User', on_delete=models.SET_NULL, related_name='employe', null=True, blank=True, help_text="Compte de connexion lie a cet employe")
-    compagnie = models.ForeignKey(Compagnie, on_delete=models.CASCADE, related_name='employes')
-    agence = models.ForeignKey(Agence, on_delete=models.SET_NULL, related_name='employes', null=True, blank=True, help_text="Laisser vide pour un PDG (toute la compagnie)")
-    zone = models.CharField(max_length=10, choices=Agence.ZONE_CHOICES, blank=True, help_text="Zone geographique geree (uniquement pour Responsable planning)")
-    nom = models.CharField(max_length=100)
-    prenom = models.CharField(max_length=100)
-    telephone = models.CharField(max_length=20)
-    poste = models.CharField(max_length=20, choices=POSTE_CHOICES, default='guichetier')
-    cni = models.CharField(max_length=50, blank=True, help_text="Numero de carte d'identite")
-    date_embauche = models.DateField(null=True, blank=True)
-    salaire = models.IntegerField(null=True, blank=True, help_text="Salaire mensuel en FCFA")
-    actif = models.BooleanField(default=True)
+    user = models.OneToOneField('auth.User', on_delete=models.SET_NULL, related_name='employe', null=True, blank=True, verbose_name=_("Compte de connexion"), help_text=_("Compte de connexion lie a cet employe"))
+    compagnie = models.ForeignKey(Compagnie, on_delete=models.CASCADE, related_name='employes', verbose_name=_("Compagnie"))
+    agence = models.ForeignKey(Agence, on_delete=models.SET_NULL, related_name='employes', null=True, blank=True, verbose_name=_("Agence"), help_text=_("Laisser vide pour un PDG (toute la compagnie)"))
+    zone = models.CharField(_("Zone"), max_length=10, choices=Agence.ZONE_CHOICES, blank=True, help_text=_("Zone geographique geree (uniquement pour Responsable planning)"))
+    nom = models.CharField(_("Nom"), max_length=100)
+    prenom = models.CharField(_("Prenom"), max_length=100)
+    telephone = models.CharField(_("Telephone"), max_length=20)
+    poste = models.CharField(_("Poste"), max_length=20, choices=POSTE_CHOICES, default='guichetier')
+    cni = models.CharField(_("Numero de piece"), max_length=50, blank=True, help_text=_("Numero de carte d'identite"))
+    date_embauche = models.DateField(_("Date d'embauche"), null=True, blank=True)
+    salaire = models.IntegerField(_("Salaire"), null=True, blank=True, help_text=_("Salaire mensuel en FCFA"))
+    actif = models.BooleanField(_("Actif"), default=True)
 
     def __str__(self):
         return f"{self.prenom} {self.nom} ({self.get_poste_display()})"
 
     class Meta:
-        verbose_name_plural = "Employes"
+        verbose_name = _("Employe")
+        verbose_name_plural = _("Employes")
         ordering = ['nom', 'prenom']
 
 
 class TransfertArgent(models.Model):
     STATUT_CHOICES = [
-        ('en_attente', 'En attente de retrait'),
-        ('retire', 'Retire'),
-        ('annule', 'Annule'),
-        ('rembourse', 'Rembourse'),
+        ('en_attente', _('En attente de retrait')),
+        ('retire', _('Retire')),
+        ('annule', _('Annule')),
+        ('rembourse', _('Rembourse')),
     ]
 
-    code_transfert = models.CharField(max_length=20, unique=True, blank=True)
-    compagnie = models.ForeignKey(Compagnie, on_delete=models.PROTECT, related_name='transferts')
+    code_transfert = models.CharField(_("Code de transfert"), max_length=20, unique=True, blank=True)
+    compagnie = models.ForeignKey(Compagnie, on_delete=models.PROTECT, related_name='transferts', verbose_name=_("Compagnie"))
 
-    expediteur_nom = models.CharField(max_length=100)
-    expediteur_telephone = models.CharField(max_length=20)
-    beneficiaire_nom = models.CharField(max_length=100)
-    beneficiaire_telephone = models.CharField(max_length=20)
+    expediteur_nom = models.CharField(_("Nom de l'expediteur"), max_length=100)
+    expediteur_telephone = models.CharField(_("Telephone de l'expediteur"), max_length=20)
+    beneficiaire_nom = models.CharField(_("Nom du beneficiaire"), max_length=100)
+    beneficiaire_telephone = models.CharField(_("Telephone du beneficiaire"), max_length=20)
 
-    agence_depart = models.ForeignKey(Agence, on_delete=models.PROTECT, related_name='transferts_envoyes')
-    agence_retrait = models.ForeignKey(Agence, on_delete=models.PROTECT, related_name='transferts_recus')
-    cree_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='transferts_crees', verbose_name="Cree par")
-    modifie_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='transferts_modifies', verbose_name="Modifie par")
+    agence_depart = models.ForeignKey(Agence, on_delete=models.PROTECT, related_name='transferts_envoyes', verbose_name=_("Agence de depart"))
+    agence_retrait = models.ForeignKey(Agence, on_delete=models.PROTECT, related_name='transferts_recus', verbose_name=_("Agence de retrait"))
+    cree_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='transferts_crees', verbose_name=_("Cree par"))
+    modifie_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='transferts_modifies', verbose_name=_("Modifie par"))
 
-    montant = models.IntegerField(help_text="Montant envoye en FCFA")
-    frais = models.IntegerField(default=0, help_text="Frais de transfert en FCFA")
-    code_retrait = models.CharField(max_length=10, blank=True, help_text="Code secret remis au beneficiaire")
+    montant = models.IntegerField(_("Montant"), help_text=_("Montant envoye en FCFA"))
+    frais = models.IntegerField(_("Frais"), default=0, help_text=_("Frais de transfert en FCFA"))
+    code_retrait = models.CharField(_("Code de retrait"), max_length=10, blank=True, help_text=_("Code secret remis au beneficiaire"))
 
-    statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='en_attente')
-    date_envoi = models.DateTimeField(auto_now_add=True)
-    date_retrait = models.DateTimeField(null=True, blank=True)
-    notes = models.TextField(blank=True)
+    statut = models.CharField(_("Statut"), max_length=20, choices=STATUT_CHOICES, default='en_attente')
+    date_envoi = models.DateTimeField(_("Date d'envoi"), auto_now_add=True)
+    date_retrait = models.DateTimeField(_("Date de retrait"), null=True, blank=True)
+    notes = models.TextField(_("Notes"), blank=True)
 
     def __str__(self):
         return f"{self.code_transfert} - {self.expediteur_nom} -> {self.beneficiaire_nom}"
@@ -443,37 +465,38 @@ class TransfertArgent(models.Model):
         super().save(*args, **kwargs)
 
     class Meta:
-        verbose_name_plural = "Transferts d'argent"
+        verbose_name = _("Transfert d'argent")
+        verbose_name_plural = _("Transferts d'argent")
         ordering = ['-date_envoi']
 
 
 class Entretien(models.Model):
     TYPE_CHOICES = [
-        ('vidange', 'Vidange moteur'),
-        ('freins', 'Freins'),
-        ('pneus', 'Pneus'),
-        ('revision', 'Revision generale'),
-        ('boite_vitesse', 'Vidange boite de vitesse'),
-        ('courroie', 'Courroie'),
-        ('batterie', 'Batterie'),
-        ('climatisation', 'Climatisation'),
-        ('carrosserie', 'Carrosserie'),
-        ('autre', 'Autre'),
+        ('vidange', _('Vidange moteur')),
+        ('freins', _('Freins')),
+        ('pneus', _('Pneus')),
+        ('revision', _('Revision generale')),
+        ('boite_vitesse', _('Vidange boite de vitesse')),
+        ('courroie', _('Courroie')),
+        ('batterie', _('Batterie')),
+        ('climatisation', _('Climatisation')),
+        ('carrosserie', _('Carrosserie')),
+        ('autre', _('Autre')),
     ]
 
-    bus = models.ForeignKey('Bus', on_delete=models.CASCADE, related_name='entretiens', verbose_name="Bus")
-    type_entretien = models.CharField(max_length=20, choices=TYPE_CHOICES, verbose_name="Type d'entretien")
-    date_entretien = models.DateField(verbose_name="Date de l'entretien")
-    kilometrage = models.PositiveIntegerField(default=0, verbose_name="Kilometrage du bus")
-    cout = models.PositiveIntegerField(default=0, verbose_name="Cout (FCFA)")
-    description = models.TextField(blank=True, verbose_name="Details / pieces changees")
-    prochain_km = models.PositiveIntegerField(null=True, blank=True, verbose_name="Prochaine echeance (km)")
-    cree_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='entretiens_crees', verbose_name="Enregistre par")
-    date_creation = models.DateTimeField(auto_now_add=True)
+    bus = models.ForeignKey('Bus', on_delete=models.CASCADE, related_name='entretiens', verbose_name=_("Bus"))
+    type_entretien = models.CharField(_("Type d'entretien"), max_length=20, choices=TYPE_CHOICES)
+    date_entretien = models.DateField(_("Date de l'entretien"))
+    kilometrage = models.PositiveIntegerField(_("Kilometrage du bus"), default=0)
+    cout = models.PositiveIntegerField(_("Cout (FCFA)"), default=0)
+    description = models.TextField(_("Details / pieces changees"), blank=True)
+    prochain_km = models.PositiveIntegerField(_("Prochaine echeance (km)"), null=True, blank=True)
+    cree_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='entretiens_crees', verbose_name=_("Enregistre par"))
+    date_creation = models.DateTimeField(_("Date de creation"), auto_now_add=True)
 
     class Meta:
-        verbose_name = "Entretien"
-        verbose_name_plural = "Entretiens"
+        verbose_name = _("Entretien")
+        verbose_name_plural = _("Entretiens")
         ordering = ['-date_entretien']
 
     def __str__(self):
@@ -481,18 +504,18 @@ class Entretien(models.Model):
 
 
 class PleinCarburant(models.Model):
-    bus = models.ForeignKey('Bus', on_delete=models.CASCADE, related_name='pleins', verbose_name="Bus")
-    voyage = models.ForeignKey('Voyage', on_delete=models.SET_NULL, null=True, blank=True, related_name='pleins', verbose_name="Voyage")
-    date_plein = models.DateField(verbose_name="Date du plein")
-    litres = models.DecimalField(max_digits=7, decimal_places=2, default=0, verbose_name="Litres")
-    montant = models.PositiveIntegerField(default=0, verbose_name="Montant (FCFA)")
-    kilometrage = models.PositiveIntegerField(null=True, blank=True, verbose_name="Kilometrage")
-    cree_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='pleins_crees', verbose_name="Enregistre par")
-    date_creation = models.DateTimeField(auto_now_add=True)
+    bus = models.ForeignKey('Bus', on_delete=models.CASCADE, related_name='pleins', verbose_name=_("Bus"))
+    voyage = models.ForeignKey('Voyage', on_delete=models.SET_NULL, null=True, blank=True, related_name='pleins', verbose_name=_("Voyage"))
+    date_plein = models.DateField(_("Date du plein"))
+    litres = models.DecimalField(_("Litres"), max_digits=7, decimal_places=2, default=0)
+    montant = models.PositiveIntegerField(_("Montant (FCFA)"), default=0)
+    kilometrage = models.PositiveIntegerField(_("Kilometrage"), null=True, blank=True)
+    cree_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='pleins_crees', verbose_name=_("Enregistre par"))
+    date_creation = models.DateTimeField(_("Date de creation"), auto_now_add=True)
 
     class Meta:
-        verbose_name = "Plein de carburant"
-        verbose_name_plural = "Pleins de carburant"
+        verbose_name = _("Plein de carburant")
+        verbose_name_plural = _("Pleins de carburant")
         ordering = ['-date_plein']
 
     def __str__(self):
@@ -500,8 +523,8 @@ class PleinCarburant(models.Model):
 
 
 class Siege(models.Model):
-    voyage = models.ForeignKey('Voyage', on_delete=models.CASCADE, related_name='sieges')
-    numero = models.IntegerField(help_text="Numero du siege")
+    voyage = models.ForeignKey('Voyage', on_delete=models.CASCADE, related_name='sieges', verbose_name=_("Voyage"))
+    numero = models.IntegerField(_("Numero"), help_text=_("Numero du siege"))
 
     def __str__(self):
         return f"Siege {self.numero} - {self.voyage}"
@@ -524,51 +547,61 @@ class Siege(models.Model):
         return True
 
     class Meta:
+        verbose_name = _("Siege")
+        verbose_name_plural = _("Sieges")
         ordering = ['voyage', 'numero']
         unique_together = ['voyage', 'numero']
 
+
 class Promotion(models.Model):
-    titre = models.CharField(max_length=120, help_text="Titre de la promotion")
-    texte = models.TextField(help_text="Description de la promotion")
-    image = models.ImageField(upload_to='promotions/', null=True, blank=True, help_text="Image de la promotion")
-    date_debut = models.DateField(help_text="Date de debut de validite")
-    date_fin = models.DateField(help_text="Date de fin de validite")
-    actif = models.BooleanField(default=True, help_text="Decochez pour masquer")
-    date_creation = models.DateTimeField(auto_now_add=True)
-    service = models.CharField(max_length=20, choices=[('voyage', 'Reservation de voyage'), ('colis', 'Envoi de colis'), ('transfert', "Transfert d'argent"), ('aucun', 'Aucun')], default='aucun', help_text="Vers quel service renvoie la promotion")
+    SERVICE_CHOICES = [
+        ('voyage', _('Reservation de voyage')),
+        ('colis', _('Envoi de colis')),
+        ('transfert', _("Transfert d'argent")),
+        ('aucun', _('Aucun')),
+    ]
+
+    titre = models.CharField(_("Titre"), max_length=120, help_text=_("Titre de la promotion"))
+    texte = models.TextField(_("Texte"), help_text=_("Description de la promotion"))
+    image = models.ImageField(_("Image"), upload_to='promotions/', null=True, blank=True, help_text=_("Image de la promotion"))
+    date_debut = models.DateField(_("Date de debut"), help_text=_("Date de debut de validite"))
+    date_fin = models.DateField(_("Date de fin"), help_text=_("Date de fin de validite"))
+    actif = models.BooleanField(_("Actif"), default=True, help_text=_("Decochez pour masquer"))
+    date_creation = models.DateTimeField(_("Date de creation"), auto_now_add=True)
+    service = models.CharField(_("Service"), max_length=20, choices=SERVICE_CHOICES, default='aucun', help_text=_("Vers quel service renvoie la promotion"))
 
     def __str__(self):
         return self.titre
 
     class Meta:
-        verbose_name = "Promotion"
-        verbose_name_plural = "Promotions"
+        verbose_name = _("Promotion")
+        verbose_name_plural = _("Promotions")
         ordering = ['-date_creation']
 
-    
+
 class DemandeColis(models.Model):
     STATUT_CHOICES = [
-        ('en_attente', 'En attente de validation'),
-        ('validee', 'Validee (colis cree)'),
-        ('annulee', 'Annulee'),
+        ('en_attente', _('En attente de validation')),
+        ('validee', _('Validee (colis cree)')),
+        ('annulee', _('Annulee')),
     ]
-    numero_demande = models.CharField(max_length=20, unique=True, blank=True)
-    client = models.ForeignKey('Client', on_delete=models.SET_NULL, null=True, blank=True, related_name='demandes_colis')
-    expediteur_nom = models.CharField(max_length=100)
-    expediteur_telephone = models.CharField(max_length=20)
-    destinataire_nom = models.CharField(max_length=100)
-    destinataire_telephone = models.CharField(max_length=20)
-    agence_depart = models.ForeignKey('Agence', on_delete=models.PROTECT, related_name='demandes_colis_depart')
-    agence_arrivee = models.ForeignKey('Agence', on_delete=models.PROTECT, related_name='demandes_colis_arrivee')
-    description = models.CharField(max_length=200)
-    poids_estime = models.FloatField(help_text="Poids estime en kg")
-    valeur_declaree = models.IntegerField(default=0, help_text="Valeur declaree en FCFA")
-    poids_reel = models.FloatField(null=True, blank=True, help_text="Poids reel pese a l'agence (kg)")
-    prix = models.IntegerField(null=True, blank=True, help_text="Prix fixe par l'agence (FCFA)")
-    statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='en_attente')
-    colis = models.ForeignKey('Colis', on_delete=models.SET_NULL, null=True, blank=True, related_name='demande_origine')
-    date_demande = models.DateTimeField(auto_now_add=True)
-    notes = models.TextField(blank=True)
+    numero_demande = models.CharField(_("Numero de demande"), max_length=20, unique=True, blank=True)
+    client = models.ForeignKey('Client', on_delete=models.SET_NULL, null=True, blank=True, related_name='demandes_colis', verbose_name=_("Client"))
+    expediteur_nom = models.CharField(_("Nom de l'expediteur"), max_length=100)
+    expediteur_telephone = models.CharField(_("Telephone de l'expediteur"), max_length=20)
+    destinataire_nom = models.CharField(_("Nom du destinataire"), max_length=100)
+    destinataire_telephone = models.CharField(_("Telephone du destinataire"), max_length=20)
+    agence_depart = models.ForeignKey('Agence', on_delete=models.PROTECT, related_name='demandes_colis_depart', verbose_name=_("Agence de depart"))
+    agence_arrivee = models.ForeignKey('Agence', on_delete=models.PROTECT, related_name='demandes_colis_arrivee', verbose_name=_("Agence d'arrivee"))
+    description = models.CharField(_("Description"), max_length=200)
+    poids_estime = models.FloatField(_("Poids estime"), help_text=_("Poids estime en kg"))
+    valeur_declaree = models.IntegerField(_("Valeur declaree"), default=0, help_text=_("Valeur declaree en FCFA"))
+    poids_reel = models.FloatField(_("Poids reel"), null=True, blank=True, help_text=_("Poids reel pese a l'agence (kg)"))
+    prix = models.IntegerField(_("Prix"), null=True, blank=True, help_text=_("Prix fixe par l'agence (FCFA)"))
+    statut = models.CharField(_("Statut"), max_length=20, choices=STATUT_CHOICES, default='en_attente')
+    colis = models.ForeignKey('Colis', on_delete=models.SET_NULL, null=True, blank=True, related_name='demande_origine', verbose_name=_("Colis"))
+    date_demande = models.DateTimeField(_("Date de demande"), auto_now_add=True)
+    notes = models.TextField(_("Notes"), blank=True)
 
     def __str__(self):
         return f"{self.numero_demande} - {self.expediteur_nom}"
@@ -582,31 +615,31 @@ class DemandeColis(models.Model):
         super().save(*args, **kwargs)
 
     class Meta:
-        verbose_name = "Demande de colis"
-        verbose_name_plural = "Demandes de colis"
+        verbose_name = _("Demande de colis")
+        verbose_name_plural = _("Demandes de colis")
         ordering = ['-date_demande']
 
 
 class DemandeTransfert(models.Model):
     STATUT_CHOICES = [
-        ('en_attente', 'En attente de validation'),
-        ('validee', 'Validee (transfert cree)'),
-        ('annulee', 'Annulee'),
+        ('en_attente', _('En attente de validation')),
+        ('validee', _('Validee (transfert cree)')),
+        ('annulee', _('Annulee')),
     ]
-    numero_demande = models.CharField(max_length=20, unique=True, blank=True)
-    client = models.ForeignKey('Client', on_delete=models.SET_NULL, null=True, blank=True, related_name='demandes_transfert')
-    expediteur_nom = models.CharField(max_length=100)
-    expediteur_telephone = models.CharField(max_length=20)
-    beneficiaire_nom = models.CharField(max_length=100)
-    beneficiaire_telephone = models.CharField(max_length=20)
-    agence_depart = models.ForeignKey('Agence', on_delete=models.PROTECT, related_name='demandes_transfert_depart')
-    agence_retrait = models.ForeignKey('Agence', on_delete=models.PROTECT, related_name='demandes_transfert_retrait')
-    montant = models.IntegerField(help_text="Montant a envoyer en FCFA")
-    frais = models.IntegerField(null=True, blank=True, help_text="Frais fixes par l'agence")
-    statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='en_attente')
-    transfert = models.ForeignKey('TransfertArgent', on_delete=models.SET_NULL, null=True, blank=True, related_name='demande_origine')
-    date_demande = models.DateTimeField(auto_now_add=True)
-    notes = models.TextField(blank=True)
+    numero_demande = models.CharField(_("Numero de demande"), max_length=20, unique=True, blank=True)
+    client = models.ForeignKey('Client', on_delete=models.SET_NULL, null=True, blank=True, related_name='demandes_transfert', verbose_name=_("Client"))
+    expediteur_nom = models.CharField(_("Nom de l'expediteur"), max_length=100)
+    expediteur_telephone = models.CharField(_("Telephone de l'expediteur"), max_length=20)
+    beneficiaire_nom = models.CharField(_("Nom du beneficiaire"), max_length=100)
+    beneficiaire_telephone = models.CharField(_("Telephone du beneficiaire"), max_length=20)
+    agence_depart = models.ForeignKey('Agence', on_delete=models.PROTECT, related_name='demandes_transfert_depart', verbose_name=_("Agence de depart"))
+    agence_retrait = models.ForeignKey('Agence', on_delete=models.PROTECT, related_name='demandes_transfert_retrait', verbose_name=_("Agence de retrait"))
+    montant = models.IntegerField(_("Montant"), help_text=_("Montant a envoyer en FCFA"))
+    frais = models.IntegerField(_("Frais"), null=True, blank=True, help_text=_("Frais fixes par l'agence"))
+    statut = models.CharField(_("Statut"), max_length=20, choices=STATUT_CHOICES, default='en_attente')
+    transfert = models.ForeignKey('TransfertArgent', on_delete=models.SET_NULL, null=True, blank=True, related_name='demande_origine', verbose_name=_("Transfert"))
+    date_demande = models.DateTimeField(_("Date de demande"), auto_now_add=True)
+    notes = models.TextField(_("Notes"), blank=True)
 
     def __str__(self):
         return f"{self.numero_demande} - {self.expediteur_nom}"
@@ -620,17 +653,16 @@ class DemandeTransfert(models.Model):
         super().save(*args, **kwargs)
 
     class Meta:
-        verbose_name = "Demande de transfert"
-        verbose_name_plural = "Demandes de transfert"
+        verbose_name = _("Demande de transfert")
+        verbose_name_plural = _("Demandes de transfert")
         ordering = ['-date_demande']
 
 
-        
 class Ligne(models.Model):
-    compagnie = models.ForeignKey('Compagnie', on_delete=models.CASCADE, related_name='lignes')
-    nom = models.CharField(max_length=120, help_text="Ex : Ndjamena - Abeche (axe Est)")
-    actif = models.BooleanField(default=True)
-    date_creation = models.DateTimeField(auto_now_add=True)
+    compagnie = models.ForeignKey('Compagnie', on_delete=models.CASCADE, related_name='lignes', verbose_name=_("Compagnie"))
+    nom = models.CharField(_("Nom"), max_length=120, help_text=_("Ex : Ndjamena - Abeche (axe Est)"))
+    actif = models.BooleanField(_("Actif"), default=True)
+    date_creation = models.DateTimeField(_("Date de creation"), auto_now_add=True)
 
     def __str__(self):
         return self.nom
@@ -639,107 +671,107 @@ class Ligne(models.Model):
         return [a.agence.ville for a in self.arrets.all().order_by('ordre')]
 
     class Meta:
-        verbose_name = "Ligne"
-        verbose_name_plural = "Lignes"
+        verbose_name = _("Ligne")
+        verbose_name_plural = _("Lignes")
         ordering = ['nom']
 
 
 class ArretLigne(models.Model):
-    ligne = models.ForeignKey('Ligne', on_delete=models.CASCADE, related_name='arrets')
-    agence = models.ForeignKey('Agence', on_delete=models.PROTECT, related_name='arrets')
-    ordre = models.IntegerField(help_text="1 = ville de depart, puis 2, 3, 4...")
-    prix_depuis_depart = models.IntegerField(default=0, help_text="Prix en FCFA depuis la ville de depart")
+    ligne = models.ForeignKey('Ligne', on_delete=models.CASCADE, related_name='arrets', verbose_name=_("Ligne"))
+    agence = models.ForeignKey('Agence', on_delete=models.PROTECT, related_name='arrets', verbose_name=_("Agence"))
+    ordre = models.IntegerField(_("Ordre"), help_text=_("1 = ville de depart, puis 2, 3, 4..."))
+    prix_depuis_depart = models.IntegerField(_("Prix depuis le depart"), default=0, help_text=_("Prix en FCFA depuis la ville de depart"))
 
     def __str__(self):
         return f"{self.ordre}. {self.agence.ville} ({self.prix_depuis_depart} FCFA)"
 
     class Meta:
-        verbose_name = "Arret de ligne"
-        verbose_name_plural = "Arrets de ligne"
+        verbose_name = _("Arret de ligne")
+        verbose_name_plural = _("Arrets de ligne")
         ordering = ['ligne', 'ordre']
         unique_together = ['ligne', 'ordre']
 
 
 class PositionBus(models.Model):
     """Position GPS d'un bus en cours de voyage, envoyee par le telephone du chauffeur."""
-    voyage = models.ForeignKey('Voyage', on_delete=models.CASCADE, related_name='positions')
-    chauffeur = models.ForeignKey('Chauffeur', on_delete=models.SET_NULL, null=True, blank=True, related_name='positions')
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-    vitesse_kmh = models.FloatField(null=True, blank=True, help_text="Vitesse en km/h si disponible")
-    horodatage = models.DateTimeField(auto_now_add=True)
+    voyage = models.ForeignKey('Voyage', on_delete=models.CASCADE, related_name='positions', verbose_name=_("Voyage"))
+    chauffeur = models.ForeignKey('Chauffeur', on_delete=models.SET_NULL, null=True, blank=True, related_name='positions', verbose_name=_("Chauffeur"))
+    latitude = models.FloatField(_("Latitude"))
+    longitude = models.FloatField(_("Longitude"))
+    vitesse_kmh = models.FloatField(_("Vitesse (km/h)"), null=True, blank=True, help_text=_("Vitesse en km/h si disponible"))
+    horodatage = models.DateTimeField(_("Horodatage"), auto_now_add=True)
 
     def __str__(self):
         return f"{self.voyage} - {self.horodatage:%d/%m/%Y %H:%M}"
 
     class Meta:
-        verbose_name = "Position bus"
-        verbose_name_plural = "Positions bus"
+        verbose_name = _("Position bus")
+        verbose_name_plural = _("Positions bus")
         ordering = ['-horodatage']
 
 
 class AlerteVoyage(models.Model):
     """Alerte automatique quand un bus s'arrete anormalement longtemps hors agence."""
     TYPE_CHOICES = [
-        ('arret_anormal', 'Arret anormal'),
+        ('arret_anormal', _('Arret anormal')),
     ]
 
-    voyage = models.ForeignKey('Voyage', on_delete=models.CASCADE, related_name='alertes')
-    type_alerte = models.CharField(max_length=20, choices=TYPE_CHOICES, default='arret_anormal')
-    message = models.TextField()
-    latitude = models.FloatField(null=True, blank=True)
-    longitude = models.FloatField(null=True, blank=True)
-    date_creation = models.DateTimeField(auto_now_add=True)
-    resolue = models.BooleanField(default=False, help_text="Cocher une fois verifiee par un responsable")
+    voyage = models.ForeignKey('Voyage', on_delete=models.CASCADE, related_name='alertes', verbose_name=_("Voyage"))
+    type_alerte = models.CharField(_("Type d'alerte"), max_length=20, choices=TYPE_CHOICES, default='arret_anormal')
+    message = models.TextField(_("Message"))
+    latitude = models.FloatField(_("Latitude"), null=True, blank=True)
+    longitude = models.FloatField(_("Longitude"), null=True, blank=True)
+    date_creation = models.DateTimeField(_("Date de creation"), auto_now_add=True)
+    resolue = models.BooleanField(_("Resolue"), default=False, help_text=_("Cocher une fois verifiee par un responsable"))
 
     def __str__(self):
         return f"{self.get_type_alerte_display()} - {self.voyage} ({self.date_creation:%d/%m %H:%M})"
 
     class Meta:
-        verbose_name = "Alerte voyage"
-        verbose_name_plural = "Alertes voyage"
+        verbose_name = _("Alerte voyage")
+        verbose_name_plural = _("Alertes voyage")
         ordering = ['-date_creation']
 
 
 class AvisVoyage(models.Model):
     """Avis laisse par un client apres un voyage termine (note + criteres detailles)."""
-    reservation = models.OneToOneField('Reservation', on_delete=models.CASCADE, related_name='avis')
-    client = models.ForeignKey('Client', on_delete=models.CASCADE, related_name='avis')
-    chauffeur = models.ForeignKey('Chauffeur', on_delete=models.CASCADE, related_name='avis')
-    voyage = models.ForeignKey('Voyage', on_delete=models.CASCADE, related_name='avis')
-    note = models.IntegerField(help_text="Note globale de 1 a 5 etoiles")
-    commentaire = models.TextField(blank=True, help_text="Commentaire facultatif du client")
+    reservation = models.OneToOneField('Reservation', on_delete=models.CASCADE, related_name='avis', verbose_name=_("Reservation"))
+    client = models.ForeignKey('Client', on_delete=models.CASCADE, related_name='avis', verbose_name=_("Client"))
+    chauffeur = models.ForeignKey('Chauffeur', on_delete=models.CASCADE, related_name='avis', verbose_name=_("Chauffeur"))
+    voyage = models.ForeignKey('Voyage', on_delete=models.CASCADE, related_name='avis', verbose_name=_("Voyage"))
+    note = models.IntegerField(_("Note"), help_text=_("Note globale de 1 a 5 etoiles"))
+    commentaire = models.TextField(_("Commentaire"), blank=True, help_text=_("Commentaire facultatif du client"))
 
-    bus_propre = models.BooleanField(null=True, blank=True, help_text="Le bus etait-il propre ?")
-    climatisation_ok = models.BooleanField(null=True, blank=True, help_text="La climatisation fonctionnait-elle ?")
-    television_ok = models.BooleanField(null=True, blank=True, help_text="La television fonctionnait-elle ?")
-    connexion_ok = models.BooleanField(null=True, blank=True, help_text="La connexion Starlink fonctionnait-elle ?")
-    chauffeur_poli = models.BooleanField(null=True, blank=True, help_text="Le chauffeur etait-il poli ?")
-    accompagnateur_aimable = models.BooleanField(null=True, blank=True, help_text="L'accompagnateur etait-il aimable ?")
+    bus_propre = models.BooleanField(_("Bus propre"), null=True, blank=True, help_text=_("Le bus etait-il propre ?"))
+    climatisation_ok = models.BooleanField(_("Climatisation OK"), null=True, blank=True, help_text=_("La climatisation fonctionnait-elle ?"))
+    television_ok = models.BooleanField(_("Television OK"), null=True, blank=True, help_text=_("La television fonctionnait-elle ?"))
+    connexion_ok = models.BooleanField(_("Connexion OK"), null=True, blank=True, help_text=_("La connexion Starlink fonctionnait-elle ?"))
+    chauffeur_poli = models.BooleanField(_("Chauffeur poli"), null=True, blank=True, help_text=_("Le chauffeur etait-il poli ?"))
+    accompagnateur_aimable = models.BooleanField(_("Accompagnateur aimable"), null=True, blank=True, help_text=_("L'accompagnateur etait-il aimable ?"))
 
-    date_creation = models.DateTimeField(auto_now_add=True)
+    date_creation = models.DateTimeField(_("Date de creation"), auto_now_add=True)
 
     def __str__(self):
         return f"{self.note}/5 - {self.chauffeur} ({self.voyage})"
 
     class Meta:
-        verbose_name = "Avis voyage"
-        verbose_name_plural = "Avis voyages"
+        verbose_name = _("Avis voyage")
+        verbose_name_plural = _("Avis voyages")
         ordering = ['-date_creation']
 
 
 class QuestionFAQ(models.Model):
     """Question frequente affichee dans l'ecran Aide de l'app mobile."""
-    question = models.CharField(max_length=200, help_text="La question posee")
-    reponse = models.TextField(help_text="La reponse affichee au client")
-    ordre = models.IntegerField(default=0, help_text="Ordre d'affichage (petit numero = en haut)")
-    actif = models.BooleanField(default=True, help_text="Decochez pour masquer sans supprimer")
-    date_creation = models.DateTimeField(auto_now_add=True)
+    question = models.CharField(_("Question"), max_length=200, help_text=_("La question posee"))
+    reponse = models.TextField(_("Reponse"), help_text=_("La reponse affichee au client"))
+    ordre = models.IntegerField(_("Ordre"), default=0, help_text=_("Ordre d'affichage (petit numero = en haut)"))
+    actif = models.BooleanField(_("Actif"), default=True, help_text=_("Decochez pour masquer sans supprimer"))
+    date_creation = models.DateTimeField(_("Date de creation"), auto_now_add=True)
 
     def __str__(self):
         return self.question
 
     class Meta:
-        verbose_name = "Question FAQ"
-        verbose_name_plural = "Questions FAQ"
+        verbose_name = _("Question FAQ")
+        verbose_name_plural = _("Questions FAQ")
         ordering = ['ordre', 'id']

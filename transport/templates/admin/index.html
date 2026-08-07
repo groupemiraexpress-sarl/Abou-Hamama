@@ -113,75 +113,75 @@
 
   <div class="raccourci-vente">
     <a href="{% url 'transport:vendre_billet' %}" class="btn-vente">
-      🎫 Vendre un billet
+      🎫 {% trans "Vendre un billet" %}
     </a>
     <a href="{% url 'transport:liste_billets' %}" class="btn-vente-secondaire">
-      Voir les billets vendus
+      {% trans "Voir les billets vendus" %}
     </a>
   </div>
 
   <div class="stats-zone">
-    <h2 class="stats-titre">Aujourd'hui</h2>
+    <h2 class="stats-titre">{% trans "Aujourd'hui" %}</h2>
     <div class="stats-grille">
       <div class="stat-carte">
         <div class="stat-valeur">{{ stats.voyages_aujourd_hui }}</div>
-        <div class="stat-label">Voyages du jour</div>
+        <div class="stat-label">{% trans "Voyages du jour" %}</div>
       </div>
       <div class="stat-carte">
         <div class="stat-valeur">{{ stats.reservations_jour }}</div>
-        <div class="stat-label">Reservations du jour</div>
+        <div class="stat-label">{% trans "Reservations du jour" %}</div>
       </div>
       <div class="stat-carte succes">
         <div class="stat-valeur">{{ stats.recette_jour }}</div>
-        <div class="stat-label">Recette du jour (FCFA)</div>
+        <div class="stat-label">{% trans "Recette du jour (FCFA)" %}</div>
       </div>
       <div class="stat-carte">
         <div class="stat-valeur">{{ stats.voyages_a_venir }}</div>
-        <div class="stat-label">Voyages a venir</div>
+        <div class="stat-label">{% trans "Voyages a venir" %}</div>
       </div>
     </div>
 
-    <h2 class="stats-titre">A traiter</h2>
+    <h2 class="stats-titre">{% trans "A traiter" %}</h2>
     <div class="stats-grille">
       <div class="stat-carte alerte">
         <div class="stat-valeur">{{ stats.alertes_non_resolues }}</div>
-        <div class="stat-label">Alertes de securite</div>
+        <div class="stat-label">{% trans "Alertes de securite" %}</div>
       </div>
       <div class="stat-carte alerte">
         <div class="stat-valeur">{{ stats.demandes_colis_attente }}</div>
-        <div class="stat-label">Demandes colis en attente</div>
+        <div class="stat-label">{% trans "Demandes colis en attente" %}</div>
       </div>
       <div class="stat-carte alerte">
         <div class="stat-valeur">{{ stats.demandes_transfert_attente }}</div>
-        <div class="stat-label">Demandes transfert en attente</div>
+        <div class="stat-label">{% trans "Demandes transfert en attente" %}</div>
       </div>
       <div class="stat-carte alerte">
         <div class="stat-valeur">{{ stats.reservations_attente }}</div>
-        <div class="stat-label">Reservations non payees</div>
+        <div class="stat-label">{% trans "Reservations non payees" %}</div>
       </div>
       <div class="stat-carte alerte">
         <div class="stat-valeur">{{ stats.transferts_attente }}</div>
-        <div class="stat-label">Transferts a retirer</div>
+        <div class="stat-label">{% trans "Transferts a retirer" %}</div>
       </div>
     </div>
 
-    <h2 class="stats-titre">Activite</h2>
+    <h2 class="stats-titre">{% trans "Activite" %}</h2>
     <div class="stats-grille">
       <div class="stat-carte">
         <div class="stat-valeur">{{ stats.colis_transit }}</div>
-        <div class="stat-label">Colis en transit</div>
+        <div class="stat-label">{% trans "Colis en transit" %}</div>
       </div>
       <div class="stat-carte">
         <div class="stat-valeur">{{ stats.colis_arrives }}</div>
-        <div class="stat-label">Colis arrives</div>
+        <div class="stat-label">{% trans "Colis arrives" %}</div>
       </div>
       <div class="stat-carte">
         <div class="stat-valeur">{{ stats.bus_service }}</div>
-        <div class="stat-label">Bus en service</div>
+        <div class="stat-label">{% trans "Bus en service" %}</div>
       </div>
       <div class="stat-carte">
         <div class="stat-valeur">{{ stats.total_clients }}</div>
-        <div class="stat-label">Clients actifs</div>
+        <div class="stat-label">{% trans "Clients actifs" %}</div>
       </div>
     </div>
   </div>
@@ -191,15 +191,15 @@
     {% if app.app_label == 'transport' %}
 
       <div class="groupe-metier">
-        <h2 class="groupe-titre">Exploitation</h2>
+        <h2 class="groupe-titre">{% trans "Exploitation" %}</h2>
         <div class="groupe-liste">
           {% for model in app.models %}
             {% if model.object_name == 'Voyage' or model.object_name == 'Reservation' or model.object_name == 'Trajet' or model.object_name == 'Bus' or model.object_name == 'Chauffeur' or model.object_name == 'Siege' %}
               <div class="groupe-ligne">
                 <a class="nom" href="{{ model.admin_url }}">{{ model.name }}</a>
                 <span class="groupe-actions">
-                  {% if model.add_url %}<a href="{{ model.add_url }}">+ Ajouter</a>{% endif %}
-                  {% if model.admin_url %}<a href="{{ model.admin_url }}">Modifier</a>{% endif %}
+                  {% if model.add_url %}<a href="{{ model.add_url }}">+ {% trans "Ajouter" %}</a>{% endif %}
+                  {% if model.admin_url %}<a href="{{ model.admin_url }}">{% trans "Modifier" %}</a>{% endif %}
                 </span>
               </div>
             {% endif %}
@@ -208,14 +208,14 @@
       </div>
 
       <div class="groupe-metier">
-        <h2 class="groupe-titre">Securite</h2>
+        <h2 class="groupe-titre">{% trans "Securite" %}</h2>
         <div class="groupe-liste">
           {% for model in app.models %}
             {% if model.object_name == 'AlerteVoyage' %}
               <div class="groupe-ligne">
                 <a class="nom" href="{{ model.admin_url }}">{{ model.name }}</a>
                 <span class="groupe-actions">
-                  {% if model.admin_url %}<a href="{{ model.admin_url }}">Voir</a>{% endif %}
+                  {% if model.admin_url %}<a href="{{ model.admin_url }}">{% trans "Voir" %}</a>{% endif %}
                 </span>
               </div>
             {% endif %}
@@ -224,15 +224,15 @@
       </div>
 
       <div class="groupe-metier">
-        <h2 class="groupe-titre">Colis et transferts</h2>
+        <h2 class="groupe-titre">{% trans "Colis et transferts" %}</h2>
         <div class="groupe-liste">
           {% for model in app.models %}
             {% if model.object_name == 'Colis' or model.object_name == 'TransfertArgent' or model.object_name == 'DemandeColis' or model.object_name == 'DemandeTransfert' %}
               <div class="groupe-ligne">
                 <a class="nom" href="{{ model.admin_url }}">{{ model.name }}</a>
                 <span class="groupe-actions">
-                  {% if model.add_url %}<a href="{{ model.add_url }}">+ Ajouter</a>{% endif %}
-                  {% if model.admin_url %}<a href="{{ model.admin_url }}">Modifier</a>{% endif %}
+                  {% if model.add_url %}<a href="{{ model.add_url }}">+ {% trans "Ajouter" %}</a>{% endif %}
+                  {% if model.admin_url %}<a href="{{ model.admin_url }}">{% trans "Modifier" %}</a>{% endif %}
                 </span>
               </div>
             {% endif %}
@@ -241,15 +241,15 @@
       </div>
 
       <div class="groupe-metier">
-        <h2 class="groupe-titre">Clients et personnel</h2>
+        <h2 class="groupe-titre">{% trans "Clients et personnel" %}</h2>
         <div class="groupe-liste">
           {% for model in app.models %}
             {% if model.object_name == 'Client' or model.object_name == 'Employe' %}
               <div class="groupe-ligne">
                 <a class="nom" href="{{ model.admin_url }}">{{ model.name }}</a>
                 <span class="groupe-actions">
-                  {% if model.add_url %}<a href="{{ model.add_url }}">+ Ajouter</a>{% endif %}
-                  {% if model.admin_url %}<a href="{{ model.admin_url }}">Modifier</a>{% endif %}
+                  {% if model.add_url %}<a href="{{ model.add_url }}">+ {% trans "Ajouter" %}</a>{% endif %}
+                  {% if model.admin_url %}<a href="{{ model.admin_url }}">{% trans "Modifier" %}</a>{% endif %}
                 </span>
               </div>
             {% endif %}
@@ -258,15 +258,15 @@
       </div>
 
       <div class="groupe-metier">
-        <h2 class="groupe-titre">Maintenance du parc</h2>
+        <h2 class="groupe-titre">{% trans "Maintenance du parc" %}</h2>
         <div class="groupe-liste">
           {% for model in app.models %}
             {% if model.object_name == 'Entretien' or model.object_name == 'PleinCarburant' %}
               <div class="groupe-ligne">
                 <a class="nom" href="{{ model.admin_url }}">{{ model.name }}</a>
                 <span class="groupe-actions">
-                  {% if model.add_url %}<a href="{{ model.add_url }}">+ Ajouter</a>{% endif %}
-                  {% if model.admin_url %}<a href="{{ model.admin_url }}">Modifier</a>{% endif %}
+                  {% if model.add_url %}<a href="{{ model.add_url }}">+ {% trans "Ajouter" %}</a>{% endif %}
+                  {% if model.admin_url %}<a href="{{ model.admin_url }}">{% trans "Modifier" %}</a>{% endif %}
                 </span>
               </div>
             {% endif %}
@@ -275,15 +275,15 @@
       </div>
 
       <div class="groupe-metier">
-        <h2 class="groupe-titre">Configuration</h2>
+        <h2 class="groupe-titre">{% trans "Configuration" %}</h2>
         <div class="groupe-liste">
           {% for model in app.models %}
-            {% if model.object_name == 'Compagnie' or model.object_name == 'Agence' or model.object_name == 'Promotion' %}
+            {% if model.object_name == 'Compagnie' or model.object_name == 'Agence' or model.object_name == 'Promotion' or model.object_name == 'Ligne' or model.object_name == 'QuestionFAQ' %}
               <div class="groupe-ligne">
                 <a class="nom" href="{{ model.admin_url }}">{{ model.name }}</a>
                 <span class="groupe-actions">
-                  {% if model.add_url %}<a href="{{ model.add_url }}">+ Ajouter</a>{% endif %}
-                  {% if model.admin_url %}<a href="{{ model.admin_url }}">Modifier</a>{% endif %}
+                  {% if model.add_url %}<a href="{{ model.add_url }}">+ {% trans "Ajouter" %}</a>{% endif %}
+                  {% if model.admin_url %}<a href="{{ model.admin_url }}">{% trans "Modifier" %}</a>{% endif %}
                 </span>
               </div>
             {% endif %}
@@ -300,8 +300,8 @@
             <div class="groupe-ligne">
               <a class="nom" href="{{ model.admin_url }}">{{ model.name }}</a>
               <span class="groupe-actions">
-                {% if model.add_url %}<a href="{{ model.add_url }}">+ Ajouter</a>{% endif %}
-                {% if model.admin_url %}<a href="{{ model.admin_url }}">Modifier</a>{% endif %}
+                {% if model.add_url %}<a href="{{ model.add_url }}">+ {% trans "Ajouter" %}</a>{% endif %}
+                {% if model.admin_url %}<a href="{{ model.admin_url }}">{% trans "Modifier" %}</a>{% endif %}
               </span>
             </div>
           {% endfor %}
