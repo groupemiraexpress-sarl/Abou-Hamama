@@ -82,10 +82,12 @@ class ReservationSerializer(serializers.ModelSerializer):
     ville_arrivee = serializers.CharField(source='voyage.trajet.ville_arrivee', read_only=True)
     date_depart = serializers.DateField(source='voyage.date_depart', read_only=True)
     heure_depart = serializers.TimeField(source='voyage.heure_depart', read_only=True)
+    statut_voyage = serializers.CharField(source='voyage.statut', read_only=True)
     numeros_sieges = serializers.SerializerMethodField()
     voyageur = serializers.SerializerMethodField()
     ville_montee = serializers.SerializerMethodField()
     ville_descente = serializers.SerializerMethodField()
+    avis_donne = serializers.SerializerMethodField()
 
     voyage_id = serializers.IntegerField(source='voyage.id', read_only=True)
 
@@ -102,6 +104,9 @@ class ReservationSerializer(serializers.ModelSerializer):
         nom_complet = (obj.voyageur_prenom + ' ' + obj.voyageur_nom).strip()
         return nom_complet if nom_complet else ''
 
+    def get_avis_donne(self, obj):
+        return hasattr(obj, 'avis')
+
     class Meta:
         model = Reservation
         fields = [
@@ -110,6 +115,7 @@ class ReservationSerializer(serializers.ModelSerializer):
             'montant_total', 'statut', 'statut_libelle', 'date_reservation',
             'numeros_sieges', 'voyageur', 'voyageur_telephone',
             'ville_montee', 'ville_descente', 'voyage_id',
+            'statut_voyage', 'avis_donne',
         ]
 
 

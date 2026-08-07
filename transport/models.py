@@ -235,7 +235,6 @@ class Reservation(models.Model):
     agence = models.ForeignKey(Agence, on_delete=models.PROTECT, related_name='reservations', null=True, blank=True, help_text="Agence ou la reservation a ete faite")
     cree_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='reservations_creees', verbose_name="Cree par")
     modifie_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='reservations_modifiees', verbose_name="Modifie par")
-    modifie_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='reservations_modifiees', verbose_name="Modifie par")
     embarque = models.BooleanField(default=False, help_text="Coche automatiquement quand le billet est scanne au controle")
     date_embarquement = models.DateTimeField(null=True, blank=True)
     scanne_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='reservations_scannees', verbose_name="Scanne par")
@@ -375,7 +374,6 @@ class Employe(models.Model):
 
     user = models.OneToOneField('auth.User', on_delete=models.SET_NULL, related_name='employe', null=True, blank=True, help_text="Compte de connexion lie a cet employe")
     compagnie = models.ForeignKey(Compagnie, on_delete=models.CASCADE, related_name='employes')
-    agence = models.ForeignKey(Agence, on_delete=models.SET_NULL, related_name='employes', null=True, blank=True, help_text="Laisser vide pour un PDG (toute la compagnie)")
     agence = models.ForeignKey(Agence, on_delete=models.SET_NULL, related_name='employes', null=True, blank=True, help_text="Laisser vide pour un PDG (toute la compagnie)")
     zone = models.CharField(max_length=10, choices=Agence.ZONE_CHOICES, blank=True, help_text="Zone geographique geree (uniquement pour Responsable planning)")
     nom = models.CharField(max_length=100)
@@ -700,4 +698,31 @@ class AlerteVoyage(models.Model):
     class Meta:
         verbose_name = "Alerte voyage"
         verbose_name_plural = "Alertes voyage"
+        ordering = ['-date_creation']
+
+
+class AvisVoyage(models.Model):
+    """Avis laisse par un client apres un voyage termine (note + criteres detailles)."""
+    reservation = models.OneToOneField('Reservation', on_delete=models.CASCADE, related_name='avis')
+    client = models.ForeignKey('Client', on_delete=models.CASCADE, related_name='avis')
+    chauffeur = models.ForeignKey('Chauffeur', on_delete=models.CASCADE, related_name='avis')
+    voyage = models.ForeignKey('Voyage', on_delete=models.CASCADE, related_name='avis')
+    note = models.IntegerField(help_text="Note globale de 1 a 5 etoiles")
+    commentaire = models.TextField(blank=True, help_text="Commentaire facultatif du client")
+
+    bus_propre = models.BooleanField(null=True, blank=True, help_text="Le bus etait-il propre ?")
+    climatisation_ok = models.BooleanField(null=True, blank=True, help_text="La climatisation fonctionnait-elle ?")
+    television_ok = models.BooleanField(null=True, blank=True, help_text="La television fonctionnait-elle ?")
+    connexion_ok = models.BooleanField(null=True, blank=True, help_text="La connexion Starlink fonctionnait-elle ?")
+    chauffeur_poli = models.BooleanField(null=True, blank=True, help_text="Le chauffeur etait-il poli ?")
+    accompagnateur_aimable = models.BooleanField(null=True, blank=True, help_text="L'accompagnateur etait-il aimable ?")
+
+    date_creation = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.note}/5 - {self.chauffeur} ({self.voyage})"
+
+    class Meta:
+        verbose_name = "Avis voyage"
+        verbose_name_plural = "Avis voyages"
         ordering = ['-date_creation']

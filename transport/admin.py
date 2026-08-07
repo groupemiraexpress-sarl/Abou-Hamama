@@ -5,7 +5,7 @@ from .models import (
     Compagnie, Agence, Bus, Chauffeur, Trajet, Voyage,
     Client, Reservation, Colis, Employe, TransfertArgent,
     Entretien, PleinCarburant, Promotion, DemandeColis, DemandeTransfert, Ligne, ArretLigne,
-    AlerteVoyage
+    AlerteVoyage, AvisVoyage
 )
 
 admin.site.site_header = "Express Abou Hamama"
@@ -46,11 +46,29 @@ class BusAdmin(FiltreAgenceMixin, admin.ModelAdmin):
 class ChauffeurAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     champs_agence = ['agence']
     champ_createur = None
-    list_display = ('nom', 'prenom', 'agence', 'telephone', 'numero_permis', 'date_expiration_permis', 'statut', 'actif')
+    list_display = ('nom', 'prenom', 'agence', 'telephone', 'numero_permis', 'date_expiration_permis', 'statut', 'note_moyenne_badge', 'actif')
     list_filter = ('statut', 'agence', 'compagnie', 'actif')
     search_fields = ('nom', 'prenom', 'numero_permis', 'telephone')
     list_editable = ('statut',)
     ordering = ('agence__ville', 'agence__nom', 'nom')
+
+    @admin.display(description="Note moyenne")
+    def note_moyenne_badge(self, obj):
+        from django.utils.html import format_html
+        from django.db.models import Avg
+        moyenne = obj.avis.aggregate(m=Avg('note'))['m']
+        if moyenne is None:
+            return format_html('<span style="color:{};">Aucun avis</span>', '#9ca3af')
+        if moyenne >= 4:
+            couleur = '#059669'
+        elif moyenne >= 3:
+            couleur = '#d97706'
+        else:
+            couleur = '#dc2626'
+        return format_html(
+            '<span style="background:{}; color:#fff; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:600;">&#9733; {}/5 ({} avis)</span>',
+            couleur, round(moyenne, 1), obj.avis.count()
+        )
 
 
 @admin.register(Trajet)
@@ -392,6 +410,7 @@ class LigneAdmin(FiltreAgenceMixin, admin.ModelAdmin):
         villes = obj.villes()
         return " -> ".join(villes) if villes else "(aucun arret)"
 
+
 @admin.register(AlerteVoyage)
 class AlerteVoyageAdmin(admin.ModelAdmin):
     list_display = ('type_alerte', 'voyage', 'message_court', 'date_creation', 'resolue')
@@ -406,3 +425,60 @@ class AlerteVoyageAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return False
+
+
+@admin.register(AvisVoyage)
+class AvisVoyageAdmin(admin.ModelAdmin):
+    list_display = ('note_etoiles', 'chauffeur', 'client', 'voyage', 'critere_bus', 'critere_clim', 'critere_tv', 'critere_connexion', 'critere_chauffeur', 'critere_accompagnateur', 'commentaire_court', 'date_creation')
+    list_filter = ('note', 'chauffeur', 'date_creation')
+    search_fields = ('client__nom', 'client__telephone', 'chauffeur__nom', 'chauffeur__prenom', 'commentaire')
+    ordering = ('-date_creation',)
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    @admin.display(description="Note", ordering='note')
+    def note_etoiles(self, obj):
+        from django.utils.html import format_html
+        return format_html('<span style="color:{}; font-size:14px; font-weight:600;">{} {}/5</span>', '#ca8a04', '\u2605' * obj.note + '\u2606' * (5 - obj.note), obj.note)
+
+    def _oui_non(self, valeur):
+        from django.utils.html import format_html
+        if valeur is True:
+            return format_html('<span style="color:{}; font-weight:600;">&#10003;</span>', '#059669')
+        if valeur is False:
+            return format_html('<span style="color:{}; font-weight:600;">&#10007;</span>', '#dc2626')
+        return format_html('<span style="color:{};">-</span>', '#9ca3af')
+
+    @admin.display(description="Bus propre")
+    def critere_bus(self, obj):
+        return self._oui_non(obj.bus_propre)
+
+    @admin.display(description="Clim")
+    def critere_clim(self, obj):
+        return self._oui_non(obj.climatisation_ok)
+
+    @admin.display(description="TV")
+    def critere_tv(self, obj):
+        return self._oui_non(obj.television_ok)
+
+    @admin.display(description="Connexion")
+    def critere_connexion(self, obj):
+        return self._oui_non(obj.connexion_ok)
+
+    @admin.display(description="Chauffeur poli")
+    def critere_chauffeur(self, obj):
+        return self._oui_non(obj.chauffeur_poli)
+
+    @admin.display(description="Accompagnateur")
+    def critere_accompagnateur(self, obj):
+        return self._oui_non(obj.accompagnateur_aimable)
+
+    @admin.display(description="Commentaire")
+    def commentaire_court(self, obj):
+        if not obj.commentaire:
+            return "-"
+        return obj.commentaire[:50] + ('...' if len(obj.commentaire) > 50 else '')

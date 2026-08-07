@@ -929,3 +929,65 @@ def api_historique_positions_voyage(request, voyage_id):
         'points': points,
         'nombre_points': len(points),
     })
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def api_donner_avis(request):
+    """
+    Le client note un voyage termine : note globale 1-5 + criteres oui/non + commentaire.
+    Un seul avis par billet, uniquement pour ses propres billets payes et termines.
+    """
+    from .models import AvisVoyage
+
+    client = Client.objects.filter(user=request.user).first()
+    if not client:
+        return Response({'erreur': 'Client introuvable.'}, status=404)
+
+    numero = request.data.get('numero_reservation', '').strip()
+    note = request.data.get('note')
+    commentaire = request.data.get('commentaire', '').strip()
+
+    if not numero or note is None:
+        return Response({'erreur': 'numero_reservation et note obligatoires.'}, status=400)
+
+    try:
+        note = int(note)
+    except (ValueError, TypeError):
+        return Response({'erreur': 'La note doit etre un nombre.'}, status=400)
+    if note < 1 or note > 5:
+        return Response({'erreur': 'La note doit etre entre 1 et 5.'}, status=400)
+
+    reservation = Reservation.objects.filter(
+        numero_reservation=numero, client=client
+    ).select_related('voyage__chauffeur').first()
+    if not reservation:
+        return Response({'erreur': 'Billet introuvable.'}, status=404)
+    if reservation.statut != 'payee':
+        return Response({'erreur': 'Seul un billet paye peut etre note.'}, status=400)
+    if reservation.voyage.statut != 'termine':
+        return Response({'erreur': 'Vous pourrez noter ce voyage une fois termine.'}, status=400)
+    if hasattr(reservation, 'avis'):
+        return Response({'erreur': 'Vous avez deja note ce voyage.'}, status=400)
+
+    def lire_critere(nom):
+        valeur = request.data.get(nom)
+        if valeur is True or valeur is False:
+            return valeur
+        return None
+
+    AvisVoyage.objects.create(
+        reservation=reservation,
+        client=client,
+        chauffeur=reservation.voyage.chauffeur,
+        voyage=reservation.voyage,
+        note=note,
+        commentaire=commentaire,
+        bus_propre=lire_critere('bus_propre'),
+        climatisation_ok=lire_critere('climatisation_ok'),
+        television_ok=lire_critere('television_ok'),
+        connexion_ok=lire_critere('connexion_ok'),
+        chauffeur_poli=lire_critere('chauffeur_poli'),
+        accompagnateur_aimable=lire_critere('accompagnateur_aimable'),
+    )
+    return Response({'message': 'Merci pour votre avis !'}, status=201)
