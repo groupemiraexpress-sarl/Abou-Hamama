@@ -45,6 +45,7 @@ urlpatterns = [
     path('api/reserver/', api_views.api_reserver, name='api_reserver'),
     path('api/mes-billets/', api_views.api_mes_billets, name='api_mes_billets'),
     path('api/donner-avis/', api_views.api_donner_avis),
+    path('api/faq/', api_views.api_faq, name='api_faq'),
 
     # API - Sieges
     path('api/voyage/<int:voyage_id>/sieges/', api_views.api_sieges_voyage, name='api_sieges_voyage'),

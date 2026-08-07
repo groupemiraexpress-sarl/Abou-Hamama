@@ -726,3 +726,20 @@ class AvisVoyage(models.Model):
         verbose_name = "Avis voyage"
         verbose_name_plural = "Avis voyages"
         ordering = ['-date_creation']
+
+
+class QuestionFAQ(models.Model):
+    """Question frequente affichee dans l'ecran Aide de l'app mobile."""
+    question = models.CharField(max_length=200, help_text="La question posee")
+    reponse = models.TextField(help_text="La reponse affichee au client")
+    ordre = models.IntegerField(default=0, help_text="Ordre d'affichage (petit numero = en haut)")
+    actif = models.BooleanField(default=True, help_text="Decochez pour masquer sans supprimer")
+    date_creation = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.question
+
+    class Meta:
+        verbose_name = "Question FAQ"
+        verbose_name_plural = "Questions FAQ"
+        ordering = ['ordre', 'id']

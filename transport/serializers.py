@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Colis, TransfertArgent, Voyage, Reservation, Siege, Promotion, DemandeColis, Agence, DemandeTransfert,  ArretLigne
+from .models import Colis, TransfertArgent, Voyage, Reservation, Siege, Promotion, DemandeColis, Agence, DemandeTransfert,  ArretLigne, QuestionFAQ
 
 
 class ColisSerializer(serializers.ModelSerializer):
@@ -144,7 +144,7 @@ class PromotionSerializer(serializers.ModelSerializer):
 class AgenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Agence
-        fields = ['id', 'nom', 'ville']
+        fields = ['id', 'nom', 'ville', 'adresse', 'telephone']
 
 
 class DemandeColisSerializer(serializers.ModelSerializer):
@@ -173,3 +173,9 @@ class DemandeTransfertSerializer(serializers.ModelSerializer):
     class Meta:
         model = DemandeTransfert
         fields = ['numero_demande', 'expediteur_nom', 'expediteur_telephone', 'beneficiaire_nom', 'beneficiaire_telephone', 'agence_depart_nom', 'agence_retrait_nom', 'montant', 'frais', 'statut', 'statut_libelle', 'date_demande', 'code_suivi']
+
+
+class QuestionFAQSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuestionFAQ
+        fields = ['id', 'question', 'reponse']

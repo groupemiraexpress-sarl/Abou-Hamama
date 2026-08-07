@@ -5,7 +5,7 @@ from .models import (
     Compagnie, Agence, Bus, Chauffeur, Trajet, Voyage,
     Client, Reservation, Colis, Employe, TransfertArgent,
     Entretien, PleinCarburant, Promotion, DemandeColis, DemandeTransfert, Ligne, ArretLigne,
-    AlerteVoyage, AvisVoyage
+    AlerteVoyage, AvisVoyage, QuestionFAQ
 )
 
 admin.site.site_header = "Express Abou Hamama"
@@ -482,3 +482,12 @@ class AvisVoyageAdmin(admin.ModelAdmin):
         if not obj.commentaire:
             return "-"
         return obj.commentaire[:50] + ('...' if len(obj.commentaire) > 50 else '')
+
+
+@admin.register(QuestionFAQ)
+class QuestionFAQAdmin(admin.ModelAdmin):
+    list_display = ('ordre', 'question', 'actif', 'date_creation')
+    list_filter = ('actif',)
+    search_fields = ('question', 'reponse')
+    list_editable = ('actif',)
+    ordering = ('ordre', 'id')

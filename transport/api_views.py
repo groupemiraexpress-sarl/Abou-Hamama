@@ -991,3 +991,12 @@ def api_donner_avis(request):
         accompagnateur_aimable=lire_critere('accompagnateur_aimable'),
     )
     return Response({'message': 'Merci pour votre avis !'}, status=201)
+
+
+@api_view(['GET'])
+def api_faq(request):
+    """Liste des questions frequentes actives, pour l'ecran Aide."""
+    from .models import QuestionFAQ
+    from .serializers import QuestionFAQSerializer
+    questions = QuestionFAQ.objects.filter(actif=True)
+    return Response(QuestionFAQSerializer(questions, many=True).data)
