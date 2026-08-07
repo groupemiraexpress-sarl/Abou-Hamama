@@ -76,10 +76,11 @@ class VoyageAdmin(FiltreAgenceMixin, admin.ModelAdmin):
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'prenom', 'telephone', 'email', 'type_client', 'niveau_badge', 'points_fidelite', 'nombre_voyages', 'actif')
-    list_filter = ('type_client', 'niveau_fidelite', 'ville_residence', 'actif')
-    search_fields = ('nom', 'prenom', 'telephone', 'email', 'cni')
+    list_display = ('nom', 'prenom', 'telephone', 'email', 'type_client', 'niveau_badge', 'points_fidelite', 'nombre_voyages', 'code_parrainage', 'parraine_par', 'bonus_statut', 'nb_filleuls', 'actif')
+    list_filter = ('type_client', 'niveau_fidelite', 'ville_residence', 'actif', ('parraine_par', admin.EmptyFieldListFilter))
+    search_fields = ('nom', 'prenom', 'telephone', 'email', 'cni', 'code_parrainage')
     ordering = ('nom', 'prenom')
+    readonly_fields = ('code_parrainage', 'bonus_parrainage_attribue')
 
     @admin.display(description="Niveau", ordering='niveau_fidelite')
     def niveau_badge(self, obj):
@@ -90,6 +91,19 @@ class ClientAdmin(admin.ModelAdmin):
             '<span style="background:{}; color:#fff; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:600;">{}</span>',
             couleur, obj.get_niveau_fidelite_display()
         )
+
+    @admin.display(description="Bonus parrainage")
+    def bonus_statut(self, obj):
+        from django.utils.html import format_html
+        if not obj.parraine_par_id:
+            return format_html('<span style="color:{};">-</span>', '#9ca3af')
+        if obj.bonus_parrainage_attribue:
+            return format_html('<span style="color:{}; font-weight:600;">&#10003; Verse</span>', '#059669')
+        return format_html('<span style="color:{}; font-weight:600;">En attente</span>', '#d97706')
+
+    @admin.display(description="Filleuls")
+    def nb_filleuls(self, obj):
+        return obj.filleuls.count()
 
 
 @admin.register(Reservation)
