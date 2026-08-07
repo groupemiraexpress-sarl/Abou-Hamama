@@ -143,6 +143,13 @@ class Voyage(models.Model):
         ordering = ['-date_depart', '-heure_depart']
 
 
+def generer_code_parrainage():
+    """Genere un code du type AH-X7K2P9 (sans lettres/chiffres ambigus)."""
+    import random
+    caracteres = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+    return 'AH-' + ''.join(random.choice(caracteres) for _ in range(6))
+
+
 class Client(models.Model):
     TYPE_CHOICES = [
         ('particulier', 'Particulier'),
@@ -177,6 +184,9 @@ class Client(models.Model):
     nombre_voyages = models.IntegerField(default=0, help_text="Nombre total de voyages effectues")
     points_fidelite = models.IntegerField(default=0, help_text="1 point par 100 FCFA depense")
     niveau_fidelite = models.CharField(max_length=10, choices=NIVEAU_CHOICES, default='bronze')
+    code_parrainage = models.CharField(max_length=12, unique=True, blank=True, null=True, help_text="Code unique que ce client partage a ses amis")
+    parraine_par = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='filleuls', help_text="Client qui a parraine ce client")
+    bonus_parrainage_attribue = models.BooleanField(default=False, help_text="Vrai si le bonus de parrainage a deja ete donne (au premier billet paye)")
     actif = models.BooleanField(default=True)
 
     def mettre_a_jour_niveau(self):
@@ -186,6 +196,14 @@ class Client(models.Model):
             self.niveau_fidelite = 'argent'
         else:
             self.niveau_fidelite = 'bronze'
+
+    def save(self, *args, **kwargs):
+        if not self.code_parrainage:
+            code = generer_code_parrainage()
+            while Client.objects.filter(code_parrainage=code).exists():
+                code = generer_code_parrainage()
+            self.code_parrainage = code
+        super().save(*args, **kwargs)
 
     def __str__(self):
         if self.prenom:
@@ -269,6 +287,13 @@ class Reservation(models.Model):
             points_gagnes = int(self.montant_total // 100)
             self.client.points_fidelite += points_gagnes
             self.client.nombre_voyages += 1
+            if self.client.parraine_par_id and not self.client.bonus_parrainage_attribue:
+                self.client.bonus_parrainage_attribue = True
+                self.client.points_fidelite += 25
+                parrain = self.client.parraine_par
+                parrain.points_fidelite += 50
+                parrain.mettre_a_jour_niveau()
+                parrain.save()
             self.client.mettre_a_jour_niveau()
             self.client.save()
 

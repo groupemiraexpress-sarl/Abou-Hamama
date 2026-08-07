@@ -40,12 +40,14 @@ def api_suivi_transfert(request, code_transfert):
     return Response(TransfertArgentSerializer(transfert).data)
 
 
+
 @api_view(['POST'])
 def api_inscription(request):
     username = request.data.get('username', '').strip()
     email = request.data.get('email', '').strip().lower()
     telephone = request.data.get('telephone', '').strip()
     password = request.data.get('password', '')
+    code_parrain = request.data.get('code_parrainage', '').strip().upper()
     if not username or not password:
         return Response({'erreur': 'Nom et mot de passe obligatoires.'}, status=400)
     if not email:
@@ -61,11 +63,17 @@ def api_inscription(request):
     if Client.objects.filter(telephone=telephone).exists():
         return Response({'erreur': 'Un compte existe deja avec ce numero de telephone.'}, status=400)
 
+    parrain = None
+    if code_parrain:
+        parrain = Client.objects.filter(code_parrainage=code_parrain).first()
+        if not parrain:
+            return Response({'erreur': 'Code de parrainage invalide.'}, status=400)
+
     user = User.objects.create_user(username=username, email=email, password=password)
     user.is_active = False
     user.save()
 
-    client = Client.objects.create(nom=username, telephone=telephone, email=email)
+    client = Client.objects.create(nom=username, telephone=telephone, email=email, parraine_par=parrain)
     client.user = user
     client.save()
 
@@ -97,6 +105,8 @@ def api_mon_profil(request):
         'points_fidelite': client.points_fidelite if client else 0,
         'niveau_fidelite': client.niveau_fidelite if client else 'bronze',
         'nombre_voyages': client.nombre_voyages if client else 0,
+        'code_parrainage': client.code_parrainage if client else '',
+        'nombre_filleuls': client.filleuls.count() if client else 0,
     })
 
 
