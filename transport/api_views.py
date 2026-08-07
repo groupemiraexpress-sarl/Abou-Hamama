@@ -94,6 +94,9 @@ def api_mon_profil(request):
         'prenom': client.prenom if client else '',
         'telephone': client.telephone if (client and not client.telephone.startswith('compte-')) else '',
         'date_inscription': user.date_joined,
+        'points_fidelite': client.points_fidelite if client else 0,
+        'niveau_fidelite': client.niveau_fidelite if client else 'bronze',
+        'nombre_voyages': client.nombre_voyages if client else 0,
     })
 
 

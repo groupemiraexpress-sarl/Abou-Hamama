@@ -1,0 +1,79 @@
+{% extends "transport/base.html" %}
+{% load static %}
+{% block titre %}Tableau de bord PDG — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}Vue d'ensemble{% endblock %}
+{% block contenu %}
+
+<div style="position:relative; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; width:100vw; padding:0 16px; box-sizing:border-box;">
+<div style="max-width:1400px; margin:0 auto;">
+
+<div class="card" style="text-align:center; margin-bottom:16px;">
+    <p style="color:#6b7280; font-size:.85rem; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;">Recette totale du jour</p>
+    <p style="color:#1F3864; font-size:2.5rem; font-weight:800; margin:0;">{{ recette_totale }} FCFA</p>
+    <div style="display:flex; justify-content:center; gap:24px; margin-top:12px; font-size:.85rem; color:#6b7280;">
+        <span>Billets : <strong style="color:#1F3864;">{{ recette_billets }}</strong></span>
+        <span>Colis : <strong style="color:#1F3864;">{{ recette_colis }}</strong></span>
+        <span>Transferts : <strong style="color:#1F3864;">{{ recette_transferts }}</strong></span>
+    </div>
+</div>
+
+<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:14px; margin-bottom:16px;">
+    <div class="card" style="text-align:center;">
+        <p style="color:#059669; font-size:2rem; font-weight:800; margin:0;">{{ bus_en_circulation }}</p>
+        <p style="color:#6b7280; font-size:.8rem; text-transform:uppercase;">Bus en circulation</p>
+    </div>
+    <div class="card" style="text-align:center;">
+        <p style="color:{% if alertes_actives > 0 %}#b91c1c{% else %}#059669{% endif %}; font-size:2rem; font-weight:800; margin:0;">{{ alertes_actives }}</p>
+        <p style="color:#6b7280; font-size:.8rem; text-transform:uppercase;">Alertes actives</p>
+    </div>
+    <div class="card" style="text-align:center;">
+        <p style="color:#1F3864; font-size:2rem; font-weight:800; margin:0;">{{ taux_remplissage_moyen }}%</p>
+        <p style="color:#6b7280; font-size:.8rem; text-transform:uppercase;">Remplissage moyen</p>
+    </div>
+    <div class="card" style="text-align:center;">
+        <p style="color:#1F3864; font-size:2rem; font-weight:800; margin:0;">{{ colis_jour }}</p>
+        <p style="color:#6b7280; font-size:.8rem; text-transform:uppercase;">Colis du jour</p>
+    </div>
+    <div class="card" style="text-align:center;">
+        <p style="color:#1F3864; font-size:2rem; font-weight:800; margin:0;">{{ transferts_jour }}</p>
+        <p style="color:#6b7280; font-size:.8rem; text-transform:uppercase;">Transferts du jour</p>
+    </div>
+</div>
+
+<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:14px; margin-bottom:16px;">
+    <div class="card">
+        <h3 style="color:#1F3864; font-size:1rem; margin-bottom:14px;">Top 3 agences (recette du jour)</h3>
+        {% if top_agences %}
+        {% for a in top_agences %}
+        <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #eef0f3;">
+            <span style="color:#374151;">{{ forloop.counter }}. {{ a.agence__nom }}</span>
+            <span style="color:#1F3864; font-weight:700;">{{ a.total }} FCFA</span>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p style="color:#6b7280; font-size:.9rem;">Aucune vente aujourd'hui.</p>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <h3 style="color:#1F3864; font-size:1rem; margin-bottom:14px;">Repartition Nord / Sud</h3>
+        <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #eef0f3;">
+            <span style="color:#374151;">Zone Nord</span>
+            <span style="color:#1F3864; font-weight:700;">{{ repartition_nord.total }} FCFA ({{ repartition_nord.nb }} billets)</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; padding:10px 0;">
+            <span style="color:#374151;">Zone Sud</span>
+            <span style="color:#1F3864; font-weight:700;">{{ repartition_sud.total }} FCFA ({{ repartition_sud.nb }} billets)</span>
+        </div>
+    </div>
+</div>
+
+<div style="text-align:center; margin-top:10px; margin-bottom:20px;">
+    <a href="{% url 'admin:index' %}" class="btn" style="background:#6b7280;">
+        <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
+    </a>
+</div>
+
+</div>
+</div>
+{% endblock %}

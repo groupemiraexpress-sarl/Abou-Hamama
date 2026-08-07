@@ -54,6 +54,9 @@
           {% if request.user.is_superuser or employe.poste == 'pdg' or employe.poste == 'responsable' or employe.poste == 'securite' %}
             <a href="{% url 'transport:manifeste_bord' %}">Manifeste de bord</a>
           {% endif %}
+          {% if request.user.is_superuser or employe.poste == 'pdg' %}
+            <a href="{% url 'transport:tableau_bord_pdg' %}">Vue d'ensemble PDG</a>
+          {% endif %}
         {% endwith %}
         {% if request.user.is_superuser %}
           <a href="{% url 'admin:password_change' %}">Modifier le mot de passe</a>

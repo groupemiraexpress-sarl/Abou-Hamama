@@ -158,6 +158,12 @@ class Client(models.Model):
         ('autre', 'Autre piece'),
     ]
 
+    NIVEAU_CHOICES = [
+        ('bronze', 'Bronze'),
+        ('argent', 'Argent'),
+        ('or', 'Or'),
+    ]
+
     user = models.OneToOneField('auth.User', on_delete=models.SET_NULL, null=True, blank=True, related_name='client', help_text="Compte de connexion lie a cette fiche client (app mobile)")
     nom = models.CharField(max_length=100)
     prenom = models.CharField(max_length=100, blank=True)
@@ -169,7 +175,17 @@ class Client(models.Model):
     ville_residence = models.CharField(max_length=50, blank=True)
     date_inscription = models.DateTimeField(auto_now_add=True)
     nombre_voyages = models.IntegerField(default=0, help_text="Nombre total de voyages effectues")
+    points_fidelite = models.IntegerField(default=0, help_text="1 point par 100 FCFA depense")
+    niveau_fidelite = models.CharField(max_length=10, choices=NIVEAU_CHOICES, default='bronze')
     actif = models.BooleanField(default=True)
+
+    def mettre_a_jour_niveau(self):
+        if self.points_fidelite >= 2000:
+            self.niveau_fidelite = 'or'
+        elif self.points_fidelite >= 500:
+            self.niveau_fidelite = 'argent'
+        else:
+            self.niveau_fidelite = 'bronze'
 
     def __str__(self):
         if self.prenom:
@@ -205,6 +221,7 @@ class Reservation(models.Model):
     embarque = models.BooleanField(default=False, help_text="Coche automatiquement quand le billet est scanne au controle")
     date_embarquement = models.DateTimeField(null=True, blank=True)
     scanne_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='reservations_scannees', verbose_name="Scanne par")
+    points_attribues = models.BooleanField(default=False, help_text="Vrai si les points de fidelite ont deja ete comptes pour cette reservation")
     nombre_places = models.IntegerField(default=1)
     voyageur_nom = models.CharField(max_length=100, blank=True, help_text="Nom du voyageur de ce billet")
     voyageur_prenom = models.CharField(max_length=100, blank=True, help_text="Prenom du voyageur")
@@ -234,12 +251,10 @@ class Reservation(models.Model):
                 ).count()
                 nouveau_numero = dernier_numero + 1
                 self.numero_reservation = f"RES-{annee}-{nouveau_numero:04d}"
-
             if self.arret_montee and self.arret_descente:
                 self.montant_total = self.arret_descente.prix_depuis_depart - self.arret_montee.prix_depuis_depart
             else:
                 self.montant_total = self.voyage.prix * self.nombre_places
-
             if not self.voyage.ligne_id:
                 if self.nombre_places > self.voyage.places_disponibles:
                     raise ValueError(
@@ -248,6 +263,14 @@ class Reservation(models.Model):
                     )
                 self.voyage.places_disponibles -= self.nombre_places
                 self.voyage.save()
+
+        if self.statut == 'payee' and not self.points_attribues and self.client_id:
+            self.points_attribues = True
+            points_gagnes = int(self.montant_total // 100)
+            self.client.points_fidelite += points_gagnes
+            self.client.nombre_voyages += 1
+            self.client.mettre_a_jour_niveau()
+            self.client.save()
 
         super().save(*args, **kwargs)
 

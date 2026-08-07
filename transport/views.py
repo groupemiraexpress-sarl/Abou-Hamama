@@ -546,7 +546,7 @@ def manifeste_bord(request):
 
     voyages_disponibles = Voyage.objects.filter(
         statut__in=['programme', 'en_cours', 'termine']
-    ).select_related('trajet', 'bus').order_by('-date_depart', '-heure_depart')[:50]
+    ).select_related('trajet', 'bus').order_by('-date_depart', '-heure_depart')
 
     if not (request.user.is_superuser or poste == 'pdg'):
         agence = employe.agence if employe else None
@@ -554,6 +554,8 @@ def manifeste_bord(request):
             voyages_disponibles = voyages_disponibles.filter(bus__agence=agence)
         else:
             voyages_disponibles = voyages_disponibles.none()
+
+    voyages_disponibles = voyages_disponibles[:50]
 
     voyage_id = request.GET.get('voyage')
     if voyage_id:
@@ -570,4 +572,91 @@ def manifeste_bord(request):
         'voyage_choisi': voyage_choisi,
         'reservations': reservations,
         'nombre_embarques': nombre_embarques,
+    })
+
+
+@staff_member_required
+def tableau_bord_pdg(request):
+    """
+    Vue synthetique pour le PDG : indicateurs cles de toute la compagnie.
+    """
+    from django.db.models import Sum, Count, Q as DQ
+    from .models import AlerteVoyage, Colis, TransfertArgent
+
+    employe = getattr(request.user, 'employe', None)
+    poste = employe.poste if employe else None
+    autorise = request.user.is_superuser or poste == 'pdg'
+
+    if not autorise:
+        return redirect('admin:index')
+
+    aujourd_hui = timezone.now().date()
+
+    def val(x):
+        return x or 0
+
+    # Recette du jour, toutes agences
+    recette_billets = Reservation.objects.filter(
+        statut='payee', date_reservation__date=aujourd_hui
+    ).aggregate(total=Sum('montant_total'))['total']
+    recette_colis = Colis.objects.filter(
+        date_enregistrement__date=aujourd_hui
+    ).aggregate(total=Sum('prix'))['total']
+    recette_transferts = TransfertArgent.objects.filter(
+        date_envoi__date=aujourd_hui
+    ).aggregate(total=Sum('frais'))['total']
+
+    recette_totale = val(recette_billets) + val(recette_colis) + val(recette_transferts)
+
+    # Bus en circulation
+    bus_en_circulation = Voyage.objects.filter(statut='en_cours').count()
+
+    # Alertes non resolues
+    alertes_actives = AlerteVoyage.objects.filter(resolue=False).count()
+
+    # Taux de remplissage moyen du jour (voyages du jour uniquement)
+    voyages_jour = Voyage.objects.filter(date_depart=aujourd_hui).select_related('bus')
+    taux_total = 0
+    nb_voyages_calcules = 0
+    for v in voyages_jour:
+        if v.bus and v.bus.capacite:
+            places_vendues = Reservation.objects.filter(voyage=v, statut='payee').count()
+            taux = (places_vendues / v.bus.capacite) * 100
+            taux_total += taux
+            nb_voyages_calcules += 1
+    taux_remplissage_moyen = round(taux_total / nb_voyages_calcules, 1) if nb_voyages_calcules else 0
+
+    # Top 3 agences par recette du jour (billets)
+    top_agences = (
+        Reservation.objects.filter(statut='payee', date_reservation__date=aujourd_hui, agence__isnull=False)
+        .values('agence__nom')
+        .annotate(total=Sum('montant_total'))
+        .order_by('-total')[:3]
+    )
+
+    # Repartition Nord/Sud (billets du jour, via agence de vente)
+    repartition = (
+        Reservation.objects.filter(statut='payee', date_reservation__date=aujourd_hui, agence__zone__in=['nord', 'sud'])
+        .values('agence__zone')
+        .annotate(total=Sum('montant_total'), nb=Count('id'))
+    )
+    repartition_dict = {r['agence__zone']: {'total': r['total'], 'nb': r['nb']} for r in repartition}
+
+    # Colis et transferts du jour
+    colis_jour = Colis.objects.filter(date_enregistrement__date=aujourd_hui).count()
+    transferts_jour = TransfertArgent.objects.filter(date_envoi__date=aujourd_hui).count()
+
+    return render(request, 'transport/tableau_bord_pdg.html', {
+        'recette_totale': recette_totale,
+        'recette_billets': val(recette_billets),
+        'recette_colis': val(recette_colis),
+        'recette_transferts': val(recette_transferts),
+        'bus_en_circulation': bus_en_circulation,
+        'alertes_actives': alertes_actives,
+        'taux_remplissage_moyen': taux_remplissage_moyen,
+        'top_agences': top_agences,
+        'repartition_nord': repartition_dict.get('nord', {'total': 0, 'nb': 0}),
+        'repartition_sud': repartition_dict.get('sud', {'total': 0, 'nb': 0}),
+        'colis_jour': colis_jour,
+        'transferts_jour': transferts_jour,
     })

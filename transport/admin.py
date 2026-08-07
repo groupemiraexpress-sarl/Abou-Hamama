@@ -76,10 +76,20 @@ class VoyageAdmin(FiltreAgenceMixin, admin.ModelAdmin):
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'prenom', 'telephone', 'email', 'type_client', 'ville_residence', 'nombre_voyages', 'actif')
-    list_filter = ('type_client', 'ville_residence', 'actif')
+    list_display = ('nom', 'prenom', 'telephone', 'email', 'type_client', 'niveau_badge', 'points_fidelite', 'nombre_voyages', 'actif')
+    list_filter = ('type_client', 'niveau_fidelite', 'ville_residence', 'actif')
     search_fields = ('nom', 'prenom', 'telephone', 'email', 'cni')
     ordering = ('nom', 'prenom')
+
+    @admin.display(description="Niveau", ordering='niveau_fidelite')
+    def niveau_badge(self, obj):
+        from django.utils.html import format_html
+        couleurs = {'bronze': '#b45309', 'argent': '#6b7280', 'or': '#ca8a04'}
+        couleur = couleurs.get(obj.niveau_fidelite, '#6b7280')
+        return format_html(
+            '<span style="background:{}; color:#fff; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:600;">{}</span>',
+            couleur, obj.get_niveau_fidelite_display()
+        )
 
 
 @admin.register(Reservation)
