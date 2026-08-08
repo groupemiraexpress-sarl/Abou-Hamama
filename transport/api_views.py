@@ -13,6 +13,37 @@ from django.utils.encoding import force_bytes, force_str
 
 from .models import Voyage, Colis, TransfertArgent, Client, Reservation, Siege, Promotion, DemandeColis, Agence, DemandeTransfert, Chauffeur, PositionBus, Employe
 from .serializers import VoyageSerializer, ColisSerializer, TransfertArgentSerializer, ReservationSerializer, SiegeSerializer, PromotionSerializer, DemandeColisSerializer, AgenceSerializer, DemandeTransfertSerializer
+import re
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError as DjangoValidationError
+
+
+def valider_telephone_tchad(telephone):
+    """
+    Verifie qu'un numero de telephone tchadien est valide :
+    exactement 8 chiffres, commencant par 6, 8 ou 9
+    (Airtel : 6, 8 - Moov Africa : 9). Le prefixe 7 (Salam) est refuse,
+    cet operateur n'etant plus en service.
+    Retourne None si valide, ou un message d'erreur sinon.
+    """
+    if not re.fullmatch(r'\d{8}', telephone):
+        return "Le numero de telephone doit contenir exactement 8 chiffres."
+    if telephone[0] not in ('6', '8', '9'):
+        return "Numero de telephone invalide. Les numeros tchadiens commencent par 6, 8 ou 9."
+    return None
+
+
+def valider_email_strict(email):
+    """
+    Verifie qu'un email a un format valide (utilise le validateur Django,
+    qui verifie la presence d'un @ et d'un domaine avec extension valide).
+    Retourne None si valide, ou un message d'erreur sinon.
+    """
+    try:
+        validate_email(email)
+    except DjangoValidationError:
+        return "Adresse email invalide."
+    return None
 
 
 @api_view(['GET'])
@@ -48,6 +79,7 @@ def api_inscription(request):
     telephone = request.data.get('telephone', '').strip()
     password = request.data.get('password', '')
     code_parrain = request.data.get('code_parrainage', '').strip().upper()
+
     if not username or not password:
         return Response({'erreur': 'Nom et mot de passe obligatoires.'}, status=400)
     if not email:
@@ -56,7 +88,16 @@ def api_inscription(request):
         return Response({'erreur': 'Numero de telephone obligatoire.'}, status=400)
     if len(password) < 6:
         return Response({'erreur': 'Mot de passe trop court (min 6).'}, status=400)
-    if User.objects.filter(username=username).exists():
+
+    erreur_email = valider_email_strict(email)
+    if erreur_email:
+        return Response({'erreur': erreur_email}, status=400)
+
+    erreur_tel = valider_telephone_tchad(telephone)
+    if erreur_tel:
+        return Response({'erreur': erreur_tel}, status=400)
+
+    if User.objects.filter(username__iexact=username).exists():
         return Response({'erreur': 'Ce nom d\'utilisateur est deja pris.'}, status=400)
     if User.objects.filter(email__iexact=email).exists():
         return Response({'erreur': 'Un compte existe deja avec cet email.'}, status=400)
@@ -117,7 +158,7 @@ def api_modifier_profil(request):
     nom = request.data.get('nom', '').strip()
     prenom = request.data.get('prenom', '').strip()
     telephone = request.data.get('telephone', '').strip()
-    email = request.data.get('email', '').strip()
+    email = request.data.get('email', '').strip().lower()
 
     client = Client.objects.filter(user=user).first()
     if not client:
@@ -127,18 +168,27 @@ def api_modifier_profil(request):
     if nom:
         client.nom = nom
     client.prenom = prenom
+
     if telephone:
+        erreur_tel = valider_telephone_tchad(telephone)
+        if erreur_tel:
+            return Response({'erreur': erreur_tel}, status=400)
         autre = Client.objects.filter(telephone=telephone).exclude(pk=client.pk).first()
         if autre:
             return Response({'erreur': 'Ce numero est deja utilise par un autre compte.'}, status=400)
         client.telephone = telephone
+
     if email:
+        erreur_email = valider_email_strict(email)
+        if erreur_email:
+            return Response({'erreur': erreur_email}, status=400)
         autre_user = User.objects.filter(email__iexact=email).exclude(pk=user.pk).first()
         if autre_user:
             return Response({'erreur': 'Cet email est deja utilise par un autre compte.'}, status=400)
         client.email = email
         user.email = email
         user.save()
+
     try:
         client.save()
     except Exception:
