@@ -1,5 +1,4 @@
 from django.contrib import admin
-from .admin_filtres import FiltreAgenceMixin
 from .admin_filtres import FiltreAgenceMixin, FiltreAgenceListFilter
 from .models import (
     Compagnie, Agence, Bus, Chauffeur, Trajet, Voyage,
@@ -7,6 +6,17 @@ from .models import (
     Entretien, PleinCarburant, Promotion, DemandeColis, DemandeTransfert, Ligne, ArretLigne,
     AlerteVoyage, AvisVoyage, QuestionFAQ
 )
+from django import forms
+from django.contrib.auth.models import User
+import secrets
+import string
+
+
+def _generer_mot_de_passe(longueur=8):
+    """Genere un mot de passe temporaire aleatoire (lettres + chiffres)."""
+    alphabet = string.ascii_letters + string.digits
+    return ''.join(secrets.choice(alphabet) for _ in range(longueur))
+
 
 admin.site.site_header = "Express Abou Hamama"
 admin.site.site_title = "Gestion Abou Hamama"
@@ -92,13 +102,62 @@ class VoyageAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     date_hierarchy = 'date_depart'
 
 
+class ClientAdminForm(forms.ModelForm):
+    nom_utilisateur = forms.CharField(
+        label="Nom d'utilisateur app (optionnel)", max_length=150, required=False,
+        help_text="A remplir uniquement si ce client doit avoir un acces a l'application "
+                   "mobile. Laisser vide pour un client comptoir classique (aucun compte cree)."
+    )
+    mot_de_passe = forms.CharField(
+        label="Mot de passe", required=False, widget=forms.PasswordInput(render_value=False),
+        help_text="Requis uniquement si un nom d'utilisateur est renseigne ci-dessus."
+    )
+
+    class Meta:
+        model = Client
+        exclude = ('user',)
+
+    def clean(self):
+        cleaned = super().clean()
+        nom_utilisateur = cleaned.get('nom_utilisateur')
+        if nom_utilisateur:
+            if User.objects.filter(username=nom_utilisateur).exclude(pk=self.instance.user_id).exists():
+                self.add_error('nom_utilisateur', "Ce nom d'utilisateur est deja pris.")
+            if not self.instance.pk and not cleaned.get('mot_de_passe'):
+                self.add_error('mot_de_passe', "Mot de passe requis pour creer le compte.")
+        return cleaned
+
+
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
+    form = ClientAdminForm
     list_display = ('nom', 'prenom', 'telephone', 'email', 'type_client', 'niveau_badge', 'points_fidelite', 'nombre_voyages', 'code_parrainage', 'parraine_par', 'bonus_statut', 'nb_filleuls', 'actif')
     list_filter = ('type_client', 'niveau_fidelite', 'ville_residence', 'actif', ('parraine_par', admin.EmptyFieldListFilter))
     search_fields = ('nom', 'prenom', 'telephone', 'email', 'cni', 'code_parrainage')
     ordering = ('nom', 'prenom')
     readonly_fields = ('code_parrainage', 'bonus_parrainage_attribue')
+
+    def save_model(self, request, obj, form, change):
+        nom_utilisateur = form.cleaned_data.get('nom_utilisateur')
+        mot_de_passe = form.cleaned_data.get('mot_de_passe')
+
+        if nom_utilisateur:
+            if obj.user:
+                obj.user.username = nom_utilisateur
+                if mot_de_passe:
+                    obj.user.set_password(mot_de_passe)
+                obj.user.first_name = obj.prenom
+                obj.user.last_name = obj.nom
+                obj.user.save()
+            else:
+                user = User.objects.create_user(
+                    username=nom_utilisateur,
+                    password=mot_de_passe,
+                    first_name=obj.prenom,
+                    last_name=obj.nom,
+                )
+                obj.user = user
+        super().save_model(request, obj, form, change)
 
     @admin.display(description="Niveau", ordering='niveau_fidelite')
     def niveau_badge(self, obj):
@@ -186,8 +245,42 @@ class ColisAdmin(FiltreAgenceMixin, admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
 
+class EmployeAdminForm(forms.ModelForm):
+    nom_utilisateur = forms.CharField(
+        label="Nom d'utilisateur (connexion)", max_length=150, required=False,
+        help_text="Laisser vide pour utiliser le telephone comme identifiant. "
+                   "En modification, laisser vide pour ne pas toucher au compte existant."
+    )
+    mot_de_passe = forms.CharField(
+        label="Mot de passe", required=False, widget=forms.PasswordInput(render_value=False),
+        help_text="Laisser vide : a la creation, un mot de passe temporaire sera genere et affiche."
+    )
+
+    class Meta:
+        model = Employe
+        exclude = ('user',)
+
+    def clean(self):
+        cleaned = super().clean()
+        if self.instance.pk:
+            return cleaned  # modification : la gestion du compte se fait dans save_model
+        nom_utilisateur = cleaned.get('nom_utilisateur')
+        telephone = cleaned.get('telephone')
+        identifiant = nom_utilisateur or telephone
+        if not identifiant:
+            raise forms.ValidationError("Renseignez un telephone ou un nom d'utilisateur pour creer le compte.")
+        if User.objects.filter(username=identifiant).exists():
+            self.add_error(
+                'nom_utilisateur' if nom_utilisateur else 'telephone',
+                "Cet identifiant (nom d'utilisateur ou telephone) est deja pris. "
+                "Renseignez un nom d'utilisateur different."
+            )
+        return cleaned
+
+
 @admin.register(Employe)
 class EmployeAdmin(FiltreAgenceMixin, admin.ModelAdmin):
+    form = EmployeAdminForm
     champs_agence = ['agence']
     champ_createur = None  # pas de notion de "createur" pour un employe
     list_display = ('agence', 'poste_badge', 'nom', 'prenom', 'telephone', 'compte_lie', 'actif')
@@ -195,6 +288,81 @@ class EmployeAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     search_fields = ('nom', 'prenom', 'telephone', 'cni')
     list_editable = ('actif',)
     ordering = ('agence__ville', 'agence__nom', 'poste', 'nom')
+
+    # Postes qu'un Responsable d'agence a le droit de creer lui-meme
+    # (pas de pdg, comptable, rh, resp_maintenance, resp_planning, securite depuis une agence)
+    POSTES_AUTORISES_RESPONSABLE = ('secretaire', 'guichetier', 'caissier', 'agent_colis', 'agent_transfert', 'manutentionnaire')
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'agence':
+            from .admin_filtres import voit_tout, agence_de, zone_de
+            if not voit_tout(request.user):
+                employe = getattr(request.user, 'employe', None)
+                poste = employe.poste if employe else None
+                if poste == 'resp_planning':
+                    zone = zone_de(request.user)
+                    if zone:
+                        kwargs['queryset'] = Agence.objects.filter(zone=zone)
+                else:
+                    agence = agence_de(request.user)
+                    if agence:
+                        kwargs['queryset'] = Agence.objects.filter(id=agence.id)
+                        kwargs['initial'] = agence.id
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def formfield_for_choice_field(self, db_field, request, **kwargs):
+        if db_field.name == 'poste':
+            from .admin_filtres import voit_tout
+            employe = getattr(request.user, 'employe', None)
+            poste = employe.poste if employe else None
+            if not voit_tout(request.user) and poste == 'responsable':
+                kwargs['choices'] = [c for c in db_field.choices if c[0] in self.POSTES_AUTORISES_RESPONSABLE]
+        return super().formfield_for_choice_field(db_field, request, **kwargs)
+
+    def save_model(self, request, obj, form, change):
+        nom_utilisateur = form.cleaned_data.get('nom_utilisateur')
+        mot_de_passe = form.cleaned_data.get('mot_de_passe')
+
+        if not change:
+            username = nom_utilisateur or obj.telephone
+            mdp_genere = mot_de_passe or _generer_mot_de_passe()
+            user = User.objects.create_user(
+                username=username, password=mdp_genere,
+                first_name=obj.prenom, last_name=obj.nom, is_staff=True,
+            )
+            obj.user = user
+            super().save_model(request, obj, form, change)
+            if not mot_de_passe:
+                self.message_user(
+                    request,
+                    f"Compte cree : identifiant \"{username}\" / mot de passe temporaire \"{mdp_genere}\". "
+                    f"Communiquez-le a l'employe puis demandez-lui de le changer.",
+                    level='warning',
+                )
+        else:
+            if obj.user:
+                if nom_utilisateur and nom_utilisateur != obj.user.username:
+                    obj.user.username = nom_utilisateur
+                if mot_de_passe:
+                    obj.user.set_password(mot_de_passe)
+                obj.user.first_name = obj.prenom
+                obj.user.last_name = obj.nom
+                obj.user.is_staff = True
+                obj.user.save()
+            elif nom_utilisateur:
+                mdp_genere = mot_de_passe or _generer_mot_de_passe()
+                user = User.objects.create_user(
+                    username=nom_utilisateur, password=mdp_genere,
+                    first_name=obj.prenom, last_name=obj.nom, is_staff=True,
+                )
+                obj.user = user
+                if not mot_de_passe:
+                    self.message_user(
+                        request,
+                        f"Compte cree : identifiant \"{nom_utilisateur}\" / mot de passe temporaire \"{mdp_genere}\".",
+                        level='warning',
+                    )
+            super().save_model(request, obj, form, change)
 
     @admin.display(description="Poste", ordering='poste')
     def poste_badge(self, obj):
@@ -376,6 +544,7 @@ class DemandeTransfertAdmin(FiltreAgenceMixin, admin.ModelAdmin):
             
 from django.contrib.admin import AdminSite
 from .admin_stats import statistiques_tableau_bord
+from .admin_filtres import profil_tableau_bord
 
 _ancien_index = AdminSite.index
 
@@ -383,6 +552,7 @@ _ancien_index = AdminSite.index
 def _index_avec_stats(self, request, extra_context=None):
     extra_context = extra_context or {}
     extra_context['stats'] = statistiques_tableau_bord(request.user)
+    extra_context['stats_profil'] = profil_tableau_bord(request.user)
     return _ancien_index(self, request, extra_context)
 
 AdminSite.index = _index_avec_stats

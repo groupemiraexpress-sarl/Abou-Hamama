@@ -111,85 +111,134 @@
 {% block content %}
 <div id="content-main">
 
+  {% if stats_profil.voit_raccourci_vente %}
   <div class="raccourci-vente">
     <a href="{% url 'transport:vendre_billet' %}" class="btn-vente">
-      🎫 {% trans "Vendre un billet" %}
+      ðŸŽ« {% trans "Vendre un billet" %}
     </a>
     <a href="{% url 'transport:liste_billets' %}" class="btn-vente-secondaire">
       {% trans "Voir les billets vendus" %}
     </a>
   </div>
+  {% endif %}
 
   <div class="stats-zone">
+
+    {% if stats_profil.voit_voyages_aujourd_hui or stats_profil.voit_reservations_jour or stats_profil.voit_recette_jour or stats_profil.voit_voyages_a_venir %}
     <h2 class="stats-titre">{% trans "Aujourd'hui" %}</h2>
     <div class="stats-grille">
+      {% if stats_profil.voit_voyages_aujourd_hui %}
       <div class="stat-carte">
         <div class="stat-valeur">{{ stats.voyages_aujourd_hui }}</div>
         <div class="stat-label">{% trans "Voyages du jour" %}</div>
       </div>
+      {% endif %}
+      {% if stats_profil.voit_reservations_jour %}
       <div class="stat-carte">
         <div class="stat-valeur">{{ stats.reservations_jour }}</div>
         <div class="stat-label">{% trans "Reservations du jour" %}</div>
       </div>
+      {% endif %}
+      {% if stats_profil.voit_recette_jour %}
       <div class="stat-carte succes">
         <div class="stat-valeur">{{ stats.recette_jour }}</div>
         <div class="stat-label">{% trans "Recette du jour (FCFA)" %}</div>
       </div>
+      {% endif %}
+      {% if stats_profil.voit_voyages_a_venir %}
       <div class="stat-carte">
         <div class="stat-valeur">{{ stats.voyages_a_venir }}</div>
         <div class="stat-label">{% trans "Voyages a venir" %}</div>
       </div>
+      {% endif %}
     </div>
+    {% endif %}
 
+    {% if stats_profil.voit_alertes_non_resolues or stats_profil.voit_demandes_colis_attente or stats_profil.voit_demandes_transfert_attente or stats_profil.voit_reservations_attente or stats_profil.voit_transferts_attente %}
     <h2 class="stats-titre">{% trans "A traiter" %}</h2>
     <div class="stats-grille">
+      {% if stats_profil.voit_alertes_non_resolues %}
       <div class="stat-carte alerte">
         <div class="stat-valeur">{{ stats.alertes_non_resolues }}</div>
         <div class="stat-label">{% trans "Alertes de securite" %}</div>
       </div>
+      {% endif %}
+      {% if stats_profil.voit_demandes_colis_attente %}
       <div class="stat-carte alerte">
         <div class="stat-valeur">{{ stats.demandes_colis_attente }}</div>
         <div class="stat-label">{% trans "Demandes colis en attente" %}</div>
       </div>
+      {% endif %}
+      {% if stats_profil.voit_demandes_transfert_attente %}
       <div class="stat-carte alerte">
         <div class="stat-valeur">{{ stats.demandes_transfert_attente }}</div>
         <div class="stat-label">{% trans "Demandes transfert en attente" %}</div>
       </div>
+      {% endif %}
+      {% if stats_profil.voit_reservations_attente %}
       <div class="stat-carte alerte">
         <div class="stat-valeur">{{ stats.reservations_attente }}</div>
         <div class="stat-label">{% trans "Reservations non payees" %}</div>
       </div>
+      {% endif %}
+      {% if stats_profil.voit_transferts_attente %}
       <div class="stat-carte alerte">
         <div class="stat-valeur">{{ stats.transferts_attente }}</div>
         <div class="stat-label">{% trans "Transferts a retirer" %}</div>
       </div>
+      {% endif %}
     </div>
+    {% endif %}
 
+    {% if stats_profil.voit_colis_transit or stats_profil.voit_colis_arrives or stats_profil.voit_bus_service or stats_profil.voit_bus_maintenance or stats_profil.voit_total_clients or stats_profil.voit_total_employes %}
     <h2 class="stats-titre">{% trans "Activite" %}</h2>
     <div class="stats-grille">
+      {% if stats_profil.voit_colis_transit %}
       <div class="stat-carte">
         <div class="stat-valeur">{{ stats.colis_transit }}</div>
         <div class="stat-label">{% trans "Colis en transit" %}</div>
       </div>
+      {% endif %}
+      {% if stats_profil.voit_colis_arrives %}
       <div class="stat-carte">
         <div class="stat-valeur">{{ stats.colis_arrives }}</div>
         <div class="stat-label">{% trans "Colis arrives" %}</div>
       </div>
+      {% endif %}
+      {% if stats_profil.voit_bus_service %}
       <div class="stat-carte">
         <div class="stat-valeur">{{ stats.bus_service }}</div>
         <div class="stat-label">{% trans "Bus en service" %}</div>
       </div>
+      {% endif %}
+      {% if stats_profil.voit_bus_maintenance %}
+      <div class="stat-carte alerte">
+        <div class="stat-valeur">{{ stats.bus_maintenance }}</div>
+        <div class="stat-label">{% trans "Bus en maintenance" %}</div>
+      </div>
+      {% endif %}
+      {% if stats_profil.voit_total_clients %}
       <div class="stat-carte">
         <div class="stat-valeur">{{ stats.total_clients }}</div>
         <div class="stat-label">{% trans "Clients actifs" %}</div>
       </div>
+      {% endif %}
+      {% if stats_profil.voit_total_employes %}
+      <div class="stat-carte">
+        <div class="stat-valeur">{{ stats.total_employes }}</div>
+        <div class="stat-label">{% trans "Employes actifs" %}</div>
+      </div>
+      {% endif %}
     </div>
+    {% endif %}
+
   </div>
 
 {% if app_list %}
   {% for app in app_list %}
     {% if app.app_label == 'transport' %}
 
+      {% if stats_profil.voit_groupe_exploitation %}
       <div class="groupe-metier">
         <h2 class="groupe-titre">{% trans "Exploitation" %}</h2>
         <div class="groupe-liste">
@@ -206,7 +255,9 @@
           {% endfor %}
         </div>
       </div>
+      {% endif %}
 
+      {% if stats_profil.voit_groupe_securite %}
       <div class="groupe-metier">
         <h2 class="groupe-titre">{% trans "Securite" %}</h2>
         <div class="groupe-liste">
@@ -222,7 +273,9 @@
           {% endfor %}
         </div>
       </div>
+      {% endif %}
 
+      {% if stats_profil.voit_groupe_colis_transferts %}
       <div class="groupe-metier">
         <h2 class="groupe-titre">{% trans "Colis et transferts" %}</h2>
         <div class="groupe-liste">
@@ -239,7 +292,9 @@
           {% endfor %}
         </div>
       </div>
+      {% endif %}
 
+      {% if stats_profil.voit_groupe_clients_personnel %}
       <div class="groupe-metier">
         <h2 class="groupe-titre">{% trans "Clients et personnel" %}</h2>
         <div class="groupe-liste">
@@ -256,7 +311,9 @@
           {% endfor %}
         </div>
       </div>
+      {% endif %}
 
+      {% if stats_profil.voit_groupe_maintenance %}
       <div class="groupe-metier">
         <h2 class="groupe-titre">{% trans "Maintenance du parc" %}</h2>
         <div class="groupe-liste">
@@ -273,7 +330,9 @@
           {% endfor %}
         </div>
       </div>
+      {% endif %}
 
+      {% if stats_profil.voit_groupe_configuration %}
       <div class="groupe-metier">
         <h2 class="groupe-titre">{% trans "Configuration" %}</h2>
         <div class="groupe-liste">
@@ -290,6 +349,7 @@
           {% endfor %}
         </div>
       </div>
+      {% endif %}
 
     {% else %}
 
