@@ -1,3 +1,4 @@
+@'
 {% extends "admin/base.html" %}
 {% load static %}
 {% load i18n %}
@@ -113,5 +114,61 @@
       margin-left: 0;
       margin-right: 2px;
     }
+
+    /* ---------------------------------------------------------------- */
+    /* Filigrane du logo en arriere-plan de la zone de contenu           */
+    /* ---------------------------------------------------------------- */
+    #content {
+      position: relative;
+    }
+    #content::before {
+      content: "";
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 700px;
+      height: 700px;
+      background-image: url('{% static "transport/logo_abou_hamama.png" %}');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      opacity: 0.25;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    #content > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Fil d'Ariane ("Accueil > Tableau de bord") plus soigne             */
+    /* ---------------------------------------------------------------- */
+    div.breadcrumbs {
+      background: linear-gradient(90deg, #261F64 0%, #2c4a82 100%);
+      color: #ffffff;
+      padding: 13px 22px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.2px;
+      box-shadow: 0 2px 6px rgba(38, 31, 100, 0.15);
+      border: none;
+    }
+    div.breadcrumbs a {
+      color: #ffffff;
+      opacity: 0.85;
+      text-decoration: none;
+      transition: opacity 0.15s ease;
+    }
+    div.breadcrumbs a:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+    html[dir="rtl"] div.breadcrumbs {
+      background: linear-gradient(270deg, #261F64 0%, #2c4a82 100%);
+    }
   </style>
 {% endblock %}
+
+'@ | Set-Content -Path "transport\templates\admin\base_site.html" -Encoding UTF8

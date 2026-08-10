@@ -1,9 +1,10 @@
 """Calcul des statistiques pour le tableau de bord de l'admin."""
+from datetime import timedelta
 from django.utils import timezone
 from django.db.models import Q
 from .models import (
     Voyage, Reservation, Colis, TransfertArgent,
-    DemandeColis, DemandeTransfert, Client, Bus, Employe
+    DemandeColis, DemandeTransfert, Client, Bus, Employe, Chauffeur
 )
 from .admin_filtres import voit_tout, agence_de, zone_de, POSTES_PERSONNEL
 
@@ -26,6 +27,7 @@ def statistiques_tableau_bord(user=None):
     transferts_qs = TransfertArgent.objects.all()
     demandes_colis_qs = DemandeColis.objects.all()
     demandes_transfert_qs = DemandeTransfert.objects.all()
+    chauffeurs_qs = Chauffeur.objects.filter(actif=True)
 
     if not scope_global:
         if scope_zone:
@@ -34,12 +36,14 @@ def statistiques_tableau_bord(user=None):
             transferts_qs = transferts_qs.filter(Q(agence_depart__zone=zone) | Q(agence_retrait__zone=zone))
             demandes_colis_qs = demandes_colis_qs.filter(Q(agence_depart__zone=zone) | Q(agence_arrivee__zone=zone))
             demandes_transfert_qs = demandes_transfert_qs.filter(Q(agence_depart__zone=zone) | Q(agence_retrait__zone=zone))
+            chauffeurs_qs = chauffeurs_qs.filter(agence__zone=zone)
         elif agence is None:
             reservations_qs = reservations_qs.none()
             colis_qs = colis_qs.none()
             transferts_qs = transferts_qs.none()
             demandes_colis_qs = demandes_colis_qs.none()
             demandes_transfert_qs = demandes_transfert_qs.none()
+            chauffeurs_qs = chauffeurs_qs.none()
         else:
             if poste in POSTES_PERSONNEL:
                 reservations_qs = reservations_qs.filter(cree_par=employe)
@@ -52,6 +56,7 @@ def statistiques_tableau_bord(user=None):
 
             demandes_colis_qs = demandes_colis_qs.filter(Q(agence_depart=agence) | Q(agence_arrivee=agence))
             demandes_transfert_qs = demandes_transfert_qs.filter(Q(agence_depart=agence) | Q(agence_retrait=agence))
+            chauffeurs_qs = chauffeurs_qs.filter(agence=agence)
 
     # Voyages et parc (pas de notion d'agence sur ces modeles, restent globaux)
     voyages_aujourd_hui = Voyage.objects.filter(date_depart=aujourd_hui).count()
@@ -81,6 +86,10 @@ def statistiques_tableau_bord(user=None):
 
     alertes_non_resolues = AlerteVoyage.objects.filter(resolue=False).count()
 
+    # Permis de conduire deja expires ou expirant dans les 30 prochains jours (filtres)
+    date_limite_permis = aujourd_hui + timedelta(days=30)
+    permis_a_renouveler = chauffeurs_qs.filter(date_expiration_permis__lte=date_limite_permis).count()
+
     return {
         'voyages_aujourd_hui': voyages_aujourd_hui,
         'voyages_a_venir': voyages_a_venir,
@@ -98,4 +107,5 @@ def statistiques_tableau_bord(user=None):
         'bus_maintenance': bus_maintenance,
         'total_clients': total_clients,
         'total_employes': total_employes,
+        'permis_a_renouveler': permis_a_renouveler,
     }

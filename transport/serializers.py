@@ -46,9 +46,30 @@ class VoyageSerializer(serializers.ModelSerializer):
         return obj.bus.agence.adresse if obj.bus.agence else None
     ligne_nom = serializers.SerializerMethodField()
     destinations = serializers.SerializerMethodField()
+    places_disponibles = serializers.SerializerMethodField()
 
     def get_ligne_nom(self, obj):
         return obj.ligne.nom if obj.ligne else None
+
+    def get_places_disponibles(self, obj):
+        """
+        Pour un voyage avec ligne : compte les sieges qui n'ont AUCUNE
+        reservation active (en_attente ou payee). Approximatif quand un
+        meme siege sert plusieurs segments differents (un siege deja pris
+        sur un segment compte comme occupe meme s'il redevient libre plus
+        loin sur la ligne), mais toujours correct dans le sens "jamais
+        optimiste" - ne bloque jamais une vraie place libre, puisque le
+        choix precis du siege (est_libre()) reste le juge final.
+        Pour un voyage sans ligne : le compteur classique, inchange.
+        """
+        if not obj.ligne_id:
+            return obj.places_disponibles
+
+        total_sieges = obj.sieges.count()
+        sieges_occupes = obj.sieges.filter(
+            reservations__statut__in=['en_attente', 'payee']
+        ).distinct().count()
+        return total_sieges - sieges_occupes
 
     def get_destinations(self, obj):
         if not obj.ligne:

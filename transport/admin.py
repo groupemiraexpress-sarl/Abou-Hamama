@@ -18,6 +18,19 @@ def _generer_mot_de_passe(longueur=8):
     return ''.join(secrets.choice(alphabet) for _ in range(longueur))
 
 
+def _config_modifiable_uniquement_par_pdg(request):
+    """
+    Vrai uniquement pour le PDG et le superuser : utilise pour verrouiller
+    l'ajout/modification/suppression sur les donnees de configuration
+    partagees par toute la compagnie (Trajets, Promotions, Agences,
+    Compagnie, FAQ). La consultation reste ouverte a tous les employes.
+    """
+    if request.user.is_superuser:
+        return True
+    employe = getattr(request.user, 'employe', None)
+    return employe is not None and employe.poste == 'pdg'
+
+
 admin.site.site_header = "Express Abou Hamama"
 admin.site.site_title = "Gestion Abou Hamama"
 admin.site.index_title = "Tableau de bord"
@@ -31,6 +44,15 @@ class CompagnieAdmin(admin.ModelAdmin):
     list_editable = ('actif',)
     ordering = ('nom',)
 
+    def has_add_permission(self, request):
+        return _config_modifiable_uniquement_par_pdg(request)
+
+    def has_change_permission(self, request, obj=None):
+        return _config_modifiable_uniquement_par_pdg(request)
+
+    def has_delete_permission(self, request, obj=None):
+        return _config_modifiable_uniquement_par_pdg(request)
+
 
 @admin.register(Agence)
 class AgenceAdmin(admin.ModelAdmin):
@@ -39,6 +61,15 @@ class AgenceAdmin(admin.ModelAdmin):
     search_fields = ('nom', 'ville', 'adresse', 'responsable')
     list_editable = ('actif',)
     ordering = ('compagnie', 'ville', 'nom')
+
+    def has_add_permission(self, request):
+        return _config_modifiable_uniquement_par_pdg(request)
+
+    def has_change_permission(self, request, obj=None):
+        return _config_modifiable_uniquement_par_pdg(request)
+
+    def has_delete_permission(self, request, obj=None):
+        return _config_modifiable_uniquement_par_pdg(request)
 
 
 @admin.register(Bus)
@@ -61,6 +92,28 @@ class ChauffeurAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     search_fields = ('nom', 'prenom', 'numero_permis', 'telephone')
     list_editable = ('statut',)
     ordering = ('agence__ville', 'agence__nom', 'nom')
+
+    def has_add_permission(self, request):
+        from .admin_filtres import est_recruteur
+        return est_recruteur(request.user)
+
+    def has_change_permission(self, request, obj=None):
+        from .admin_filtres import est_recruteur
+        return est_recruteur(request.user)
+
+    def has_delete_permission(self, request, obj=None):
+        from .admin_filtres import voit_tout
+        return voit_tout(request.user)
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'agence':
+            from .admin_filtres import voit_tout, agence_de
+            if not voit_tout(request.user):
+                agence = agence_de(request.user)
+                if agence:
+                    kwargs['queryset'] = Agence.objects.filter(id=agence.id)
+                    kwargs['initial'] = agence.id
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     @admin.display(description="Note moyenne")
     def note_moyenne_badge(self, obj):
@@ -89,17 +142,34 @@ class TrajetAdmin(admin.ModelAdmin):
     list_editable = ('prix_base', 'actif')
     ordering = ('ville_depart', 'ville_arrivee')
 
+    def has_add_permission(self, request):
+        return _config_modifiable_uniquement_par_pdg(request)
+
+    def has_change_permission(self, request, obj=None):
+        return _config_modifiable_uniquement_par_pdg(request)
+
+    def has_delete_permission(self, request, obj=None):
+        return _config_modifiable_uniquement_par_pdg(request)
+
 
 @admin.register(Voyage)
 class VoyageAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     champs_agence = ['bus__agence']
     champ_createur = None
-    list_display = ('trajet', 'date_depart', 'heure_depart', 'bus', 'chauffeur', 'prix', 'places_disponibles', 'statut')
+    list_display = ('trajet', 'date_depart', 'heure_depart', 'bus', 'chauffeur', 'prix', 'places_disponibles', 'places_reelles', 'statut')
     list_filter = ('statut', 'date_depart', 'trajet__compagnie', 'bus')
     search_fields = ('trajet__ville_depart', 'trajet__ville_arrivee', 'bus__immatriculation')
     list_editable = ('statut',)
     ordering = ('-date_depart', '-heure_depart')
     date_hierarchy = 'date_depart'
+
+    @admin.display(description="Places dispo (reel)")
+    def places_reelles(self, obj):
+        if not obj.ligne_id:
+            return obj.places_disponibles
+        total = obj.sieges.count()
+        occupes = obj.sieges.filter(reservations__statut__in=['en_attente', 'payee']).distinct().count()
+        return f"{total - occupes} / {total}"
 
 
 class ClientAdminForm(forms.ModelForm):
@@ -137,7 +207,15 @@ class ClientAdmin(admin.ModelAdmin):
     ordering = ('nom', 'prenom')
     readonly_fields = ('code_parrainage', 'bonus_parrainage_attribue')
 
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        if obj is not None and obj.user_id:
+            form.base_fields['nom_utilisateur'].initial = obj.user.username
+        return form
+
     def save_model(self, request, obj, form, change):
+        # NOTE : un compte Client n'a jamais acces a l'admin (pas is_staff),
+        # donc pas besoin de groupe Django ici - uniquement pour les Employe.
         nom_utilisateur = form.cleaned_data.get('nom_utilisateur')
         mot_de_passe = form.cleaned_data.get('mot_de_passe')
 
@@ -186,11 +264,21 @@ class ClientAdmin(admin.ModelAdmin):
 @admin.register(Reservation)
 class ReservationAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     champs_agence = ['agence']
-    list_display = ('numero_reservation', 'client', 'voyage', 'nombre_places', 'montant_total', 'statut', 'mode_paiement', 'cree_par', 'modifie_par', 'date_reservation')
+    list_display = ('numero_reservation', 'client', 'voyage', 'nombre_places', 'montant_total', 'statut', 'origine', 'mode_paiement', 'modifie_par', 'date_reservation')
     list_filter = ('statut', 'mode_paiement', 'voyage__date_depart', 'agence')
     search_fields = ('numero_reservation', 'client__nom', 'client__telephone')
     ordering = ('-date_reservation',)
     date_hierarchy = 'date_reservation'
+
+    @admin.display(description="Origine")
+    def origine(self, obj):
+        from django.utils.html import format_html
+        if obj.cree_par_id:
+            return format_html(
+                '<span style="color:#1F3864;">&#128100; {}</span>',
+                obj.cree_par.nom
+            )
+        return format_html('<span style="color:#059669; font-weight:600;">&#128241; App mobile</span>')
 
     def get_readonly_fields(self, request, obj=None):
         employe = getattr(request.user, 'employe', None)
@@ -262,9 +350,26 @@ class EmployeAdminForm(forms.ModelForm):
 
     def clean(self):
         cleaned = super().clean()
-        if self.instance.pk:
-            return cleaned  # modification : la gestion du compte se fait dans save_model
+
+        # Un seul PDG autorise dans tout le logiciel
+        poste = cleaned.get('poste')
+        if poste == 'pdg':
+            deja_pdg = Employe.objects.filter(poste='pdg').exclude(pk=self.instance.pk).exists()
+            if deja_pdg:
+                self.add_error('poste', "Un seul compte PDG est autorise dans le logiciel. Un PDG existe deja.")
+
         nom_utilisateur = cleaned.get('nom_utilisateur')
+
+        if self.instance.pk:
+            # Modification : si un nouveau nom d'utilisateur est fourni, verifier qu'il est libre
+            if nom_utilisateur:
+                deja_pris = User.objects.filter(username=nom_utilisateur).exclude(
+                    pk=self.instance.user_id
+                ).exists()
+                if deja_pris:
+                    self.add_error('nom_utilisateur', "Ce nom d'utilisateur est deja pris par un autre compte.")
+            return cleaned  # le reste de la gestion du compte se fait dans save_model
+
         telephone = cleaned.get('telephone')
         identifiant = nom_utilisateur or telephone
         if not identifiant:
@@ -289,9 +394,23 @@ class EmployeAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     list_editable = ('actif',)
     ordering = ('agence__ville', 'agence__nom', 'poste', 'nom')
 
-    # Postes qu'un Responsable d'agence a le droit de creer lui-meme
-    # (pas de pdg, comptable, rh, resp_maintenance, resp_planning, securite depuis une agence)
-    POSTES_AUTORISES_RESPONSABLE = ('secretaire', 'guichetier', 'caissier', 'agent_colis', 'agent_transfert', 'manutentionnaire')
+    def has_add_permission(self, request):
+        from .admin_filtres import est_recruteur
+        return est_recruteur(request.user)
+
+    def has_change_permission(self, request, obj=None):
+        from .admin_filtres import est_recruteur
+        return est_recruteur(request.user)
+
+    def has_delete_permission(self, request, obj=None):
+        from .admin_filtres import voit_tout
+        return voit_tout(request.user)
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        if obj is not None and obj.user_id:
+            form.base_fields['nom_utilisateur'].initial = obj.user.username
+        return form
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'agence':
@@ -312,14 +431,16 @@ class EmployeAdmin(FiltreAgenceMixin, admin.ModelAdmin):
 
     def formfield_for_choice_field(self, db_field, request, **kwargs):
         if db_field.name == 'poste':
-            from .admin_filtres import voit_tout
+            from .admin_filtres import voit_tout, POSTES_RECRUTEURS, POSTES_RECRUTABLES_PAR_AGENCE
             employe = getattr(request.user, 'employe', None)
             poste = employe.poste if employe else None
-            if not voit_tout(request.user) and poste == 'responsable':
-                kwargs['choices'] = [c for c in db_field.choices if c[0] in self.POSTES_AUTORISES_RESPONSABLE]
+            if not voit_tout(request.user) and poste in POSTES_RECRUTEURS:
+                kwargs['choices'] = [c for c in db_field.choices if c[0] in POSTES_RECRUTABLES_PAR_AGENCE]
         return super().formfield_for_choice_field(db_field, request, **kwargs)
 
     def save_model(self, request, obj, form, change):
+        from .admin_filtres import assigner_groupe_selon_poste
+
         nom_utilisateur = form.cleaned_data.get('nom_utilisateur')
         mot_de_passe = form.cleaned_data.get('mot_de_passe')
 
@@ -330,6 +451,7 @@ class EmployeAdmin(FiltreAgenceMixin, admin.ModelAdmin):
                 username=username, password=mdp_genere,
                 first_name=obj.prenom, last_name=obj.nom, is_staff=True,
             )
+            assigner_groupe_selon_poste(user, obj.poste)
             obj.user = user
             super().save_model(request, obj, form, change)
             if not mot_de_passe:
@@ -349,12 +471,14 @@ class EmployeAdmin(FiltreAgenceMixin, admin.ModelAdmin):
                 obj.user.last_name = obj.nom
                 obj.user.is_staff = True
                 obj.user.save()
+                assigner_groupe_selon_poste(obj.user, obj.poste)
             elif nom_utilisateur:
                 mdp_genere = mot_de_passe or _generer_mot_de_passe()
                 user = User.objects.create_user(
                     username=nom_utilisateur, password=mdp_genere,
                     first_name=obj.prenom, last_name=obj.nom, is_staff=True,
                 )
+                assigner_groupe_selon_poste(user, obj.poste)
                 obj.user = user
                 if not mot_de_passe:
                     self.message_user(
@@ -423,8 +547,10 @@ class TransfertArgentAdmin(FiltreAgenceMixin, admin.ModelAdmin):
                 obj.cree_par = employe
         super().save_model(request, obj, form, change)
 
+
 @admin.register(Entretien)
-class EntretienAdmin(admin.ModelAdmin):
+class EntretienAdmin(FiltreAgenceMixin, admin.ModelAdmin):
+    champs_agence = ['bus__agence']
     list_display = ('bus', 'type_entretien', 'date_entretien', 'kilometrage', 'cout', 'cree_par')
     list_filter = ('type_entretien', 'date_entretien', 'bus')
     search_fields = ('bus__immatriculation', 'description')
@@ -433,7 +559,8 @@ class EntretienAdmin(admin.ModelAdmin):
 
 
 @admin.register(PleinCarburant)
-class PleinCarburantAdmin(admin.ModelAdmin):
+class PleinCarburantAdmin(FiltreAgenceMixin, admin.ModelAdmin):
+    champs_agence = ['bus__agence']
     list_display = ('bus', 'voyage', 'date_plein', 'litres', 'montant', 'cree_par')
     list_filter = ('date_plein', 'bus')
     search_fields = ('bus__immatriculation',)
@@ -447,6 +574,15 @@ class PromotionAdmin(admin.ModelAdmin):
     list_filter = ('actif',)
     search_fields = ('titre', 'texte')
     ordering = ('-date_creation',)
+
+    def has_add_permission(self, request):
+        return _config_modifiable_uniquement_par_pdg(request)
+
+    def has_change_permission(self, request, obj=None):
+        return _config_modifiable_uniquement_par_pdg(request)
+
+    def has_delete_permission(self, request, obj=None):
+        return _config_modifiable_uniquement_par_pdg(request)
 
 
 @admin.register(DemandeColis)
@@ -582,7 +718,9 @@ class LigneAdmin(FiltreAgenceMixin, admin.ModelAdmin):
 
 
 @admin.register(AlerteVoyage)
-class AlerteVoyageAdmin(admin.ModelAdmin):
+class AlerteVoyageAdmin(FiltreAgenceMixin, admin.ModelAdmin):
+    champs_agence = ['voyage__bus__agence']
+    champ_createur = None
     list_display = ('type_alerte', 'voyage', 'message_court', 'date_creation', 'resolue')
     list_filter = ('type_alerte', 'resolue', 'date_creation')
     search_fields = ('voyage__bus__immatriculation', 'message')
@@ -598,7 +736,9 @@ class AlerteVoyageAdmin(admin.ModelAdmin):
 
 
 @admin.register(AvisVoyage)
-class AvisVoyageAdmin(admin.ModelAdmin):
+class AvisVoyageAdmin(FiltreAgenceMixin, admin.ModelAdmin):
+    champs_agence = ['voyage__bus__agence']
+    champ_createur = None  # avis soumis par les clients, pas par un employe
     list_display = ('note_etoiles', 'chauffeur', 'client', 'voyage', 'critere_bus', 'critere_clim', 'critere_tv', 'critere_connexion', 'critere_chauffeur', 'critere_accompagnateur', 'commentaire_court', 'date_creation')
     list_filter = ('note', 'chauffeur', 'date_creation')
     search_fields = ('client__nom', 'client__telephone', 'chauffeur__nom', 'chauffeur__prenom', 'commentaire')
@@ -661,3 +801,12 @@ class QuestionFAQAdmin(admin.ModelAdmin):
     search_fields = ('question', 'reponse')
     list_editable = ('actif',)
     ordering = ('ordre', 'id')
+
+    def has_add_permission(self, request):
+        return _config_modifiable_uniquement_par_pdg(request)
+
+    def has_change_permission(self, request, obj=None):
+        return _config_modifiable_uniquement_par_pdg(request)
+
+    def has_delete_permission(self, request, obj=None):
+        return _config_modifiable_uniquement_par_pdg(request)

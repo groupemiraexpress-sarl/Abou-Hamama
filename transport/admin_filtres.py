@@ -1,35 +1,88 @@
 """
-Cloisonnement par agence, par zone et par employe pour l'admin Express Abou Hamama.
+Cloisonnement par agence et par employe pour l'admin Express Abou Hamama.
+
+Philosophie generale : chaque agence est une unite autonome avec son propre
+personnel complet (responsable, secretaire, guichetier, caissier, agent
+colis, agent transfert, manutentionnaire, comptable, RH, responsable
+maintenance, agent de securite...). Un employe ne voit et ne gere QUE les
+donnees de sa propre agence, quel que soit son poste.
+
+Deux exceptions seulement :
+  - le PDG (et le superutilisateur) voient et gerent TOUTE la compagnie,
+    toutes agences confondues. Un seul compte PDG existe dans le logiciel
+    (contrainte appliquee dans EmployeAdminForm).
+  - le Responsable planning (poste 'resp_planning') supervise une zone
+    entiere (Nord ou Sud) regroupant plusieurs agences ; il n'a pas
+    d'agence propre mais une zone.
 
 Regle generale :
-  - superutilisateur / poste 'pdg'      -> voit tout
-  - postes "siege" (comptable, rh,
-    maintenance)                        -> voient tout, toutes agences
+  - superutilisateur / poste 'pdg'      -> voit tout, toutes agences
   - poste 'resp_planning'               -> voit sa zone (Nord ou Sud),
                                             toutes les agences de cette zone
   - roles de terrain (guichetier,
     agent colis, agent transfert)       -> voient uniquement ce qu'ils
-                                            ont personnellement cree
-  - les autres employes avec une agence -> voient tout ce qui se passe
+                                            ont personnellement cree,
                                             dans leur agence
+  - tous les autres postes (responsable, secretaire, caissier,
+    manutentionnaire, comptable, rh, resp_maintenance, securite, autre)
+                                         -> voient tout ce qui se passe
+                                            dans leur propre agence,
+                                            et seulement leur agence
   - employe sans agence ni zone         -> ne voit rien
 
 Ce fichier gere le perimetre des DONNEES (quelles lignes en base un
-employe peut voir). Le perimetre de l'INTERFACE du tableau de bord
-(quelles cartes/raccourcis/groupes de modeles s'affichent sur la page
-d'accueil de l'admin) est gere plus bas par profil_tableau_bord(), qui
-est une notion volontairement separee : un comptable voit TOUTES les
-donnees financieres (voit_tout=True) mais ne voit QUE les cartes
-financieres sur le tableau de bord.
+employe peut voir) via FiltreAgenceMixin, et les permissions FINES via
+les has_*_permission personnalises sur chaque ModelAdmin dans admin.py.
+
+IMPORTANT : un compte non-superuser doit d'abord avoir la permission
+Django "view"/"change" sur un modele pour meme apparaitre dans le menu
+de l'admin - sans elle, il ne voit RIEN, quel que soit son poste. Cette
+permission de base est accordee via les 14 groupes Django deja crees
+manuellement (un par poste : "Guichetier / billettiste", "Comptable",
+"Responsable d'agence", etc. - voir Groupes dans l'admin). La fonction
+assigner_groupe_selon_poste() plus bas met automatiquement chaque nouvel
+employe dans le bon groupe selon son poste.
 """
 from django.db.models import Q
 from django.contrib import admin
 
-# Postes qui ne voient que ce qu'ils ont eux-memes enregistre
+# Postes qui ne voient que ce qu'ils ont eux-memes enregistre (dans leur agence)
 POSTES_PERSONNEL = ('guichetier', 'agent_colis', 'agent_transfert')
 
-# Postes "siege" : un seul titulaire pour toute la compagnie, voient tout
-POSTES_SIEGE = ('comptable', 'rh', 'resp_maintenance')
+# Postes autorises a recruter (creer/modifier des fiches Employe et Chauffeur),
+# au sein de leur propre agence uniquement.
+POSTES_RECRUTEURS = ('responsable', 'rh')
+
+# Postes qu'un Responsable ou un RH d'agence peuvent attribuer a un nouvel
+# employe. N'inclut pas 'pdg' (compte unique, reserve au PDG lui-meme),
+# ni 'responsable' ni 'resp_planning' (nominations reservees au PDG).
+POSTES_RECRUTABLES_PAR_AGENCE = (
+    'secretaire', 'guichetier', 'caissier', 'agent_colis', 'agent_transfert',
+    'manutentionnaire', 'comptable', 'resp_maintenance', 'securite', 'rh', 'autre',
+)
+
+# Correspondance exacte poste -> nom du groupe Django deja cree manuellement
+# (Groupes > ...), avec les permissions precises pour ce metier. Les noms
+# des groupes ne correspondent pas toujours mot pour mot au libelle du
+# champ Poste (ex: "PDG / Direction" vs "PDG / Directeur general"), d'ou
+# cette table de correspondance explicite plutot qu'une simple comparaison
+# de texte.
+POSTE_VERS_GROUPE = {
+    'pdg': 'PDG / Direction',
+    'responsable': "Responsable d'agence",
+    'secretaire': "Secretaire d'agence",
+    'resp_planning': 'Responsable planning',
+    'guichetier': 'Guichetier / billettiste',
+    'caissier': 'Caissier',
+    'agent_colis': 'Agent colis',
+    'agent_transfert': "Agent transfert d'argent",
+    'manutentionnaire': 'Manutentionnaire / bagagiste',
+    'comptable': 'Comptable',
+    'rh': 'Responsable RH',
+    'resp_maintenance': 'Responsable maintenance',
+    'securite': 'Agent de securite',
+    'autre': 'Autre (lecture seule)',
+}
 
 
 def agence_de(user):
@@ -49,13 +102,53 @@ def zone_de(user):
 
 
 def voit_tout(user):
-    """Vrai si l'utilisateur doit voir toutes les agences (toutes zones)."""
+    """
+    Vrai uniquement pour le PDG et le superutilisateur : ce sont les
+    seuls a voir toutes les agences. Tous les autres postes, y compris
+    comptable/RH/responsable maintenance, sont desormais cantonnes a
+    leur propre agence (voir docstring du module).
+    """
     if user.is_superuser:
         return True
     employe = getattr(user, 'employe', None)
-    if employe is not None and employe.poste in ('pdg',) + POSTES_SIEGE:
+    return employe is not None and employe.poste == 'pdg'
+
+
+def est_recruteur(user):
+    """Vrai si l'utilisateur peut creer/gerer des fiches employe ou chauffeur dans sa propre agence."""
+    if voit_tout(user):
         return True
-    return False
+    employe = getattr(user, 'employe', None)
+    return employe is not None and employe.poste in POSTES_RECRUTEURS
+
+
+def assigner_groupe_selon_poste(user, poste):
+    """
+    Ajoute l'utilisateur au groupe Django deja configure pour son poste
+    (avec les permissions precises adaptees a ce metier). Retire au passage
+    tout autre groupe "poste" qu'il aurait pu avoir avant (utile en cas de
+    changement de poste), pour eviter les cumuls de permissions.
+
+    Ne fait rien (sans erreur) si aucun groupe Django n'existe pour ce
+    poste - le compte reste alors sans acces tant que le groupe n'est pas
+    cree manuellement dans Groupes > Ajouter un groupe.
+    """
+    from django.contrib.auth.models import Group
+
+    noms_groupes_postes = set(POSTE_VERS_GROUPE.values())
+    nom_groupe = POSTE_VERS_GROUPE.get(poste)
+
+    # Retire les anciens groupes "poste" (utile si l'employe change de role)
+    for groupe in user.groups.filter(name__in=noms_groupes_postes):
+        user.groups.remove(groupe)
+
+    if not nom_groupe:
+        return
+    try:
+        groupe = Group.objects.get(name=nom_groupe)
+        user.groups.add(groupe)
+    except Group.DoesNotExist:
+        pass
 
 
 class FiltreAgenceMixin:
@@ -141,14 +234,11 @@ class FiltreAgenceListFilter(admin.SimpleListFilter):
 # cartes de stats, quel raccourci de vente et quels groupes de modeles
 # apparaissent sur la page d'accueil, selon le poste de l'employe connecte.
 
-# Tous les drapeaux possibles. Chaque cle correspond soit a une carte de
-# stats (meme nom que dans statistiques_tableau_bord), soit a un groupe de
-# modeles, soit au raccourci de vente rapide.
 DRAPEAUX_TABLEAU_BORD = [
     'voit_raccourci_vente',
     'voit_voyages_aujourd_hui', 'voit_reservations_jour', 'voit_recette_jour', 'voit_voyages_a_venir',
     'voit_alertes_non_resolues', 'voit_demandes_colis_attente', 'voit_demandes_transfert_attente',
-    'voit_reservations_attente', 'voit_transferts_attente',
+    'voit_reservations_attente', 'voit_transferts_attente', 'voit_permis_a_renouveler',
     'voit_colis_transit', 'voit_colis_arrives', 'voit_bus_service', 'voit_bus_maintenance',
     'voit_total_clients', 'voit_total_employes',
     'voit_groupe_exploitation', 'voit_groupe_securite', 'voit_groupe_colis_transferts',
@@ -162,7 +252,7 @@ PROFILS_TABLEAU_BORD = {
         'voit_raccourci_vente',
         'voit_voyages_aujourd_hui', 'voit_reservations_jour', 'voit_recette_jour', 'voit_voyages_a_venir',
         'voit_alertes_non_resolues', 'voit_demandes_colis_attente', 'voit_demandes_transfert_attente',
-        'voit_reservations_attente', 'voit_transferts_attente',
+        'voit_reservations_attente', 'voit_transferts_attente', 'voit_permis_a_renouveler',
         'voit_colis_transit', 'voit_colis_arrives', 'voit_bus_service', 'voit_bus_maintenance', 'voit_total_clients',
         'voit_groupe_exploitation', 'voit_groupe_securite', 'voit_groupe_colis_transferts',
         'voit_groupe_clients_personnel', 'voit_groupe_maintenance',
@@ -176,7 +266,7 @@ PROFILS_TABLEAU_BORD = {
     },
     'resp_planning': {
         'voit_voyages_aujourd_hui', 'voit_voyages_a_venir', 'voit_reservations_jour', 'voit_reservations_attente',
-        'voit_bus_service', 'voit_bus_maintenance',
+        'voit_bus_service', 'voit_bus_maintenance', 'voit_permis_a_renouveler',
         'voit_groupe_exploitation',
     },
     'guichetier': {
@@ -198,7 +288,7 @@ PROFILS_TABLEAU_BORD = {
         'voit_recette_jour', 'voit_reservations_attente', 'voit_transferts_attente',
     },
     'rh': {
-        'voit_total_employes', 'voit_groupe_clients_personnel',
+        'voit_total_employes', 'voit_permis_a_renouveler', 'voit_groupe_clients_personnel',
     },
     'resp_maintenance': {
         'voit_bus_service', 'voit_bus_maintenance', 'voit_groupe_maintenance',
