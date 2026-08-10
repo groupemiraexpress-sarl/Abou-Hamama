@@ -273,12 +273,13 @@ class ReservationAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     @admin.display(description="Origine")
     def origine(self, obj):
         from django.utils.html import format_html
+        from django.utils.safestring import mark_safe
         if obj.cree_par_id:
             return format_html(
                 '<span style="color:#1F3864;">&#128100; {}</span>',
                 obj.cree_par.nom
             )
-        return format_html('<span style="color:#059669; font-weight:600;">&#128241; App mobile</span>')
+        return mark_safe('<span style="color:#059669; font-weight:600;">&#128241; App mobile</span>')
 
     def get_readonly_fields(self, request, obj=None):
         employe = getattr(request.user, 'employe', None)
