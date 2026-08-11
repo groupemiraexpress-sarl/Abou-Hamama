@@ -332,6 +332,9 @@ def api_reserver_siege(request):
     telephone = request.data.get('telephone', '').strip()
     type_piece = request.data.get('type_piece', '').strip()
     numero_piece = request.data.get('numero_piece', '').strip()
+    nationalite = request.data.get('nationalite', '').strip()
+    date_emission = request.data.get('date_emission') or None
+    date_expiration = request.data.get('date_expiration') or None
     arret_montee_id = request.data.get('arret_montee')
     arret_descente_id = request.data.get('arret_descente')
 
@@ -339,6 +342,24 @@ def api_reserver_siege(request):
         return Response({'erreur': 'voyage_id, numero_siege, nom et telephone obligatoires.'}, status=400)
     if not type_piece or not numero_piece:
         return Response({'erreur': 'Piece d\'identite obligatoire (type et numero).'}, status=400)
+
+    # Longueur exacte attendue selon le type de piece (Tchad)
+    LONGUEURS_PIECE = {'cni': 10, 'passeport': 9, 'permis': 10, 'acte_naissance': 4}
+    longueur_attendue = LONGUEURS_PIECE.get(type_piece)
+    if longueur_attendue and (not numero_piece.isdigit() or len(numero_piece) != longueur_attendue):
+        return Response({
+            'erreur': f'Le numero de piece doit contenir exactement {longueur_attendue} chiffres pour ce type de piece.'
+        }, status=400)
+
+    if date_expiration:
+        from datetime import date as date_cls
+        try:
+            annee, mois, jour = [int(x) for x in date_expiration.split('-')]
+            if date_cls(annee, mois, jour) < date_cls.today():
+                return Response({'erreur': "Cette piece d'identite est expiree."}, status=400)
+        except (ValueError, TypeError):
+            return Response({'erreur': "Date d'expiration invalide."}, status=400)
+
     try:
         numero_siege = int(numero_siege)
     except (ValueError, TypeError):
@@ -380,6 +401,9 @@ def api_reserver_siege(request):
             voyageur_telephone=telephone,
             voyageur_type_piece=type_piece,
             voyageur_numero_piece=numero_piece,
+            voyageur_nationalite=nationalite,
+            voyageur_date_emission=date_emission,
+            voyageur_date_expiration=date_expiration,
             arret_montee=arret_montee,
             arret_descente=arret_descente,
             statut='en_attente',

@@ -1,1067 +1,2942 @@
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Express Abou Hamama\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-11 07:43+0100\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
+#: .\config\settings.py:115
 msgid "Français"
 msgstr "الفرنسية"
 
+#: .\config\settings.py:116
 msgid "English"
 msgstr "الإنجليزية"
 
+#: .\config\settings.py:117
 msgid "العربية"
 msgstr "العربية"
 
-msgid "Nom"
-msgstr "الاسم"
-
-msgid "Prenom"
-msgstr "الاسم الأول"
-
-msgid "Sigle"
-msgstr "الاختصار"
-
-msgid "Siege social"
-msgstr "المقر الرئيسي"
-
-msgid "Telephone"
-msgstr "الهاتف"
-
-msgid "Email"
-msgstr "البريد الإلكتروني"
-
-msgid "Date de creation"
-msgstr "تاريخ الإنشاء"
-
-msgid "Actif"
-msgstr "نشط"
-
-msgid "Compagnie"
-msgstr "الشركة"
-
-msgid "Compagnies"
-msgstr "الشركات"
-
-msgid "Nord"
-msgstr "الشمال"
-
-msgid "Sud"
-msgstr "الجنوب"
-
-msgid "Zone"
-msgstr "المنطقة"
-
-msgid "Zone geographique (pour le planning)"
-msgstr "المنطقة الجغرافية (للتخطيط)"
-
-msgid "Ville"
-msgstr "المدينة"
-
-msgid "Adresse"
-msgstr "العنوان"
-
-msgid "Latitude"
-msgstr "خط العرض"
-
-msgid "Longitude"
-msgstr "خط الطول"
-
-msgid "Responsable"
-msgstr "المسؤول"
-
-msgid "Agence"
-msgstr "الوكالة"
-
-msgid "Agences"
-msgstr "الوكالات"
-
-msgid "En service"
-msgstr "في الخدمة"
-
-msgid "En maintenance"
-msgstr "قيد الصيانة"
-
-msgid "Hors service"
-msgstr "خارج الخدمة"
-
-msgid "Agence de rattachement du bus"
-msgstr "وكالة انتماء الحافلة"
-
-msgid "Immatriculation"
-msgstr "رقم التسجيل"
-
-msgid "Marque"
-msgstr "الماركة"
-
-msgid "Modele"
-msgstr "الطراز"
-
-msgid "Capacite"
-msgstr "السعة"
-
-msgid "Kilometrage"
-msgstr "عدد الكيلومترات"
-
-msgid "Annee"
-msgstr "السنة"
-
-msgid "Statut"
-msgstr "الحالة"
-
-msgid "Date visite technique"
-msgstr "تاريخ الفحص الفني"
-
-msgid "Date assurance"
-msgstr "تاريخ التأمين"
-
-msgid "Bus"
-msgstr "الحافلة"
-
-msgid "Disponible"
-msgstr "متاح"
-
-msgid "En mission"
-msgstr "في مهمة"
-
-msgid "En repos"
-msgstr "في راحة"
-
-msgid "Inactif"
-msgstr "غير نشط"
-
-msgid "Compte de connexion"
-msgstr "حساب الدخول"
-
-msgid "Compte de connexion de ce chauffeur (cree par le PDG)"
-msgstr "حساب دخول هذا السائق (أنشأه المدير العام)"
-
-msgid "Agence de rattachement du chauffeur"
-msgstr "وكالة انتماء السائق"
-
-msgid "Numero de permis"
-msgstr "رقم رخصة القيادة"
-
-msgid "Date d'expiration du permis"
-msgstr "تاريخ انتهاء الرخصة"
-
-msgid "Date d'embauche"
-msgstr "تاريخ التوظيف"
-
-msgid "Annees d'experience"
-msgstr "سنوات الخبرة"
-
-msgid "Photo"
-msgstr "الصورة"
-
-msgid "Chauffeur"
-msgstr "السائق"
-
-msgid "Chauffeurs"
-msgstr "السائقون"
-
-msgid "Ville de depart"
-msgstr "مدينة الانطلاق"
-
-msgid "Ville d'arrivee"
-msgstr "مدينة الوصول"
-
-msgid "Distance (km)"
-msgstr "المسافة (كم)"
-
-msgid "Distance en kilometres"
-msgstr "المسافة بالكيلومترات"
-
-msgid "Duree estimee (heures)"
-msgstr "المدة المقدرة (ساعات)"
-
-msgid "Duree estimee en heures"
-msgstr "المدة المقدرة بالساعات"
-
-msgid "Prix de base"
-msgstr "السعر الأساسي"
-
-msgid "Prix du billet en FCFA"
-msgstr "سعر التذكرة بالفرنك"
-
-msgid "Trajet"
-msgstr "المسار"
-
-msgid "Trajets"
-msgstr "المسارات"
-
-msgid "Programme"
-msgstr "مبرمج"
-
-msgid "En cours"
-msgstr "جارية"
-
-msgid "Termine"
-msgstr "منتهية"
-
-msgid "Annule"
-msgstr "ملغاة"
-
-msgid "Ligne"
-msgstr "الخط"
-
-msgid "Ligne desservie (si le voyage dessert plusieurs villes)"
-msgstr "الخط المخدوم (إذا كانت الرحلة تخدم عدة مدن)"
-
-msgid "Date de depart"
-msgstr "تاريخ الانطلاق"
-
-msgid "Heure de depart"
-msgstr "ساعة الانطلاق"
-
-msgid "Heure d'arrivee prevue"
-msgstr "ساعة الوصول المتوقعة"
-
-msgid "Prix"
-msgstr "السعر"
-
-msgid "Places disponibles"
-msgstr "المقاعد المتاحة"
-
-msgid "Notes"
-msgstr "ملاحظات"
-
-msgid "Voyage"
-msgstr "الرحلة"
-
-msgid "Voyages"
-msgstr "الرحلات"
-
-msgid "Particulier"
-msgstr "فرد"
-
-msgid "Entreprise"
-msgstr "شركة"
-
-msgid "Carte nationale d'identite"
-msgstr "بطاقة الهوية الوطنية"
-
-msgid "Passeport"
-msgstr "جواز السفر"
-
-msgid "Acte de naissance"
-msgstr "شهادة الميلاد"
-
-msgid "Carte professionnelle"
-msgstr "البطاقة المهنية"
-
-msgid "Permis de conduire"
-msgstr "رخصة القيادة"
-
-msgid "Autre piece"
-msgstr "وثيقة أخرى"
-
-msgid "Bronze"
-msgstr "برونزي"
-
-msgid "Argent"
-msgstr "فضي"
-
-msgid "Or"
-msgstr "ذهبي"
-
-msgid "Compte de connexion lie a cette fiche client (app mobile)"
-msgstr "حساب الدخول المرتبط ببطاقة العميل (تطبيق الجوال)"
-
-msgid "Type de client"
-msgstr "نوع العميل"
-
-msgid "Type de piece"
-msgstr "نوع الوثيقة"
-
-msgid "Type de piece d'identite"
-msgstr "نوع وثيقة الهوية"
-
-msgid "Numero de piece"
-msgstr "رقم الوثيقة"
-
-msgid "Numero de la piece d'identite"
-msgstr "رقم وثيقة الهوية"
-
-msgid "Ville de residence"
-msgstr "مدينة الإقامة"
-
-msgid "Date d'inscription"
-msgstr "تاريخ التسجيل"
-
-msgid "Nombre de voyages"
-msgstr "عدد الرحلات"
-
-msgid "Nombre total de voyages effectues"
-msgstr "العدد الإجمالي للرحلات المنجزة"
-
-msgid "Points de fidelite"
-msgstr "نقاط الولاء"
-
-msgid "1 point par 100 FCFA depense"
-msgstr "نقطة واحدة لكل 100 فرنك"
-
-msgid "Niveau de fidelite"
-msgstr "مستوى الولاء"
-
-msgid "Code de parrainage"
-msgstr "رمز الإحالة"
-
-msgid "Code unique que ce client partage a ses amis"
-msgstr "رمز فريد يشاركه العميل مع أصدقائه"
-
-msgid "Parraine par"
-msgstr "أحاله"
-
-msgid "Client qui a parraine ce client"
-msgstr "العميل الذي أحال هذا العميل"
-
-msgid "Bonus parrainage attribue"
-msgstr "مكافأة الإحالة ممنوحة"
-
-msgid "Vrai si le bonus de parrainage a deja ete donne (au premier billet paye)"
-msgstr "صحيح إذا تم منح مكافأة الإحالة (عند أول تذكرة مدفوعة)"
-
-msgid "Client"
-msgstr "العميل"
-
-msgid "Clients"
-msgstr "العملاء"
-
-msgid "En attente de paiement"
-msgstr "في انتظار الدفع"
-
-msgid "Payee"
-msgstr "مدفوعة"
-
-msgid "Annulee"
-msgstr "ملغاة"
-
-msgid "Remboursee"
-msgstr "مستردة"
-
-msgid "Especes"
-msgstr "نقدا"
-
-msgid "Mobile Money"
-msgstr "موبايل موني"
-
-msgid "Virement bancaire"
-msgstr "تحويل بنكي"
-
-msgid "Carte bancaire"
-msgstr "بطاقة بنكية"
-
-msgid "Numero de reservation"
-msgstr "رقم الحجز"
-
-msgid "Agence ou la reservation a ete faite"
-msgstr "الوكالة التي تم فيها الحجز"
-
-msgid "Cree par"
-msgstr "أنشأه"
-
-msgid "Modifie par"
-msgstr "عدله"
-
-msgid "Embarque"
-msgstr "صعد"
-
-msgid "Coche automatiquement quand le billet est scanne au controle"
-msgstr "يتم تحديده تلقائيا عند مسح التذكرة في المراقبة"
-
-msgid "Date d'embarquement"
-msgstr "تاريخ الصعود"
-
-msgid "Scanne par"
-msgstr "مسحه"
-
-msgid "Points attribues"
-msgstr "النقاط ممنوحة"
-
-msgid "Vrai si les points de fidelite ont deja ete comptes pour cette reservation"
-msgstr "صحيح إذا تم احتساب نقاط الولاء لهذا الحجز"
-
-msgid "Nombre de places"
-msgstr "عدد المقاعد"
-
-msgid "Nom du voyageur"
-msgstr "اسم المسافر"
-
-msgid "Nom du voyageur de ce billet"
-msgstr "اسم المسافر لهذه التذكرة"
-
-msgid "Prenom du voyageur"
-msgstr "الاسم الأول للمسافر"
-
-msgid "Telephone du voyageur"
-msgstr "هاتف المسافر"
-
-msgid "Type de piece du voyageur"
-msgstr "نوع وثيقة المسافر"
-
-msgid "Numero de piece du voyageur"
-msgstr "رقم وثيقة المسافر"
-
-msgid "Siege"
-msgstr "المقعد"
-
-msgid "Sieges"
-msgstr "المقاعد"
-
-msgid "Siege physique reserve"
-msgstr "المقعد المحجوز"
-
-msgid "Arret de montee"
-msgstr "محطة الصعود"
-
-msgid "Arret ou le voyageur monte (si ligne multi-arrets)"
-msgstr "المحطة التي يصعد منها المسافر (للخطوط متعددة المحطات)"
-
-msgid "Arret de descente"
-msgstr "محطة النزول"
-
-msgid "Arret ou le voyageur descend (si ligne multi-arrets)"
-msgstr "المحطة التي ينزل فيها المسافر (للخطوط متعددة المحطات)"
-
-msgid "Montant total"
-msgstr "المبلغ الإجمالي"
-
-msgid "Calcule automatiquement"
-msgstr "يحسب تلقائيا"
-
-msgid "Mode de paiement"
-msgstr "طريقة الدفع"
-
-msgid "Date de reservation"
-msgstr "تاريخ الحجز"
-
-msgid "Date de paiement"
-msgstr "تاريخ الدفع"
-
-msgid "Reservation"
-msgstr "الحجز"
-
-msgid "Reservations"
-msgstr "الحجوزات"
-
-msgid "Enregistre"
-msgstr "مسجل"
-
-msgid "En transit"
-msgstr "في الطريق"
-
-msgid "Arrive a destination"
-msgstr "وصل إلى الوجهة"
-
-msgid "Livre"
-msgstr "مسلم"
-
-msgid "Retourne"
-msgstr "مرتجع"
-
-msgid "Code de suivi"
-msgstr "رمز التتبع"
-
-msgid "Nom de l'expediteur"
-msgstr "اسم المرسل"
-
-msgid "Telephone de l'expediteur"
-msgstr "هاتف المرسل"
-
-msgid "Nom du destinataire"
-msgstr "اسم المستلم"
-
-msgid "Telephone du destinataire"
-msgstr "هاتف المستلم"
-
-msgid "Agence de depart"
-msgstr "وكالة الانطلاق"
-
-msgid "Agence d'arrivee"
-msgstr "وكالة الوصول"
-
-msgid "Description"
-msgstr "الوصف"
-
-msgid "Contenu du colis"
-msgstr "محتوى الطرد"
-
-msgid "Poids (kg)"
-msgstr "الوزن (كغ)"
-
-msgid "Poids en kilogrammes"
-msgstr "الوزن بالكيلوغرامات"
-
-msgid "Prix en FCFA"
-msgstr "السعر بالفرنك"
-
-msgid "Voyage sur lequel le colis est transporte"
-msgstr "الرحلة التي ينقل عليها الطرد"
-
-msgid "Date d'enregistrement"
-msgstr "تاريخ التسجيل"
-
-msgid "Date de livraison"
-msgstr "تاريخ التسليم"
-
-msgid "Colis"
-msgstr "الطرود"
-
-msgid "PDG / Directeur general"
-msgstr "المدير العام"
-
-msgid "Responsable d'agence"
-msgstr "مسؤول الوكالة"
-
-msgid "Secretaire d'agence"
-msgstr "سكرتير الوكالة"
-
-msgid "Responsable planning"
-msgstr "مسؤول التخطيط"
-
-msgid "Guichetier / billettiste"
-msgstr "موظف شباك التذاكر"
-
-msgid "Caissier"
-msgstr "أمين الصندوق"
-
-msgid "Agent colis"
-msgstr "موظف الطرود"
-
-msgid "Agent transfert d'argent"
-msgstr "موظف تحويل الأموال"
-
-msgid "Manutentionnaire / bagagiste"
-msgstr "عامل الأمتعة"
-
-msgid "Comptable"
-msgstr "المحاسب"
-
-msgid "Responsable RH / recrutement"
-msgstr "مسؤول الموارد البشرية"
-
-msgid "Responsable maintenance"
-msgstr "مسؤول الصيانة"
-
-msgid "Agent de securite"
-msgstr "موظف الأمن"
-
-msgid "Autre"
-msgstr "آخر"
-
-msgid "Compte de connexion lie a cet employe"
-msgstr "حساب الدخول المرتبط بهذا الموظف"
-
-msgid "Laisser vide pour un PDG (toute la compagnie)"
-msgstr "اتركه فارغا للمدير العام (كل الشركة)"
-
-msgid "Zone geographique geree (uniquement pour Responsable planning)"
-msgstr "المنطقة الجغرافية المدارة (لمسؤول التخطيط فقط)"
-
-msgid "Poste"
-msgstr "المنصب"
-
-msgid "Numero de carte d'identite"
-msgstr "رقم بطاقة الهوية"
-
-msgid "Salaire"
-msgstr "الراتب"
-
-msgid "Salaire mensuel en FCFA"
-msgstr "الراتب الشهري بالفرنك"
-
-msgid "Employe"
-msgstr "الموظف"
-
-msgid "Employes"
-msgstr "الموظفون"
-
-msgid "En attente de retrait"
-msgstr "في انتظار السحب"
-
-msgid "Retire"
-msgstr "مسحوب"
-
-msgid "Rembourse"
-msgstr "مسترد"
-
-msgid "Code de transfert"
-msgstr "رمز التحويل"
-
-msgid "Nom du beneficiaire"
-msgstr "اسم المستفيد"
-
-msgid "Telephone du beneficiaire"
-msgstr "هاتف المستفيد"
-
-msgid "Agence de retrait"
-msgstr "وكالة السحب"
-
-msgid "Montant"
-msgstr "المبلغ"
-
-msgid "Montant envoye en FCFA"
-msgstr "المبلغ المرسل بالفرنك"
-
-msgid "Frais"
-msgstr "الرسوم"
-
-msgid "Frais de transfert en FCFA"
-msgstr "رسوم التحويل بالفرنك"
-
-msgid "Code de retrait"
-msgstr "رمز السحب"
-
-msgid "Code secret remis au beneficiaire"
-msgstr "الرمز السري المسلم للمستفيد"
-
-msgid "Date d'envoi"
-msgstr "تاريخ الإرسال"
-
-msgid "Date de retrait"
-msgstr "تاريخ السحب"
-
-msgid "Transfert d'argent"
-msgstr "تحويل الأموال"
-
-msgid "Transferts d'argent"
-msgstr "تحويلات الأموال"
-
-msgid "Vidange moteur"
-msgstr "تغيير زيت المحرك"
-
-msgid "Freins"
-msgstr "الفرامل"
-
-msgid "Pneus"
-msgstr "الإطارات"
-
-msgid "Revision generale"
-msgstr "مراجعة عامة"
-
-msgid "Vidange boite de vitesse"
-msgstr "تغيير زيت علبة السرعة"
-
-msgid "Courroie"
-msgstr "الحزام"
-
-msgid "Batterie"
-msgstr "البطارية"
-
-msgid "Climatisation"
-msgstr "التكييف"
-
-msgid "Carrosserie"
-msgstr "الهيكل"
-
-msgid "Type d'entretien"
-msgstr "نوع الصيانة"
-
-msgid "Date de l'entretien"
-msgstr "تاريخ الصيانة"
-
-msgid "Kilometrage du bus"
-msgstr "عدد كيلومترات الحافلة"
-
-msgid "Cout (FCFA)"
-msgstr "التكلفة (فرنك)"
-
-msgid "Details / pieces changees"
-msgstr "التفاصيل / القطع المغيرة"
-
-msgid "Prochaine echeance (km)"
-msgstr "الموعد القادم (كم)"
-
-msgid "Enregistre par"
-msgstr "سجله"
-
-msgid "Entretien"
-msgstr "الصيانة"
-
-msgid "Entretiens"
-msgstr "الصيانات"
-
-msgid "Date du plein"
-msgstr "تاريخ التعبئة"
-
-msgid "Litres"
-msgstr "اللترات"
-
-msgid "Montant (FCFA)"
-msgstr "المبلغ (فرنك)"
-
-msgid "Plein de carburant"
-msgstr "تعبئة الوقود"
-
-msgid "Pleins de carburant"
-msgstr "تعبئات الوقود"
-
-msgid "Numero"
-msgstr "الرقم"
-
-msgid "Numero du siege"
-msgstr "رقم المقعد"
-
-msgid "Reservation de voyage"
-msgstr "حجز رحلة"
-
-msgid "Envoi de colis"
-msgstr "إرسال طرد"
-
-msgid "Aucun"
-msgstr "لا شيء"
-
-msgid "Titre"
-msgstr "العنوان"
-
-msgid "Titre de la promotion"
-msgstr "عنوان العرض"
-
-msgid "Texte"
+#: .\env\Lib\site-packages\django\contrib\messages\apps.py:16
+#, fuzzy
+#| msgid "Message"
+msgid "Messages"
+msgstr "الرسالة"
+
+#: .\env\Lib\site-packages\django\contrib\sitemaps\apps.py:8
+msgid "Site Maps"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\contrib\staticfiles\apps.py:9
+msgid "Static Files"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\contrib\syndication\apps.py:7
+msgid "Syndication"
+msgstr ""
+
+#. Translators: String used to replace omitted page numbers in elided page
+#. range generated by paginators, e.g. [1, 2, '…', 5, 6, 7, '…', 9, 10].
+#: .\env\Lib\site-packages\django\core\paginator.py:33
+msgid "…"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\paginator.py:35
+msgid "That page number is not an integer"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\paginator.py:36
+msgid "That page number is less than 1"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\paginator.py:37
+msgid "That page contains no results"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:22
+msgid "Enter a valid value."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:70
+msgid "Enter a valid domain name."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:153
+#: .\env\Lib\site-packages\django\forms\fields.py:773
+msgid "Enter a valid URL."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:200
+msgid "Enter a valid integer."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:211
+msgid "Enter a valid email address."
+msgstr ""
+
+#. Translators: "letters" means latin letters: a-z and A-Z.
+#: .\env\Lib\site-packages\django\core\validators.py:289
+msgid ""
+"Enter a valid “slug” consisting of letters, numbers, underscores or hyphens."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:297
+msgid ""
+"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or"
+" hyphens."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:309
+#: .\env\Lib\site-packages\django\core\validators.py:318
+#: .\env\Lib\site-packages\django\core\validators.py:332
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2220
+#, python-format
+msgid "Enter a valid %(protocol)s address."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:311
+msgid "IPv4"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:320
+#: .\env\Lib\site-packages\django\utils\ipv6.py:43
+msgid "IPv6"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:334
+msgid "IPv4 or IPv6"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:375
+msgid "Enter only digits separated by commas."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:381
+#, python-format
+msgid "Ensure this value is %(limit_value)s (it is %(show_value)s)."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:416
+#, python-format
+msgid "Ensure this value is less than or equal to %(limit_value)s."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:425
+#, python-format
+msgid "Ensure this value is greater than or equal to %(limit_value)s."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:434
+#, python-format
+msgid "Ensure this value is a multiple of step size %(limit_value)s."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:441
+#, python-format
+msgid ""
+"Ensure this value is a multiple of step size %(limit_value)s, starting from "
+"%(offset)s, e.g. %(offset)s, %(valid_value1)s, %(valid_value2)s, and so on."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:473
+#, python-format
+msgid ""
+"Ensure this value has at least %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at least %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:491
+#, python-format
+msgid ""
+"Ensure this value has at most %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at most %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:514
+#: .\env\Lib\site-packages\django\forms\fields.py:364
+#: .\env\Lib\site-packages\django\forms\fields.py:403
+msgid "Enter a number."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:516
+#, python-format
+msgid "Ensure that there are no more than %(max)s digit in total."
+msgid_plural "Ensure that there are no more than %(max)s digits in total."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:521
+#, python-format
+msgid "Ensure that there are no more than %(max)s decimal place."
+msgid_plural "Ensure that there are no more than %(max)s decimal places."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:526
+#, python-format
+msgid ""
+"Ensure that there are no more than %(max)s digit before the decimal point."
+msgid_plural ""
+"Ensure that there are no more than %(max)s digits before the decimal point."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:597
+#, python-format
+msgid ""
+"File extension “%(extension)s” is not allowed. Allowed extensions are: "
+"%(allowed_extensions)s."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\core\validators.py:659
+msgid "Null characters are not allowed."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\base.py:1633
+#: .\env\Lib\site-packages\django\forms\models.py:932
+msgid "and"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\base.py:1635
+#, python-format
+msgid "%(model_name)s with this %(field_labels)s already exists."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\constraints.py:20
+#, python-format
+msgid "Constraint “%(name)s” is violated."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:134
+#, python-format
+msgid "Value %(value)r is not a valid choice."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:135
+msgid "This field cannot be null."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:136
+msgid "This field cannot be blank."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:137
+#, python-format
+msgid "%(model_name)s with this %(field_label)s already exists."
+msgstr ""
+
+#. Translators: The 'lookup_type' is one of 'date', 'year' or
+#. 'month'. Eg: "Title must be unique for pub_date year"
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:141
+#, python-format
+msgid ""
+"%(field_label)s must be unique for %(date_field_label)s %(lookup_type)s."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:180
+#, python-format
+msgid "Field of type: %(field_type)s"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1161
+#, python-format
+msgid "“%(value)s” value must be either True or False."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1162
+#, python-format
+msgid "“%(value)s” value must be either True, False, or None."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1164
+msgid "Boolean (Either True or False)"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1214
+#, python-format
+msgid "String (up to %(max_length)s)"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1216
+msgid "String (unlimited)"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1325
+msgid "Comma-separated integers"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1426
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid date format. It must be in YYYY-MM-DD "
+"format."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1430
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1565
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD) but it is an invalid "
+"date."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1434
+msgid "Date (without time)"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1561
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in YYYY-MM-DD "
+"HH:MM[:ss[.uuuuuu]][TZ] format."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1569
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD "
+"HH:MM[:ss[.uuuuuu]][TZ]) but it is an invalid date/time."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1574
+msgid "Date (with time)"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1701
+#, python-format
+msgid "“%(value)s” value must be a decimal number."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1703
+msgid "Decimal number"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1864
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in [DD] "
+"[[HH:]MM:]ss[.uuuuuu] format."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1868
+#, fuzzy
+#| msgid "Configuration"
+msgid "Duration"
+msgstr "الإعدادات"
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1920
+msgid "Email address"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:1945
+msgid "File path"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2023
+#, python-format
+msgid "“%(value)s” value must be a float."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2025
+msgid "Floating point number"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2065
+#, python-format
+msgid "“%(value)s” value must be an integer."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2067
+msgid "Integer"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2163
+msgid "Big (8 byte) integer"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2180
+msgid "Small integer"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2188
+msgid "IPv4 address"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2219
+msgid "IP address"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2310
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2311
+#, python-format
+msgid "“%(value)s” value must be either None, True or False."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2313
+msgid "Boolean (Either True, False or None)"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2364
+msgid "Positive big integer"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2379
+msgid "Positive integer"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2394
+msgid "Positive small integer"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2410
+#, python-format
+msgid "Slug (up to %(max_length)s)"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2446
+#, fuzzy
+#| msgid "Texte"
+msgid "Text"
 msgstr "النص"
 
-msgid "Description de la promotion"
-msgstr "وصف العرض"
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2526
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in HH:MM[:ss[.uuuuuu]] "
+"format."
+msgstr ""
 
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2530
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (HH:MM[:ss[.uuuuuu]]) but it is an "
+"invalid time."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2534
+msgid "Time"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2642
+msgid "URL"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2666
+msgid "Raw binary data"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2731
+#, python-format
+msgid "“%(value)s” is not a valid UUID."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\__init__.py:2733
+msgid "Universally unique identifier"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\files.py:244
+msgid "File"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\files.py:420
+#: .\transport\models.py:569
 msgid "Image"
 msgstr "الصورة"
 
+#: .\env\Lib\site-packages\django\db\models\fields\json.py:24
+msgid "A JSON object"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\json.py:26
+msgid "Value must be valid JSON."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\related.py:974
+#, python-format
+msgid "%(model)s instance with %(field)s %(value)r is not a valid choice."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\related.py:977
+msgid "Foreign Key (type determined by related field)"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\related.py:1271
+msgid "One-to-one relationship"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\related.py:1328
+#, python-format
+msgid "%(from)s-%(to)s relationship"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\related.py:1330
+#, python-format
+msgid "%(from)s-%(to)s relationships"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\db\models\fields\related.py:1378
+msgid "Many-to-many relationship"
+msgstr ""
+
+#. Translators: If found as last label character, these punctuation
+#. characters will prevent the default label_suffix to be appended to
+#. the label
+#: .\env\Lib\site-packages\django\forms\boundfield.py:188
+msgid ":?.!"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:91
+msgid "This field is required."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:313
+msgid "Enter a whole number."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:484
+#: .\env\Lib\site-packages\django\forms\fields.py:1241
+#, fuzzy
+#| msgid "En attente de validation"
+msgid "Enter a valid date."
+msgstr "في انتظار التأكيد"
+
+#: .\env\Lib\site-packages\django\forms\fields.py:507
+#: .\env\Lib\site-packages\django\forms\fields.py:1242
+#, fuzzy
+#| msgid "En attente de validation"
+msgid "Enter a valid time."
+msgstr "في انتظار التأكيد"
+
+#: .\env\Lib\site-packages\django\forms\fields.py:534
+msgid "Enter a valid date/time."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:568
+#, fuzzy
+#| msgid "En attente de validation"
+msgid "Enter a valid duration."
+msgstr "في انتظار التأكيد"
+
+#: .\env\Lib\site-packages\django\forms\fields.py:569
+#, python-brace-format
+msgid "The number of days must be between {min_days} and {max_days}."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:638
+msgid "No file was submitted. Check the encoding type on the form."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:639
+msgid "No file was submitted."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:640
+msgid "The submitted file is empty."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:642
+#, python-format
+msgid ""
+"Ensure this filename has at most %(max)d character (it has %(length)d)."
+msgid_plural ""
+"Ensure this filename has at most %(max)d characters (it has %(length)d)."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:647
+msgid "Please either submit a file or check the clear checkbox, not both."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:715
+msgid ""
+"Upload a valid image. The file you uploaded was either not an image or a "
+"corrupted image."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:862
+#: .\env\Lib\site-packages\django\forms\fields.py:949
+#: .\env\Lib\site-packages\django\forms\models.py:1621
+#, python-format
+msgid "Select a valid choice. %(value)s is not one of the available choices."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:951
+#: .\env\Lib\site-packages\django\forms\fields.py:1070
+#: .\env\Lib\site-packages\django\forms\models.py:1619
+msgid "Enter a list of values."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:1071
+msgid "Enter a complete value."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:1313
+msgid "Enter a valid UUID."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\fields.py:1343
+msgid "Enter a valid JSON."
+msgstr ""
+
+#. Translators: This is the default suffix added to form field labels
+#: .\env\Lib\site-packages\django\forms\forms.py:97
+msgid ":"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\forms.py:239
+#, python-format
+msgid "(Hidden field %(name)s) %(error)s"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\formsets.py:61
+#, python-format
+msgid ""
+"ManagementForm data is missing or has been tampered with. Missing fields: "
+"%(field_names)s. You may need to file a bug report if the issue persists."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\formsets.py:65
+#, python-format
+msgid "Please submit at most %(num)d form."
+msgid_plural "Please submit at most %(num)d forms."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: .\env\Lib\site-packages\django\forms\formsets.py:70
+#, python-format
+msgid "Please submit at least %(num)d form."
+msgid_plural "Please submit at least %(num)d forms."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: .\env\Lib\site-packages\django\forms\formsets.py:484
+#: .\env\Lib\site-packages\django\forms\formsets.py:491
+msgid "Order"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\formsets.py:499
+msgid "Delete"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\models.py:925
+#, python-format
+msgid "Please correct the duplicate data for %(field)s."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\models.py:930
+#, python-format
+msgid "Please correct the duplicate data for %(field)s, which must be unique."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\models.py:937
+#, python-format
+msgid ""
+"Please correct the duplicate data for %(field_name)s which must be unique "
+"for the %(lookup)s in %(date_field)s."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\models.py:946
+msgid "Please correct the duplicate values below."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\models.py:1383
+msgid "The inline value did not match the parent instance."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\models.py:1474
+msgid ""
+"Select a valid choice. That choice is not one of the available choices."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\models.py:1623
+#, python-format
+msgid "“%(pk)s” is not a valid value."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\utils.py:229
+#, python-format
+msgid ""
+"%(datetime)s couldn’t be interpreted in time zone %(current_timezone)s; it "
+"may be ambiguous or it may not exist."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\widgets.py:528
+msgid "Clear"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\widgets.py:529
+msgid "Currently"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\widgets.py:530
+msgid "Change"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\widgets.py:869
+msgid "Unknown"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\widgets.py:870
+msgid "Yes"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\forms\widgets.py:871
+#, fuzzy
+#| msgid "Nom"
+msgid "No"
+msgstr "الاسم"
+
+#: .\env\Lib\site-packages\django\tasks\base.py:34
+msgctxt "Task"
+msgid "Ready"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\tasks\base.py:36
+msgctxt "Task"
+msgid "Running"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\tasks\base.py:38
+msgctxt "Task"
+msgid "Failed"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\tasks\base.py:40
+msgctxt "Task"
+msgid "Successful"
+msgstr ""
+
+#. Translators: Please do not add spaces around commas.
+#: .\env\Lib\site-packages\django\template\defaultfilters.py:878
+msgid "yes,no,maybe"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\template\defaultfilters.py:908
+#: .\env\Lib\site-packages\django\template\defaultfilters.py:925
+#, python-format
+msgid "%(size)d byte"
+msgid_plural "%(size)d bytes"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: .\env\Lib\site-packages\django\template\defaultfilters.py:927
+#, python-format
+msgid "%s KB"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\template\defaultfilters.py:929
+#, python-format
+msgid "%s MB"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\template\defaultfilters.py:931
+#, python-format
+msgid "%s GB"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\template\defaultfilters.py:933
+#, python-format
+msgid "%s TB"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\template\defaultfilters.py:935
+#, python-format
+msgid "%s PB"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dateformat.py:74
+msgid "p.m."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dateformat.py:75
+msgid "a.m."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dateformat.py:80
+msgid "PM"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dateformat.py:81
+msgid "AM"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dateformat.py:153
+msgid "midnight"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dateformat.py:155
+msgid "noon"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:7
+msgid "Monday"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:8
+msgid "Tuesday"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:9
+msgid "Wednesday"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:10
+msgid "Thursday"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:11
+msgid "Friday"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:12
+msgid "Saturday"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:13
+msgid "Sunday"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:16
+#, fuzzy
+#| msgid "Montant"
+msgid "Mon"
+msgstr "المبلغ"
+
+#: .\env\Lib\site-packages\django\utils\dates.py:17
+msgid "Tue"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:18
+msgid "Wed"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:19
+msgid "Thu"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:20
+#, fuzzy
+#| msgid "Frais"
+msgid "Fri"
+msgstr "الرسوم"
+
+#: .\env\Lib\site-packages\django\utils\dates.py:21
+#, fuzzy
+#| msgid "Statut"
+msgid "Sat"
+msgstr "الحالة"
+
+#: .\env\Lib\site-packages\django\utils\dates.py:22
+#, fuzzy
+#| msgid "Sud"
+msgid "Sun"
+msgstr "الجنوب"
+
+#: .\env\Lib\site-packages\django\utils\dates.py:25
+msgid "January"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:26
+msgid "February"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:27
+msgid "March"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:28
+msgid "April"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:29
+msgid "May"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:30
+msgid "June"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:31
+msgid "July"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:32
+msgid "August"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:33
+msgid "September"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:34
+msgid "October"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:35
+msgid "November"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:36
+msgid "December"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:39
+msgid "jan"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:40
+msgid "feb"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:41
+msgid "mar"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:42
+msgid "apr"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:43
+msgid "may"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:44
+msgid "jun"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:45
+msgid "jul"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:46
+msgid "aug"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:47
+msgid "sep"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:48
+msgid "oct"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:49
+msgid "nov"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:50
+msgid "dec"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:53
+msgctxt "abbrev. month"
+msgid "Jan."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:54
+msgctxt "abbrev. month"
+msgid "Feb."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:55
+msgctxt "abbrev. month"
+msgid "March"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:56
+msgctxt "abbrev. month"
+msgid "April"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:57
+msgctxt "abbrev. month"
+msgid "May"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:58
+msgctxt "abbrev. month"
+msgid "June"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:59
+msgctxt "abbrev. month"
+msgid "July"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:60
+msgctxt "abbrev. month"
+msgid "Aug."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:61
+msgctxt "abbrev. month"
+msgid "Sept."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:62
+msgctxt "abbrev. month"
+msgid "Oct."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:63
+msgctxt "abbrev. month"
+msgid "Nov."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:64
+msgctxt "abbrev. month"
+msgid "Dec."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:67
+msgctxt "alt. month"
+msgid "January"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:68
+msgctxt "alt. month"
+msgid "February"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:69
+msgctxt "alt. month"
+msgid "March"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:70
+msgctxt "alt. month"
+msgid "April"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:71
+msgctxt "alt. month"
+msgid "May"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:72
+msgctxt "alt. month"
+msgid "June"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:73
+msgctxt "alt. month"
+msgid "July"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:74
+msgctxt "alt. month"
+msgid "August"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:75
+msgctxt "alt. month"
+msgid "September"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:76
+msgctxt "alt. month"
+msgid "October"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:77
+msgctxt "alt. month"
+msgid "November"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\dates.py:78
+msgctxt "alt. month"
+msgid "December"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\ipv6.py:20
+msgid "This is not a valid IPv6 address."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\text.py:76
+#, python-format
+msgctxt "String to return when truncating text"
+msgid "%(truncated_text)s…"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\text.py:282
+#, fuzzy
+#| msgid "Nord"
+msgid "or"
+msgstr "الشمال"
+
+#. Translators: This string is used as a separator between list elements
+#: .\env\Lib\site-packages\django\utils\text.py:301
+#: .\env\Lib\site-packages\django\utils\timesince.py:135
+msgid ", "
+msgstr ""
+
+#: .\env\Lib\site-packages\django\utils\timesince.py:8
+#, python-format
+msgid "%(num)d year"
+msgid_plural "%(num)d years"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: .\env\Lib\site-packages\django\utils\timesince.py:9
+#, python-format
+msgid "%(num)d month"
+msgid_plural "%(num)d months"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: .\env\Lib\site-packages\django\utils\timesince.py:10
+#, python-format
+msgid "%(num)d week"
+msgid_plural "%(num)d weeks"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: .\env\Lib\site-packages\django\utils\timesince.py:11
+#, python-format
+msgid "%(num)d day"
+msgid_plural "%(num)d days"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: .\env\Lib\site-packages\django\utils\timesince.py:12
+#, python-format
+msgid "%(num)d hour"
+msgid_plural "%(num)d hours"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: .\env\Lib\site-packages\django\utils\timesince.py:13
+#, python-format
+msgid "%(num)d minute"
+msgid_plural "%(num)d minutes"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: .\env\Lib\site-packages\django\views\csrf.py:29
+msgid "Forbidden"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\csrf.py:30
+msgid "CSRF verification failed. Request aborted."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\csrf.py:34
+msgid ""
+"You are seeing this message because this HTTPS site requires a “Referer "
+"header” to be sent by your web browser, but none was sent. This header is "
+"required for security reasons, to ensure that your browser is not being "
+"hijacked by third parties."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\csrf.py:40
+msgid ""
+"If you have configured your browser to disable “Referer” headers, please re-"
+"enable them, at least for this site, or for HTTPS connections, or for “same-"
+"origin” requests."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\csrf.py:45
+msgid ""
+"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or"
+" including the “Referrer-Policy: no-referrer” header, please remove them. "
+"The CSRF protection requires the “Referer” header to do strict referer "
+"checking. If you’re concerned about privacy, use alternatives like <a "
+"rel=\"noreferrer\" …> for links to third-party sites."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\csrf.py:54
+msgid ""
+"You are seeing this message because this site requires a CSRF cookie when "
+"submitting forms. This cookie is required for security reasons, to ensure "
+"that your browser is not being hijacked by third parties."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\csrf.py:60
+msgid ""
+"If you have configured your browser to disable cookies, please re-enable "
+"them, at least for this site, or for “same-origin” requests."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\csrf.py:66
+msgid "More information is available with DEBUG=True."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\generic\dates.py:44
+msgid "No year specified"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\generic\dates.py:64
+#: .\env\Lib\site-packages\django\views\generic\dates.py:115
+#: .\env\Lib\site-packages\django\views\generic\dates.py:214
+#, fuzzy
+#| msgid "Date assurance"
+msgid "Date out of range"
+msgstr "تاريخ التأمين"
+
+#: .\env\Lib\site-packages\django\views\generic\dates.py:94
+msgid "No month specified"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\generic\dates.py:147
+msgid "No day specified"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\generic\dates.py:194
+msgid "No week specified"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\generic\dates.py:353
+#: .\env\Lib\site-packages\django\views\generic\dates.py:384
+#, python-format
+msgid "No %(verbose_name_plural)s available"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\generic\dates.py:680
+#, python-format
+msgid ""
+"Future %(verbose_name_plural)s not available because "
+"%(class_name)s.allow_future is False."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\generic\dates.py:720
+#, python-format
+msgid "Invalid date string “%(datestr)s” given format “%(format)s”"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\generic\detail.py:56
+#, python-format
+msgid "No %(verbose_name)s found matching the query"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\generic\list.py:70
+msgid "Page is not “last”, nor can it be converted to an int."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\generic\list.py:77
+#, python-format
+msgid "Invalid page (%(page_number)s): %(message)s"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\generic\list.py:173
+#, python-format
+msgid "Empty list and “%(class_name)s.allow_empty” is False."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\static.py:49
+msgid "Directory indexes are not allowed here."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\static.py:51
+#, python-format
+msgid "“%(path)s” does not exist"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\static.py:68
+#: .\env\Lib\site-packages\django\views\templates\directory_index.html:8
+#: .\env\Lib\site-packages\django\views\templates\directory_index.html:11
+#, python-format
+msgid "Index of %(directory)s"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:7
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:204
+msgid "The install worked successfully! Congratulations!"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:206
+#, python-format
+msgid ""
+"View <a href=\"https://docs.djangoproject.com/en/%(version)s/releases/\" "
+"target=\"_blank\" rel=\"noopener\">release notes</a> for Django %(version)s"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:208
+#, python-format
+msgid ""
+"You are seeing this page because <a "
+"href=\"https://docs.djangoproject.com/en/%(version)s/ref/settings/#debug\" "
+"target=\"_blank\" rel=\"noopener\">DEBUG=True</a> is in your settings file "
+"and you have not configured any URLs."
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:217
+msgid "Django Documentation"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:218
+msgid "Topics, references, &amp; how-to’s"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:226
+msgid "Tutorial: A Polling App"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:227
+msgid "Get started with Django"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:235
+msgid "Django Community"
+msgstr ""
+
+#: .\env\Lib\site-packages\django\views\templates\default_urlconf.html:236
+msgid "Connect, get help, or contribute"
+msgstr ""
+
+#: .\transport\admin.py:167
+#, fuzzy
+#| msgid "Places disponibles"
+msgid "Places dispo (reel)"
+msgstr "الأماكن المتاحة (فعلي)"
+
+#: .\transport\admin.py:178
+msgid "Nom d'utilisateur app (optionnel)"
+msgstr "اسم المستخدم للتطبيق (اختياري)"
+
+#: .\transport\admin.py:179
+msgid ""
+"A remplir uniquement si ce client doit avoir un acces a l'application "
+"mobile. Laisser vide pour un client comptoir classique (aucun compte cree)."
+msgstr ""
+"يُملأ فقط إذا كان هذا العميل بحاجة إلى الوصول إلى التطبيق. اتركه فارغًا "
+"لعميل الشباك العادي (لن يُنشأ أي حساب)."
+
+#: .\transport\admin.py:183 .\transport\admin.py:347
+#, fuzzy
+#| msgid "Modifier le mot de passe"
+msgid "Mot de passe"
+msgstr "تغيير كلمة المرور"
+
+#: .\transport\admin.py:184
+msgid "Requis uniquement si un nom d'utilisateur est renseigne ci-dessus."
+msgstr "مطلوب فقط إذا تم إدخال اسم مستخدم أعلاه."
+
+#: .\transport\admin.py:196
+msgid "Ce nom d'utilisateur est deja pris."
+msgstr "اسم المستخدم هذا مستخدم بالفعل."
+
+#: .\transport\admin.py:198
+msgid "Mot de passe requis pour creer le compte."
+msgstr "كلمة المرور مطلوبة لإنشاء الحساب."
+
+#: .\transport\admin.py:274
+msgid "Origine"
+msgstr "المصدر"
+
+#: .\transport\admin.py:284
+msgid "App mobile"
+msgstr "تطبيق الجوال"
+
+#: .\transport\admin.py:342
+#, fuzzy
+#| msgid "Compte de connexion"
+msgid "Nom d'utilisateur (connexion)"
+msgstr "اسم المستخدم (تسجيل الدخول)"
+
+#: .\transport\admin.py:343
+msgid ""
+"Laisser vide pour utiliser le telephone comme identifiant. En modification, "
+"laisser vide pour ne pas toucher au compte existant."
+msgstr ""
+"اتركه فارغًا لاستخدام رقم الهاتف كمعرف. عند التعديل، اتركه فارغًا لعدم تغيير"
+" الحساب الحالي."
+
+#: .\transport\admin.py:348
+msgid ""
+"Laisser vide : a la creation, un mot de passe temporaire sera genere et "
+"affiche."
+msgstr "اتركه فارغًا: عند الإنشاء، سيتم توليد كلمة مرور مؤقتة وعرضها."
+
+#: .\transport\admin.py:363
+msgid "Un seul compte PDG est autorise dans le logiciel. Un PDG existe deja."
+msgstr "لا يُسمح إلا بحساب مدير عام واحد في النظام. يوجد مدير عام بالفعل."
+
+#: .\transport\admin.py:374
+msgid "Ce nom d'utilisateur est deja pris par un autre compte."
+msgstr "اسم المستخدم هذا مستخدم بالفعل من قبل حساب آخر."
+
+#: .\transport\admin.py:380
+msgid "Renseignez un telephone ou un nom d'utilisateur pour creer le compte."
+msgstr "أدخل رقم هاتف أو اسم مستخدم لإنشاء الحساب."
+
+#: .\transport\admin.py:384
+msgid ""
+"Cet identifiant (nom d'utilisateur ou telephone) est deja pris. Renseignez "
+"un nom d'utilisateur different."
+msgstr ""
+"هذا المعرف (اسم المستخدم أو الهاتف) مستخدم بالفعل. أدخل اسم مستخدم مختلف."
+
+#: .\transport\admin.py:464
+#, python-format
+msgid ""
+"Compte cree : identifiant \"%(identifiant)s\" / mot de passe temporaire "
+"\"%(motdepasse)s\". Communiquez-le a l'employe puis demandez-lui de le "
+"changer."
+msgstr ""
+"تم إنشاء الحساب: المعرف \"%(identifiant)s\" / كلمة المرور المؤقتة "
+"\"%(motdepasse)s\". أرسلها إلى الموظف واطلب منه تغييرها."
+
+#: .\transport\admin.py:492
+#, python-format
+msgid ""
+"Compte cree : identifiant \"%(identifiant)s\" / mot de passe temporaire "
+"\"%(motdepasse)s\"."
+msgstr ""
+"تم إنشاء الحساب: المعرف \"%(identifiant)s\" / كلمة المرور المؤقتة "
+"\"%(motdepasse)s\"."
+
+#: .\transport\models.py:6 .\transport\models.py:30 .\transport\models.py:85
+#: .\transport\models.py:191 .\transport\models.py:403
+#: .\transport\models.py:666
+msgid "Nom"
+msgstr "الاسم"
+
+#: .\transport\models.py:7
+msgid "Sigle"
+msgstr "الاختصار"
+
+#: .\transport\models.py:8
+msgid "Siege social"
+msgstr "المقر الرئيسي"
+
+#: .\transport\models.py:9 .\transport\models.py:33 .\transport\models.py:87
+#: .\transport\models.py:193 .\transport\models.py:405
+msgid "Telephone"
+msgstr "الهاتف"
+
+#: .\transport\models.py:10 .\transport\models.py:194
+msgid "Email"
+msgstr "البريد الإلكتروني"
+
+#: .\transport\models.py:11 .\transport\models.py:143
+#: .\transport\models.py:498 .\transport\models.py:517
+#: .\transport\models.py:573 .\transport\models.py:668
+#: .\transport\models.py:727 .\transport\models.py:755
+#: .\transport\models.py:772
+msgid "Date de creation"
+msgstr "تاريخ الإنشاء"
+
+#: .\transport\models.py:12 .\transport\models.py:37 .\transport\models.py:94
+#: .\transport\models.py:112 .\transport\models.py:206
+#: .\transport\models.py:410 .\transport\models.py:572
+#: .\transport\models.py:667 .\transport\models.py:771
+msgid "Actif"
+msgstr "نشط"
+
+#: .\transport\models.py:18 .\transport\models.py:28 .\transport\models.py:54
+#: .\transport\models.py:83 .\transport\models.py:106
+#: .\transport\models.py:338 .\transport\models.py:400
+#: .\transport\models.py:430 .\transport\models.py:665
+msgid "Compagnie"
+msgstr "الشركة"
+
+#: .\transport\models.py:19
+msgid "Compagnies"
+msgstr "الشركات"
+
+#: .\transport\models.py:24
+msgid "Nord"
+msgstr "الشمال"
+
+#: .\transport\models.py:25
+msgid "Sud"
+msgstr "الجنوب"
+
+#: .\transport\models.py:29 .\transport\models.py:402
+msgid "Zone"
+msgstr "المنطقة"
+
+#: .\transport\models.py:29
+msgid "Zone geographique (pour le planning)"
+msgstr "المنطقة الجغرافية (للتخطيط)"
+
+#: .\transport\models.py:31
+msgid "Ville"
+msgstr "المدينة"
+
+#: .\transport\models.py:32
+msgid "Adresse"
+msgstr "العنوان"
+
+#: .\transport\models.py:34 .\transport\models.py:702
+#: .\transport\models.py:725
+msgid "Latitude"
+msgstr "خط العرض"
+
+#: .\transport\models.py:35 .\transport\models.py:703
+#: .\transport\models.py:726
+msgid "Longitude"
+msgstr "خط الطول"
+
+#: .\transport\models.py:36
+msgid "Responsable"
+msgstr "المسؤول"
+
+#: .\transport\models.py:43 .\transport\models.py:55 .\transport\models.py:84
+#: .\transport\models.py:253 .\transport\models.py:401
+#: .\transport\models.py:684
+msgid "Agence"
+msgstr "الوكالة"
+
+#: .\transport\models.py:44
+msgid "Agences"
+msgstr "الوكالات"
+
+#: .\transport\models.py:49
+msgid "En service"
+msgstr "في الخدمة"
+
+#: .\transport\models.py:50
+msgid "En maintenance"
+msgstr "قيد الصيانة"
+
+#: .\transport\models.py:51
+msgid "Hors service"
+msgstr "خارج الخدمة"
+
+#: .\transport\models.py:55
+msgid "Agence de rattachement du bus"
+msgstr "وكالة انتماء الحافلة"
+
+#: .\transport\models.py:56
+msgid "Immatriculation"
+msgstr "رقم التسجيل"
+
+#: .\transport\models.py:57
+msgid "Marque"
+msgstr "الماركة"
+
+#: .\transport\models.py:58
+msgid "Modele"
+msgstr "الطراز"
+
+#: .\transport\models.py:59
+msgid "Capacite"
+msgstr "السعة"
+
+#: .\transport\models.py:60 .\transport\models.py:515
+msgid "Kilometrage"
+msgstr "عدد الكيلومترات"
+
+#: .\transport\models.py:61
+msgid "Annee"
+msgstr "السنة"
+
+#: .\transport\models.py:62 .\transport\models.py:92 .\transport\models.py:141
+#: .\transport\models.py:273 .\transport\models.py:356
+#: .\transport\models.py:446 .\transport\models.py:604
+#: .\transport\models.py:642
+msgid "Statut"
+msgstr "الحالة"
+
+#: .\transport\models.py:63
+msgid "Date visite technique"
+msgstr "تاريخ الفحص الفني"
+
+#: .\transport\models.py:64
+msgid "Date assurance"
+msgstr "تاريخ التأمين"
+
+#: .\transport\models.py:70 .\transport\models.py:71 .\transport\models.py:134
+#: .\transport\models.py:490 .\transport\models.py:510
+msgid "Bus"
+msgstr "الحافلة"
+
+#: .\transport\models.py:76
+msgid "Disponible"
+msgstr "متاح"
+
+#: .\transport\models.py:77
+msgid "En mission"
+msgstr "في مهمة"
+
+#: .\transport\models.py:78
+msgid "En repos"
+msgstr "في راحة"
+
+#: .\transport\models.py:79
+msgid "Inactif"
+msgstr "غير نشط"
+
+#: .\transport\models.py:82 .\transport\models.py:190
+#: .\transport\models.py:399
+msgid "Compte de connexion"
+msgstr "حساب الدخول"
+
+#: .\transport\models.py:82
+msgid "Compte de connexion de ce chauffeur (cree par le PDG)"
+msgstr "حساب دخول هذا السائق (أنشأه المدير العام)"
+
+#: .\transport\models.py:84
+msgid "Agence de rattachement du chauffeur"
+msgstr "وكالة انتماء السائق"
+
+#: .\transport\models.py:86 .\transport\models.py:192
+#: .\transport\models.py:404
+msgid "Prenom"
+msgstr "الاسم الأول"
+
+#: .\transport\models.py:88
+msgid "Numero de permis"
+msgstr "رقم رخصة القيادة"
+
+#: .\transport\models.py:89
+msgid "Date d'expiration du permis"
+msgstr "تاريخ انتهاء الرخصة"
+
+#: .\transport\models.py:90 .\transport\models.py:408
+msgid "Date d'embauche"
+msgstr "تاريخ التوظيف"
+
+#: .\transport\models.py:91
+msgid "Annees d'experience"
+msgstr "سنوات الخبرة"
+
+#: .\transport\models.py:93
+msgid "Photo"
+msgstr "الصورة"
+
+#: .\transport\models.py:100 .\transport\models.py:135
+#: .\transport\models.py:701 .\transport\models.py:743
+msgid "Chauffeur"
+msgstr "السائق"
+
+#: .\transport\models.py:101
+msgid "Chauffeurs"
+msgstr "السائقون"
+
+#: .\transport\models.py:107
+msgid "Ville de depart"
+msgstr "مدينة الانطلاق"
+
+#: .\transport\models.py:108
+msgid "Ville d'arrivee"
+msgstr "مدينة الوصول"
+
+#: .\transport\models.py:109
+msgid "Distance (km)"
+msgstr "المسافة (كم)"
+
+#: .\transport\models.py:109
+msgid "Distance en kilometres"
+msgstr "المسافة بالكيلومترات"
+
+#: .\transport\models.py:110
+msgid "Duree estimee (heures)"
+msgstr "المدة المقدرة (ساعات)"
+
+#: .\transport\models.py:110
+msgid "Duree estimee en heures"
+msgstr "المدة المقدرة بالساعات"
+
+#: .\transport\models.py:111
+msgid "Prix de base"
+msgstr "السعر الأساسي"
+
+#: .\transport\models.py:111 .\transport\models.py:139
+msgid "Prix du billet en FCFA"
+msgstr "سعر التذكرة بالفرنك"
+
+#: .\transport\models.py:118 .\transport\models.py:132
+msgid "Trajet"
+msgstr "المسار"
+
+#: .\transport\models.py:119
+msgid "Trajets"
+msgstr "المسارات"
+
+#: .\transport\models.py:126
+msgid "Programme"
+msgstr "مبرمج"
+
+#: .\transport\models.py:127
+msgid "En cours"
+msgstr "جارية"
+
+#: .\transport\models.py:128
+msgid "Termine"
+msgstr "منتهية"
+
+#: .\transport\models.py:129 .\transport\models.py:425
+msgid "Annule"
+msgstr "ملغاة"
+
+#: .\transport\models.py:133 .\transport\models.py:677
+#: .\transport\models.py:683
+msgid "Ligne"
+msgstr "الخط"
+
+#: .\transport\models.py:133
+msgid "Ligne desservie (si le voyage dessert plusieurs villes)"
+msgstr "الخط المخدوم (إذا كانت الرحلة تخدم عدة مدن)"
+
+#: .\transport\models.py:136
+msgid "Date de depart"
+msgstr "تاريخ الانطلاق"
+
+#: .\transport\models.py:137
+msgid "Heure de depart"
+msgstr "ساعة الانطلاق"
+
+#: .\transport\models.py:138
+msgid "Heure d'arrivee prevue"
+msgstr "ساعة الوصول المتوقعة"
+
+#: .\transport\models.py:139 .\transport\models.py:352
+#: .\transport\models.py:603
+msgid "Prix"
+msgstr "السعر"
+
+#: .\transport\models.py:140
+msgid "Places disponibles"
+msgstr "المقاعد المتاحة"
+
+#: .\transport\models.py:142 .\transport\models.py:277
+#: .\transport\models.py:359 .\transport\models.py:449
+#: .\transport\models.py:607 .\transport\models.py:645
+msgid "Notes"
+msgstr "ملاحظات"
+
+#: .\transport\models.py:157 .\transport\models.py:252
+#: .\transport\models.py:354 .\transport\models.py:511
+#: .\transport\models.py:529 .\transport\models.py:700
+#: .\transport\models.py:722 .\transport\models.py:744
+msgid "Voyage"
+msgstr "الرحلة"
+
+#: .\transport\models.py:158
+msgid "Voyages"
+msgstr "الرحلات"
+
+#: .\transport\models.py:171
+msgid "Particulier"
+msgstr "فرد"
+
+#: .\transport\models.py:172
+msgid "Entreprise"
+msgstr "شركة"
+
+#: .\transport\models.py:176
+msgid "Carte nationale d'identite"
+msgstr "بطاقة الهوية الوطنية"
+
+#: .\transport\models.py:177
+msgid "Passeport"
+msgstr "جواز السفر"
+
+#: .\transport\models.py:178
+msgid "Acte de naissance"
+msgstr "شهادة الميلاد"
+
+#: .\transport\models.py:179
+msgid "Carte professionnelle"
+msgstr "البطاقة المهنية"
+
+#: .\transport\models.py:180
+msgid "Permis de conduire"
+msgstr "رخصة القيادة"
+
+#: .\transport\models.py:181
+msgid "Autre piece"
+msgstr "وثيقة أخرى"
+
+#: .\transport\models.py:185
+msgid "Bronze"
+msgstr "برونزي"
+
+#: .\transport\models.py:186
+msgid "Argent"
+msgstr "فضي"
+
+#: .\transport\models.py:187
+msgid "Or"
+msgstr "ذهبي"
+
+#: .\transport\models.py:190
+msgid "Compte de connexion lie a cette fiche client (app mobile)"
+msgstr "حساب الدخول المرتبط ببطاقة العميل (تطبيق الجوال)"
+
+#: .\transport\models.py:195
+msgid "Type de client"
+msgstr "نوع العميل"
+
+#: .\transport\models.py:196
+msgid "Type de piece"
+msgstr "نوع الوثيقة"
+
+#: .\transport\models.py:196
+msgid "Type de piece d'identite"
+msgstr "نوع وثيقة الهوية"
+
+#: .\transport\models.py:197 .\transport\models.py:407
+msgid "Numero de piece"
+msgstr "رقم الوثيقة"
+
+#: .\transport\models.py:197
+msgid "Numero de la piece d'identite"
+msgstr "رقم وثيقة الهوية"
+
+#: .\transport\models.py:198
+msgid "Ville de residence"
+msgstr "مدينة الإقامة"
+
+#: .\transport\models.py:199
+msgid "Date d'inscription"
+msgstr "تاريخ التسجيل"
+
+#: .\transport\models.py:200
+msgid "Nombre de voyages"
+msgstr "عدد الرحلات"
+
+#: .\transport\models.py:200
+msgid "Nombre total de voyages effectues"
+msgstr "العدد الإجمالي للرحلات المنجزة"
+
+#: .\transport\models.py:201
+msgid "Points de fidelite"
+msgstr "نقاط الولاء"
+
+#: .\transport\models.py:201
+msgid "1 point par 100 FCFA depense"
+msgstr "نقطة واحدة لكل 100 فرنك"
+
+#: .\transport\models.py:202
+msgid "Niveau de fidelite"
+msgstr "مستوى الولاء"
+
+#: .\transport\models.py:203
+msgid "Code de parrainage"
+msgstr "رمز الإحالة"
+
+#: .\transport\models.py:203
+msgid "Code unique que ce client partage a ses amis"
+msgstr "رمز فريد يشاركه العميل مع أصدقائه"
+
+#: .\transport\models.py:204
+msgid "Parraine par"
+msgstr "أحاله"
+
+#: .\transport\models.py:204
+msgid "Client qui a parraine ce client"
+msgstr "العميل الذي أحال هذا العميل"
+
+#: .\transport\models.py:205
+msgid "Bonus parrainage attribue"
+msgstr "مكافأة الإحالة ممنوحة"
+
+#: .\transport\models.py:205
+msgid ""
+"Vrai si le bonus de parrainage a deja ete donne (au premier billet paye)"
+msgstr "صحيح إذا تم منح مكافأة الإحالة (عند أول تذكرة مدفوعة)"
+
+#: .\transport\models.py:230 .\transport\models.py:251
+#: .\transport\models.py:592 .\transport\models.py:633
+#: .\transport\models.py:742
+msgid "Client"
+msgstr "العميل"
+
+#: .\transport\models.py:231
+msgid "Clients"
+msgstr "العملاء"
+
+#: .\transport\models.py:237
+msgid "En attente de paiement"
+msgstr "في انتظار الدفع"
+
+#: .\transport\models.py:238
+msgid "Payee"
+msgstr "مدفوعة"
+
+#: .\transport\models.py:239 .\transport\models.py:589
+#: .\transport\models.py:630
+msgid "Annulee"
+msgstr "ملغاة"
+
+#: .\transport\models.py:240
+msgid "Remboursee"
+msgstr "مستردة"
+
+#: .\transport\models.py:244
+msgid "Especes"
+msgstr "نقدا"
+
+#: .\transport\models.py:245
+msgid "Mobile Money"
+msgstr "موبايل موني"
+
+#: .\transport\models.py:246
+msgid "Virement bancaire"
+msgstr "تحويل بنكي"
+
+#: .\transport\models.py:247
+msgid "Carte bancaire"
+msgstr "بطاقة بنكية"
+
+#: .\transport\models.py:250
+msgid "Numero de reservation"
+msgstr "رقم الحجز"
+
+#: .\transport\models.py:253
+msgid "Agence ou la reservation a ete faite"
+msgstr "الوكالة التي تم فيها الحجز"
+
+#: .\transport\models.py:254 .\transport\models.py:347
+#: .\transport\models.py:439
+msgid "Cree par"
+msgstr "أنشأه"
+
+#: .\transport\models.py:255 .\transport\models.py:348
+#: .\transport\models.py:440
+msgid "Modifie par"
+msgstr "عدله"
+
+#: .\transport\models.py:256
+msgid "Embarque"
+msgstr "صعد"
+
+#: .\transport\models.py:256
+msgid "Coche automatiquement quand le billet est scanne au controle"
+msgstr "يتم تحديده تلقائيا عند مسح التذكرة في المراقبة"
+
+#: .\transport\models.py:257
+msgid "Date d'embarquement"
+msgstr "تاريخ الصعود"
+
+#: .\transport\models.py:258
+msgid "Scanne par"
+msgstr "مسحه"
+
+#: .\transport\models.py:259
+msgid "Points attribues"
+msgstr "النقاط ممنوحة"
+
+#: .\transport\models.py:259
+msgid ""
+"Vrai si les points de fidelite ont deja ete comptes pour cette reservation"
+msgstr "صحيح إذا تم احتساب نقاط الولاء لهذا الحجز"
+
+#: .\transport\models.py:260
+msgid "Nombre de places"
+msgstr "عدد المقاعد"
+
+#: .\transport\models.py:261
+msgid "Nom du voyageur"
+msgstr "اسم المسافر"
+
+#: .\transport\models.py:261
+msgid "Nom du voyageur de ce billet"
+msgstr "اسم المسافر لهذه التذكرة"
+
+#: .\transport\models.py:262
+msgid "Prenom du voyageur"
+msgstr "الاسم الأول للمسافر"
+
+#: .\transport\models.py:263
+msgid "Telephone du voyageur"
+msgstr "هاتف المسافر"
+
+#: .\transport\models.py:264
+msgid "Type de piece du voyageur"
+msgstr "نوع وثيقة المسافر"
+
+#: .\transport\models.py:265
+msgid "Numero de piece du voyageur"
+msgstr "رقم وثيقة المسافر"
+
+#: .\transport\models.py:266
+#, fuzzy
+#| msgid "Nom du voyageur"
+msgid "Nationalite du voyageur"
+msgstr "اسم المسافر"
+
+#: .\transport\models.py:266
+msgid "Nationalite indiquee sur la piece"
+msgstr ""
+
+#: .\transport\models.py:267
+#, fuzzy
+#| msgid "Date de fin de validite"
+msgid "Date d'emission de la piece"
+msgstr "تاريخ نهاية الصلاحية"
+
+#: .\transport\models.py:268
+#, fuzzy
+#| msgid "Date d'expiration du permis"
+msgid "Date d'expiration de la piece"
+msgstr "تاريخ انتهاء الرخصة"
+
+#: .\transport\models.py:269 .\transport\models.py:553
+msgid "Siege"
+msgstr "المقعد"
+
+#: .\transport\models.py:269
+msgid "Siege physique reserve"
+msgstr "المقعد المحجوز"
+
+#: .\transport\models.py:270
+msgid "Arret de montee"
+msgstr "محطة الصعود"
+
+#: .\transport\models.py:270
+msgid "Arret ou le voyageur monte (si ligne multi-arrets)"
+msgstr "المحطة التي يصعد منها المسافر (للخطوط متعددة المحطات)"
+
+#: .\transport\models.py:271
+msgid "Arret de descente"
+msgstr "محطة النزول"
+
+#: .\transport\models.py:271
+msgid "Arret ou le voyageur descend (si ligne multi-arrets)"
+msgstr "المحطة التي ينزل فيها المسافر (للخطوط متعددة المحطات)"
+
+#: .\transport\models.py:272
+msgid "Montant total"
+msgstr "المبلغ الإجمالي"
+
+#: .\transport\models.py:272
+msgid "Calcule automatiquement"
+msgstr "يحسب تلقائيا"
+
+#: .\transport\models.py:274
+msgid "Mode de paiement"
+msgstr "طريقة الدفع"
+
+#: .\transport\models.py:275
+msgid "Date de reservation"
+msgstr "تاريخ الحجز"
+
+#: .\transport\models.py:276
+msgid "Date de paiement"
+msgstr "تاريخ الدفع"
+
+#: .\transport\models.py:323 .\transport\models.py:741
+msgid "Reservation"
+msgstr "الحجز"
+
+#: .\transport\models.py:324
+msgid "Reservations"
+msgstr "الحجوزات"
+
+#: .\transport\models.py:330
+msgid "Enregistre"
+msgstr "مسجل"
+
+#: .\transport\models.py:331
+msgid "En transit"
+msgstr "في الطريق"
+
+#: .\transport\models.py:332
+msgid "Arrive a destination"
+msgstr "وصل إلى الوجهة"
+
+#: .\transport\models.py:333
+msgid "Livre"
+msgstr "مسلم"
+
+#: .\transport\models.py:334
+msgid "Retourne"
+msgstr "مرتجع"
+
+#: .\transport\models.py:337
+msgid "Code de suivi"
+msgstr "رمز التتبع"
+
+#: .\transport\models.py:340 .\transport\models.py:432
+#: .\transport\models.py:593 .\transport\models.py:634
+msgid "Nom de l'expediteur"
+msgstr "اسم المرسل"
+
+#: .\transport\models.py:341 .\transport\models.py:433
+#: .\transport\models.py:594 .\transport\models.py:635
+msgid "Telephone de l'expediteur"
+msgstr "هاتف المرسل"
+
+#: .\transport\models.py:342 .\transport\models.py:595
+msgid "Nom du destinataire"
+msgstr "اسم المستلم"
+
+#: .\transport\models.py:343 .\transport\models.py:596
+msgid "Telephone du destinataire"
+msgstr "هاتف المستلم"
+
+#: .\transport\models.py:345 .\transport\models.py:437
+#: .\transport\models.py:597 .\transport\models.py:638
+msgid "Agence de depart"
+msgstr "وكالة الانطلاق"
+
+#: .\transport\models.py:346 .\transport\models.py:598
+msgid "Agence d'arrivee"
+msgstr "وكالة الوصول"
+
+#: .\transport\models.py:350 .\transport\models.py:599
+msgid "Description"
+msgstr "الوصف"
+
+#: .\transport\models.py:350
+msgid "Contenu du colis"
+msgstr "محتوى الطرد"
+
+#: .\transport\models.py:351
+msgid "Poids (kg)"
+msgstr "الوزن (كغ)"
+
+#: .\transport\models.py:351
+msgid "Poids en kilogrammes"
+msgstr "الوزن بالكيلوغرامات"
+
+#: .\transport\models.py:352
+msgid "Prix en FCFA"
+msgstr "السعر بالفرنك"
+
+#: .\transport\models.py:354
+msgid "Voyage sur lequel le colis est transporte"
+msgstr "الرحلة التي ينقل عليها الطرد"
+
+#: .\transport\models.py:357
+msgid "Date d'enregistrement"
+msgstr "تاريخ التسجيل"
+
+#: .\transport\models.py:358
+msgid "Date de livraison"
+msgstr "تاريخ التسليم"
+
+#: .\transport\models.py:376 .\transport\models.py:377
+#: .\transport\models.py:605
+msgid "Colis"
+msgstr "الطرود"
+
+#: .\transport\models.py:383
+msgid "PDG / Directeur general"
+msgstr "المدير العام"
+
+#: .\transport\models.py:384
+msgid "Responsable d'agence"
+msgstr "مسؤول الوكالة"
+
+#: .\transport\models.py:385
+msgid "Secretaire d'agence"
+msgstr "سكرتير الوكالة"
+
+#: .\transport\models.py:386
+msgid "Responsable planning"
+msgstr "مسؤول التخطيط"
+
+#: .\transport\models.py:387
+msgid "Guichetier / billettiste"
+msgstr "موظف شباك التذاكر"
+
+#: .\transport\models.py:388
+msgid "Caissier"
+msgstr "أمين الصندوق"
+
+#: .\transport\models.py:389
+msgid "Agent colis"
+msgstr "موظف الطرود"
+
+#: .\transport\models.py:390
+msgid "Agent transfert d'argent"
+msgstr "موظف تحويل الأموال"
+
+#: .\transport\models.py:391
+msgid "Manutentionnaire / bagagiste"
+msgstr "عامل الأمتعة"
+
+#: .\transport\models.py:392
+msgid "Comptable"
+msgstr "المحاسب"
+
+#: .\transport\models.py:393
+msgid "Responsable RH / recrutement"
+msgstr "مسؤول الموارد البشرية"
+
+#: .\transport\models.py:394
+msgid "Responsable maintenance"
+msgstr "مسؤول الصيانة"
+
+#: .\transport\models.py:395
+msgid "Agent de securite"
+msgstr "موظف الأمن"
+
+#: .\transport\models.py:396 .\transport\models.py:487
+msgid "Autre"
+msgstr "آخر"
+
+#: .\transport\models.py:399
+msgid "Compte de connexion lie a cet employe"
+msgstr "حساب الدخول المرتبط بهذا الموظف"
+
+#: .\transport\models.py:401
+msgid "Laisser vide pour un PDG (toute la compagnie)"
+msgstr "اتركه فارغا للمدير العام (كل الشركة)"
+
+#: .\transport\models.py:402
+msgid "Zone geographique geree (uniquement pour Responsable planning)"
+msgstr "المنطقة الجغرافية المدارة (لمسؤول التخطيط فقط)"
+
+#: .\transport\models.py:406
+msgid "Poste"
+msgstr "المنصب"
+
+#: .\transport\models.py:407
+msgid "Numero de carte d'identite"
+msgstr "رقم بطاقة الهوية"
+
+#: .\transport\models.py:409
+msgid "Salaire"
+msgstr "الراتب"
+
+#: .\transport\models.py:409
+msgid "Salaire mensuel en FCFA"
+msgstr "الراتب الشهري بالفرنك"
+
+#: .\transport\models.py:416
+msgid "Employe"
+msgstr "الموظف"
+
+#: .\transport\models.py:417
+msgid "Employes"
+msgstr "الموظفون"
+
+#: .\transport\models.py:423
+msgid "En attente de retrait"
+msgstr "في انتظار السحب"
+
+#: .\transport\models.py:424
+msgid "Retire"
+msgstr "مسحوب"
+
+#: .\transport\models.py:426
+msgid "Rembourse"
+msgstr "مسترد"
+
+#: .\transport\models.py:429
+msgid "Code de transfert"
+msgstr "رمز التحويل"
+
+#: .\transport\models.py:434 .\transport\models.py:636
+msgid "Nom du beneficiaire"
+msgstr "اسم المستفيد"
+
+#: .\transport\models.py:435 .\transport\models.py:637
+msgid "Telephone du beneficiaire"
+msgstr "هاتف المستفيد"
+
+#: .\transport\models.py:438 .\transport\models.py:639
+msgid "Agence de retrait"
+msgstr "وكالة السحب"
+
+#: .\transport\models.py:442 .\transport\models.py:640
+msgid "Montant"
+msgstr "المبلغ"
+
+#: .\transport\models.py:442
+msgid "Montant envoye en FCFA"
+msgstr "المبلغ المرسل بالفرنك"
+
+#: .\transport\models.py:443 .\transport\models.py:641
+msgid "Frais"
+msgstr "الرسوم"
+
+#: .\transport\models.py:443
+msgid "Frais de transfert en FCFA"
+msgstr "رسوم التحويل بالفرنك"
+
+#: .\transport\models.py:444
+msgid "Code de retrait"
+msgstr "رمز السحب"
+
+#: .\transport\models.py:444
+msgid "Code secret remis au beneficiaire"
+msgstr "الرمز السري المسلم للمستفيد"
+
+#: .\transport\models.py:447
+msgid "Date d'envoi"
+msgstr "تاريخ الإرسال"
+
+#: .\transport\models.py:448
+msgid "Date de retrait"
+msgstr "تاريخ السحب"
+
+#: .\transport\models.py:471 .\transport\models.py:563
+msgid "Transfert d'argent"
+msgstr "تحويل الأموال"
+
+#: .\transport\models.py:472
+msgid "Transferts d'argent"
+msgstr "تحويلات الأموال"
+
+#: .\transport\models.py:478
+msgid "Vidange moteur"
+msgstr "تغيير زيت المحرك"
+
+#: .\transport\models.py:479
+msgid "Freins"
+msgstr "الفرامل"
+
+#: .\transport\models.py:480
+msgid "Pneus"
+msgstr "الإطارات"
+
+#: .\transport\models.py:481
+msgid "Revision generale"
+msgstr "مراجعة عامة"
+
+#: .\transport\models.py:482
+msgid "Vidange boite de vitesse"
+msgstr "تغيير زيت علبة السرعة"
+
+#: .\transport\models.py:483
+msgid "Courroie"
+msgstr "الحزام"
+
+#: .\transport\models.py:484
+msgid "Batterie"
+msgstr "البطارية"
+
+#: .\transport\models.py:485
+msgid "Climatisation"
+msgstr "التكييف"
+
+#: .\transport\models.py:486
+msgid "Carrosserie"
+msgstr "الهيكل"
+
+#: .\transport\models.py:491
+msgid "Type d'entretien"
+msgstr "نوع الصيانة"
+
+#: .\transport\models.py:492
+msgid "Date de l'entretien"
+msgstr "تاريخ الصيانة"
+
+#: .\transport\models.py:493
+msgid "Kilometrage du bus"
+msgstr "عدد كيلومترات الحافلة"
+
+#: .\transport\models.py:494
+msgid "Cout (FCFA)"
+msgstr "التكلفة (فرنك)"
+
+#: .\transport\models.py:495
+msgid "Details / pieces changees"
+msgstr "التفاصيل / القطع المغيرة"
+
+#: .\transport\models.py:496
+msgid "Prochaine echeance (km)"
+msgstr "الموعد القادم (كم)"
+
+#: .\transport\models.py:497 .\transport\models.py:516
+msgid "Enregistre par"
+msgstr "سجله"
+
+#: .\transport\models.py:501
+msgid "Entretien"
+msgstr "الصيانة"
+
+#: .\transport\models.py:502
+msgid "Entretiens"
+msgstr "الصيانات"
+
+#: .\transport\models.py:512
+msgid "Date du plein"
+msgstr "تاريخ التعبئة"
+
+#: .\transport\models.py:513
+msgid "Litres"
+msgstr "اللترات"
+
+#: .\transport\models.py:514
+msgid "Montant (FCFA)"
+msgstr "المبلغ (فرنك)"
+
+#: .\transport\models.py:520
+msgid "Plein de carburant"
+msgstr "تعبئة الوقود"
+
+#: .\transport\models.py:521
+msgid "Pleins de carburant"
+msgstr "تعبئات الوقود"
+
+#: .\transport\models.py:530
+msgid "Numero"
+msgstr "الرقم"
+
+#: .\transport\models.py:530
+msgid "Numero du siege"
+msgstr "رقم المقعد"
+
+#: .\transport\models.py:554
+msgid "Sieges"
+msgstr "المقاعد"
+
+#: .\transport\models.py:561
+msgid "Reservation de voyage"
+msgstr "حجز رحلة"
+
+#: .\transport\models.py:562
+msgid "Envoi de colis"
+msgstr "إرسال طرد"
+
+#: .\transport\models.py:564
+msgid "Aucun"
+msgstr "لا شيء"
+
+#: .\transport\models.py:567
+msgid "Titre"
+msgstr "العنوان"
+
+#: .\transport\models.py:567
+msgid "Titre de la promotion"
+msgstr "عنوان العرض"
+
+#: .\transport\models.py:568
+msgid "Texte"
+msgstr "النص"
+
+#: .\transport\models.py:568
+msgid "Description de la promotion"
+msgstr "وصف العرض"
+
+#: .\transport\models.py:569
 msgid "Image de la promotion"
 msgstr "صورة العرض"
 
+#: .\transport\models.py:570
 msgid "Date de debut"
 msgstr "تاريخ البداية"
 
+#: .\transport\models.py:570
 msgid "Date de debut de validite"
 msgstr "تاريخ بداية الصلاحية"
 
+#: .\transport\models.py:571
 msgid "Date de fin"
 msgstr "تاريخ النهاية"
 
+#: .\transport\models.py:571
 msgid "Date de fin de validite"
 msgstr "تاريخ نهاية الصلاحية"
 
+#: .\transport\models.py:572
 msgid "Decochez pour masquer"
 msgstr "ألغ التحديد للإخفاء"
 
+#: .\transport\models.py:574
 msgid "Service"
 msgstr "الخدمة"
 
+#: .\transport\models.py:574
 msgid "Vers quel service renvoie la promotion"
 msgstr "إلى أي خدمة يوجه العرض"
 
+#: .\transport\models.py:580
 msgid "Promotion"
 msgstr "العرض"
 
+#: .\transport\models.py:581
 msgid "Promotions"
 msgstr "العروض"
 
+#: .\transport\models.py:587 .\transport\models.py:628
 msgid "En attente de validation"
 msgstr "في انتظار التأكيد"
 
+#: .\transport\models.py:588
 msgid "Validee (colis cree)"
 msgstr "مؤكدة (تم إنشاء الطرد)"
 
-msgid "Validee (transfert cree)"
-msgstr "مؤكدة (تم إنشاء التحويل)"
-
+#: .\transport\models.py:591 .\transport\models.py:632
 msgid "Numero de demande"
 msgstr "رقم الطلب"
 
+#: .\transport\models.py:600
 msgid "Poids estime"
 msgstr "الوزن المقدر"
 
+#: .\transport\models.py:600
 msgid "Poids estime en kg"
 msgstr "الوزن المقدر بالكغ"
 
+#: .\transport\models.py:601
 msgid "Valeur declaree"
 msgstr "القيمة المصرح بها"
 
+#: .\transport\models.py:601
 msgid "Valeur declaree en FCFA"
 msgstr "القيمة المصرح بها بالفرنك"
 
+#: .\transport\models.py:602
 msgid "Poids reel"
 msgstr "الوزن الحقيقي"
 
+#: .\transport\models.py:602
 msgid "Poids reel pese a l'agence (kg)"
 msgstr "الوزن الحقيقي الموزون في الوكالة (كغ)"
 
+#: .\transport\models.py:603
 msgid "Prix fixe par l'agence (FCFA)"
 msgstr "السعر المحدد من الوكالة (فرنك)"
 
+#: .\transport\models.py:606 .\transport\models.py:644
 msgid "Date de demande"
 msgstr "تاريخ الطلب"
 
+#: .\transport\models.py:621
 msgid "Demande de colis"
 msgstr "طلب طرد"
 
+#: .\transport\models.py:622
 msgid "Demandes de colis"
 msgstr "طلبات الطرود"
 
+#: .\transport\models.py:629
+msgid "Validee (transfert cree)"
+msgstr "مؤكدة (تم إنشاء التحويل)"
+
+#: .\transport\models.py:640
 msgid "Montant a envoyer en FCFA"
 msgstr "المبلغ المراد إرساله بالفرنك"
 
+#: .\transport\models.py:641
 msgid "Frais fixes par l'agence"
 msgstr "الرسوم المحددة من الوكالة"
 
+#: .\transport\models.py:643
 msgid "Transfert"
 msgstr "التحويل"
 
+#: .\transport\models.py:659
 msgid "Demande de transfert"
 msgstr "طلب تحويل"
 
+#: .\transport\models.py:660
 msgid "Demandes de transfert"
 msgstr "طلبات التحويل"
 
+#: .\transport\models.py:666
 msgid "Ex : Ndjamena - Abeche (axe Est)"
 msgstr "مثال: نجامينا - أبشة (المحور الشرقي)"
 
+#: .\transport\models.py:678
 msgid "Lignes"
 msgstr "الخطوط"
 
+#: .\transport\models.py:685 .\transport\models.py:770
 msgid "Ordre"
 msgstr "الترتيب"
 
+#: .\transport\models.py:685
 msgid "1 = ville de depart, puis 2, 3, 4..."
 msgstr "1 = مدينة الانطلاق، ثم 2، 3، 4..."
 
+#: .\transport\models.py:686
 msgid "Prix depuis le depart"
 msgstr "السعر من الانطلاق"
 
+#: .\transport\models.py:686
 msgid "Prix en FCFA depuis la ville de depart"
 msgstr "السعر بالفرنك من مدينة الانطلاق"
 
+#: .\transport\models.py:692
 msgid "Arret de ligne"
 msgstr "محطة الخط"
 
+#: .\transport\models.py:693
 msgid "Arrets de ligne"
 msgstr "محطات الخط"
 
+#: .\transport\models.py:704
 msgid "Vitesse (km/h)"
 msgstr "السرعة (كم/س)"
 
+#: .\transport\models.py:704
 msgid "Vitesse en km/h si disponible"
 msgstr "السرعة بالكم/س إن وجدت"
 
+#: .\transport\models.py:705
 msgid "Horodatage"
 msgstr "الوقت والتاريخ"
 
+#: .\transport\models.py:711
 msgid "Position bus"
 msgstr "موقع الحافلة"
 
+#: .\transport\models.py:712
 msgid "Positions bus"
 msgstr "مواقع الحافلات"
 
+#: .\transport\models.py:719
 msgid "Arret anormal"
 msgstr "توقف غير عادي"
 
+#: .\transport\models.py:723
 msgid "Type d'alerte"
 msgstr "نوع التنبيه"
 
+#: .\transport\models.py:724
 msgid "Message"
 msgstr "الرسالة"
 
+#: .\transport\models.py:728
 msgid "Resolue"
 msgstr "معالجة"
 
+#: .\transport\models.py:728
 msgid "Cocher une fois verifiee par un responsable"
 msgstr "حدد بعد التحقق من قبل مسؤول"
 
+#: .\transport\models.py:734
 msgid "Alerte voyage"
 msgstr "تنبيه رحلة"
 
+#: .\transport\models.py:735
 msgid "Alertes voyage"
 msgstr "تنبيهات الرحلات"
 
+#: .\transport\models.py:745
 msgid "Note"
 msgstr "التقييم"
 
+#: .\transport\models.py:745
 msgid "Note globale de 1 a 5 etoiles"
 msgstr "تقييم عام من 1 إلى 5 نجوم"
 
+#: .\transport\models.py:746
 msgid "Commentaire"
 msgstr "التعليق"
 
+#: .\transport\models.py:746
 msgid "Commentaire facultatif du client"
 msgstr "تعليق اختياري من العميل"
 
+#: .\transport\models.py:748
 msgid "Bus propre"
 msgstr "الحافلة نظيفة"
 
+#: .\transport\models.py:748
 msgid "Le bus etait-il propre ?"
 msgstr "هل كانت الحافلة نظيفة؟"
 
+#: .\transport\models.py:749
 msgid "Climatisation OK"
 msgstr "التكييف يعمل"
 
+#: .\transport\models.py:749
 msgid "La climatisation fonctionnait-elle ?"
 msgstr "هل كان التكييف يعمل؟"
 
+#: .\transport\models.py:750
 msgid "Television OK"
 msgstr "التلفزيون يعمل"
 
+#: .\transport\models.py:750
 msgid "La television fonctionnait-elle ?"
 msgstr "هل كان التلفزيون يعمل؟"
 
+#: .\transport\models.py:751
 msgid "Connexion OK"
 msgstr "الاتصال يعمل"
 
+#: .\transport\models.py:751
 msgid "La connexion Starlink fonctionnait-elle ?"
 msgstr "هل كان اتصال ستارلينك يعمل؟"
 
+#: .\transport\models.py:752
 msgid "Chauffeur poli"
 msgstr "السائق مهذب"
 
+#: .\transport\models.py:752
 msgid "Le chauffeur etait-il poli ?"
 msgstr "هل كان السائق مهذبا؟"
 
+#: .\transport\models.py:753
 msgid "Accompagnateur aimable"
 msgstr "المرافق لطيف"
 
+#: .\transport\models.py:753
 msgid "L'accompagnateur etait-il aimable ?"
 msgstr "هل كان المرافق لطيفا؟"
 
+#: .\transport\models.py:761
 msgid "Avis voyage"
 msgstr "تقييم رحلة"
 
+#: .\transport\models.py:762
 msgid "Avis voyages"
 msgstr "تقييمات الرحلات"
 
+#: .\transport\models.py:768
 msgid "Question"
 msgstr "السؤال"
 
+#: .\transport\models.py:768
 msgid "La question posee"
 msgstr "السؤال المطروح"
 
+#: .\transport\models.py:769
 msgid "Reponse"
 msgstr "الجواب"
 
+#: .\transport\models.py:769
 msgid "La reponse affichee au client"
 msgstr "الجواب المعروض للعميل"
 
+#: .\transport\models.py:770
 msgid "Ordre d'affichage (petit numero = en haut)"
 msgstr "ترتيب العرض (الرقم الصغير = في الأعلى)"
 
+#: .\transport\models.py:771
 msgid "Decochez pour masquer sans supprimer"
 msgstr "ألغ التحديد للإخفاء بدون حذف"
 
+#: .\transport\models.py:778
 msgid "Question FAQ"
 msgstr "سؤال شائع"
 
+#: .\transport\models.py:779
 msgid "Questions FAQ"
 msgstr "الأسئلة الشائعة"
 
-msgid "Vendre un billet"
-msgstr "بيع تذكرة"
-
-msgid "Voir les billets vendus"
-msgstr "عرض التذاكر المباعة"
-
-msgid "Aujourd'hui"
-msgstr "اليوم"
-
-msgid "Voyages du jour"
-msgstr "رحلات اليوم"
-
-msgid "Reservations du jour"
-msgstr "حجوزات اليوم"
-
-msgid "Recette du jour (FCFA)"
-msgstr "إيرادات اليوم (فرنك)"
-
-msgid "Voyages a venir"
-msgstr "الرحلات القادمة"
-
-msgid "A traiter"
-msgstr "للمعالجة"
-
-msgid "Alertes de securite"
-msgstr "تنبيهات الأمن"
-
-msgid "Demandes colis en attente"
-msgstr "طلبات الطرود المعلقة"
-
-msgid "Demandes transfert en attente"
-msgstr "طلبات التحويل المعلقة"
-
-msgid "Reservations non payees"
-msgstr "الحجوزات غير المدفوعة"
-
-msgid "Transferts a retirer"
-msgstr "التحويلات للسحب"
-
-msgid "Activite"
-msgstr "النشاط"
-
-msgid "Colis en transit"
-msgstr "الطرود في الطريق"
-
-msgid "Colis arrives"
-msgstr "الطرود الواصلة"
-
-msgid "Bus en service"
-msgstr "الحافلات في الخدمة"
-
-msgid "Clients actifs"
-msgstr "العملاء النشطون"
-
-msgid "Exploitation"
-msgstr "التشغيل"
-
-msgid "Securite"
-msgstr "الأمن"
-
-msgid "Colis et transferts"
-msgstr "الطرود والتحويلات"
-
-msgid "Clients et personnel"
-msgstr "العملاء والموظفون"
-
-msgid "Maintenance du parc"
-msgstr "صيانة الأسطول"
-
-msgid "Configuration"
-msgstr "الإعدادات"
-
-msgid "Ajouter"
-msgstr "إضافة"
-
-msgid "Modifier"
-msgstr "تعديل"
-
-msgid "Voir"
-msgstr "عرض"
-
+#: .\transport\templates\admin\base_site.html:37
 msgid "Administrateur"
 msgstr "المدير"
 
+#: .\transport\templates\admin\base_site.html:41
 msgid "Mon profil"
 msgstr "ملفي الشخصي"
 
+#: .\transport\templates\admin\base_site.html:44
 msgid "Rapport RH par agence"
 msgstr "تقرير الموارد البشرية حسب الوكالة"
 
+#: .\transport\templates\admin\base_site.html:47
 msgid "Rapport financier par agence"
 msgstr "التقرير المالي حسب الوكالة"
 
+#: .\transport\templates\admin\base_site.html:50
 msgid "Rapport maintenance par agence"
 msgstr "تقرير الصيانة حسب الوكالة"
 
+#: .\transport\templates\admin\base_site.html:53
 msgid "Carte des bus en direct"
 msgstr "خريطة الحافلات المباشرة"
 
+#: .\transport\templates\admin\base_site.html:56
 msgid "Manifeste de bord"
 msgstr "بيان الركاب"
 
+#: .\transport\templates\admin\base_site.html:59
 msgid "Vue d'ensemble PDG"
 msgstr "نظرة عامة للمدير العام"
 
+#: .\transport\templates\admin\base_site.html:63
+#: .\transport\templates\admin\base_site.html:67
 msgid "Modifier le mot de passe"
 msgstr "تغيير كلمة المرور"
 
+#: .\transport\templates\admin\base_site.html:85
 msgid "Deconnexion"
 msgstr "تسجيل الخروج"
+
+#: .\transport\templates\admin\index.html:117
+msgid "Vendre un billet"
+msgstr "بيع تذكرة"
+
+#: .\transport\templates\admin\index.html:120
+msgid "Voir les billets vendus"
+msgstr "عرض التذاكر المباعة"
+
+#: .\transport\templates\admin\index.html:128
+msgid "Aujourd'hui"
+msgstr "اليوم"
+
+#: .\transport\templates\admin\index.html:133
+msgid "Voyages du jour"
+msgstr "رحلات اليوم"
+
+#: .\transport\templates\admin\index.html:139
+msgid "Reservations du jour"
+msgstr "حجوزات اليوم"
+
+#: .\transport\templates\admin\index.html:145
+msgid "Recette du jour (FCFA)"
+msgstr "إيرادات اليوم (فرنك)"
+
+#: .\transport\templates\admin\index.html:151
+msgid "Voyages a venir"
+msgstr "الرحلات القادمة"
+
+#: .\transport\templates\admin\index.html:158
+msgid "A traiter"
+msgstr "للمعالجة"
+
+#: .\transport\templates\admin\index.html:163
+msgid "Alertes de securite"
+msgstr "تنبيهات الأمن"
+
+#: .\transport\templates\admin\index.html:169
+msgid "Demandes colis en attente"
+msgstr "طلبات الطرود المعلقة"
+
+#: .\transport\templates\admin\index.html:175
+msgid "Demandes transfert en attente"
+msgstr "طلبات التحويل المعلقة"
+
+#: .\transport\templates\admin\index.html:181
+msgid "Reservations non payees"
+msgstr "الحجوزات غير المدفوعة"
+
+#: .\transport\templates\admin\index.html:187
+msgid "Transferts a retirer"
+msgstr "التحويلات للسحب"
+
+#: .\transport\templates\admin\index.html:194
+msgid "Activite"
+msgstr "النشاط"
+
+#: .\transport\templates\admin\index.html:199
+msgid "Colis en transit"
+msgstr "الطرود في الطريق"
+
+#: .\transport\templates\admin\index.html:205
+msgid "Colis arrives"
+msgstr "الطرود الواصلة"
+
+#: .\transport\templates\admin\index.html:211
+msgid "Bus en service"
+msgstr "الحافلات في الخدمة"
+
+#: .\transport\templates\admin\index.html:217
+#, fuzzy
+#| msgid "En maintenance"
+msgid "Bus en maintenance"
+msgstr "قيد الصيانة"
+
+#: .\transport\templates\admin\index.html:223
+msgid "Clients actifs"
+msgstr "العملاء النشطون"
+
+#: .\transport\templates\admin\index.html:229
+#, fuzzy
+#| msgid "Employes"
+msgid "Employes actifs"
+msgstr "الموظفون"
+
+#: .\transport\templates\admin\index.html:243
+msgid "Exploitation"
+msgstr "التشغيل"
+
+#: .\transport\templates\admin\index.html:250
+#: .\transport\templates\admin\index.html:287
+#: .\transport\templates\admin\index.html:306
+#: .\transport\templates\admin\index.html:325
+#: .\transport\templates\admin\index.html:344
+#: .\transport\templates\admin\index.html:363
+msgid "Ajouter"
+msgstr "إضافة"
+
+#: .\transport\templates\admin\index.html:251
+#: .\transport\templates\admin\index.html:288
+#: .\transport\templates\admin\index.html:307
+#: .\transport\templates\admin\index.html:326
+#: .\transport\templates\admin\index.html:345
+#: .\transport\templates\admin\index.html:364
+msgid "Modifier"
+msgstr "تعديل"
+
+#: .\transport\templates\admin\index.html:262
+msgid "Securite"
+msgstr "الأمن"
+
+#: .\transport\templates\admin\index.html:269
+msgid "Voir"
+msgstr "عرض"
+
+#: .\transport\templates\admin\index.html:280
+msgid "Colis et transferts"
+msgstr "الطرود والتحويلات"
+
+#: .\transport\templates\admin\index.html:299
+msgid "Clients et personnel"
+msgstr "العملاء والموظفون"
+
+#: .\transport\templates\admin\index.html:318
+msgid "Maintenance du parc"
+msgstr "صيانة الأسطول"
+
+#: .\transport\templates\admin\index.html:337
+msgid "Configuration"
+msgstr "الإعدادات"

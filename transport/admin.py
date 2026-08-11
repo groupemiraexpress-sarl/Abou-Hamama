@@ -8,6 +8,7 @@ from .models import (
 )
 from django import forms
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 import secrets
 import string
 
@@ -163,7 +164,7 @@ class VoyageAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     ordering = ('-date_depart', '-heure_depart')
     date_hierarchy = 'date_depart'
 
-    @admin.display(description="Places dispo (reel)")
+    @admin.display(description=_("Places dispo (reel)"))
     def places_reelles(self, obj):
         if not obj.ligne_id:
             return obj.places_disponibles
@@ -174,13 +175,13 @@ class VoyageAdmin(FiltreAgenceMixin, admin.ModelAdmin):
 
 class ClientAdminForm(forms.ModelForm):
     nom_utilisateur = forms.CharField(
-        label="Nom d'utilisateur app (optionnel)", max_length=150, required=False,
-        help_text="A remplir uniquement si ce client doit avoir un acces a l'application "
-                   "mobile. Laisser vide pour un client comptoir classique (aucun compte cree)."
+        label=_("Nom d'utilisateur app (optionnel)"), max_length=150, required=False,
+        help_text=_("A remplir uniquement si ce client doit avoir un acces a l'application "
+                     "mobile. Laisser vide pour un client comptoir classique (aucun compte cree).")
     )
     mot_de_passe = forms.CharField(
-        label="Mot de passe", required=False, widget=forms.PasswordInput(render_value=False),
-        help_text="Requis uniquement si un nom d'utilisateur est renseigne ci-dessus."
+        label=_("Mot de passe"), required=False, widget=forms.PasswordInput(render_value=False),
+        help_text=_("Requis uniquement si un nom d'utilisateur est renseigne ci-dessus.")
     )
 
     class Meta:
@@ -192,9 +193,9 @@ class ClientAdminForm(forms.ModelForm):
         nom_utilisateur = cleaned.get('nom_utilisateur')
         if nom_utilisateur:
             if User.objects.filter(username=nom_utilisateur).exclude(pk=self.instance.user_id).exists():
-                self.add_error('nom_utilisateur', "Ce nom d'utilisateur est deja pris.")
+                self.add_error('nom_utilisateur', _("Ce nom d'utilisateur est deja pris."))
             if not self.instance.pk and not cleaned.get('mot_de_passe'):
-                self.add_error('mot_de_passe', "Mot de passe requis pour creer le compte.")
+                self.add_error('mot_de_passe', _("Mot de passe requis pour creer le compte."))
         return cleaned
 
 
@@ -270,16 +271,18 @@ class ReservationAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     ordering = ('-date_reservation',)
     date_hierarchy = 'date_reservation'
 
-    @admin.display(description="Origine")
+    @admin.display(description=_("Origine"))
     def origine(self, obj):
         from django.utils.html import format_html
-        from django.utils.safestring import mark_safe
         if obj.cree_par_id:
             return format_html(
                 '<span style="color:#1F3864;">&#128100; {}</span>',
                 obj.cree_par.nom
             )
-        return mark_safe('<span style="color:#059669; font-weight:600;">&#128241; App mobile</span>')
+        return format_html(
+            '<span style="color:#059669; font-weight:600;">&#128241; {}</span>',
+            _("App mobile")
+        )
 
     def get_readonly_fields(self, request, obj=None):
         employe = getattr(request.user, 'employe', None)
@@ -336,13 +339,13 @@ class ColisAdmin(FiltreAgenceMixin, admin.ModelAdmin):
 
 class EmployeAdminForm(forms.ModelForm):
     nom_utilisateur = forms.CharField(
-        label="Nom d'utilisateur (connexion)", max_length=150, required=False,
-        help_text="Laisser vide pour utiliser le telephone comme identifiant. "
-                   "En modification, laisser vide pour ne pas toucher au compte existant."
+        label=_("Nom d'utilisateur (connexion)"), max_length=150, required=False,
+        help_text=_("Laisser vide pour utiliser le telephone comme identifiant. "
+                     "En modification, laisser vide pour ne pas toucher au compte existant.")
     )
     mot_de_passe = forms.CharField(
-        label="Mot de passe", required=False, widget=forms.PasswordInput(render_value=False),
-        help_text="Laisser vide : a la creation, un mot de passe temporaire sera genere et affiche."
+        label=_("Mot de passe"), required=False, widget=forms.PasswordInput(render_value=False),
+        help_text=_("Laisser vide : a la creation, un mot de passe temporaire sera genere et affiche.")
     )
 
     class Meta:
@@ -357,7 +360,7 @@ class EmployeAdminForm(forms.ModelForm):
         if poste == 'pdg':
             deja_pdg = Employe.objects.filter(poste='pdg').exclude(pk=self.instance.pk).exists()
             if deja_pdg:
-                self.add_error('poste', "Un seul compte PDG est autorise dans le logiciel. Un PDG existe deja.")
+                self.add_error('poste', _("Un seul compte PDG est autorise dans le logiciel. Un PDG existe deja."))
 
         nom_utilisateur = cleaned.get('nom_utilisateur')
 
@@ -368,18 +371,18 @@ class EmployeAdminForm(forms.ModelForm):
                     pk=self.instance.user_id
                 ).exists()
                 if deja_pris:
-                    self.add_error('nom_utilisateur', "Ce nom d'utilisateur est deja pris par un autre compte.")
+                    self.add_error('nom_utilisateur', _("Ce nom d'utilisateur est deja pris par un autre compte."))
             return cleaned  # le reste de la gestion du compte se fait dans save_model
 
         telephone = cleaned.get('telephone')
         identifiant = nom_utilisateur or telephone
         if not identifiant:
-            raise forms.ValidationError("Renseignez un telephone ou un nom d'utilisateur pour creer le compte.")
+            raise forms.ValidationError(_("Renseignez un telephone ou un nom d'utilisateur pour creer le compte."))
         if User.objects.filter(username=identifiant).exists():
             self.add_error(
                 'nom_utilisateur' if nom_utilisateur else 'telephone',
-                "Cet identifiant (nom d'utilisateur ou telephone) est deja pris. "
-                "Renseignez un nom d'utilisateur different."
+                _("Cet identifiant (nom d'utilisateur ou telephone) est deja pris. "
+                  "Renseignez un nom d'utilisateur different.")
             )
         return cleaned
 
@@ -458,8 +461,10 @@ class EmployeAdmin(FiltreAgenceMixin, admin.ModelAdmin):
             if not mot_de_passe:
                 self.message_user(
                     request,
-                    f"Compte cree : identifiant \"{username}\" / mot de passe temporaire \"{mdp_genere}\". "
-                    f"Communiquez-le a l'employe puis demandez-lui de le changer.",
+                    _('Compte cree : identifiant "%(identifiant)s" / mot de passe temporaire "%(motdepasse)s". '
+                      'Communiquez-le a l\'employe puis demandez-lui de le changer.') % {
+                        'identifiant': username, 'motdepasse': mdp_genere,
+                    },
                     level='warning',
                 )
         else:
@@ -484,7 +489,9 @@ class EmployeAdmin(FiltreAgenceMixin, admin.ModelAdmin):
                 if not mot_de_passe:
                     self.message_user(
                         request,
-                        f"Compte cree : identifiant \"{nom_utilisateur}\" / mot de passe temporaire \"{mdp_genere}\".",
+                        _('Compte cree : identifiant "%(identifiant)s" / mot de passe temporaire "%(motdepasse)s".') % {
+                            'identifiant': nom_utilisateur, 'motdepasse': mdp_genere,
+                        },
                         level='warning',
                     )
             super().save_model(request, obj, form, change)
