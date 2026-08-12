@@ -459,6 +459,12 @@ def api_creer_demande_colis(request):
     expediteur_telephone = request.data.get('expediteur_telephone', '').strip()
     destinataire_nom = request.data.get('destinataire_nom', '').strip()
     destinataire_telephone = request.data.get('destinataire_telephone', '').strip()
+    expediteur_nationalite = request.data.get('expediteur_nationalite', '').strip()
+    expediteur_type_piece = request.data.get('expediteur_type_piece', '').strip()
+    expediteur_numero_piece = request.data.get('expediteur_numero_piece', '').strip()
+    destinataire_nationalite = request.data.get('destinataire_nationalite', '').strip()
+    destinataire_type_piece = request.data.get('destinataire_type_piece', '').strip()
+    destinataire_numero_piece = request.data.get('destinataire_numero_piece', '').strip()
     agence_depart_id = request.data.get('agence_depart')
     agence_arrivee_id = request.data.get('agence_arrivee')
     description = request.data.get('description', '').strip()
@@ -483,8 +489,14 @@ def api_creer_demande_colis(request):
         client=client,
         expediteur_nom=expediteur_nom,
         expediteur_telephone=expediteur_telephone,
+        expediteur_nationalite=expediteur_nationalite,
+        expediteur_type_piece=expediteur_type_piece,
+        expediteur_numero_piece=expediteur_numero_piece,
         destinataire_nom=destinataire_nom,
         destinataire_telephone=destinataire_telephone,
+        destinataire_nationalite=destinataire_nationalite,
+        destinataire_type_piece=destinataire_type_piece,
+        destinataire_numero_piece=destinataire_numero_piece,
         agence_depart=agence_depart,
         agence_arrivee=agence_arrivee,
         description=description,
