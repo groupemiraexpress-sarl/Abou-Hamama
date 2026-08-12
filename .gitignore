@@ -9,3 +9,5 @@ staticfiles/
 test_reservation.py
 test_mes_billets.py
 employes_test_identifiants.csv
+
+media/
