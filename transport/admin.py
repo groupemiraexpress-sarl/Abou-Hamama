@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .admin_filtres import FiltreAgenceMixin, FiltreAgenceListFilter
+from .admin_filtres import FiltreAgenceMixin, FiltreAgenceListFilter, FiltreAgenceDepartArrivee, FiltreAgenceDepartRetrait
 from .models import (
     Compagnie, Agence, Bus, Chauffeur, Trajet, Voyage,
     Client, Reservation, Colis, Employe, TransfertArgent,
@@ -78,7 +78,7 @@ class BusAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     champs_agence = ['agence']
     champ_createur = None
     list_display = ('immatriculation', 'agence', 'marque', 'modele', 'capacite', 'statut', 'kilometrage')
-    list_filter = ('statut', 'agence', 'compagnie', 'marque')
+    list_filter = ('statut', FiltreAgenceListFilter, 'compagnie', 'marque')
     search_fields = ('immatriculation', 'marque', 'modele')
     list_editable = ('statut',)
     ordering = ('agence__ville', 'agence__nom', 'immatriculation')
@@ -89,7 +89,7 @@ class ChauffeurAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     champs_agence = ['agence']
     champ_createur = None
     list_display = ('nom', 'prenom', 'agence', 'telephone', 'numero_permis', 'date_expiration_permis', 'statut', 'note_moyenne_badge', 'actif')
-    list_filter = ('statut', 'agence', 'compagnie', 'actif')
+    list_filter = ('statut', FiltreAgenceListFilter, 'compagnie', 'actif')
     search_fields = ('nom', 'prenom', 'numero_permis', 'telephone')
     list_editable = ('statut',)
     ordering = ('agence__ville', 'agence__nom', 'nom')
@@ -266,7 +266,7 @@ class ClientAdmin(admin.ModelAdmin):
 class ReservationAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     champs_agence = ['agence']
     list_display = ('numero_reservation', 'client', 'voyage', 'nombre_places', 'montant_total', 'statut', 'origine', 'mode_paiement', 'modifie_par', 'date_reservation')
-    list_filter = ('statut', 'mode_paiement', 'voyage__date_depart', 'agence')
+    list_filter = ('statut', 'mode_paiement', 'voyage__date_depart', FiltreAgenceListFilter)
     search_fields = ('numero_reservation', 'client__nom', 'client__telephone')
     ordering = ('-date_reservation',)
     date_hierarchy = 'date_reservation'
@@ -304,7 +304,7 @@ class ReservationAdmin(FiltreAgenceMixin, admin.ModelAdmin):
 class ColisAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     champs_agence = ['agence_depart', 'agence_arrivee']
     list_display = ('code_suivi', 'expediteur_nom', 'destinataire_nom', 'agence_depart', 'agence_arrivee', 'poids_kg', 'prix', 'statut', 'cree_par', 'modifie_par', 'date_enregistrement')
-    list_filter = ('statut', 'agence_depart', 'agence_arrivee', 'compagnie')
+    list_filter = ('statut', FiltreAgenceDepartArrivee, 'compagnie')
     search_fields = ('code_suivi', 'expediteur_nom', 'expediteur_telephone', 'destinataire_nom', 'destinataire_telephone')
     ordering = ('-date_enregistrement',)
     date_hierarchy = 'date_enregistrement'
@@ -523,7 +523,7 @@ class EmployeAdmin(FiltreAgenceMixin, admin.ModelAdmin):
 class TransfertArgentAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     champs_agence = ['agence_depart', 'agence_retrait']
     list_display = ('code_transfert', 'expediteur_nom', 'beneficiaire_nom', 'montant', 'frais', 'agence_depart', 'agence_retrait', 'statut', 'cree_par', 'modifie_par', 'date_envoi')
-    list_filter = ('statut', 'agence_depart', 'agence_retrait', 'compagnie')
+    list_filter = ('statut', FiltreAgenceDepartRetrait, 'compagnie')
     search_fields = ('code_transfert', 'expediteur_nom', 'expediteur_telephone', 'beneficiaire_nom', 'beneficiaire_telephone', 'code_retrait')
     ordering = ('-date_envoi',)
     date_hierarchy = 'date_envoi'
@@ -598,7 +598,7 @@ class DemandeColisAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     champs_agence = ['agence_depart', 'agence_arrivee']
     champ_createur = None  # demandes soumises par les clients, pas par un employe
     list_display = ('numero_demande', 'expediteur_nom', 'destinataire_nom', 'agence_depart', 'agence_arrivee', 'poids_estime', 'poids_reel', 'prix', 'statut', 'date_demande')
-    list_filter = ('statut', 'agence_depart', 'agence_arrivee')
+    list_filter = ('statut', FiltreAgenceDepartArrivee)
     search_fields = ('numero_demande', 'expediteur_nom', 'expediteur_telephone', 'destinataire_nom')
     list_editable = ('poids_reel', 'prix', 'statut')
     ordering = ('-date_demande',)
@@ -650,7 +650,7 @@ class DemandeTransfertAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     champs_agence = ['agence_depart', 'agence_retrait']
     champ_createur = None
     list_display = ('numero_demande', 'expediteur_nom', 'beneficiaire_nom', 'agence_depart', 'agence_retrait', 'montant', 'frais', 'statut', 'date_demande')
-    list_filter = ('statut', 'agence_depart', 'agence_retrait')
+    list_filter = ('statut', FiltreAgenceDepartRetrait)
     search_fields = ('numero_demande', 'expediteur_nom', 'expediteur_telephone', 'beneficiaire_nom')
     list_editable = ('frais',)
     ordering = ('-date_demande',)

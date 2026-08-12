@@ -227,6 +227,61 @@ class FiltreAgenceListFilter(admin.SimpleListFilter):
         return queryset
 
 
+class FiltreAgenceMultiListFilter(admin.SimpleListFilter):
+    """
+    Variante de FiltreAgenceListFilter pour les modeles qui ont PLUSIEURS
+    champs agence (ex: agence_depart + agence_arrivee, ou agence_depart +
+    agence_retrait) au lieu d'un seul champ 'agence'.
+
+    A utiliser via une sous-classe qui definit `champs_agence`, ex :
+
+        class FiltreAgenceDepartArrivee(FiltreAgenceMultiListFilter):
+            champs_agence = ['agence_depart', 'agence_arrivee']
+
+    Le menu deroulant ne propose que l'agence (ou la zone, ou toutes)
+    que l'utilisateur a le droit de voir - jamais la liste complete pour
+    un responsable d'agence. Quand une agence est choisie, le filtre
+    applique un OU logique sur tous les champs_agence (une ligne est
+    incluse si CETTE agence est soit le depart, soit l'arrivee/retrait).
+    """
+    title = 'agence'
+    parameter_name = 'agence_id'
+    champs_agence = []
+
+    def lookups(self, request, model_admin):
+        from .models import Agence
+        if voit_tout(request.user):
+            agences = Agence.objects.filter(actif=True).order_by('ville', 'nom')
+        else:
+            employe = getattr(request.user, 'employe', None)
+            poste = employe.poste if employe else None
+            if poste == 'resp_planning':
+                zone = zone_de(request.user)
+                agences = Agence.objects.filter(actif=True, zone=zone).order_by('ville', 'nom') if zone else Agence.objects.none()
+            else:
+                agence = agence_de(request.user)
+                agences = Agence.objects.filter(id=agence.id) if agence else Agence.objects.none()
+        return [(a.id, str(a)) for a in agences]
+
+    def queryset(self, request, queryset):
+        if self.value():
+            condition = Q()
+            for champ in self.champs_agence:
+                condition |= Q(**{champ: self.value()})
+            return queryset.filter(condition)
+        return queryset
+
+
+class FiltreAgenceDepartArrivee(FiltreAgenceMultiListFilter):
+    """Pour les modeles avec agence_depart + agence_arrivee (Colis, DemandeColis)."""
+    champs_agence = ['agence_depart', 'agence_arrivee']
+
+
+class FiltreAgenceDepartRetrait(FiltreAgenceMultiListFilter):
+    """Pour les modeles avec agence_depart + agence_retrait (DemandeTransfert, TransfertArgent)."""
+    champs_agence = ['agence_depart', 'agence_retrait']
+
+
 # ---------------------------------------------------------------------------
 # Profil d'affichage du tableau de bord (page d'accueil de l'admin)
 # ---------------------------------------------------------------------------
