@@ -304,6 +304,7 @@ def api_reserver(request):
         reservation = Reservation.objects.create(
             client=client,
             voyage=voyage,
+            agence=voyage.bus.agence,
             nombre_places=nombre_places,
             voyageur_nom=nom,
             voyageur_telephone=telephone,
@@ -394,6 +395,7 @@ def api_reserver_siege(request):
             client=client,
             voyage=voyage,
             siege=siege,
+            agence=voyage.bus.agence,
             nombre_places=1,
             voyageur_nom=nom,
             voyageur_prenom=prenom,
