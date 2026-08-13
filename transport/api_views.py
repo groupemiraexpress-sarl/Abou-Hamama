@@ -235,23 +235,22 @@ def api_sieges_voyage(request, voyage_id):
     if not voyage:
         return Response({'erreur': 'Voyage introuvable.'}, status=404)
 
-    ordre_montee = request.GET.get('arret_montee')
-    ordre_descente = request.GET.get('arret_descente')
+    arret_montee_id = request.GET.get('arret_montee')
+    arret_descente_id = request.GET.get('arret_descente')
 
     sieges = Siege.objects.filter(voyage=voyage).order_by('numero')
 
-    if voyage.ligne_id and ordre_montee and ordre_descente:
-        try:
-            ordre_montee = int(ordre_montee)
-            ordre_descente = int(ordre_descente)
-        except (ValueError, TypeError):
-            return Response({'erreur': 'arret_montee et arret_descente doivent etre des nombres.'}, status=400)
+    if voyage.ligne_id and arret_montee_id and arret_descente_id:
+        arret_montee = voyage.ligne.arrets.filter(id=arret_montee_id).first()
+        arret_descente = voyage.ligne.arrets.filter(id=arret_descente_id).first()
+        if not arret_montee or not arret_descente:
+            return Response({'erreur': 'Arret introuvable sur cette ligne.'}, status=404)
         resultat = []
         for siege in sieges:
             resultat.append({
                 'id': siege.id,
                 'numero': siege.numero,
-                'occupe': not siege.est_libre(ordre_montee, ordre_descente),
+                'occupe': not siege.est_libre(arret_montee.ordre, arret_descente.ordre),
             })
         return Response(resultat)
 
@@ -344,7 +343,7 @@ def api_reserver_siege(request):
         return Response({'erreur': 'Piece d\'identite obligatoire (type et numero).'}, status=400)
 
     # Longueur exacte attendue selon le type de piece (Tchad)
-    LONGUEURS_PIECE = {'cni': 10, 'passeport': 9, 'permis': 10, 'acte_naissance': 4}
+    LONGUEURS_PIECE = {'cni': 10, 'passeport': 7, 'permis': 10, 'acte_naissance': 4}
     longueur_attendue = LONGUEURS_PIECE.get(type_piece)
     if longueur_attendue and (not numero_piece.isdigit() or len(numero_piece) != longueur_attendue):
         return Response({
