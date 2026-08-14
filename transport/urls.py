@@ -69,8 +69,8 @@ urlpatterns = [
 # API - Agents de guichet (colis et transfert d'argent)
     path('api/agent-guichet/connexion/', api_views.api_connexion_agent_guichet, name='api_connexion_agent_guichet'),
     path('api/agent-guichet/profil/', api_views.api_profil_agent_guichet, name='api_profil_agent_guichet'),
-    path('api/agent-guichet/colis/<str:code_suivi>/', api_views.api_guichet_rechercher_colis, name='api_guichet_rechercher_colis'),
     path('api/agent-guichet/colis/confirmer-retrait/', api_views.api_guichet_confirmer_retrait_colis, name='api_guichet_confirmer_retrait_colis'),
-    path('api/agent-guichet/transfert/<str:code_transfert>/', api_views.api_guichet_rechercher_transfert, name='api_guichet_rechercher_transfert'),
+    path('api/agent-guichet/colis/<str:code_suivi>/', api_views.api_guichet_rechercher_colis, name='api_guichet_rechercher_colis'),
     path('api/agent-guichet/transfert/confirmer-retrait/', api_views.api_guichet_confirmer_retrait_transfert, name='api_guichet_confirmer_retrait_transfert'),
+    path('api/agent-guichet/transfert/<str:code_transfert>/', api_views.api_guichet_rechercher_transfert, name='api_guichet_rechercher_transfert'),
 ]
