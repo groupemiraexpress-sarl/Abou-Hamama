@@ -360,6 +360,7 @@ class Colis(models.Model):
     voyage = models.ForeignKey(Voyage, on_delete=models.SET_NULL, related_name='colis', null=True, blank=True, verbose_name=_("Voyage"), help_text=_("Voyage sur lequel le colis est transporte"))
 
     statut = models.CharField(_("Statut"), max_length=20, choices=STATUT_CHOICES, default='enregistre')
+    code_retrait = models.CharField(_("Code de retrait"), max_length=10, blank=True, help_text=_("Code secret remis au destinataire, exige a la remise"))
     date_enregistrement = models.DateTimeField(_("Date d'enregistrement"), auto_now_add=True)
     date_livraison = models.DateTimeField(_("Date de livraison"), null=True, blank=True)
     notes = models.TextField(_("Notes"), blank=True)
@@ -376,6 +377,11 @@ class Colis(models.Model):
             ).count()
             nouveau_numero = dernier_numero + 1
             self.code_suivi = f"COL-{annee}-{nouveau_numero:04d}"
+
+        if not self.code_retrait:
+            import random
+            self.code_retrait = str(random.randint(10000, 99999))
+
         super().save(*args, **kwargs)
 
     class Meta:

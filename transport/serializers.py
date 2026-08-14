@@ -173,13 +173,19 @@ class DemandeColisSerializer(serializers.ModelSerializer):
     agence_depart_nom = serializers.CharField(source='agence_depart.__str__', read_only=True)
     agence_arrivee_nom = serializers.CharField(source='agence_arrivee.__str__', read_only=True)
     code_suivi = serializers.SerializerMethodField()
+    code_retrait = serializers.SerializerMethodField()
 
     def get_code_suivi(self, obj):
         return obj.colis.code_suivi if obj.colis else None
 
+    def get_code_retrait(self, obj):
+        # Uniquement visible par l'expediteur, via son propre espace "mes demandes" -
+        # jamais expose par l'endpoint public de suivi (ColisSerializer).
+        return obj.colis.code_retrait if obj.colis else None
+
     class Meta:
         model = DemandeColis
-        fields = ['numero_demande', 'expediteur_nom', 'expediteur_telephone', 'destinataire_nom', 'destinataire_telephone', 'agence_depart_nom', 'agence_arrivee_nom', 'description', 'poids_estime', 'valeur_declaree', 'statut', 'statut_libelle', 'date_demande', 'code_suivi']
+        fields = ['numero_demande', 'expediteur_nom', 'expediteur_telephone', 'destinataire_nom', 'destinataire_telephone', 'agence_depart_nom', 'agence_arrivee_nom', 'description', 'poids_estime', 'valeur_declaree', 'statut', 'statut_libelle', 'date_demande', 'code_suivi', 'code_retrait']
 
 
 class DemandeTransfertSerializer(serializers.ModelSerializer):
@@ -187,13 +193,19 @@ class DemandeTransfertSerializer(serializers.ModelSerializer):
     agence_depart_nom = serializers.CharField(source='agence_depart.__str__', read_only=True)
     agence_retrait_nom = serializers.CharField(source='agence_retrait.__str__', read_only=True)
     code_suivi = serializers.SerializerMethodField()
+    code_retrait = serializers.SerializerMethodField()
 
     def get_code_suivi(self, obj):
         return obj.transfert.code_transfert if obj.transfert else None
 
+    def get_code_retrait(self, obj):
+        # Uniquement visible par l'expediteur, via son propre espace "mes demandes" -
+        # jamais expose par l'endpoint public de suivi (TransfertArgentSerializer).
+        return obj.transfert.code_retrait if obj.transfert else None
+
     class Meta:
         model = DemandeTransfert
-        fields = ['numero_demande', 'expediteur_nom', 'expediteur_telephone', 'beneficiaire_nom', 'beneficiaire_telephone', 'agence_depart_nom', 'agence_retrait_nom', 'montant', 'frais', 'statut', 'statut_libelle', 'date_demande', 'code_suivi']
+        fields = ['numero_demande', 'expediteur_nom', 'expediteur_telephone', 'beneficiaire_nom', 'beneficiaire_telephone', 'agence_depart_nom', 'agence_retrait_nom', 'montant', 'frais', 'statut', 'statut_libelle', 'date_demande', 'code_suivi', 'code_retrait']
 
 
 class QuestionFAQSerializer(serializers.ModelSerializer):
