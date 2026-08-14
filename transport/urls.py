@@ -60,7 +60,9 @@ urlpatterns = [
     path('api/chauffeur/position/', api_views.api_enregistrer_position, name='api_enregistrer_position'),
     path('api/voyage/<int:voyage_id>/positions/', api_views.api_positions_voyage, name='api_positions_voyage'),
     path('api/chauffeur/terminer-voyage/', api_views.api_terminer_voyage, name='api_terminer_voyage'),
+    path('api/chauffeur/profil/', api_views.api_profil_chauffeur, name='api_profil_chauffeur'),
     path('api/securite/connexion/', api_views.api_connexion_securite, name='api_connexion_securite'),
     path('api/securite/scanner-billet/', api_views.api_scanner_billet, name='api_scanner_billet'),
+    path('api/securite/profil/', api_views.api_profil_securite, name='api_profil_securite'),
     path('api/voyage/<int:voyage_id>/historique-positions/', api_views.api_historique_positions_voyage, name='api_historique_positions_voyage'),
 ]

@@ -915,6 +915,27 @@ def api_terminer_voyage(request):
 
     return Response({'message': 'Voyage termine avec succes.'})
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def api_profil_chauffeur(request):
+    """Profil complet du chauffeur connecte."""
+    chauffeur = Chauffeur.objects.select_related('agence', 'compagnie').filter(user=request.user).first()
+    if not chauffeur:
+        return Response({'erreur': 'Compte chauffeur introuvable.'}, status=404)
+    return Response({
+        'nom': chauffeur.nom,
+        'prenom': chauffeur.prenom,
+        'telephone': chauffeur.telephone,
+        'numero_permis': chauffeur.numero_permis,
+        'date_expiration_permis': chauffeur.date_expiration_permis,
+        'date_embauche': chauffeur.date_embauche,
+        'annees_experience': chauffeur.annees_experience,
+        'statut_libelle': chauffeur.get_statut_display(),
+        'agence': chauffeur.agence.nom if chauffeur.agence else None,
+        'compagnie': chauffeur.compagnie.nom if chauffeur.compagnie else None,
+    })
+
+
 @api_view(['POST'])
 def api_connexion_securite(request):
     """Connexion dediee aux agents de securite, pour scanner les billets."""
@@ -993,6 +1014,25 @@ def api_scanner_billet(request):
         'trajet': f"{reservation.voyage.trajet.ville_depart} -> {reservation.voyage.trajet.ville_arrivee}",
         'siege': reservation.siege.numero if reservation.siege else None,
     })
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def api_profil_securite(request):
+    """Profil complet de l'agent de securite connecte."""
+    employe = Employe.objects.select_related('agence', 'compagnie').filter(user=request.user, poste='securite').first()
+    if not employe:
+        return Response({'erreur': 'Compte agent de securite introuvable.'}, status=404)
+    return Response({
+        'nom': employe.nom,
+        'prenom': employe.prenom,
+        'telephone': employe.telephone,
+        'poste_libelle': employe.get_poste_display(),
+        'agence': employe.agence.nom if employe.agence else None,
+        'compagnie': employe.compagnie.nom if employe.compagnie else None,
+        'date_embauche': employe.date_embauche,
+    })
+
 
 @api_view(['GET'])
 def api_historique_positions_voyage(request, voyage_id):
