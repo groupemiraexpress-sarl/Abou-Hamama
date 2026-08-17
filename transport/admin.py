@@ -821,6 +821,7 @@ class DemandeColisAdmin(FiltreAgenceMixin, admin.ModelAdmin):
 
     @admin.action(description="Valider et creer le colis")
     def valider_et_creer_colis(self, request, queryset):
+        from .notifications import notifier_telephone
         crees = 0
         ignorees = 0
         for demande in queryset:
@@ -854,8 +855,18 @@ class DemandeColisAdmin(FiltreAgenceMixin, admin.ModelAdmin):
             demande.statut = 'validee'
             demande.save()
             crees += 1
+            notifier_telephone(
+                demande.expediteur_telephone, "Demande validee",
+                f"Votre demande de colis a ete validee. Code de suivi : {colis.code_suivi}.",
+                {"type": "demande_colis_validee", "code_suivi": colis.code_suivi},
+            )
+            notifier_telephone(
+                demande.destinataire_telephone, "Colis en route",
+                f"Un colis vous est envoye ({colis.code_suivi}). Vous serez notifie a son arrivee.",
+                {"type": "demande_colis_validee", "code_suivi": colis.code_suivi},
+            )
         if crees:
-            self.message_user(request, f"{crees} colis cree(s) avec succes.")
+            self.message_user(request, f"{crees} colis cree(s) avec succes. Les clients ont ete notifies.")
         if ignorees:
             self.message_user(request, f"{ignorees} demande(s) ignoree(s) : deja traitee ou poids/prix manquant.", level='warning')
 
@@ -877,6 +888,7 @@ class DemandeTransfertAdmin(FiltreAgenceMixin, admin.ModelAdmin):
 
     @admin.action(description="Valider et creer le transfert")
     def valider_et_creer_transfert(self, request, queryset):
+        from .notifications import notifier_telephone
         crees = 0
         ignorees = 0
         for demande in queryset:
@@ -909,8 +921,18 @@ class DemandeTransfertAdmin(FiltreAgenceMixin, admin.ModelAdmin):
             demande.statut = 'validee'
             demande.save()
             crees += 1
+            notifier_telephone(
+                demande.expediteur_telephone, "Demande validee",
+                f"Votre demande de transfert a ete validee. Code : {transfert.code_transfert}.",
+                {"type": "demande_transfert_validee", "code_transfert": transfert.code_transfert},
+            )
+            notifier_telephone(
+                demande.beneficiaire_telephone, "Argent disponible",
+                f"Un transfert de {demande.montant} FCFA vous attend ({transfert.code_transfert}). Presentez-vous a l'agence avec une piece d'identite.",
+                {"type": "demande_transfert_validee", "code_transfert": transfert.code_transfert},
+            )
         if crees:
-            self.message_user(request, f"{crees} transfert(s) cree(s) avec succes.")
+            self.message_user(request, f"{crees} transfert(s) cree(s) avec succes. Les clients ont ete notifies.")
         if ignorees:
             self.message_user(request, f"{ignorees} demande(s) ignoree(s) : deja validee, ou frais manquants.", level='warning')
 
