@@ -87,6 +87,8 @@ def statistiques_tableau_bord(user=None):
     colis_transit = colis_qs.filter(statut='en_transit').count()
     colis_arrives = colis_qs.filter(statut='arrive').count()
     transferts_attente = transferts_qs.filter(statut='en_attente').count()
+    colis_livres_jour = colis_qs.filter(statut='livre', date_livraison__date=aujourd_hui).count()
+    transferts_retires_jour = transferts_qs.filter(statut='retire', date_retrait__date=aujourd_hui).count()
 
     alertes_non_resolues = AlerteVoyage.objects.filter(resolue=False).count()
 
@@ -107,6 +109,8 @@ def statistiques_tableau_bord(user=None):
         'colis_transit': colis_transit,
         'colis_arrives': colis_arrives,
         'transferts_attente': transferts_attente,
+        'colis_livres_jour': colis_livres_jour,
+        'transferts_retires_jour': transferts_retires_jour,
         'bus_service': bus_service,
         'bus_maintenance': bus_maintenance,
         'total_clients': total_clients,

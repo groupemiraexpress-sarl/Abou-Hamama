@@ -9,6 +9,7 @@ from .models import (
 from django import forms
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
+import functools
 import secrets
 import string
 
@@ -300,14 +301,66 @@ class ReservationAdmin(FiltreAgenceMixin, admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
 
+class ColisConfirmationForm(forms.ModelForm):
+    """Formulaire de Colis avec 2 champs supplementaires (non enregistres tels
+    quels) permettant a l'agence d'arrivee de confirmer la remise directement
+    depuis l'admin, sans passer par l'app mobile."""
+    code_retrait_saisi = forms.CharField(
+        label=_("Code de retrait communique par le destinataire"),
+        max_length=10, required=False,
+        help_text=_("Demandez ce code au destinataire (ne le lui montrez jamais vous-meme) pour confirmer la remise."),
+    )
+    piece_identite_verifiee = forms.BooleanField(
+        label=_("J'ai verifie la piece d'identite du destinataire"),
+        required=False,
+    )
+
+    class Meta:
+        model = Colis
+        fields = '__all__'
+
+    def __init__(self, *args, request=None, **kwargs):
+        self.request = request
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned = super().clean()
+        code_saisi = (cleaned.get('code_retrait_saisi') or '').strip()
+        if not code_saisi:
+            return cleaned
+        obj = self.instance
+        employe = getattr(self.request.user, 'employe', None) if self.request else None
+        agence = getattr(employe, 'agence', None)
+        autorise = self.request and (
+            self.request.user.is_superuser
+            or (agence and obj.pk and agence.id == obj.agence_arrivee_id)
+        )
+        if not obj.pk:
+            raise forms.ValidationError(_("Impossible de confirmer la remise d'un colis pas encore enregistre."))
+        if not autorise:
+            raise forms.ValidationError(_("Seule l'agence d'arrivee peut confirmer la remise de ce colis."))
+        if obj.statut == 'livre':
+            raise forms.ValidationError(_("Ce colis a deja ete remis."))
+        if not cleaned.get('piece_identite_verifiee'):
+            raise forms.ValidationError(_("Vous devez confirmer avoir verifie la piece d'identite du destinataire."))
+        if code_saisi != obj.code_retrait:
+            raise forms.ValidationError(_("Code de retrait incorrect."))
+        return cleaned
+
+
 @admin.register(Colis)
 class ColisAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     champs_agence = ['agence_depart', 'agence_arrivee']
-    list_display = ('code_suivi', 'expediteur_nom', 'destinataire_nom', 'agence_depart', 'agence_arrivee', 'poids_kg', 'prix', 'statut', 'cree_par', 'modifie_par', 'date_enregistrement')
+    form = ColisConfirmationForm
+    list_display = ('code_suivi', 'expediteur_nom', 'destinataire_nom', 'agence_depart', 'agence_arrivee', 'poids_kg', 'prix', 'statut', 'date_livraison', 'cree_par', 'modifie_par', 'date_enregistrement')
     list_filter = ('statut', FiltreAgenceDepartArrivee, 'compagnie')
     search_fields = ('code_suivi', 'expediteur_nom', 'expediteur_telephone', 'destinataire_nom', 'destinataire_telephone')
     ordering = ('-date_enregistrement',)
     date_hierarchy = 'date_enregistrement'
+
+    def get_form(self, request, obj=None, **kwargs):
+        Form = super().get_form(request, obj, **kwargs)
+        return functools.partial(Form, request=request)
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'agence_depart':
@@ -318,10 +371,37 @@ class ColisAdmin(FiltreAgenceMixin, admin.ModelAdmin):
                     kwargs['queryset'] = Agence.objects.filter(id=agence.id)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
+    def _peut_confirmer(self, request, obj):
+        if obj is None or obj.statut == 'livre':
+            return False
+        if request.user.is_superuser:
+            return True
+        employe = getattr(request.user, 'employe', None)
+        agence = getattr(employe, 'agence', None)
+        return bool(agence and agence.id == obj.agence_arrivee_id)
+
+    def _peut_voir_code_retrait(self, request, obj):
+        if request.user.is_superuser or obj is None:
+            return True
+        employe = getattr(request.user, 'employe', None)
+        poste = employe.poste if employe else None
+        agence = getattr(employe, 'agence', None)
+        if poste == 'pdg':
+            return True
+        return bool(agence and agence.id == obj.agence_depart_id)
+
+    def get_fields(self, request, obj=None):
+        champs = list(super().get_fields(request, obj))
+        if not self._peut_voir_code_retrait(request, obj) and 'code_retrait' in champs:
+            champs.remove('code_retrait')
+        if self._peut_confirmer(request, obj):
+            champs += ['code_retrait_saisi', 'piece_identite_verifiee']
+        return champs
+
     def get_readonly_fields(self, request, obj=None):
         employe = getattr(request.user, 'employe', None)
         poste = employe.poste if employe else None
-        base = ('cree_par', 'modifie_par', 'code_suivi', 'date_enregistrement')
+        base = ('cree_par', 'modifie_par', 'code_suivi', 'code_retrait', 'date_enregistrement', 'date_livraison')
         if request.user.is_superuser or poste in ('pdg', 'responsable'):
             return base
         if obj is not None:
@@ -330,11 +410,30 @@ class ColisAdmin(FiltreAgenceMixin, admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         employe = getattr(request.user, 'employe', None)
+        code_saisi = (form.cleaned_data.get('code_retrait_saisi') or '').strip() if change else ''
+        confirmation = bool(change and code_saisi and obj.statut != 'livre')
+        if confirmation:
+            from django.utils import timezone as tz
+            obj.statut = 'livre'
+            obj.date_livraison = tz.now()
         if employe:
             obj.modifie_par = employe
             if not change:
                 obj.cree_par = employe
         super().save_model(request, obj, form, change)
+        if confirmation:
+            from .notifications import notifier_telephone
+            notifier_telephone(
+                obj.expediteur_telephone, "Colis remis",
+                f"Votre colis {obj.code_suivi} a ete remis a {obj.destinataire_nom}.",
+                {"type": "colis_livre", "code_suivi": obj.code_suivi},
+            )
+            notifier_telephone(
+                obj.destinataire_telephone, "Colis recupere",
+                f"Vous avez recupere le colis {obj.code_suivi}.",
+                {"type": "colis_livre", "code_suivi": obj.code_suivi},
+            )
+            self.message_user(request, f"Colis remis a {obj.destinataire_nom} avec succes.")
 
 
 class EmployeAdminForm(forms.ModelForm):
@@ -519,14 +618,66 @@ class EmployeAdmin(FiltreAgenceMixin, admin.ModelAdmin):
         return obj.user.username if obj.user else "—"
 
 
+class TransfertConfirmationForm(forms.ModelForm):
+    """Formulaire de TransfertArgent avec 2 champs supplementaires permettant
+    a l'agence de retrait de confirmer le paiement directement depuis
+    l'admin, sans passer par l'app mobile."""
+    code_retrait_saisi = forms.CharField(
+        label=_("Code de retrait communique par le beneficiaire"),
+        max_length=10, required=False,
+        help_text=_("Demandez ce code au beneficiaire (ne le lui montrez jamais vous-meme) pour confirmer le paiement."),
+    )
+    piece_identite_verifiee = forms.BooleanField(
+        label=_("J'ai verifie la piece d'identite du beneficiaire"),
+        required=False,
+    )
+
+    class Meta:
+        model = TransfertArgent
+        fields = '__all__'
+
+    def __init__(self, *args, request=None, **kwargs):
+        self.request = request
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned = super().clean()
+        code_saisi = (cleaned.get('code_retrait_saisi') or '').strip()
+        if not code_saisi:
+            return cleaned
+        obj = self.instance
+        employe = getattr(self.request.user, 'employe', None) if self.request else None
+        agence = getattr(employe, 'agence', None)
+        autorise = self.request and (
+            self.request.user.is_superuser
+            or (agence and obj.pk and agence.id == obj.agence_retrait_id)
+        )
+        if not obj.pk:
+            raise forms.ValidationError(_("Impossible de confirmer un transfert pas encore enregistre."))
+        if not autorise:
+            raise forms.ValidationError(_("Seule l'agence de retrait peut confirmer le paiement de ce transfert."))
+        if obj.statut != 'en_attente':
+            raise forms.ValidationError(_("Ce transfert n'est plus disponible pour retrait."))
+        if not cleaned.get('piece_identite_verifiee'):
+            raise forms.ValidationError(_("Vous devez confirmer avoir verifie la piece d'identite du beneficiaire."))
+        if code_saisi != obj.code_retrait:
+            raise forms.ValidationError(_("Code de retrait incorrect."))
+        return cleaned
+
+
 @admin.register(TransfertArgent)
 class TransfertArgentAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     champs_agence = ['agence_depart', 'agence_retrait']
-    list_display = ('code_transfert', 'expediteur_nom', 'beneficiaire_nom', 'montant', 'frais', 'agence_depart', 'agence_retrait', 'statut', 'cree_par', 'modifie_par', 'date_envoi')
+    form = TransfertConfirmationForm
+    list_display = ('code_transfert', 'expediteur_nom', 'beneficiaire_nom', 'montant', 'frais', 'agence_depart', 'agence_retrait', 'statut', 'date_retrait', 'cree_par', 'modifie_par', 'date_envoi')
     list_filter = ('statut', FiltreAgenceDepartRetrait, 'compagnie')
     search_fields = ('code_transfert', 'expediteur_nom', 'expediteur_telephone', 'beneficiaire_nom', 'beneficiaire_telephone', 'code_retrait')
     ordering = ('-date_envoi',)
     date_hierarchy = 'date_envoi'
+
+    def get_form(self, request, obj=None, **kwargs):
+        Form = super().get_form(request, obj, **kwargs)
+        return functools.partial(Form, request=request)
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'agence_depart':
@@ -537,10 +688,37 @@ class TransfertArgentAdmin(FiltreAgenceMixin, admin.ModelAdmin):
                     kwargs['queryset'] = Agence.objects.filter(id=agence.id)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
+    def _peut_confirmer(self, request, obj):
+        if obj is None or obj.statut != 'en_attente':
+            return False
+        if request.user.is_superuser:
+            return True
+        employe = getattr(request.user, 'employe', None)
+        agence = getattr(employe, 'agence', None)
+        return bool(agence and agence.id == obj.agence_retrait_id)
+
+    def _peut_voir_code_retrait(self, request, obj):
+        if request.user.is_superuser or obj is None:
+            return True
+        employe = getattr(request.user, 'employe', None)
+        poste = employe.poste if employe else None
+        agence = getattr(employe, 'agence', None)
+        if poste == 'pdg':
+            return True
+        return bool(agence and agence.id == obj.agence_depart_id)
+
+    def get_fields(self, request, obj=None):
+        champs = list(super().get_fields(request, obj))
+        if not self._peut_voir_code_retrait(request, obj) and 'code_retrait' in champs:
+            champs.remove('code_retrait')
+        if self._peut_confirmer(request, obj):
+            champs += ['code_retrait_saisi', 'piece_identite_verifiee']
+        return champs
+
     def get_readonly_fields(self, request, obj=None):
         employe = getattr(request.user, 'employe', None)
         poste = employe.poste if employe else None
-        base = ('cree_par', 'modifie_par', 'code_transfert', 'code_retrait', 'date_envoi')
+        base = ('cree_par', 'modifie_par', 'code_transfert', 'code_retrait', 'date_envoi', 'date_retrait')
         if request.user.is_superuser or poste in ('pdg', 'responsable'):
             return base
         if obj is not None:
@@ -549,11 +727,30 @@ class TransfertArgentAdmin(FiltreAgenceMixin, admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         employe = getattr(request.user, 'employe', None)
+        code_saisi = (form.cleaned_data.get('code_retrait_saisi') or '').strip() if change else ''
+        confirmation = bool(change and code_saisi and obj.statut == 'en_attente')
+        if confirmation:
+            from django.utils import timezone as tz
+            obj.statut = 'retire'
+            obj.date_retrait = tz.now()
         if employe:
             obj.modifie_par = employe
             if not change:
                 obj.cree_par = employe
         super().save_model(request, obj, form, change)
+        if confirmation:
+            from .notifications import notifier_telephone
+            notifier_telephone(
+                obj.expediteur_telephone, "Transfert retire",
+                f"Votre transfert {obj.code_transfert} a ete retire par {obj.beneficiaire_nom}.",
+                {"type": "transfert_retire", "code_transfert": obj.code_transfert},
+            )
+            notifier_telephone(
+                obj.beneficiaire_telephone, "Transfert recupere",
+                f"Vous avez recupere le transfert {obj.code_transfert} ({obj.montant} FCFA).",
+                {"type": "transfert_retire", "code_transfert": obj.code_transfert},
+            )
+            self.message_user(request, f"Transfert paye a {obj.beneficiaire_nom} avec succes.")
 
 
 @admin.register(Entretien)

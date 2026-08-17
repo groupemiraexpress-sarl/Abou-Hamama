@@ -294,7 +294,8 @@ DRAPEAUX_TABLEAU_BORD = [
     'voit_voyages_aujourd_hui', 'voit_reservations_jour', 'voit_recette_jour', 'voit_voyages_a_venir',
     'voit_alertes_non_resolues', 'voit_demandes_colis_attente', 'voit_demandes_transfert_attente',
     'voit_reservations_attente', 'voit_transferts_attente', 'voit_permis_a_renouveler',
-    'voit_colis_transit', 'voit_colis_arrives', 'voit_bus_service', 'voit_bus_maintenance',
+    'voit_colis_transit', 'voit_colis_arrives', 'voit_colis_livres_jour', 'voit_transferts_retires_jour',
+    'voit_bus_service', 'voit_bus_maintenance',
     'voit_total_clients', 'voit_total_employes',
     'voit_groupe_exploitation', 'voit_groupe_securite', 'voit_groupe_colis_transferts',
     'voit_groupe_clients_personnel', 'voit_groupe_maintenance', 'voit_groupe_configuration',
@@ -308,7 +309,8 @@ PROFILS_TABLEAU_BORD = {
         'voit_voyages_aujourd_hui', 'voit_reservations_jour', 'voit_recette_jour', 'voit_voyages_a_venir',
         'voit_alertes_non_resolues', 'voit_demandes_colis_attente', 'voit_demandes_transfert_attente',
         'voit_reservations_attente', 'voit_transferts_attente', 'voit_permis_a_renouveler',
-        'voit_colis_transit', 'voit_colis_arrives', 'voit_bus_service', 'voit_bus_maintenance', 'voit_total_clients',
+        'voit_colis_transit', 'voit_colis_arrives', 'voit_colis_livres_jour', 'voit_transferts_retires_jour',
+        'voit_bus_service', 'voit_bus_maintenance', 'voit_total_clients',
         'voit_groupe_exploitation', 'voit_groupe_securite', 'voit_groupe_colis_transferts',
         'voit_groupe_clients_personnel', 'voit_groupe_maintenance',
     },
@@ -316,7 +318,7 @@ PROFILS_TABLEAU_BORD = {
         'voit_raccourci_vente',
         'voit_voyages_aujourd_hui', 'voit_reservations_jour', 'voit_voyages_a_venir', 'voit_reservations_attente',
         'voit_demandes_colis_attente', 'voit_demandes_transfert_attente',
-        'voit_colis_transit', 'voit_colis_arrives',
+        'voit_colis_transit', 'voit_colis_arrives', 'voit_colis_livres_jour', 'voit_transferts_retires_jour',
         'voit_groupe_exploitation', 'voit_groupe_colis_transferts',
     },
     'resp_planning': {
@@ -331,16 +333,16 @@ PROFILS_TABLEAU_BORD = {
         'voit_raccourci_vente', 'voit_reservations_jour', 'voit_recette_jour', 'voit_reservations_attente',
     },
     'agent_colis': {
-        'voit_demandes_colis_attente', 'voit_colis_transit', 'voit_colis_arrives', 'voit_groupe_colis_transferts',
+        'voit_demandes_colis_attente', 'voit_colis_transit', 'voit_colis_arrives', 'voit_colis_livres_jour', 'voit_groupe_colis_transferts',
     },
     'agent_transfert': {
-        'voit_demandes_transfert_attente', 'voit_transferts_attente', 'voit_groupe_colis_transferts',
+        'voit_demandes_transfert_attente', 'voit_transferts_attente', 'voit_transferts_retires_jour', 'voit_groupe_colis_transferts',
     },
     'manutentionnaire': {
         'voit_colis_transit', 'voit_colis_arrives',
     },
     'comptable': {
-        'voit_recette_jour', 'voit_reservations_attente', 'voit_transferts_attente',
+        'voit_recette_jour', 'voit_reservations_attente', 'voit_transferts_attente', 'voit_transferts_retires_jour',
     },
     'rh': {
         'voit_total_employes', 'voit_permis_a_renouveler', 'voit_groupe_clients_personnel',

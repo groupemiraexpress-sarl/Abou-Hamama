@@ -190,7 +190,7 @@
     </div>
     {% endif %}
 
-    {% if stats_profil.voit_colis_transit or stats_profil.voit_colis_arrives or stats_profil.voit_bus_service or stats_profil.voit_bus_maintenance or stats_profil.voit_total_clients or stats_profil.voit_total_employes %}
+    {% if stats_profil.voit_colis_transit or stats_profil.voit_colis_arrives or stats_profil.voit_colis_livres_jour or stats_profil.voit_transferts_retires_jour or stats_profil.voit_bus_service or stats_profil.voit_bus_maintenance or stats_profil.voit_total_clients or stats_profil.voit_total_employes %}
     <h2 class="stats-titre">{% trans "Activite" %}</h2>
     <div class="stats-grille">
       {% if stats_profil.voit_colis_transit %}
@@ -203,6 +203,18 @@
       <div class="stat-carte">
         <div class="stat-valeur">{{ stats.colis_arrives }}</div>
         <div class="stat-label">{% trans "Colis arrives" %}</div>
+      </div>
+      {% endif %}
+      {% if stats_profil.voit_colis_livres_jour %}
+      <div class="stat-carte">
+        <div class="stat-valeur">{{ stats.colis_livres_jour }}</div>
+        <div class="stat-label">{% trans "Colis remis aujourd'hui" %}</div>
+      </div>
+      {% endif %}
+      {% if stats_profil.voit_transferts_retires_jour %}
+      <div class="stat-carte">
+        <div class="stat-valeur">{{ stats.transferts_retires_jour }}</div>
+        <div class="stat-label">{% trans "Transferts retires aujourd'hui" %}</div>
       </div>
       {% endif %}
       {% if stats_profil.voit_bus_service %}
