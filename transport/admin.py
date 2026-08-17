@@ -412,9 +412,16 @@ class ColisAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     def get_readonly_fields(self, request, obj=None):
         employe = getattr(request.user, 'employe', None)
         poste = employe.poste if employe else None
+        agence = getattr(employe, 'agence', None)
         base = ('cree_par', 'modifie_par', 'code_suivi', 'code_retrait', 'date_enregistrement', 'date_livraison')
         if request.user.is_superuser or poste in ('pdg', 'responsable'):
             return base
+        if obj is not None and agence and agence.id == obj.agence_arrivee_id and agence.id != obj.agence_depart_id:
+            # L'agence d'arrivee n'a pas enregistre ce colis : elle ne doit
+            # rien pouvoir modifier dessus (juste consulter et confirmer la
+            # remise via les 2 champs ajoutes par le formulaire).
+            champs_modele = tuple(f.name for f in Colis._meta.fields if f.editable and f.name != 'id')
+            return tuple(dict.fromkeys(base + champs_modele))
         if obj is not None:
             return base + ('prix',)
         return base
@@ -740,9 +747,16 @@ class TransfertArgentAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     def get_readonly_fields(self, request, obj=None):
         employe = getattr(request.user, 'employe', None)
         poste = employe.poste if employe else None
+        agence = getattr(employe, 'agence', None)
         base = ('cree_par', 'modifie_par', 'code_transfert', 'code_retrait', 'date_envoi', 'date_retrait')
         if request.user.is_superuser or poste in ('pdg', 'responsable'):
             return base
+        if obj is not None and agence and agence.id == obj.agence_retrait_id and agence.id != obj.agence_depart_id:
+            # L'agence de retrait n'a pas enregistre ce transfert : elle ne
+            # doit rien pouvoir modifier dessus (juste consulter et
+            # confirmer le paiement via les 2 champs ajoutes par le formulaire).
+            champs_modele = tuple(f.name for f in TransfertArgent._meta.fields if f.editable and f.name != 'id')
+            return tuple(dict.fromkeys(base + champs_modele))
         if obj is not None:
             return base + ('montant', 'frais')
         return base
