@@ -73,4 +73,7 @@ urlpatterns = [
     path('api/agent-guichet/colis/<str:code_suivi>/', api_views.api_guichet_rechercher_colis, name='api_guichet_rechercher_colis'),
     path('api/agent-guichet/transfert/confirmer-retrait/', api_views.api_guichet_confirmer_retrait_transfert, name='api_guichet_confirmer_retrait_transfert'),
     path('api/agent-guichet/transfert/<str:code_transfert>/', api_views.api_guichet_rechercher_transfert, name='api_guichet_rechercher_transfert'),
+
+# API - Notifications push
+    path('api/push-token/', api_views.api_enregistrer_push_token, name='api_enregistrer_push_token'),
 ]

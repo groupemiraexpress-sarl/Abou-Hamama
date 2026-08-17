@@ -4,7 +4,7 @@ from .models import (
     Compagnie, Agence, Bus, Chauffeur, Trajet, Voyage,
     Client, Reservation, Colis, Employe, TransfertArgent,
     Entretien, PleinCarburant, Promotion, DemandeColis, DemandeTransfert, Ligne, ArretLigne,
-    AlerteVoyage, AvisVoyage, QuestionFAQ
+    AlerteVoyage, AvisVoyage, QuestionFAQ, PushToken
 )
 from django import forms
 from django.contrib.auth.models import User
@@ -830,3 +830,10 @@ class QuestionFAQAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return _config_modifiable_uniquement_par_pdg(request)
+
+
+@admin.register(PushToken)
+class PushTokenAdmin(admin.ModelAdmin):
+    list_display = ('user', 'token', 'date_maj')
+    search_fields = ('user__username', 'token')
+    readonly_fields = ('date_creation', 'date_maj')

@@ -11,7 +11,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 
-from .models import Voyage, Colis, TransfertArgent, Client, Reservation, Siege, Promotion, DemandeColis, Agence, DemandeTransfert, Chauffeur, PositionBus, Employe
+from .models import Voyage, Colis, TransfertArgent, Client, Reservation, Siege, Promotion, DemandeColis, Agence, DemandeTransfert, Chauffeur, PositionBus, Employe, PushToken
 from .serializers import VoyageSerializer, ColisSerializer, TransfertArgentSerializer, ReservationSerializer, SiegeSerializer, PromotionSerializer, DemandeColisSerializer, AgenceSerializer, DemandeTransfertSerializer
 import re
 from django.core.validators import validate_email
@@ -1254,6 +1254,20 @@ def api_guichet_confirmer_retrait_colis(request):
     colis.modifie_par = employe
     colis.save()
 
+    from .notifications import notifier_telephone
+    notifier_telephone(
+        colis.expediteur_telephone,
+        "Colis remis",
+        f"Votre colis {colis.code_suivi} a ete remis a {colis.destinataire_nom}.",
+        {"type": "colis_livre", "code_suivi": colis.code_suivi},
+    )
+    notifier_telephone(
+        colis.destinataire_telephone,
+        "Colis recupere",
+        f"Vous avez recupere le colis {colis.code_suivi}.",
+        {"type": "colis_livre", "code_suivi": colis.code_suivi},
+    )
+
     return Response({
         'message': 'Colis remis avec succes.',
         'destinataire_nom': colis.destinataire_nom,
@@ -1329,7 +1343,33 @@ def api_guichet_confirmer_retrait_transfert(request):
     transfert.modifie_par = employe
     transfert.save()
 
+    from .notifications import notifier_telephone
+    notifier_telephone(
+        transfert.expediteur_telephone,
+        "Transfert retire",
+        f"Votre transfert {transfert.code_transfert} a ete retire par {transfert.beneficiaire_nom}.",
+        {"type": "transfert_retire", "code_transfert": transfert.code_transfert},
+    )
+    notifier_telephone(
+        transfert.beneficiaire_telephone,
+        "Transfert recupere",
+        f"Vous avez recupere le transfert {transfert.code_transfert} ({transfert.montant} FCFA).",
+        {"type": "transfert_retire", "code_transfert": transfert.code_transfert},
+    )
+
     return Response({
         'message': 'Transfert paye avec succes.',
         'beneficiaire_nom': transfert.beneficiaire_nom,
     })
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def api_enregistrer_push_token(request):
+    """Enregistre (ou met a jour) le jeton de notification push Expo de l'utilisateur connecte."""
+    token = request.data.get('token', '').strip()
+    if not token:
+        return Response({'erreur': 'Jeton manquant.'}, status=400)
+
+    PushToken.objects.update_or_create(token=token, defaults={'user': request.user})
+    return Response({'message': 'Jeton enregistre avec succes.'})

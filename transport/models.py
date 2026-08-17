@@ -766,6 +766,22 @@ class AlerteVoyage(models.Model):
         ordering = ['-date_creation']
 
 
+class PushToken(models.Model):
+    """Jeton de notification push Expo associe a un compte utilisateur de l'app mobile."""
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='push_tokens', verbose_name=_("Utilisateur"))
+    token = models.CharField(_("Jeton Expo"), max_length=255, unique=True)
+    date_creation = models.DateTimeField(_("Date de creation"), auto_now_add=True)
+    date_maj = models.DateTimeField(_("Derniere mise a jour"), auto_now=True)
+
+    def __str__(self):
+        return f"{self.user} - {self.token[:20]}..."
+
+    class Meta:
+        verbose_name = _("Jeton push")
+        verbose_name_plural = _("Jetons push")
+        ordering = ['-date_maj']
+
+
 class AvisVoyage(models.Model):
     """Avis laisse par un client apres un voyage termine (note + criteres detailles)."""
     reservation = models.OneToOneField('Reservation', on_delete=models.CASCADE, related_name='avis', verbose_name=_("Reservation"))
