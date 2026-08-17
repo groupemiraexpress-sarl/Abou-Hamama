@@ -47,14 +47,16 @@ def statistiques_tableau_bord(user=None):
             demandes_transfert_qs = demandes_transfert_qs.none()
             chauffeurs_qs = chauffeurs_qs.none()
         else:
+            # Colis/transferts restent filtres par agence (depart OU
+            # arrivee/retrait) meme pour un agent_colis/agent_transfert :
+            # l'agence d'arrivee doit voir ce que l'agence de depart a
+            # enregistre pour pouvoir confirmer la remise/le retrait.
+            colis_qs = colis_qs.filter(Q(agence_depart=agence) | Q(agence_arrivee=agence))
+            transferts_qs = transferts_qs.filter(Q(agence_depart=agence) | Q(agence_retrait=agence))
             if poste in POSTES_PERSONNEL:
                 reservations_qs = reservations_qs.filter(cree_par=employe)
-                colis_qs = colis_qs.filter(cree_par=employe)
-                transferts_qs = transferts_qs.filter(cree_par=employe)
             else:
                 reservations_qs = reservations_qs.filter(agence=agence)
-                colis_qs = colis_qs.filter(Q(agence_depart=agence) | Q(agence_arrivee=agence))
-                transferts_qs = transferts_qs.filter(Q(agence_depart=agence) | Q(agence_retrait=agence))
 
             # Seule l'agence de depart traite la demande : l'agence
             # d'arrivee/de retrait ne doit pas la voir avant validation.

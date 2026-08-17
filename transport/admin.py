@@ -350,6 +350,10 @@ class ColisConfirmationForm(forms.ModelForm):
 @admin.register(Colis)
 class ColisAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     champs_agence = ['agence_depart', 'agence_arrivee']
+    # Un colis doit rester visible par l'agence d'arrivee (pour confirmer la
+    # remise) meme si c'est l'agence de depart qui l'a enregistre : on ne
+    # doit donc PAS filtrer par "createur" ici, seulement par agence.
+    champ_createur = None
     form = ColisConfirmationForm
     list_display = ('code_suivi', 'expediteur_nom', 'destinataire_nom', 'agence_depart', 'agence_arrivee', 'poids_kg', 'prix', 'statut', 'date_livraison', 'cree_par', 'modifie_par', 'date_enregistrement')
     list_filter = ('statut', FiltreAgenceDepartArrivee, 'compagnie')
@@ -675,6 +679,9 @@ class TransfertConfirmationForm(forms.ModelForm):
 @admin.register(TransfertArgent)
 class TransfertArgentAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     champs_agence = ['agence_depart', 'agence_retrait']
+    # Meme raisonnement que pour ColisAdmin : l'agence de retrait doit voir
+    # le transfert enregistre par l'agence de depart pour pouvoir le payer.
+    champ_createur = None
     form = TransfertConfirmationForm
     list_display = ('code_transfert', 'expediteur_nom', 'beneficiaire_nom', 'montant', 'frais', 'agence_depart', 'agence_retrait', 'statut', 'date_retrait', 'cree_par', 'modifie_par', 'date_envoi')
     list_filter = ('statut', FiltreAgenceDepartRetrait, 'compagnie')
