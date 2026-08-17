@@ -34,8 +34,10 @@ def statistiques_tableau_bord(user=None):
             reservations_qs = reservations_qs.filter(agence__zone=zone)
             colis_qs = colis_qs.filter(Q(agence_depart__zone=zone) | Q(agence_arrivee__zone=zone))
             transferts_qs = transferts_qs.filter(Q(agence_depart__zone=zone) | Q(agence_retrait__zone=zone))
-            demandes_colis_qs = demandes_colis_qs.filter(Q(agence_depart__zone=zone) | Q(agence_arrivee__zone=zone))
-            demandes_transfert_qs = demandes_transfert_qs.filter(Q(agence_depart__zone=zone) | Q(agence_retrait__zone=zone))
+            # Seule l'agence de depart traite la demande : ne pas compter les
+            # demandes ou la zone n'est que la destination/le retrait.
+            demandes_colis_qs = demandes_colis_qs.filter(agence_depart__zone=zone)
+            demandes_transfert_qs = demandes_transfert_qs.filter(agence_depart__zone=zone)
             chauffeurs_qs = chauffeurs_qs.filter(agence__zone=zone)
         elif agence is None:
             reservations_qs = reservations_qs.none()
@@ -54,8 +56,10 @@ def statistiques_tableau_bord(user=None):
                 colis_qs = colis_qs.filter(Q(agence_depart=agence) | Q(agence_arrivee=agence))
                 transferts_qs = transferts_qs.filter(Q(agence_depart=agence) | Q(agence_retrait=agence))
 
-            demandes_colis_qs = demandes_colis_qs.filter(Q(agence_depart=agence) | Q(agence_arrivee=agence))
-            demandes_transfert_qs = demandes_transfert_qs.filter(Q(agence_depart=agence) | Q(agence_retrait=agence))
+            # Seule l'agence de depart traite la demande : l'agence
+            # d'arrivee/de retrait ne doit pas la voir avant validation.
+            demandes_colis_qs = demandes_colis_qs.filter(agence_depart=agence)
+            demandes_transfert_qs = demandes_transfert_qs.filter(agence_depart=agence)
             chauffeurs_qs = chauffeurs_qs.filter(agence=agence)
 
     # Voyages et parc (pas de notion d'agence sur ces modeles, restent globaux)

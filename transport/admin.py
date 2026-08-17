@@ -595,7 +595,10 @@ class PromotionAdmin(admin.ModelAdmin):
 
 @admin.register(DemandeColis)
 class DemandeColisAdmin(FiltreAgenceMixin, admin.ModelAdmin):
-    champs_agence = ['agence_depart', 'agence_arrivee']
+    # Seule l'agence de depart traite la demande (elle recoit physiquement le
+    # colis et fixe poids/prix). L'agence d'arrivee ne doit pas voir la
+    # demande avant validation : elle ne verra le colis qu'une fois cree.
+    champs_agence = ['agence_depart']
     champ_createur = None  # demandes soumises par les clients, pas par un employe
     list_display = ('numero_demande', 'expediteur_nom', 'destinataire_nom', 'agence_depart', 'agence_arrivee', 'poids_estime', 'poids_reel', 'prix', 'statut', 'date_demande')
     list_filter = ('statut', FiltreAgenceDepartArrivee)
@@ -647,7 +650,10 @@ class DemandeColisAdmin(FiltreAgenceMixin, admin.ModelAdmin):
 
 @admin.register(DemandeTransfert)
 class DemandeTransfertAdmin(FiltreAgenceMixin, admin.ModelAdmin):
-    champs_agence = ['agence_depart', 'agence_retrait']
+    # Seule l'agence de depart traite la demande (elle recoit l'argent et
+    # fixe les frais). L'agence de retrait ne doit pas voir la demande avant
+    # validation : elle ne verra le transfert qu'une fois cree.
+    champs_agence = ['agence_depart']
     champ_createur = None
     list_display = ('numero_demande', 'expediteur_nom', 'beneficiaire_nom', 'agence_depart', 'agence_retrait', 'montant', 'frais', 'statut', 'date_demande')
     list_filter = ('statut', FiltreAgenceDepartRetrait)
