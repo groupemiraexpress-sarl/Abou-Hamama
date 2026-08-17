@@ -9,7 +9,6 @@ from .models import (
 from django import forms
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
-import functools
 import secrets
 import string
 
@@ -360,7 +359,13 @@ class ColisAdmin(FiltreAgenceMixin, admin.ModelAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
         Form = super().get_form(request, obj, **kwargs)
-        return functools.partial(Form, request=request)
+
+        class FormAvecRequete(Form):
+            def __init__(self, *args, **inner_kwargs):
+                inner_kwargs.setdefault('request', request)
+                super().__init__(*args, **inner_kwargs)
+
+        return FormAvecRequete
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'agence_depart':
@@ -394,8 +399,10 @@ class ColisAdmin(FiltreAgenceMixin, admin.ModelAdmin):
         champs = list(super().get_fields(request, obj))
         if not self._peut_voir_code_retrait(request, obj) and 'code_retrait' in champs:
             champs.remove('code_retrait')
-        if self._peut_confirmer(request, obj):
-            champs += ['code_retrait_saisi', 'piece_identite_verifiee']
+        if not self._peut_confirmer(request, obj):
+            for champ in ('code_retrait_saisi', 'piece_identite_verifiee'):
+                if champ in champs:
+                    champs.remove(champ)
         return champs
 
     def get_readonly_fields(self, request, obj=None):
@@ -677,7 +684,13 @@ class TransfertArgentAdmin(FiltreAgenceMixin, admin.ModelAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
         Form = super().get_form(request, obj, **kwargs)
-        return functools.partial(Form, request=request)
+
+        class FormAvecRequete(Form):
+            def __init__(self, *args, **inner_kwargs):
+                inner_kwargs.setdefault('request', request)
+                super().__init__(*args, **inner_kwargs)
+
+        return FormAvecRequete
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'agence_depart':
@@ -711,8 +724,10 @@ class TransfertArgentAdmin(FiltreAgenceMixin, admin.ModelAdmin):
         champs = list(super().get_fields(request, obj))
         if not self._peut_voir_code_retrait(request, obj) and 'code_retrait' in champs:
             champs.remove('code_retrait')
-        if self._peut_confirmer(request, obj):
-            champs += ['code_retrait_saisi', 'piece_identite_verifiee']
+        if not self._peut_confirmer(request, obj):
+            for champ in ('code_retrait_saisi', 'piece_identite_verifiee'):
+                if champ in champs:
+                    champs.remove(champ)
         return champs
 
     def get_readonly_fields(self, request, obj=None):
