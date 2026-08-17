@@ -483,6 +483,8 @@ def api_creer_demande_colis(request):
     agence_arrivee = Agence.objects.filter(id=agence_arrivee_id).first()
     if not agence_depart or not agence_arrivee:
         return Response({'erreur': 'Agence introuvable.'}, status=404)
+    if agence_depart.zone and agence_arrivee.zone and agence_depart.zone != agence_arrivee.zone:
+        return Response({'erreur': "Ces deux agences ne sont pas sur le meme trajet (zones differentes)."}, status=400)
 
     client = Client.objects.filter(user=user).first()
 
@@ -550,6 +552,8 @@ def api_creer_demande_transfert(request):
     agence_retrait = Agence.objects.filter(id=agence_retrait_id).first()
     if not agence_depart or not agence_retrait:
         return Response({'erreur': 'Agence introuvable.'}, status=404)
+    if agence_depart.zone and agence_retrait.zone and agence_depart.zone != agence_retrait.zone:
+        return Response({'erreur': "Ces deux agences ne sont pas sur le meme trajet (zones differentes)."}, status=400)
 
     client = Client.objects.filter(user=user).first()
 

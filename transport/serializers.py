@@ -165,7 +165,7 @@ class PromotionSerializer(serializers.ModelSerializer):
 class AgenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Agence
-        fields = ['id', 'nom', 'ville', 'adresse', 'telephone']
+        fields = ['id', 'nom', 'ville', 'adresse', 'telephone', 'zone']
 
 
 class DemandeColisSerializer(serializers.ModelSerializer):
