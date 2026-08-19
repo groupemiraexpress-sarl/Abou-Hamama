@@ -262,8 +262,31 @@ class ClientAdmin(admin.ModelAdmin):
         return obj.filleuls.count()
 
 
+class ReservationAdminForm(forms.ModelForm):
+    class Meta:
+        model = Reservation
+        fields = '__all__'
+
+    def clean(self):
+        cleaned = super().clean()
+        siege = cleaned.get('siege')
+        statut = cleaned.get('statut')
+        if siege and statut not in ('annulee', 'remboursee'):
+            arret_montee = cleaned.get('arret_montee')
+            arret_descente = cleaned.get('arret_descente')
+            ordre_montee = arret_montee.ordre if arret_montee else 1
+            ordre_descente = arret_descente.ordre if arret_descente else 999999
+            if not siege.est_libre(ordre_montee, ordre_descente, exclure_reservation_id=self.instance.pk):
+                raise forms.ValidationError(
+                    _("Le siege %(numero)s est deja reserve sur ce trajet par une autre reservation active. Verifiez la liste des reservations avant d'en creer une nouvelle.")
+                    % {'numero': siege.numero}
+                )
+        return cleaned
+
+
 @admin.register(Reservation)
 class ReservationAdmin(FiltreAgenceMixin, admin.ModelAdmin):
+    form = ReservationAdminForm
     champs_agence = ['agence']
     list_display = ('numero_reservation', 'client', 'voyage', 'nombre_places', 'montant_total', 'statut', 'origine', 'mode_paiement', 'modifie_par', 'date_reservation')
     list_filter = ('statut', 'mode_paiement', 'voyage__date_depart', FiltreAgenceListFilter)

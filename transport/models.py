@@ -289,6 +289,13 @@ class Reservation(models.Model):
                 ).count()
                 nouveau_numero = dernier_numero + 1
                 self.numero_reservation = f"RES-{annee}-{nouveau_numero:04d}"
+            if self.siege_id and self.statut not in ('annulee', 'remboursee'):
+                ordre_montee = self.arret_montee.ordre if self.arret_montee_id else 1
+                ordre_descente = self.arret_descente.ordre if self.arret_descente_id else 999999
+                if not self.siege.est_libre(ordre_montee, ordre_descente):
+                    raise ValueError(
+                        f"Le siege {self.siege.numero} est deja reserve sur ce trajet (verifiez les reservations existantes)."
+                    )
             if self.arret_montee and self.arret_descente:
                 self.montant_total = self.arret_descente.prix_depuis_depart - self.arret_montee.prix_depuis_depart
             else:
@@ -550,12 +557,14 @@ class Siege(models.Model):
     def __str__(self):
         return f"Siege {self.numero} - {self.voyage}"
 
-    def est_libre(self, ordre_montee, ordre_descente):
+    def est_libre(self, ordre_montee, ordre_descente, exclure_reservation_id=None):
         """
         Verifie si ce siege est libre sur le segment [ordre_montee, ordre_descente[.
         Deux segments se chevauchent si depart_A < arrivee_B ET depart_B < arrivee_A.
         """
         reservations_actives = self.reservations.exclude(statut__in=['annulee', 'remboursee'])
+        if exclure_reservation_id:
+            reservations_actives = reservations_actives.exclude(pk=exclure_reservation_id)
 
         if not self.voyage.ligne_id:
             return not reservations_actives.exists()
