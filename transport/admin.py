@@ -287,6 +287,9 @@ class ReservationAdminForm(forms.ModelForm):
 @admin.register(Reservation)
 class ReservationAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     form = ReservationAdminForm
+
+    class Media:
+        js = ('transport/admin_reservation_sieges.js',)
     champs_agence = ['agence']
     list_display = ('numero_reservation', 'client', 'voyage', 'nombre_places', 'montant_total', 'statut', 'origine', 'mode_paiement', 'modifie_par', 'date_reservation')
     list_filter = ('statut', 'mode_paiement', 'voyage__date_depart', FiltreAgenceListFilter)
