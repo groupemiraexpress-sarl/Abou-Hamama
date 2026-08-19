@@ -35,9 +35,27 @@ def _envoyer_vers_expo(messages):
             method="POST",
         )
         with urllib.request.urlopen(req, timeout=10) as resp:
-            resp.read()
+            corps_reponse = resp.read().decode("utf-8")
+    except urllib.error.HTTPError as e:
+        logger.error("Echec de l'envoi de notification(s) push Expo (HTTP %s): %s", e.code, e.read().decode("utf-8", "replace"))
+        return
     except Exception:
         logger.exception("Echec de l'envoi de notification(s) push Expo")
+        return
+
+    try:
+        reponse = json.loads(corps_reponse)
+    except ValueError:
+        logger.error("Reponse Expo illisible: %s", corps_reponse)
+        return
+
+    tickets = reponse.get("data") if isinstance(reponse, dict) else None
+    if isinstance(tickets, list):
+        for ticket in tickets:
+            if isinstance(ticket, dict) and ticket.get("status") == "error":
+                logger.error("Erreur push Expo: %s", ticket)
+    if isinstance(reponse, dict) and reponse.get("errors"):
+        logger.error("Erreur push Expo (requete): %s", reponse["errors"])
 
 
 def notifier_utilisateur(user, titre, corps, data=None):
