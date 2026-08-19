@@ -474,6 +474,10 @@ def api_creer_demande_colis(request):
 
     if not expediteur_nom or not expediteur_telephone or not destinataire_nom or not destinataire_telephone:
         return Response({'erreur': 'Informations expediteur et destinataire obligatoires.'}, status=400)
+    if not expediteur_type_piece or not expediteur_numero_piece:
+        return Response({'erreur': "Piece d'identite de l'expediteur obligatoire (type et numero)."}, status=400)
+    if not destinataire_type_piece or not destinataire_numero_piece:
+        return Response({'erreur': "Piece d'identite du destinataire obligatoire (type et numero)."}, status=400)
     if not agence_depart_id or not agence_arrivee_id:
         return Response({'erreur': 'Agences de depart et arrivee obligatoires.'}, status=400)
     if not description or not poids_estime:
@@ -528,14 +532,24 @@ def api_creer_demande_transfert(request):
     user = request.user
     expediteur_nom = request.data.get('expediteur_nom', '').strip()
     expediteur_telephone = request.data.get('expediteur_telephone', '').strip()
+    expediteur_nationalite = request.data.get('expediteur_nationalite', '').strip()
+    expediteur_type_piece = request.data.get('expediteur_type_piece', '').strip()
+    expediteur_numero_piece = request.data.get('expediteur_numero_piece', '').strip()
     beneficiaire_nom = request.data.get('beneficiaire_nom', '').strip()
     beneficiaire_telephone = request.data.get('beneficiaire_telephone', '').strip()
+    beneficiaire_nationalite = request.data.get('beneficiaire_nationalite', '').strip()
+    beneficiaire_type_piece = request.data.get('beneficiaire_type_piece', '').strip()
+    beneficiaire_numero_piece = request.data.get('beneficiaire_numero_piece', '').strip()
     agence_depart_id = request.data.get('agence_depart')
     agence_retrait_id = request.data.get('agence_retrait')
     montant = request.data.get('montant')
 
     if not expediteur_nom or not expediteur_telephone or not beneficiaire_nom or not beneficiaire_telephone:
         return Response({'erreur': 'Informations expediteur et beneficiaire obligatoires.'}, status=400)
+    if not expediteur_type_piece or not expediteur_numero_piece:
+        return Response({'erreur': "Piece d'identite de l'expediteur obligatoire (type et numero)."}, status=400)
+    if not beneficiaire_type_piece or not beneficiaire_numero_piece:
+        return Response({'erreur': "Piece d'identite du beneficiaire obligatoire (type et numero)."}, status=400)
     if not agence_depart_id or not agence_retrait_id:
         return Response({'erreur': 'Agences de depart et de retrait obligatoires.'}, status=400)
     if not montant:
@@ -561,8 +575,14 @@ def api_creer_demande_transfert(request):
         client=client,
         expediteur_nom=expediteur_nom,
         expediteur_telephone=expediteur_telephone,
+        expediteur_nationalite=expediteur_nationalite,
+        expediteur_type_piece=expediteur_type_piece,
+        expediteur_numero_piece=expediteur_numero_piece,
         beneficiaire_nom=beneficiaire_nom,
         beneficiaire_telephone=beneficiaire_telephone,
+        beneficiaire_nationalite=beneficiaire_nationalite,
+        beneficiaire_type_piece=beneficiaire_type_piece,
+        beneficiaire_numero_piece=beneficiaire_numero_piece,
         agence_depart=agence_depart,
         agence_retrait=agence_retrait,
         montant=montant,

@@ -269,6 +269,10 @@ class ReservationAdminForm(forms.ModelForm):
 
     def clean(self):
         cleaned = super().clean()
+        if not cleaned.get('voyageur_nom') or not cleaned.get('voyageur_telephone'):
+            raise forms.ValidationError(_("Le nom et le telephone du voyageur sont obligatoires."))
+        if not cleaned.get('voyageur_type_piece') or not cleaned.get('voyageur_numero_piece'):
+            raise forms.ValidationError(_("La piece d'identite (type et numero) du voyageur est obligatoire."))
         siege = cleaned.get('siege')
         statut = cleaned.get('statut')
         if siege and statut not in ('annulee', 'remboursee'):
@@ -350,6 +354,11 @@ class ColisConfirmationForm(forms.ModelForm):
 
     def clean(self):
         cleaned = super().clean()
+        for prefixe, label in (('expediteur', _("l'expediteur")), ('destinataire', _("le destinataire"))):
+            if not cleaned.get(f'{prefixe}_type_piece') or not cleaned.get(f'{prefixe}_numero_piece'):
+                raise forms.ValidationError(
+                    _("La piece d'identite (type et numero) de %(personne)s est obligatoire.") % {'personne': label}
+                )
         code_saisi = (cleaned.get('code_retrait_saisi') or '').strip()
         if not code_saisi:
             return cleaned
@@ -686,6 +695,11 @@ class TransfertConfirmationForm(forms.ModelForm):
 
     def clean(self):
         cleaned = super().clean()
+        for prefixe, label in (('expediteur', _("l'expediteur")), ('beneficiaire', _("le beneficiaire"))):
+            if not cleaned.get(f'{prefixe}_type_piece') or not cleaned.get(f'{prefixe}_numero_piece'):
+                raise forms.ValidationError(
+                    _("La piece d'identite (type et numero) de %(personne)s est obligatoire.") % {'personne': label}
+                )
         code_saisi = (cleaned.get('code_retrait_saisi') or '').strip()
         if not code_saisi:
             return cleaned
