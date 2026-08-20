@@ -122,6 +122,12 @@
   </div>
   {% endif %}
 
+  <div style="margin-bottom:16px;">
+    <a href="{% url 'transport:historique_employe' %}" class="btn-vente-secondaire" style="display:inline-block;">
+      {% trans "Mon activite / Historique par employe" %}
+    </a>
+  </div>
+
   <div class="stats-zone">
 
     {% if stats_profil.voit_voyages_aujourd_hui or stats_profil.voit_reservations_jour or stats_profil.voit_recette_jour or stats_profil.voit_voyages_a_venir %}
@@ -129,25 +135,25 @@
     <div class="stats-grille">
       {% if stats_profil.voit_voyages_aujourd_hui %}
       <div class="stat-carte">
-        <div class="stat-valeur">{{ stats.voyages_aujourd_hui }}</div>
+        <div class="stat-valeur" data-stat="voyages_aujourd_hui">{{ stats.voyages_aujourd_hui }}</div>
         <div class="stat-label">{% trans "Voyages du jour" %}</div>
       </div>
       {% endif %}
       {% if stats_profil.voit_reservations_jour %}
       <div class="stat-carte">
-        <div class="stat-valeur">{{ stats.reservations_jour }}</div>
+        <div class="stat-valeur" data-stat="reservations_jour">{{ stats.reservations_jour }}</div>
         <div class="stat-label">{% trans "Reservations du jour" %}</div>
       </div>
       {% endif %}
       {% if stats_profil.voit_recette_jour %}
       <div class="stat-carte succes">
-        <div class="stat-valeur">{{ stats.recette_jour }}</div>
+        <div class="stat-valeur" data-stat="recette_jour">{{ stats.recette_jour }}</div>
         <div class="stat-label">{% trans "Recette du jour (FCFA)" %}</div>
       </div>
       {% endif %}
       {% if stats_profil.voit_voyages_a_venir %}
       <div class="stat-carte">
-        <div class="stat-valeur">{{ stats.voyages_a_venir }}</div>
+        <div class="stat-valeur" data-stat="voyages_a_venir">{{ stats.voyages_a_venir }}</div>
         <div class="stat-label">{% trans "Voyages a venir" %}</div>
       </div>
       {% endif %}
@@ -159,31 +165,31 @@
     <div class="stats-grille">
       {% if stats_profil.voit_alertes_non_resolues %}
       <div class="stat-carte alerte">
-        <div class="stat-valeur">{{ stats.alertes_non_resolues }}</div>
+        <div class="stat-valeur" data-stat="alertes_non_resolues">{{ stats.alertes_non_resolues }}</div>
         <div class="stat-label">{% trans "Alertes de securite" %}</div>
       </div>
       {% endif %}
       {% if stats_profil.voit_demandes_colis_attente %}
       <div class="stat-carte alerte">
-        <div class="stat-valeur">{{ stats.demandes_colis_attente }}</div>
+        <div class="stat-valeur" data-stat="demandes_colis_attente">{{ stats.demandes_colis_attente }}</div>
         <div class="stat-label">{% trans "Demandes colis en attente" %}</div>
       </div>
       {% endif %}
       {% if stats_profil.voit_demandes_transfert_attente %}
       <div class="stat-carte alerte">
-        <div class="stat-valeur">{{ stats.demandes_transfert_attente }}</div>
+        <div class="stat-valeur" data-stat="demandes_transfert_attente">{{ stats.demandes_transfert_attente }}</div>
         <div class="stat-label">{% trans "Demandes transfert en attente" %}</div>
       </div>
       {% endif %}
       {% if stats_profil.voit_reservations_attente %}
       <div class="stat-carte alerte">
-        <div class="stat-valeur">{{ stats.reservations_attente }}</div>
+        <div class="stat-valeur" data-stat="reservations_attente">{{ stats.reservations_attente }}</div>
         <div class="stat-label">{% trans "Reservations non payees" %}</div>
       </div>
       {% endif %}
       {% if stats_profil.voit_transferts_attente %}
       <div class="stat-carte alerte">
-        <div class="stat-valeur">{{ stats.transferts_attente }}</div>
+        <div class="stat-valeur" data-stat="transferts_attente">{{ stats.transferts_attente }}</div>
         <div class="stat-label">{% trans "Transferts a retirer" %}</div>
       </div>
       {% endif %}
@@ -195,54 +201,59 @@
     <div class="stats-grille">
       {% if stats_profil.voit_colis_transit %}
       <div class="stat-carte">
-        <div class="stat-valeur">{{ stats.colis_transit }}</div>
+        <div class="stat-valeur" data-stat="colis_transit">{{ stats.colis_transit }}</div>
         <div class="stat-label">{% trans "Colis en transit" %}</div>
       </div>
       {% endif %}
       {% if stats_profil.voit_colis_arrives %}
       <div class="stat-carte">
-        <div class="stat-valeur">{{ stats.colis_arrives }}</div>
+        <div class="stat-valeur" data-stat="colis_arrives">{{ stats.colis_arrives }}</div>
         <div class="stat-label">{% trans "Colis arrives" %}</div>
       </div>
       {% endif %}
       {% if stats_profil.voit_colis_livres_jour %}
       <div class="stat-carte">
-        <div class="stat-valeur">{{ stats.colis_livres_jour }}</div>
+        <div class="stat-valeur" data-stat="colis_livres_jour">{{ stats.colis_livres_jour }}</div>
         <div class="stat-label">{% trans "Colis remis aujourd'hui" %}</div>
       </div>
       {% endif %}
       {% if stats_profil.voit_transferts_retires_jour %}
       <div class="stat-carte">
-        <div class="stat-valeur">{{ stats.transferts_retires_jour }}</div>
+        <div class="stat-valeur" data-stat="transferts_retires_jour">{{ stats.transferts_retires_jour }}</div>
         <div class="stat-label">{% trans "Transferts retires aujourd'hui" %}</div>
       </div>
       {% endif %}
       {% if stats_profil.voit_bus_service %}
       <div class="stat-carte">
-        <div class="stat-valeur">{{ stats.bus_service }}</div>
+        <div class="stat-valeur" data-stat="bus_service">{{ stats.bus_service }}</div>
         <div class="stat-label">{% trans "Bus en service" %}</div>
       </div>
       {% endif %}
       {% if stats_profil.voit_bus_maintenance %}
       <div class="stat-carte alerte">
-        <div class="stat-valeur">{{ stats.bus_maintenance }}</div>
+        <div class="stat-valeur" data-stat="bus_maintenance">{{ stats.bus_maintenance }}</div>
         <div class="stat-label">{% trans "Bus en maintenance" %}</div>
       </div>
       {% endif %}
       {% if stats_profil.voit_total_clients %}
       <div class="stat-carte">
-        <div class="stat-valeur">{{ stats.total_clients }}</div>
+        <div class="stat-valeur" data-stat="total_clients">{{ stats.total_clients }}</div>
         <div class="stat-label">{% trans "Clients actifs" %}</div>
       </div>
       {% endif %}
       {% if stats_profil.voit_total_employes %}
       <div class="stat-carte">
-        <div class="stat-valeur">{{ stats.total_employes }}</div>
+        <div class="stat-valeur" data-stat="total_employes">{{ stats.total_employes }}</div>
         <div class="stat-label">{% trans "Employes actifs" %}</div>
       </div>
       {% endif %}
     </div>
     {% endif %}
+
+    <p id="maj-auto-info" style="font-size:11px; color:#9aa1ab; margin-top:-10px;">
+      <span id="maj-auto-point" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#059669; margin-right:5px;"></span>
+      {% trans "Mise a jour auto" %} — <span id="maj-auto-heure">--:--:--</span>
+    </p>
 
   </div>
 
@@ -385,4 +396,42 @@
 {% endif %}
 
 </div>
+<script>
+(function () {
+  "use strict";
+  // Rafraichit automatiquement les chiffres du tableau de bord toutes les
+  // 60 secondes, sans recharger toute la page (juste les nombres), pour
+  // rester leger sur un hebergement gratuit tout en donnant une vue "live".
+  var URL_STATS = "{% url 'transport:api_stats_tableau_bord' %}";
+  var DELAI_MS = 60000;
+
+  function formaterHeure() {
+    var d = new Date();
+    function pad(n) { return (n < 10 ? "0" : "") + n; }
+    return pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
+  }
+
+  function rafraichir() {
+    fetch(URL_STATS, { credentials: "same-origin" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) {
+        if (!data) return;
+        Object.keys(data).forEach(function (cle) {
+          var el = document.querySelector('[data-stat="' + cle + '"]');
+          if (el) el.textContent = data[cle];
+        });
+        var heure = document.getElementById("maj-auto-heure");
+        if (heure) heure.textContent = formaterHeure();
+      })
+      .catch(function () { /* silencieux : on reessaiera au prochain cycle */ });
+  }
+
+  var heureInit = document.getElementById("maj-auto-heure");
+  if (heureInit) heureInit.textContent = formaterHeure();
+
+  if (document.getElementById("maj-auto-info")) {
+    setInterval(rafraichir, DELAI_MS);
+  }
+})();
+</script>
 {% endblock %}

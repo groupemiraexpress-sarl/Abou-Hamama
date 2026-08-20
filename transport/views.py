@@ -1,8 +1,21 @@
 from django.shortcuts import render, redirect
 from django.contrib.admin.views.decorators import staff_member_required
+from django.http import JsonResponse
 from django.utils import timezone
 from .models import Voyage, Client, Reservation, Agence, Chauffeur, Employe, Colis, TransfertArgent
 from django.urls import reverse
+
+
+@staff_member_required
+def api_stats_tableau_bord(request):
+    """
+    Renvoie les chiffres du tableau de bord (admin) en JSON, pour permettre
+    a la page d'accueil de l'admin de se rafraichir toute seule sans recharger
+    toute la page (juste les chiffres). Reutilise exactement le meme calcul
+    que la page d'accueil (memes filtres agence/zone/poste par utilisateur).
+    """
+    from .admin_stats import statistiques_tableau_bord
+    return JsonResponse(statistiques_tableau_bord(request.user))
 
 
 @staff_member_required
@@ -136,6 +149,96 @@ def recu_transfert(request, transfert_id):
     """Affiche un recu imprimable pour un transfert d'argent (comme le recu de billet)."""
     transfert = TransfertArgent.objects.filter(id=transfert_id).select_related('agence_depart', 'agence_retrait').first()
     return render(request, 'transport/recu_transfert.html', {'transfert': transfert})
+
+
+@staff_member_required
+def historique_employe(request):
+    """
+    Page dediee (tous postes) : l'activite d'un employe pour une journee
+    donnee (billets vendus, colis enregistres/remis, transferts enregistres/
+    retires), comme une archive professionnelle du travail du jour.
+
+    Par defaut, chaque employe voit sa propre activite. Le PDG, le
+    superutilisateur, le Responsable d'agence, le RH et le Responsable
+    planning peuvent choisir un autre employe dans leur perimetre (toute
+    la compagnie pour le PDG, leur agence pour responsable/RH, leur zone
+    pour le responsable planning).
+    """
+    from datetime import datetime
+    from .admin_filtres import voit_tout, agence_de, zone_de
+
+    employe_connecte = getattr(request.user, 'employe', None)
+    poste_connecte = employe_connecte.poste if employe_connecte else None
+    tout_voir = voit_tout(request.user)
+    peut_superviser = tout_voir or poste_connecte in ('responsable', 'rh', 'resp_planning')
+
+    if tout_voir:
+        employes_visibles = Employe.objects.filter(actif=True).order_by('agence__ville', 'nom')
+    elif poste_connecte == 'resp_planning':
+        zone = zone_de(request.user)
+        employes_visibles = Employe.objects.filter(actif=True, agence__zone=zone).order_by('agence__ville', 'nom') if zone else Employe.objects.none()
+    elif poste_connecte in ('responsable', 'rh'):
+        agence = agence_de(request.user)
+        employes_visibles = Employe.objects.filter(actif=True, agence=agence).order_by('nom') if agence else Employe.objects.none()
+    else:
+        employes_visibles = Employe.objects.filter(pk=employe_connecte.pk) if employe_connecte else Employe.objects.none()
+
+    employe_id = request.GET.get('employe')
+    employe_cible = None
+    if peut_superviser and employe_id:
+        employe_cible = employes_visibles.filter(pk=employe_id).first()
+    if not employe_cible:
+        employe_cible = employe_connecte
+
+    date_str = request.GET.get('date')
+    try:
+        date_choisie = datetime.strptime(date_str, '%Y-%m-%d').date() if date_str else timezone.now().date()
+    except ValueError:
+        date_choisie = timezone.now().date()
+
+    contexte = {
+        'employes_visibles': employes_visibles if peut_superviser else None,
+        'employe_cible': employe_cible,
+        'date_choisie': date_choisie,
+        'peut_superviser': peut_superviser,
+    }
+
+    if not employe_cible:
+        return render(request, 'transport/historique_employe.html', contexte)
+
+    reservations = Reservation.objects.filter(
+        cree_par=employe_cible, date_reservation__date=date_choisie
+    ).select_related('voyage', 'voyage__trajet', 'client').order_by('date_reservation')
+    colis_enregistres = Colis.objects.filter(
+        cree_par=employe_cible, date_enregistrement__date=date_choisie
+    ).order_by('date_enregistrement')
+    colis_remis = Colis.objects.filter(
+        modifie_par=employe_cible, statut='livre', date_livraison__date=date_choisie
+    ).order_by('date_livraison')
+    transferts_enregistres = TransfertArgent.objects.filter(
+        cree_par=employe_cible, date_envoi__date=date_choisie
+    ).order_by('date_envoi')
+    transferts_retires = TransfertArgent.objects.filter(
+        modifie_par=employe_cible, statut='retire', date_retrait__date=date_choisie
+    ).order_by('date_retrait')
+
+    montant_billets = sum(r.montant_total for r in reservations.filter(statut='payee'))
+    montant_colis = sum(c.prix for c in colis_enregistres)
+    montant_transferts = sum(t.frais for t in transferts_enregistres)
+    total_genere = montant_billets + montant_colis + montant_transferts
+
+    contexte.update({
+        'reservations': reservations,
+        'colis_enregistres': colis_enregistres,
+        'colis_remis': colis_remis,
+        'transferts_enregistres': transferts_enregistres,
+        'transferts_retires': transferts_retires,
+        'montant_billets': montant_billets,
+        'montant_colis': montant_colis,
+        'montant_transferts': montant_transferts,
+        'total_genere': total_genere,
+    })
+    return render(request, 'transport/historique_employe.html', contexte)
 
 
 @staff_member_required
