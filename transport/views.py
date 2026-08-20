@@ -23,8 +23,18 @@ def vendre_billet(request):
     """
     Interface guichetier : vendre un ou plusieurs billets,
     avec une identite distincte pour chaque passager.
+    Accessible au PDG, au Responsable d'agence, a la Secretaire, au
+    Guichetier et au Caissier uniquement (memes postes que le raccourci
+    "Vendre un billet" sur le tableau de bord). Les autres postes
+    (responsable planning, agent colis, RH, comptable, etc.) ne vendent
+    pas de billets.
     """
     employe = getattr(request.user, 'employe', None)
+    poste = employe.poste if employe else None
+    autorise = request.user.is_superuser or poste in ('pdg', 'responsable', 'secretaire', 'guichetier', 'caissier')
+
+    if not autorise:
+        return redirect('admin:index')
 
     voyages = Voyage.objects.filter(
         statut='programme',
