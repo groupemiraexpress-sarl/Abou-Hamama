@@ -1,0 +1,86 @@
+{% extends "transport/base.html" %}
+{% load static %}
+{% block titre %}Recu transfert {{ transfert.code_transfert }} — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}Recu transfert{% endblock %}
+{% block contenu %}
+{% if transfert %}
+<div class="card">
+    <div style="text-align:center; margin-bottom:20px;">
+        <img src="{% static 'transport/logo_abou_hamama.png' %}" alt="Express Abou Hamama" style="width:60px; height:60px; border-radius:50%; box-shadow:0 2px 6px rgba(0,0,0,.2); margin-bottom:10px;">
+        <br>
+        <i class="fa-solid fa-money-bill-transfer" style="font-size:2.5rem; color:#1F3864;"></i>
+        <h2 style="color:#1F3864; margin-top:8px;">Transfert enregistre</h2>
+        <p style="color:#6b7280; font-size:.9rem;">{{ transfert.code_transfert }}</p>
+    </div>
+
+    <div style="border-top:1px solid #e5e7eb; padding-top:14px; margin-top:14px;">
+        <p style="font-weight:600; color:#1F3864;">Expediteur</p>
+        <table style="width:100%; border-collapse:collapse; font-size:.9rem;">
+            <tr><td style="padding:4px 0; color:#6b7280;">Nom</td>
+                <td style="padding:4px 0; text-align:right; font-weight:600;">{{ transfert.expediteur_nom }}</td></tr>
+            <tr><td style="padding:4px 0; color:#6b7280;">Telephone</td>
+                <td style="padding:4px 0; text-align:right;">{{ transfert.expediteur_telephone }}</td></tr>
+            {% if transfert.expediteur_numero_piece %}
+            <tr><td style="padding:4px 0; color:#6b7280;">Piece</td>
+                <td style="padding:4px 0; text-align:right;">{{ transfert.expediteur_type_piece }} — {{ transfert.expediteur_numero_piece }}</td></tr>
+            {% endif %}
+        </table>
+
+        <p style="font-weight:600; color:#1F3864; margin-top:14px;">Beneficiaire</p>
+        <table style="width:100%; border-collapse:collapse; font-size:.9rem;">
+            <tr><td style="padding:4px 0; color:#6b7280;">Nom</td>
+                <td style="padding:4px 0; text-align:right; font-weight:600;">{{ transfert.beneficiaire_nom }}</td></tr>
+            <tr><td style="padding:4px 0; color:#6b7280;">Telephone</td>
+                <td style="padding:4px 0; text-align:right;">{{ transfert.beneficiaire_telephone }}</td></tr>
+            {% if transfert.beneficiaire_numero_piece %}
+            <tr><td style="padding:4px 0; color:#6b7280;">Piece</td>
+                <td style="padding:4px 0; text-align:right;">{{ transfert.beneficiaire_type_piece }} — {{ transfert.beneficiaire_numero_piece }}</td></tr>
+            {% endif %}
+        </table>
+
+        <p style="font-weight:600; color:#1F3864; margin-top:14px;">Transfert</p>
+        <table style="width:100%; border-collapse:collapse; font-size:.9rem;">
+            <tr><td style="padding:4px 0; color:#6b7280;">Trajet</td>
+                <td style="padding:4px 0; text-align:right;">{{ transfert.agence_depart }} → {{ transfert.agence_retrait }}</td></tr>
+            <tr><td style="padding:4px 0; color:#6b7280;">Date d'envoi</td>
+                <td style="padding:4px 0; text-align:right;">{{ transfert.date_envoi|date:"d/m/Y H:i" }}</td></tr>
+            <tr><td style="padding:4px 0; color:#6b7280;">Frais</td>
+                <td style="padding:4px 0; text-align:right;">{{ transfert.frais }} FCFA</td></tr>
+            <tr><td style="padding:6px 0 0; color:#1F3864; font-weight:600;">Montant envoye</td>
+                <td style="padding:6px 0 0; text-align:right; font-weight:700; color:#1F3864;">{{ transfert.montant }} FCFA</td></tr>
+        </table>
+
+        <div style="text-align:center; margin-top:14px; padding-top:14px; border-top:1px dashed #d1d5db;">
+            <p style="color:#6b7280; font-size:.8rem; margin-bottom:8px;">Code de transfert (a donner a l'expediteur)</p>
+            <div id="qr-transfert" style="display:inline-block;"></div>
+            <p style="font-weight:700; color:#1F3864; margin-top:8px; font-size:1.1rem;">{{ transfert.code_transfert }}</p>
+            <p style="color:#b91c1c; font-size:.85rem; margin-top:6px;">Ne communiquez le code de retrait qu'au beneficiaire, jamais a l'expediteur.</p>
+        </div>
+    </div>
+</div>
+<div style="display:flex; gap:12px; margin-top:20px;">
+    <button onclick="window.print()" class="btn" style="flex:1; background:#16a34a;">
+        <i class="fa-solid fa-print"></i> Imprimer
+    </button>
+</div>
+{% else %}
+<div class="card" style="text-align:center; color:#b91c1c;">
+    Transfert introuvable.
+</div>
+{% endif %}
+<div style="text-align:center; margin-top:16px;">
+    <a href="{% url 'admin:transport_transfertargent_changelist' %}" style="color:#6b7280; text-decoration:none; font-size:.9rem;">
+        <i class="fa-solid fa-arrow-left"></i> Retour a la liste des transferts
+    </a>
+</div>
+{% if transfert %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+    new QRCode(document.getElementById("qr-transfert"), {
+        text: "{{ transfert.code_transfert }}",
+        width: 140,
+        height: 140,
+    });
+</script>
+{% endif %}
+{% endblock %}

@@ -390,11 +390,20 @@ class ColisAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     # doit donc PAS filtrer par "createur" ici, seulement par agence.
     champ_createur = None
     form = ColisConfirmationForm
-    list_display = ('code_suivi', 'expediteur_nom', 'destinataire_nom', 'agence_depart', 'agence_arrivee', 'poids_kg', 'prix', 'statut', 'date_livraison', 'cree_par', 'modifie_par', 'date_enregistrement')
+    list_display = ('code_suivi', 'expediteur_nom', 'destinataire_nom', 'agence_depart', 'agence_arrivee', 'poids_kg', 'prix', 'statut', 'date_livraison', 'cree_par', 'modifie_par', 'date_enregistrement', 'lien_recu')
     list_filter = ('statut', FiltreAgenceDepartArrivee, 'compagnie')
     search_fields = ('code_suivi', 'expediteur_nom', 'expediteur_telephone', 'destinataire_nom', 'destinataire_telephone')
     ordering = ('-date_enregistrement',)
     date_hierarchy = 'date_enregistrement'
+
+    @admin.display(description="Recu")
+    def lien_recu(self, obj):
+        from django.urls import reverse
+        from django.utils.html import format_html
+        return format_html(
+            '<a href="{}" target="_blank" class="button">🖨️ Imprimer</a>',
+            reverse('transport:recu_colis', args=[obj.id]),
+        )
 
     def get_form(self, request, obj=None, **kwargs):
         Form = super().get_form(request, obj, **kwargs)
@@ -730,11 +739,20 @@ class TransfertArgentAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     # le transfert enregistre par l'agence de depart pour pouvoir le payer.
     champ_createur = None
     form = TransfertConfirmationForm
-    list_display = ('code_transfert', 'expediteur_nom', 'beneficiaire_nom', 'montant', 'frais', 'agence_depart', 'agence_retrait', 'statut', 'date_retrait', 'cree_par', 'modifie_par', 'date_envoi')
+    list_display = ('code_transfert', 'expediteur_nom', 'beneficiaire_nom', 'montant', 'frais', 'agence_depart', 'agence_retrait', 'statut', 'date_retrait', 'cree_par', 'modifie_par', 'date_envoi', 'lien_recu')
     list_filter = ('statut', FiltreAgenceDepartRetrait, 'compagnie')
     search_fields = ('code_transfert', 'expediteur_nom', 'expediteur_telephone', 'beneficiaire_nom', 'beneficiaire_telephone', 'code_retrait')
     ordering = ('-date_envoi',)
     date_hierarchy = 'date_envoi'
+
+    @admin.display(description="Recu")
+    def lien_recu(self, obj):
+        from django.urls import reverse
+        from django.utils.html import format_html
+        return format_html(
+            '<a href="{}" target="_blank" class="button">🖨️ Imprimer</a>',
+            reverse('transport:recu_transfert', args=[obj.id]),
+        )
 
     def get_form(self, request, obj=None, **kwargs):
         Form = super().get_form(request, obj, **kwargs)

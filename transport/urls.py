@@ -20,6 +20,8 @@ urlpatterns = [
     path('espace/billets-confirmes/', views.billets_confirmes, name='billets_confirmes'),
     path('espace/liste-billets/', views.liste_billets, name='liste_billets'),
     path('espace/billet/<int:reservation_id>/modifier/', views.modifier_billet, name='modifier_billet'),
+    path('espace/recu-colis/<int:colis_id>/', views.recu_colis, name='recu_colis'),
+    path('espace/recu-transfert/<int:transfert_id>/', views.recu_transfert, name='recu_transfert'),
 
     # API (pour l'application mobile)
     path('api/voyages/', api_views.api_voyages, name='api_voyages'),

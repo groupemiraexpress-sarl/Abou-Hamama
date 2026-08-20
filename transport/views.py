@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils import timezone
-from .models import Voyage, Client, Reservation, Agence, Chauffeur, Employe
+from .models import Voyage, Client, Reservation, Agence, Chauffeur, Employe, Colis, TransfertArgent
 from django.urls import reverse
 
 
@@ -122,6 +122,20 @@ def billet_confirme(request, reservation_id):
     """Affiche le recu apres la vente d'un billet (ancienne route, gardee par securite)."""
     reservation = Reservation.objects.filter(id=reservation_id).first()
     return render(request, 'transport/billet_confirme.html', {'reservation': reservation})
+
+
+@staff_member_required
+def recu_colis(request, colis_id):
+    """Affiche un recu imprimable pour un colis (comme le recu de billet)."""
+    colis = Colis.objects.filter(id=colis_id).select_related('agence_depart', 'agence_arrivee').first()
+    return render(request, 'transport/recu_colis.html', {'colis': colis})
+
+
+@staff_member_required
+def recu_transfert(request, transfert_id):
+    """Affiche un recu imprimable pour un transfert d'argent (comme le recu de billet)."""
+    transfert = TransfertArgent.objects.filter(id=transfert_id).select_related('agence_depart', 'agence_retrait').first()
+    return render(request, 'transport/recu_transfert.html', {'transfert': transfert})
 
 
 @staff_member_required
