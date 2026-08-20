@@ -122,11 +122,13 @@
   </div>
   {% endif %}
 
+  {% if stats_profil.voit_historique_employe %}
   <div style="margin-bottom:16px;">
     <a href="{% url 'transport:historique_employe' %}" class="btn-vente-secondaire" style="display:inline-block;">
       {% trans "Mon activite / Historique par employe" %}
     </a>
   </div>
+  {% endif %}
 
   <div class="stats-zone">
 

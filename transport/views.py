@@ -171,9 +171,9 @@ def historique_employe(request):
     Par defaut, chaque employe voit sa propre activite. Le PDG, le
     superutilisateur, le Responsable d'agence et le RH peuvent choisir un
     autre employe dans leur perimetre (toute la compagnie pour le PDG,
-    leur agence pour responsable/RH). Le Responsable planning, lui, ne
-    voit que sa propre activite (il supervise une zone, pas le personnel
-    des agences).
+    leur agence pour responsable/RH). Cette page ne concerne pas le
+    Responsable planning (il supervise une zone, pas le personnel des
+    agences) : il n'y a pas acces.
     """
     from datetime import datetime
     from .admin_filtres import voit_tout, agence_de
@@ -181,6 +181,10 @@ def historique_employe(request):
     employe_connecte = getattr(request.user, 'employe', None)
     poste_connecte = employe_connecte.poste if employe_connecte else None
     tout_voir = voit_tout(request.user)
+
+    if not tout_voir and poste_connecte == 'resp_planning':
+        return redirect('admin:index')
+
     peut_superviser = tout_voir or poste_connecte in ('responsable', 'rh')
 
     if tout_voir:

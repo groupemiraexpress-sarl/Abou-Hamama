@@ -290,7 +290,7 @@ class FiltreAgenceDepartRetrait(FiltreAgenceMultiListFilter):
 # apparaissent sur la page d'accueil, selon le poste de l'employe connecte.
 
 DRAPEAUX_TABLEAU_BORD = [
-    'voit_raccourci_vente',
+    'voit_raccourci_vente', 'voit_historique_employe',
     'voit_voyages_aujourd_hui', 'voit_reservations_jour', 'voit_recette_jour', 'voit_voyages_a_venir',
     'voit_alertes_non_resolues', 'voit_demandes_colis_attente', 'voit_demandes_transfert_attente',
     'voit_reservations_attente', 'voit_transferts_attente', 'voit_permis_a_renouveler',
@@ -305,7 +305,7 @@ DRAPEAUX_TABLEAU_BORD = [
 # l'ensemble des drapeaux actives sur le tableau de bord.
 PROFILS_TABLEAU_BORD = {
     'responsable': {
-        'voit_raccourci_vente',
+        'voit_raccourci_vente', 'voit_historique_employe',
         'voit_voyages_aujourd_hui', 'voit_reservations_jour', 'voit_recette_jour', 'voit_voyages_a_venir',
         'voit_alertes_non_resolues', 'voit_demandes_colis_attente', 'voit_demandes_transfert_attente',
         'voit_reservations_attente', 'voit_transferts_attente', 'voit_permis_a_renouveler',
@@ -315,7 +315,7 @@ PROFILS_TABLEAU_BORD = {
         'voit_groupe_clients_personnel', 'voit_groupe_maintenance',
     },
     'secretaire': {
-        'voit_raccourci_vente',
+        'voit_raccourci_vente', 'voit_historique_employe',
         'voit_voyages_aujourd_hui', 'voit_reservations_jour', 'voit_voyages_a_venir', 'voit_reservations_attente',
         'voit_demandes_colis_attente', 'voit_demandes_transfert_attente',
         'voit_colis_transit', 'voit_colis_arrives', 'voit_colis_livres_jour', 'voit_transferts_retires_jour',
@@ -327,33 +327,37 @@ PROFILS_TABLEAU_BORD = {
         'voit_groupe_exploitation',
     },
     'guichetier': {
-        'voit_raccourci_vente', 'voit_reservations_jour', 'voit_reservations_attente',
+        'voit_raccourci_vente', 'voit_historique_employe', 'voit_reservations_jour', 'voit_reservations_attente',
     },
     'caissier': {
-        'voit_raccourci_vente', 'voit_reservations_jour', 'voit_recette_jour', 'voit_reservations_attente',
+        'voit_raccourci_vente', 'voit_historique_employe', 'voit_reservations_jour', 'voit_recette_jour', 'voit_reservations_attente',
     },
     'agent_colis': {
+        'voit_historique_employe',
         'voit_demandes_colis_attente', 'voit_colis_transit', 'voit_colis_arrives', 'voit_colis_livres_jour', 'voit_groupe_colis_transferts',
     },
     'agent_transfert': {
+        'voit_historique_employe',
         'voit_demandes_transfert_attente', 'voit_transferts_attente', 'voit_transferts_retires_jour', 'voit_groupe_colis_transferts',
     },
     'manutentionnaire': {
-        'voit_colis_transit', 'voit_colis_arrives',
+        'voit_historique_employe', 'voit_colis_transit', 'voit_colis_arrives',
     },
     'comptable': {
+        'voit_historique_employe',
         'voit_recette_jour', 'voit_reservations_attente', 'voit_transferts_attente', 'voit_transferts_retires_jour',
     },
     'rh': {
+        'voit_historique_employe',
         'voit_total_employes', 'voit_permis_a_renouveler', 'voit_groupe_clients_personnel',
     },
     'resp_maintenance': {
-        'voit_bus_service', 'voit_bus_maintenance', 'voit_groupe_maintenance',
+        'voit_historique_employe', 'voit_bus_service', 'voit_bus_maintenance', 'voit_groupe_maintenance',
     },
     'securite': {
-        'voit_alertes_non_resolues', 'voit_groupe_securite',
+        'voit_historique_employe', 'voit_alertes_non_resolues', 'voit_groupe_securite',
     },
-    'autre': set(),
+    'autre': {'voit_historique_employe'},
 }
 
 
