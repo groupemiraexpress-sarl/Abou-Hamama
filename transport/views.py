@@ -159,24 +159,22 @@ def historique_employe(request):
     retires), comme une archive professionnelle du travail du jour.
 
     Par defaut, chaque employe voit sa propre activite. Le PDG, le
-    superutilisateur, le Responsable d'agence, le RH et le Responsable
-    planning peuvent choisir un autre employe dans leur perimetre (toute
-    la compagnie pour le PDG, leur agence pour responsable/RH, leur zone
-    pour le responsable planning).
+    superutilisateur, le Responsable d'agence et le RH peuvent choisir un
+    autre employe dans leur perimetre (toute la compagnie pour le PDG,
+    leur agence pour responsable/RH). Le Responsable planning, lui, ne
+    voit que sa propre activite (il supervise une zone, pas le personnel
+    des agences).
     """
     from datetime import datetime
-    from .admin_filtres import voit_tout, agence_de, zone_de
+    from .admin_filtres import voit_tout, agence_de
 
     employe_connecte = getattr(request.user, 'employe', None)
     poste_connecte = employe_connecte.poste if employe_connecte else None
     tout_voir = voit_tout(request.user)
-    peut_superviser = tout_voir or poste_connecte in ('responsable', 'rh', 'resp_planning')
+    peut_superviser = tout_voir or poste_connecte in ('responsable', 'rh')
 
     if tout_voir:
         employes_visibles = Employe.objects.filter(actif=True).order_by('agence__ville', 'nom')
-    elif poste_connecte == 'resp_planning':
-        zone = zone_de(request.user)
-        employes_visibles = Employe.objects.filter(actif=True, agence__zone=zone).order_by('agence__ville', 'nom') if zone else Employe.objects.none()
     elif poste_connecte in ('responsable', 'rh'):
         agence = agence_de(request.user)
         employes_visibles = Employe.objects.filter(actif=True, agence=agence).order_by('nom') if agence else Employe.objects.none()
