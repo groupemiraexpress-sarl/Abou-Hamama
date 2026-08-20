@@ -17,9 +17,14 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         resultat = traiter_expirations()
         self.stdout.write(self.style.SUCCESS(
-            f"Reservations annulees : {resultat['reservations_annulees']} | "
-            f"Demandes colis annulees : {resultat['demandes_colis_annulees']} | "
-            f"Demandes transfert annulees : {resultat['demandes_transfert_annulees']} | "
-            f"Colis retournes : {resultat['colis_retournes']} | "
-            f"Transferts annules : {resultat['transferts_annules']}"
+            f"Reservations annulees : {resultat['reservations_annulees']} "
+            f"(alertes : {resultat['reservations_alertees']}) | "
+            f"Demandes colis annulees : {resultat['demandes_colis_annulees']} "
+            f"(alertes : {resultat['demandes_colis_alertees']}) | "
+            f"Demandes transfert annulees : {resultat['demandes_transfert_annulees']} "
+            f"(alertes : {resultat['demandes_transfert_alertees']}) | "
+            f"Colis retournes : {resultat['colis_retournes']} "
+            f"(alertes : {resultat['colis_alertes']}) | "
+            f"Transferts annules : {resultat['transferts_annules']} "
+            f"(alertes : {resultat['transferts_alertes']})"
         ))

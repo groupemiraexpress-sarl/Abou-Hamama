@@ -274,6 +274,7 @@ class Reservation(models.Model):
     mode_paiement = models.CharField(_("Mode de paiement"), max_length=20, choices=MODE_PAIEMENT_CHOICES, blank=True)
     date_reservation = models.DateTimeField(_("Date de reservation"), auto_now_add=True)
     date_paiement = models.DateTimeField(_("Date de paiement"), null=True, blank=True)
+    alerte_expiration_envoyee = models.BooleanField(_("Alerte d'expiration envoyee"), default=False, help_text=_("Vrai si l'avertissement (2h avant l'annulation automatique) a deja ete envoye"))
     notes = models.TextField(_("Notes"), blank=True)
 
     def __str__(self):
@@ -371,6 +372,7 @@ class Colis(models.Model):
     date_enregistrement = models.DateTimeField(_("Date d'enregistrement"), auto_now_add=True)
     date_arrivee = models.DateTimeField(_("Date d'arrivee a l'agence"), null=True, blank=True, help_text=_("Renseignee automatiquement quand le colis passe au statut 'Arrive a destination'. Sert de point de depart au delai de 5 jours pour le retrait."))
     date_livraison = models.DateTimeField(_("Date de livraison"), null=True, blank=True)
+    alerte_retrait_envoyee = models.BooleanField(_("Alerte de retrait envoyee"), default=False, help_text=_("Vrai si l'avertissement (2h avant le retour automatique) a deja ete envoye"))
     notes = models.TextField(_("Notes"), blank=True)
 
     def __str__(self):
@@ -480,6 +482,7 @@ class TransfertArgent(models.Model):
     statut = models.CharField(_("Statut"), max_length=20, choices=STATUT_CHOICES, default='en_attente')
     date_envoi = models.DateTimeField(_("Date d'envoi"), auto_now_add=True)
     date_retrait = models.DateTimeField(_("Date de retrait"), null=True, blank=True)
+    alerte_retrait_envoyee = models.BooleanField(_("Alerte de retrait envoyee"), default=False, help_text=_("Vrai si l'avertissement (2h avant l'annulation automatique) a deja ete envoye"))
     notes = models.TextField(_("Notes"), blank=True)
 
     def __str__(self):
@@ -646,6 +649,7 @@ class DemandeColis(models.Model):
     statut = models.CharField(_("Statut"), max_length=20, choices=STATUT_CHOICES, default='en_attente')
     colis = models.ForeignKey('Colis', on_delete=models.SET_NULL, null=True, blank=True, related_name='demande_origine', verbose_name=_("Colis"))
     date_demande = models.DateTimeField(_("Date de demande"), auto_now_add=True)
+    alerte_expiration_envoyee = models.BooleanField(_("Alerte d'expiration envoyee"), default=False, help_text=_("Vrai si l'avertissement (2h avant l'annulation automatique) a deja ete envoye"))
     notes = models.TextField(_("Notes"), blank=True)
 
     def __str__(self):
@@ -690,6 +694,7 @@ class DemandeTransfert(models.Model):
     statut = models.CharField(_("Statut"), max_length=20, choices=STATUT_CHOICES, default='en_attente')
     transfert = models.ForeignKey('TransfertArgent', on_delete=models.SET_NULL, null=True, blank=True, related_name='demande_origine', verbose_name=_("Transfert"))
     date_demande = models.DateTimeField(_("Date de demande"), auto_now_add=True)
+    alerte_expiration_envoyee = models.BooleanField(_("Alerte d'expiration envoyee"), default=False, help_text=_("Vrai si l'avertissement (2h avant l'annulation automatique) a deja ete envoye"))
     notes = models.TextField(_("Notes"), blank=True)
 
     def __str__(self):

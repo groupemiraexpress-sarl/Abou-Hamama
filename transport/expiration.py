@@ -9,24 +9,27 @@ les 15-30 minutes, via un service externe qui appelle l'URL
 1. Reservations de billets non payees : delai normal de 24h apres la
    reservation. Si le voyage part le meme jour et que "24h apres la
    reservation" tombe apres "3h avant le depart", c'est la limite la plus
-   proche (3h avant le depart) qui s'applique. Passe ce delai : alerte +
-   annulation automatique, la place est reliberee.
+   proche (3h avant le depart) qui s'applique.
 
 2. Demandes de colis / demandes de transfert (avant qu'un agent ne les
-   finalise a l'agence) : 24h apres la demande. Passe ce delai : alerte +
-   demande annulee.
+   finalise a l'agence) : 24h apres la demande.
 
 3. Colis enregistres et arrives a l'agence de destination, non retires :
    5 jours a partir de la date d'arrivee (et non de l'enregistrement).
-   Passe ce delai : alerte + colis marque "retourne".
 
 4. Transferts d'argent enregistres, non retires : 5 jours a partir de
    l'enregistrement (l'argent est disponible des l'envoi, il n'y a pas de
-   trajet a attendre). Passe ce delai : alerte + transfert marque "annule".
+   trajet a attendre).
 
-Chaque annulation automatique envoie une notification push (si les
-personnes concernees ont un compte client lie a leur numero de telephone),
-en reutilisant le mecanisme existant `notifier_telephone`.
+Pour chacun de ces 4 cas, il y a DEUX etapes :
+  - Un AVERTISSEMENT envoye 2h avant l'echeance (une seule fois, grace a un
+    champ "alerte_envoyee" sur chaque modele qui empeche de le renvoyer a
+    chaque passage du verificateur).
+  - L'ANNULATION AUTOMATIQUE (avec notification) une fois l'echeance
+    depassee, si la personne ne s'est toujours pas presentee/n'a pas paye.
+
+Chaque notification est envoyee via `notifier_telephone`, qui ne fait rien
+si le numero ne correspond a aucun compte client de l'application.
 """
 from datetime import datetime, timedelta
 
@@ -39,6 +42,7 @@ DELAI_DEMANDE = timedelta(hours=24)
 DELAI_RETRAIT = timedelta(days=5)
 DELAI_BILLET_NORMAL = timedelta(hours=24)
 DELAI_BILLET_AVANT_DEPART = timedelta(hours=3)
+DELAI_AVERTISSEMENT = timedelta(hours=2)
 
 
 def _echeance_reservation(reservation):
@@ -58,118 +62,213 @@ def _echeance_reservation(reservation):
 
 def _traiter_reservations_impayees(maintenant):
     nb_annulees = 0
+    nb_alertes = 0
     reservations = Reservation.objects.filter(statut='en_attente').select_related('voyage', 'client')
     for reservation in reservations:
-        if maintenant < _echeance_reservation(reservation):
+        echeance = _echeance_reservation(reservation)
+
+        if maintenant >= echeance:
+            voyage = reservation.voyage
+            if voyage and not voyage.ligne_id:
+                voyage.places_disponibles += reservation.nombre_places
+                voyage.save(update_fields=['places_disponibles'])
+
+            reservation.statut = 'annulee'
+            reservation.save(update_fields=['statut'])
+
+            titre = "Reservation annulee"
+            corps = (
+                f"Votre reservation {reservation.numero_reservation} a expire "
+                f"(paiement non effectue a temps) et a ete annulee automatiquement."
+            )
+            donnees = {"type": "reservation_expiree", "numero_reservation": reservation.numero_reservation}
+            if reservation.client_id and reservation.client.telephone:
+                notifier_telephone(reservation.client.telephone, titre, corps, donnees)
+            if reservation.voyageur_telephone and reservation.voyageur_telephone != getattr(reservation.client, 'telephone', None):
+                notifier_telephone(reservation.voyageur_telephone, titre, corps, donnees)
+            nb_annulees += 1
             continue
 
-        voyage = reservation.voyage
-        if voyage and not voyage.ligne_id:
-            voyage.places_disponibles += reservation.nombre_places
-            voyage.save(update_fields=['places_disponibles'])
+        if not reservation.alerte_expiration_envoyee and maintenant >= echeance - DELAI_AVERTISSEMENT:
+            reservation.alerte_expiration_envoyee = True
+            reservation.save(update_fields=['alerte_expiration_envoyee'])
 
-        reservation.statut = 'annulee'
-        reservation.save(update_fields=['statut'])
+            titre = "Derniere chance pour payer votre billet"
+            corps = (
+                f"Votre reservation {reservation.numero_reservation} sera annulee automatiquement "
+                f"dans environ 2h si elle n'est pas payee a l'agence."
+            )
+            donnees = {"type": "reservation_avertissement", "numero_reservation": reservation.numero_reservation}
+            if reservation.client_id and reservation.client.telephone:
+                notifier_telephone(reservation.client.telephone, titre, corps, donnees)
+            if reservation.voyageur_telephone and reservation.voyageur_telephone != getattr(reservation.client, 'telephone', None):
+                notifier_telephone(reservation.voyageur_telephone, titre, corps, donnees)
+            nb_alertes += 1
 
-        titre = "Reservation annulee"
-        corps = (
-            f"Votre reservation {reservation.numero_reservation} a expire "
-            f"(paiement non effectue a temps) et a ete annulee automatiquement."
-        )
-        donnees = {"type": "reservation_expiree", "numero_reservation": reservation.numero_reservation}
-        if reservation.client_id and reservation.client.telephone:
-            notifier_telephone(reservation.client.telephone, titre, corps, donnees)
-        if reservation.voyageur_telephone and reservation.voyageur_telephone != getattr(reservation.client, 'telephone', None):
-            notifier_telephone(reservation.voyageur_telephone, titre, corps, donnees)
-        nb_annulees += 1
-    return nb_annulees
+    return nb_annulees, nb_alertes
 
 
 def _traiter_demandes_colis(maintenant):
     nb_annulees = 0
-    seuil = maintenant - DELAI_DEMANDE
-    for demande in DemandeColis.objects.filter(statut='en_attente', date_demande__lte=seuil):
-        demande.statut = 'annulee'
-        demande.save(update_fields=['statut'])
-        notifier_telephone(
-            demande.expediteur_telephone, "Demande de colis annulee",
-            f"Votre demande de colis {demande.numero_demande} n'a pas ete finalisee a l'agence "
-            f"dans les 24h et a ete annulee automatiquement.",
-            {"type": "demande_colis_expiree", "numero_demande": demande.numero_demande},
-        )
-        nb_annulees += 1
-    return nb_annulees
+    nb_alertes = 0
+    for demande in DemandeColis.objects.filter(statut='en_attente'):
+        echeance = demande.date_demande + DELAI_DEMANDE
+
+        if maintenant >= echeance:
+            demande.statut = 'annulee'
+            demande.save(update_fields=['statut'])
+            notifier_telephone(
+                demande.expediteur_telephone, "Demande de colis annulee",
+                f"Votre demande de colis {demande.numero_demande} n'a pas ete finalisee a l'agence "
+                f"dans les 24h et a ete annulee automatiquement.",
+                {"type": "demande_colis_expiree", "numero_demande": demande.numero_demande},
+            )
+            nb_annulees += 1
+            continue
+
+        if not demande.alerte_expiration_envoyee and maintenant >= echeance - DELAI_AVERTISSEMENT:
+            demande.alerte_expiration_envoyee = True
+            demande.save(update_fields=['alerte_expiration_envoyee'])
+            notifier_telephone(
+                demande.expediteur_telephone, "Derniere chance pour votre demande de colis",
+                f"Votre demande de colis {demande.numero_demande} sera annulee automatiquement "
+                f"dans environ 2h si elle n'est pas finalisee a l'agence.",
+                {"type": "demande_colis_avertissement", "numero_demande": demande.numero_demande},
+            )
+            nb_alertes += 1
+
+    return nb_annulees, nb_alertes
 
 
 def _traiter_demandes_transfert(maintenant):
     nb_annulees = 0
-    seuil = maintenant - DELAI_DEMANDE
-    for demande in DemandeTransfert.objects.filter(statut='en_attente', date_demande__lte=seuil):
-        demande.statut = 'annulee'
-        demande.save(update_fields=['statut'])
-        notifier_telephone(
-            demande.expediteur_telephone, "Demande de transfert annulee",
-            f"Votre demande de transfert {demande.numero_demande} n'a pas ete finalisee a l'agence "
-            f"dans les 24h et a ete annulee automatiquement.",
-            {"type": "demande_transfert_expiree", "numero_demande": demande.numero_demande},
-        )
-        nb_annulees += 1
-    return nb_annulees
+    nb_alertes = 0
+    for demande in DemandeTransfert.objects.filter(statut='en_attente'):
+        echeance = demande.date_demande + DELAI_DEMANDE
+
+        if maintenant >= echeance:
+            demande.statut = 'annulee'
+            demande.save(update_fields=['statut'])
+            notifier_telephone(
+                demande.expediteur_telephone, "Demande de transfert annulee",
+                f"Votre demande de transfert {demande.numero_demande} n'a pas ete finalisee a l'agence "
+                f"dans les 24h et a ete annulee automatiquement.",
+                {"type": "demande_transfert_expiree", "numero_demande": demande.numero_demande},
+            )
+            nb_annulees += 1
+            continue
+
+        if not demande.alerte_expiration_envoyee and maintenant >= echeance - DELAI_AVERTISSEMENT:
+            demande.alerte_expiration_envoyee = True
+            demande.save(update_fields=['alerte_expiration_envoyee'])
+            notifier_telephone(
+                demande.expediteur_telephone, "Derniere chance pour votre demande de transfert",
+                f"Votre demande de transfert {demande.numero_demande} sera annulee automatiquement "
+                f"dans environ 2h si elle n'est pas finalisee a l'agence.",
+                {"type": "demande_transfert_avertissement", "numero_demande": demande.numero_demande},
+            )
+            nb_alertes += 1
+
+    return nb_annulees, nb_alertes
 
 
 def _traiter_colis_non_retires(maintenant):
     nb_retournes = 0
-    seuil = maintenant - DELAI_RETRAIT
-    colis_en_retard = Colis.objects.filter(statut='arrive', date_arrivee__isnull=False, date_arrivee__lte=seuil)
-    for colis in colis_en_retard:
-        colis.statut = 'retourne'
-        colis.save(update_fields=['statut'])
-        notifier_telephone(
-            colis.expediteur_telephone, "Colis non retire",
-            f"Le colis {colis.code_suivi} n'a pas ete retire dans le delai de 5 jours "
-            f"apres son arrivee a l'agence. Il est marque comme retourne.",
-            {"type": "colis_non_retire", "code_suivi": colis.code_suivi},
-        )
-        notifier_telephone(
-            colis.destinataire_telephone, "Colis non retire",
-            f"Le delai de 5 jours pour retirer le colis {colis.code_suivi} est depasse. "
-            f"Contactez l'agence {colis.agence_arrivee}.",
-            {"type": "colis_non_retire", "code_suivi": colis.code_suivi},
-        )
-        nb_retournes += 1
-    return nb_retournes
+    nb_alertes = 0
+    colis_arrives = Colis.objects.filter(statut='arrive', date_arrivee__isnull=False)
+    for colis in colis_arrives:
+        echeance = colis.date_arrivee + DELAI_RETRAIT
+
+        if maintenant >= echeance:
+            colis.statut = 'retourne'
+            colis.save(update_fields=['statut'])
+            notifier_telephone(
+                colis.expediteur_telephone, "Colis non retire",
+                f"Le colis {colis.code_suivi} n'a pas ete retire dans le delai de 5 jours "
+                f"apres son arrivee a l'agence. Il est marque comme retourne.",
+                {"type": "colis_non_retire", "code_suivi": colis.code_suivi},
+            )
+            notifier_telephone(
+                colis.destinataire_telephone, "Colis non retire",
+                f"Le delai de 5 jours pour retirer le colis {colis.code_suivi} est depasse. "
+                f"Contactez l'agence {colis.agence_arrivee}.",
+                {"type": "colis_non_retire", "code_suivi": colis.code_suivi},
+            )
+            nb_retournes += 1
+            continue
+
+        if not colis.alerte_retrait_envoyee and maintenant >= echeance - DELAI_AVERTISSEMENT:
+            colis.alerte_retrait_envoyee = True
+            colis.save(update_fields=['alerte_retrait_envoyee'])
+            notifier_telephone(
+                colis.destinataire_telephone, "Derniere chance pour retirer votre colis",
+                f"Il vous reste environ 2h pour retirer le colis {colis.code_suivi} a l'agence "
+                f"{colis.agence_arrivee} avec le code {colis.code_retrait}, sinon il sera retourne.",
+                {"type": "colis_avertissement", "code_suivi": colis.code_suivi},
+            )
+            nb_alertes += 1
+
+    return nb_retournes, nb_alertes
 
 
 def _traiter_transferts_non_retires(maintenant):
     nb_annules = 0
-    seuil = maintenant - DELAI_RETRAIT
-    transferts_en_retard = TransfertArgent.objects.filter(statut='en_attente', date_envoi__lte=seuil)
-    for transfert in transferts_en_retard:
-        transfert.statut = 'annule'
-        transfert.save(update_fields=['statut'])
-        notifier_telephone(
-            transfert.expediteur_telephone, "Transfert non retire",
-            f"Le transfert {transfert.code_transfert} n'a pas ete retire dans le delai de 5 jours "
-            f"et a ete annule automatiquement.",
-            {"type": "transfert_non_retire", "code_transfert": transfert.code_transfert},
-        )
-        notifier_telephone(
-            transfert.beneficiaire_telephone, "Transfert non retire",
-            f"Le delai de 5 jours pour retirer le transfert {transfert.code_transfert} est depasse. "
-            f"Contactez l'agence {transfert.agence_retrait}.",
-            {"type": "transfert_non_retire", "code_transfert": transfert.code_transfert},
-        )
-        nb_annules += 1
-    return nb_annules
+    nb_alertes = 0
+    transferts_en_attente = TransfertArgent.objects.filter(statut='en_attente')
+    for transfert in transferts_en_attente:
+        echeance = transfert.date_envoi + DELAI_RETRAIT
+
+        if maintenant >= echeance:
+            transfert.statut = 'annule'
+            transfert.save(update_fields=['statut'])
+            notifier_telephone(
+                transfert.expediteur_telephone, "Transfert non retire",
+                f"Le transfert {transfert.code_transfert} n'a pas ete retire dans le delai de 5 jours "
+                f"et a ete annule automatiquement.",
+                {"type": "transfert_non_retire", "code_transfert": transfert.code_transfert},
+            )
+            notifier_telephone(
+                transfert.beneficiaire_telephone, "Transfert non retire",
+                f"Le delai de 5 jours pour retirer le transfert {transfert.code_transfert} est depasse. "
+                f"Contactez l'agence {transfert.agence_retrait}.",
+                {"type": "transfert_non_retire", "code_transfert": transfert.code_transfert},
+            )
+            nb_annules += 1
+            continue
+
+        if not transfert.alerte_retrait_envoyee and maintenant >= echeance - DELAI_AVERTISSEMENT:
+            transfert.alerte_retrait_envoyee = True
+            transfert.save(update_fields=['alerte_retrait_envoyee'])
+            notifier_telephone(
+                transfert.beneficiaire_telephone, "Derniere chance pour retirer votre transfert",
+                f"Il vous reste environ 2h pour retirer le transfert {transfert.code_transfert} a l'agence "
+                f"{transfert.agence_retrait} avec le code {transfert.code_retrait}, sinon il sera annule.",
+                {"type": "transfert_avertissement", "code_transfert": transfert.code_transfert},
+            )
+            nb_alertes += 1
+
+    return nb_annules, nb_alertes
 
 
 def traiter_expirations():
     """Lance toutes les verifications d'expiration et renvoie un resume."""
     maintenant = timezone.now()
+
+    reservations_annulees, reservations_alertees = _traiter_reservations_impayees(maintenant)
+    demandes_colis_annulees, demandes_colis_alertees = _traiter_demandes_colis(maintenant)
+    demandes_transfert_annulees, demandes_transfert_alertees = _traiter_demandes_transfert(maintenant)
+    colis_retournes, colis_alertes = _traiter_colis_non_retires(maintenant)
+    transferts_annules, transferts_alertes = _traiter_transferts_non_retires(maintenant)
+
     return {
-        'reservations_annulees': _traiter_reservations_impayees(maintenant),
-        'demandes_colis_annulees': _traiter_demandes_colis(maintenant),
-        'demandes_transfert_annulees': _traiter_demandes_transfert(maintenant),
-        'colis_retournes': _traiter_colis_non_retires(maintenant),
-        'transferts_annules': _traiter_transferts_non_retires(maintenant),
+        'reservations_annulees': reservations_annulees,
+        'reservations_alertees': reservations_alertees,
+        'demandes_colis_annulees': demandes_colis_annulees,
+        'demandes_colis_alertees': demandes_colis_alertees,
+        'demandes_transfert_annulees': demandes_transfert_annulees,
+        'demandes_transfert_alertees': demandes_transfert_alertees,
+        'colis_retournes': colis_retournes,
+        'colis_alertes': colis_alertes,
+        'transferts_annules': transferts_annules,
+        'transferts_alertes': transferts_alertes,
     }
