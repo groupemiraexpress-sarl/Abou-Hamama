@@ -472,12 +472,18 @@ class ColisAdmin(FiltreAgenceMixin, admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         employe = getattr(request.user, 'employe', None)
+        ancien_statut = None
+        if change and obj.pk:
+            ancien_statut = Colis.objects.filter(pk=obj.pk).values_list('statut', flat=True).first()
         code_saisi = (form.cleaned_data.get('code_retrait_saisi') or '').strip() if change else ''
         confirmation = bool(change and code_saisi and obj.statut != 'livre')
         if confirmation:
             from django.utils import timezone as tz
             obj.statut = 'livre'
             obj.date_livraison = tz.now()
+        est_nouvelle_arrivee = bool(
+            change and not confirmation and ancien_statut != 'arrive' and obj.statut == 'arrive'
+        )
         if employe:
             obj.modifie_par = employe
             if not change:
@@ -496,6 +502,23 @@ class ColisAdmin(FiltreAgenceMixin, admin.ModelAdmin):
                 {"type": "colis_livre", "code_suivi": obj.code_suivi},
             )
             self.message_user(request, f"Colis remis a {obj.destinataire_nom} avec succes.")
+        elif est_nouvelle_arrivee:
+            from .notifications import notifier_telephone
+            notifier_telephone(
+                obj.destinataire_telephone, "Colis arrive a l'agence",
+                f"Le colis {obj.code_suivi} est arrive a l'agence {obj.agence_arrivee}. "
+                f"Presentez-vous avec une piece d'identite et le code {obj.code_retrait} pour le retirer "
+                f"(delai de 5 jours).",
+                {"type": "colis_arrive", "code_suivi": obj.code_suivi},
+            )
+            self.message_user(request, "Le destinataire a ete notifie de l'arrivee du colis.")
+        elif not change:
+            from .notifications import notifier_telephone
+            notifier_telephone(
+                obj.destinataire_telephone, "Colis en route",
+                f"Un colis vous est envoye ({obj.code_suivi}). Vous serez notifie a son arrivee a l'agence.",
+                {"type": "colis_enregistre", "code_suivi": obj.code_suivi},
+            )
 
 
 class EmployeAdminForm(forms.ModelForm):
@@ -845,6 +868,15 @@ class TransfertArgentAdmin(FiltreAgenceMixin, admin.ModelAdmin):
                 {"type": "transfert_retire", "code_transfert": obj.code_transfert},
             )
             self.message_user(request, f"Transfert paye a {obj.beneficiaire_nom} avec succes.")
+        elif not change:
+            from .notifications import notifier_telephone
+            notifier_telephone(
+                obj.beneficiaire_telephone, "Argent disponible",
+                f"Un transfert de {obj.montant} FCFA vous attend a l'agence {obj.agence_retrait} "
+                f"({obj.code_transfert}). Presentez-vous avec une piece d'identite et le code "
+                f"{obj.code_retrait} pour le retirer (delai de 5 jours).",
+                {"type": "transfert_enregistre", "code_transfert": obj.code_transfert},
+            )
 
 
 @admin.register(Entretien)
@@ -1007,7 +1039,9 @@ class DemandeTransfertAdmin(FiltreAgenceMixin, admin.ModelAdmin):
             )
             notifier_telephone(
                 demande.beneficiaire_telephone, "Argent disponible",
-                f"Un transfert de {demande.montant} FCFA vous attend ({transfert.code_transfert}). Presentez-vous a l'agence avec une piece d'identite.",
+                f"Un transfert de {demande.montant} FCFA vous attend ({transfert.code_transfert}). "
+                f"Presentez-vous a l'agence avec une piece d'identite et le code {transfert.code_retrait} "
+                f"(delai de 5 jours).",
                 {"type": "demande_transfert_validee", "code_transfert": transfert.code_transfert},
             )
         if crees:

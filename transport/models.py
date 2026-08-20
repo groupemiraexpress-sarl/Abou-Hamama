@@ -369,6 +369,7 @@ class Colis(models.Model):
     statut = models.CharField(_("Statut"), max_length=20, choices=STATUT_CHOICES, default='enregistre')
     code_retrait = models.CharField(_("Code de retrait"), max_length=10, blank=True, help_text=_("Code secret remis au destinataire, exige a la remise"))
     date_enregistrement = models.DateTimeField(_("Date d'enregistrement"), auto_now_add=True)
+    date_arrivee = models.DateTimeField(_("Date d'arrivee a l'agence"), null=True, blank=True, help_text=_("Renseignee automatiquement quand le colis passe au statut 'Arrive a destination'. Sert de point de depart au delai de 5 jours pour le retrait."))
     date_livraison = models.DateTimeField(_("Date de livraison"), null=True, blank=True)
     notes = models.TextField(_("Notes"), blank=True)
 
@@ -388,6 +389,14 @@ class Colis(models.Model):
         if not self.code_retrait:
             import random
             self.code_retrait = str(random.randint(10000, 99999))
+
+        if self.statut == 'arrive' and not self.date_arrivee:
+            ancien_statut = None
+            if self.pk:
+                ancien_statut = Colis.objects.filter(pk=self.pk).values_list('statut', flat=True).first()
+            if ancien_statut != 'arrive':
+                from django.utils import timezone
+                self.date_arrivee = timezone.now()
 
         super().save(*args, **kwargs)
 

@@ -16,6 +16,12 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-07o4v)3c8le$w9$y%)1as
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
+# Cle secrete pour l'appel externe (service de cron gratuit type cron-job.org)
+# qui declenche la verification des reservations/colis/transferts expires.
+# A definir en variable d'environnement en production (ne pas laisser la
+# valeur par defaut sur un serveur en ligne).
+CLE_TACHE_EXPIRATION = os.environ.get('CLE_TACHE_EXPIRATION', 'change-moi-cle-secrete-expiration')
+
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'testserver', '.onrender.com', '.pythonanywhere.com']
 
 

@@ -25,6 +25,10 @@ urlpatterns = [
     path('espace/api-stats-tableau-bord/', views.api_stats_tableau_bord, name='api_stats_tableau_bord'),
     path('espace/historique-employe/', views.historique_employe, name='historique_employe'),
 
+    # Tache planifiee (appelee par un service de cron externe) : annulation
+    # automatique des reservations/colis/transferts expires.
+    path('api/tache/verifier-expirations/', views.verifier_expirations_cron, name='verifier_expirations_cron'),
+
     # API (pour l'application mobile)
     path('api/voyages/', api_views.api_voyages, name='api_voyages'),
     path('api/promotions/', api_views.api_promotions, name='api_promotions'),

@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import JsonResponse
 from django.utils import timezone
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_GET
 from .models import Voyage, Client, Reservation, Agence, Chauffeur, Employe, Colis, TransfertArgent
 from django.urls import reverse
 
@@ -16,6 +19,30 @@ def api_stats_tableau_bord(request):
     """
     from .admin_stats import statistiques_tableau_bord
     return JsonResponse(statistiques_tableau_bord(request.user))
+
+
+@csrf_exempt
+@require_GET
+def verifier_expirations_cron(request):
+    """
+    Point d'entree appele par un service externe gratuit (ex: cron-job.org)
+    toutes les 15-30 minutes, pour annuler automatiquement les reservations
+    de billets impayees, les demandes de colis/transfert non finalisees, et
+    les colis/transferts enregistres mais non retires dans les delais.
+
+    Protege par une cle secrete passee en parametre d'URL (pas de session
+    utilisateur possible puisque c'est un service externe qui appelle cette
+    URL, pas une personne connectee) : /api/tache/verifier-expirations/?cle=...
+    La cle attendue est definie par la variable d'environnement
+    CLE_TACHE_EXPIRATION (voir config/settings.py).
+    """
+    cle_fournie = request.GET.get('cle', '')
+    if not cle_fournie or cle_fournie != settings.CLE_TACHE_EXPIRATION:
+        return JsonResponse({'erreur': 'Cle invalide.'}, status=403)
+
+    from .expiration import traiter_expirations
+    resultat = traiter_expirations()
+    return JsonResponse({'ok': True, **resultat})
 
 
 @staff_member_required
