@@ -161,6 +161,20 @@ def recu_transfert(request, transfert_id):
     return render(request, 'transport/recu_transfert.html', {'transfert': transfert})
 
 
+# Pour chaque poste, quelles sections de transactions sont pertinentes sur
+# sa page "Mon activite" (on ne montre pas les billets a un agent colis,
+# ni les colis/transferts a un guichetier : chacun voit son propre metier).
+SECTIONS_ACTIVITE_PAR_POSTE = {
+    'pdg': {'billets', 'colis', 'transferts'},
+    'responsable': {'billets', 'colis', 'transferts'},
+    'secretaire': {'billets'},
+    'guichetier': {'billets'},
+    'caissier': {'billets'},
+    'agent_colis': {'colis'},
+    'agent_transfert': {'transferts'},
+}
+
+
 @staff_member_required
 def historique_employe(request):
     """
@@ -174,6 +188,11 @@ def historique_employe(request):
     que celui-ci a genere (toute la compagnie pour le PDG, leur agence pour
     le responsable). Cette page ne concerne pas le Responsable planning (il
     supervise une zone, pas le personnel des agences) : il n'y a pas acces.
+
+    Les sections affichees (billets / colis / transferts) dependent du
+    poste de l'employe consulte, pas du poste de la personne connectee :
+    un responsable qui consulte la fiche d'un agent colis ne voit que la
+    section colis, meme si lui-meme a acces a tout sur sa propre fiche.
     """
     from datetime import datetime
     from .admin_filtres import voit_tout, agence_de
@@ -208,11 +227,20 @@ def historique_employe(request):
     except ValueError:
         date_choisie = timezone.now().date()
 
+    poste_cible = employe_cible.poste if employe_cible else None
+    sections_actives = set(SECTIONS_ACTIVITE_PAR_POSTE.get(poste_cible, ()))
+    if not sections_actives and tout_voir and (employe_cible is None or employe_cible == employe_connecte and poste_cible is None):
+        # Superutilisateur sans fiche Employe liee : on lui montre tout par securite.
+        sections_actives = {'billets', 'colis', 'transferts'}
+
     contexte = {
         'employes_visibles': employes_visibles if peut_superviser else None,
         'employe_cible': employe_cible,
         'date_choisie': date_choisie,
         'peut_superviser': peut_superviser,
+        'voit_billets': 'billets' in sections_actives,
+        'voit_colis': 'colis' in sections_actives,
+        'voit_transferts': 'transferts' in sections_actives,
     }
 
     if not employe_cible:

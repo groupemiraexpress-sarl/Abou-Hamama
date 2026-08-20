@@ -42,11 +42,18 @@
         <p style="color:#6b7280; font-size:.85rem;">Archive du {{ date_choisie|date:"d/m/Y" }}</p>
     </div>
 
+    {% if not voit_billets and not voit_colis and not voit_transferts %}
+    <p style="color:#6b7280; text-align:center;">Ce poste n'enregistre pas de billets, colis ou transferts suivis dans cette archive.</p>
+    {% else %}
+
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:10px; margin-bottom:24px;">
+        {% if voit_billets %}
         <div style="background:#f4f6f9; border-radius:10px; padding:12px; text-align:center;">
             <p style="font-size:.75rem; color:#6b7280;">Billets vendus</p>
             <p style="font-size:1.3rem; font-weight:700; color:#1F3864;">{{ reservations|length }}</p>
         </div>
+        {% endif %}
+        {% if voit_colis %}
         <div style="background:#f4f6f9; border-radius:10px; padding:12px; text-align:center;">
             <p style="font-size:.75rem; color:#6b7280;">Colis enregistres</p>
             <p style="font-size:1.3rem; font-weight:700; color:#1F3864;">{{ colis_enregistres|length }}</p>
@@ -55,6 +62,8 @@
             <p style="font-size:.75rem; color:#6b7280;">Colis remis</p>
             <p style="font-size:1.3rem; font-weight:700; color:#1F3864;">{{ colis_remis|length }}</p>
         </div>
+        {% endif %}
+        {% if voit_transferts %}
         <div style="background:#f4f6f9; border-radius:10px; padding:12px; text-align:center;">
             <p style="font-size:.75rem; color:#6b7280;">Transferts enregistres</p>
             <p style="font-size:1.3rem; font-weight:700; color:#1F3864;">{{ transferts_enregistres|length }}</p>
@@ -63,27 +72,35 @@
             <p style="font-size:.75rem; color:#6b7280;">Transferts retires</p>
             <p style="font-size:1.3rem; font-weight:700; color:#1F3864;">{{ transferts_retires|length }}</p>
         </div>
+        {% endif %}
     </div>
 
     <table style="width:100%; border-collapse:collapse; margin-bottom:24px;">
+        {% if voit_billets %}
         <tr style="background:#f4f6f9;">
             <td style="padding:10px; font-weight:600; color:#1F3864;">Billets vendus</td>
             <td style="padding:10px; text-align:right; font-weight:700; color:#1F3864;">{{ montant_billets }} FCFA</td>
         </tr>
+        {% endif %}
+        {% if voit_colis %}
         <tr>
             <td style="padding:10px; font-weight:600; color:#1F3864;">Colis enregistres</td>
             <td style="padding:10px; text-align:right; font-weight:700; color:#1F3864;">{{ montant_colis }} FCFA</td>
         </tr>
+        {% endif %}
+        {% if voit_transferts %}
         <tr style="background:#f4f6f9;">
             <td style="padding:10px; font-weight:600; color:#1F3864;">Transferts (frais)</td>
             <td style="padding:10px; text-align:right; font-weight:700; color:#1F3864;">{{ montant_transferts }} FCFA</td>
         </tr>
+        {% endif %}
         <tr style="border-top:2px solid #1F3864;">
             <td style="padding:14px 10px 0; font-weight:700; color:#1F3864; font-size:1.1rem;">Total genere</td>
             <td style="padding:14px 10px 0; text-align:right; font-weight:700; color:#1F3864; font-size:1.2rem;">{{ total_genere }} FCFA</td>
         </tr>
     </table>
 
+    {% if voit_billets %}
     <h3 style="color:#1F3864; font-size:1rem; margin-bottom:10px; border-bottom:2px solid #1F3864; padding-bottom:6px;">Billets vendus ({{ reservations|length }})</h3>
     {% if reservations %}
     <table style="width:100%; border-collapse:collapse; margin-bottom:24px; font-size:.9rem;">
@@ -107,7 +124,9 @@
     {% else %}
     <p style="color:#6b7280; margin-bottom:24px;">Aucun billet vendu ce jour.</p>
     {% endif %}
+    {% endif %}
 
+    {% if voit_colis %}
     <h3 style="color:#1F3864; font-size:1rem; margin-bottom:10px; border-bottom:2px solid #1F3864; padding-bottom:6px;">Colis enregistres ({{ colis_enregistres|length }})</h3>
     {% if colis_enregistres %}
     <table style="width:100%; border-collapse:collapse; margin-bottom:24px; font-size:.9rem;">
@@ -151,7 +170,9 @@
     {% else %}
     <p style="color:#6b7280; margin-bottom:24px;">Aucun colis remis ce jour.</p>
     {% endif %}
+    {% endif %}
 
+    {% if voit_transferts %}
     <h3 style="color:#1F3864; font-size:1rem; margin-bottom:10px; border-bottom:2px solid #1F3864; padding-bottom:6px;">Transferts enregistres ({{ transferts_enregistres|length }})</h3>
     {% if transferts_enregistres %}
     <table style="width:100%; border-collapse:collapse; margin-bottom:24px; font-size:.9rem;">
@@ -194,6 +215,9 @@
     </table>
     {% else %}
     <p style="color:#6b7280;">Aucun transfert retire ce jour.</p>
+    {% endif %}
+    {% endif %}
+
     {% endif %}
 </div>
 
