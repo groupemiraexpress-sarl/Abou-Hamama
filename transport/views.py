@@ -168,12 +168,12 @@ def historique_employe(request):
     donnee (billets vendus, colis enregistres/remis, transferts enregistres/
     retires), comme une archive professionnelle du travail du jour.
 
-    Par defaut, chaque employe voit sa propre activite. Le PDG, le
-    superutilisateur, le Responsable d'agence et le RH peuvent choisir un
-    autre employe dans leur perimetre (toute la compagnie pour le PDG,
-    leur agence pour responsable/RH). Cette page ne concerne pas le
-    Responsable planning (il supervise une zone, pas le personnel des
-    agences) : il n'y a pas acces.
+    Chacun voit uniquement sa propre activite (par exemple, l'agent colis
+    ne voit que ce que lui-meme a enregistre). Seuls le PDG/superutilisateur
+    et le Responsable d'agence peuvent choisir un autre employe et voir ce
+    que celui-ci a genere (toute la compagnie pour le PDG, leur agence pour
+    le responsable). Cette page ne concerne pas le Responsable planning (il
+    supervise une zone, pas le personnel des agences) : il n'y a pas acces.
     """
     from datetime import datetime
     from .admin_filtres import voit_tout, agence_de
@@ -185,11 +185,11 @@ def historique_employe(request):
     if not tout_voir and poste_connecte == 'resp_planning':
         return redirect('admin:index')
 
-    peut_superviser = tout_voir or poste_connecte in ('responsable', 'rh')
+    peut_superviser = tout_voir or poste_connecte == 'responsable'
 
     if tout_voir:
         employes_visibles = Employe.objects.filter(actif=True).order_by('agence__ville', 'nom')
-    elif poste_connecte in ('responsable', 'rh'):
+    elif poste_connecte == 'responsable':
         agence = agence_de(request.user)
         employes_visibles = Employe.objects.filter(actif=True, agence=agence).order_by('nom') if agence else Employe.objects.none()
     else:
