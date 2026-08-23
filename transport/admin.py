@@ -4,7 +4,7 @@ from .models import (
     Compagnie, Agence, Bus, Chauffeur, Trajet, Voyage,
     Client, Reservation, Colis, Employe, TransfertArgent,
     Entretien, PleinCarburant, Promotion, DemandeColis, DemandeTransfert, Ligne, ArretLigne,
-    AlerteVoyage, AvisVoyage, QuestionFAQ, PushToken, AppareilConfirme, DemandeConfirmationAppareil
+    AlerteVoyage, AvisVoyage, QuestionFAQ, PushToken, AppareilConfirme, DemandeConfirmationAppareil, Plainte
 )
 from django import forms
 from django.contrib.auth.models import User
@@ -1205,3 +1205,32 @@ class DemandeConfirmationAppareilAdmin(admin.ModelAdmin):
     list_filter = ('utilisee',)
     search_fields = ('user__username', 'identifiant_appareil')
     readonly_fields = ('date_creation',)
+
+
+@admin.register(Plainte)
+class PlainteAdmin(admin.ModelAdmin):
+    list_display = ('sujet', 'client', 'statut', 'date_creation', 'traite_par')
+    list_filter = ('statut',)
+    search_fields = ('sujet', 'message', 'client__nom', 'client__telephone')
+    list_editable = ('statut',)
+    readonly_fields = ('client', 'sujet', 'message', 'date_creation', 'traite_par', 'date_reponse')
+    ordering = ('-date_creation',)
+
+    def save_model(self, request, obj, form, change):
+        employe = getattr(request.user, 'employe', None)
+        reponse_modifiee = 'reponse' in form.changed_data and obj.reponse.strip()
+        if reponse_modifiee:
+            from django.utils import timezone as tz
+            obj.date_reponse = tz.now()
+            if employe:
+                obj.traite_par = employe
+            if obj.statut == 'nouvelle':
+                obj.statut = 'traitee'
+        super().save_model(request, obj, form, change)
+        if reponse_modifiee and obj.client_id and obj.client.telephone:
+            from .notifications import notifier_telephone
+            notifier_telephone(
+                obj.client.telephone, "Reponse a votre plainte",
+                f"Vous avez recu une reponse concernant : {obj.sujet}",
+                {"type": "plainte_reponse", "plainte_id": obj.id},
+            )

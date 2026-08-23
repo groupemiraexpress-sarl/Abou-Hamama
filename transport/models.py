@@ -891,3 +891,29 @@ class QuestionFAQ(models.Model):
         verbose_name = _("Question FAQ")
         verbose_name_plural = _("Questions FAQ")
         ordering = ['ordre', 'id']
+
+
+class Plainte(models.Model):
+    """Plainte/reclamation soumise par un client depuis l'app mobile."""
+    STATUT_CHOICES = [
+        ('nouvelle', _('Nouvelle')),
+        ('en_cours', _('En cours de traitement')),
+        ('traitee', _('Traitee')),
+    ]
+
+    client = models.ForeignKey('Client', on_delete=models.SET_NULL, null=True, blank=True, related_name='plaintes', verbose_name=_("Client"))
+    sujet = models.CharField(_("Sujet"), max_length=150)
+    message = models.TextField(_("Message"))
+    statut = models.CharField(_("Statut"), max_length=20, choices=STATUT_CHOICES, default='nouvelle')
+    reponse = models.TextField(_("Reponse"), blank=True, help_text=_("Reponse donnee au client, visible dans l'app"))
+    traite_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='plaintes_traitees', verbose_name=_("Traite par"))
+    date_creation = models.DateTimeField(_("Date de creation"), auto_now_add=True)
+    date_reponse = models.DateTimeField(_("Date de reponse"), null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.sujet} - {self.client}"
+
+    class Meta:
+        verbose_name = _("Plainte")
+        verbose_name_plural = _("Plaintes")
+        ordering = ['-date_creation']

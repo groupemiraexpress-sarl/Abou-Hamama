@@ -1237,6 +1237,50 @@ def api_faq(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+def api_creer_plainte(request):
+    """Le client envoie une plainte/reclamation depuis l'app."""
+    from .models import Plainte
+
+    client = Client.objects.filter(user=request.user).first()
+    if not client:
+        return Response({'erreur': 'Compte client introuvable.'}, status=404)
+
+    sujet = request.data.get('sujet', '').strip()
+    message = request.data.get('message', '').strip()
+    if not sujet or not message:
+        return Response({'erreur': 'Sujet et message obligatoires.'}, status=400)
+
+    plainte = Plainte.objects.create(client=client, sujet=sujet, message=message)
+    return Response({'message': 'Plainte envoyee. Vous recevrez une reponse ici des que possible.', 'id': plainte.id}, status=201)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def api_mes_plaintes(request):
+    """Liste des plaintes envoyees par le client connecte, avec statut et reponse."""
+    from .models import Plainte
+
+    client = Client.objects.filter(user=request.user).first()
+    if not client:
+        return Response([])
+
+    plaintes = Plainte.objects.filter(client=client)
+    return Response([
+        {
+            'id': p.id,
+            'sujet': p.sujet,
+            'message': p.message,
+            'statut': p.statut,
+            'reponse': p.reponse,
+            'date_creation': p.date_creation,
+            'date_reponse': p.date_reponse,
+        }
+        for p in plaintes
+    ])
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def api_enregistrer_push_token(request):
     """Enregistre (ou met a jour) le jeton de notification push Expo de l'utilisateur connecte."""
     token = request.data.get('token', '').strip()
