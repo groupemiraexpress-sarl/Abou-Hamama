@@ -22,22 +22,31 @@
   {% if has_permission %}
   <div id="user-tools" class="menu-utilisateur">
     <details class="menu-compte">
+      {% with employe=request.user.employe|default_if_none:None %}
       <summary class="menu-compte-bouton">
-        <span class="avatar-initiales">{{ request.user.username|slice:":2"|upper }}</span>
+        {% if employe and employe.photo %}
+          <img src="{{ employe.photo.url }}" alt="" class="avatar-photo">
+        {% else %}
+          <span class="avatar-initiales">{{ request.user.username|slice:":2"|upper }}</span>
+        {% endif %}
         <span class="menu-compte-nom">{{ request.user.get_short_name|default:request.user.get_username }}</span>
         <span class="menu-compte-fleche">&#9662;</span>
       </summary>
       <div class="menu-compte-liste">
         <div class="menu-compte-entete">
-          <strong>{{ request.user.get_short_name|default:request.user.get_username }}</strong>
-          {% with employe=request.user.employe|default_if_none:None %}
+          {% if employe and employe.photo %}
+            <img src="{{ employe.photo.url }}" alt="" class="avatar-photo-entete">
+          {% endif %}
+          <div>
+            <strong>{{ request.user.get_short_name|default:request.user.get_username }}</strong>
             {% if employe %}
               <div class="menu-compte-role">{{ employe.get_poste_display }}{% if employe.agence %} — {{ employe.agence.nom }}{% endif %}</div>
             {% elif request.user.is_superuser %}
               <div class="menu-compte-role">{% trans "Administrateur" %}</div>
             {% endif %}
-          {% endwith %}
+          </div>
         </div>
+      {% endwith %}
         <a href="{% url 'transport:mon_profil' %}">{% trans "Mon profil" %}</a>
         {% with employe=request.user.employe|default_if_none:None %}
           {% if request.user.is_superuser or employe.poste == 'pdg' or employe.poste == 'rh' %}
@@ -169,5 +178,3 @@
     }
   </style>
 {% endblock %}
-
-'@ | Set-Content -Path "transport\templates\admin\base_site.html" -Encoding UTF8
