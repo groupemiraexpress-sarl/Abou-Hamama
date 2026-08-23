@@ -5,7 +5,11 @@
 {% block contenu %}
 <div class="card">
     <div style="text-align:center; margin-bottom:20px;">
+        {% if employe and employe.photo %}
+        <img src="{{ employe.photo.url }}" alt="{{ employe.prenom }} {{ employe.nom }}" style="width:90px; height:90px; border-radius:50%; object-fit:cover; box-shadow:0 2px 6px rgba(0,0,0,.2);">
+        {% else %}
         <img src="{% static 'transport/logo_abou_hamama.png' %}" alt="Express Abou Hamama" style="width:60px; height:60px; border-radius:50%; box-shadow:0 2px 6px rgba(0,0,0,.2);">
+        {% endif %}
     </div>
     {% if employe %}
     <table style="width:100%; border-collapse:collapse;">
