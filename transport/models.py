@@ -805,6 +805,48 @@ class PushToken(models.Model):
         ordering = ['-date_maj']
 
 
+class AppareilConfirme(models.Model):
+    """
+    Appareil (telephone) deja confirme par email pour un compte donne.
+    Utilise pour la regle "un seul appareil connecte a la fois" : a chaque
+    connexion depuis un appareil deja present ici, on deconnecte tous les
+    autres appareils (voir transport/appareils.py).
+    """
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='appareils_confirmes', verbose_name=_("Compte"))
+    identifiant_appareil = models.CharField(_("Identifiant de l'appareil"), max_length=100)
+    date_confirmation = models.DateTimeField(_("Date de confirmation"), auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.identifiant_appareil[:16]}"
+
+    class Meta:
+        verbose_name = _("Appareil confirme")
+        verbose_name_plural = _("Appareils confirmes")
+        unique_together = ['user', 'identifiant_appareil']
+
+
+class DemandeConfirmationAppareil(models.Model):
+    """
+    Demande de confirmation d'un nouvel appareil, en attente de validation
+    via le lien envoye par email. Une fois validee, un AppareilConfirme
+    correspondant est cree.
+    """
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='demandes_appareil', verbose_name=_("Compte"))
+    identifiant_appareil = models.CharField(_("Identifiant de l'appareil"), max_length=100)
+    jeton = models.CharField(_("Jeton"), max_length=64, unique=True)
+    date_creation = models.DateTimeField(_("Date de creation"), auto_now_add=True)
+    utilisee = models.BooleanField(_("Utilisee"), default=False)
+
+    def __str__(self):
+        etat = 'confirmee' if self.utilisee else 'en attente'
+        return f"{self.user.username} - {self.identifiant_appareil[:16]} ({etat})"
+
+    class Meta:
+        verbose_name = _("Demande de confirmation d'appareil")
+        verbose_name_plural = _("Demandes de confirmation d'appareil")
+        ordering = ['-date_creation']
+
+
 class AvisVoyage(models.Model):
     """Avis laisse par un client apres un voyage termine (note + criteres detailles)."""
     reservation = models.OneToOneField('Reservation', on_delete=models.CASCADE, related_name='avis', verbose_name=_("Reservation"))

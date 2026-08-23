@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',
     'transport',
 ]
 
@@ -158,6 +159,17 @@ REST_FRAMEWORK = {
         'anon': '30/minute',
         'user': '120/minute',
     },
+}
+
+# Un seul appareil connecte a la fois par compte : jeton d'acces de courte
+# duree, jeton de rafraichissement plus long mais qui tourne (rotation) et
+# se blackliste des qu'il est remplace ou qu'une autre connexion a lieu
+# (voir transport/appareils.py).
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=14),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
 }
 
 # --- Configuration de l'envoi d'emails ---

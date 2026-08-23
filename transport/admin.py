@@ -4,7 +4,7 @@ from .models import (
     Compagnie, Agence, Bus, Chauffeur, Trajet, Voyage,
     Client, Reservation, Colis, Employe, TransfertArgent,
     Entretien, PleinCarburant, Promotion, DemandeColis, DemandeTransfert, Ligne, ArretLigne,
-    AlerteVoyage, AvisVoyage, QuestionFAQ, PushToken
+    AlerteVoyage, AvisVoyage, QuestionFAQ, PushToken, AppareilConfirme, DemandeConfirmationAppareil
 )
 from django import forms
 from django.contrib.auth.models import User
@@ -1190,3 +1190,18 @@ class PushTokenAdmin(admin.ModelAdmin):
     list_display = ('user', 'token', 'date_maj')
     search_fields = ('user__username', 'token')
     readonly_fields = ('date_creation', 'date_maj')
+
+
+@admin.register(AppareilConfirme)
+class AppareilConfirmeAdmin(admin.ModelAdmin):
+    list_display = ('user', 'identifiant_appareil', 'date_confirmation')
+    search_fields = ('user__username', 'identifiant_appareil')
+    readonly_fields = ('date_confirmation',)
+
+
+@admin.register(DemandeConfirmationAppareil)
+class DemandeConfirmationAppareilAdmin(admin.ModelAdmin):
+    list_display = ('user', 'identifiant_appareil', 'utilisee', 'date_creation')
+    list_filter = ('utilisee',)
+    search_fields = ('user__username', 'identifiant_appareil')
+    readonly_fields = ('date_creation',)

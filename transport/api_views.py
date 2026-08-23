@@ -11,7 +11,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 
-from .models import Voyage, Colis, TransfertArgent, Client, Reservation, Siege, Promotion, DemandeColis, Agence, DemandeTransfert, Chauffeur, PositionBus, Employe, PushToken
+from .models import Voyage, Colis, TransfertArgent, Client, Reservation, Siege, Promotion, DemandeColis, Agence, DemandeTransfert, Chauffeur, PositionBus, Employe, PushToken, AppareilConfirme, DemandeConfirmationAppareil
 from .serializers import VoyageSerializer, ColisSerializer, TransfertArgentSerializer, ReservationSerializer, SiegeSerializer, PromotionSerializer, DemandeColisSerializer, AgenceSerializer, DemandeTransfertSerializer
 import re
 from django.core.validators import validate_email
@@ -70,6 +70,49 @@ def api_suivi_transfert(request, code_transfert):
         return Response({'erreur': 'Transfert introuvable'}, status=404)
     return Response(TransfertArgentSerializer(transfert).data)
 
+
+
+@api_view(['POST'])
+def api_connexion_client(request):
+    """
+    Connexion client. Remplace TokenObtainPairView pour pouvoir appliquer
+    la regle "un seul appareil connecte a la fois" et la confirmation par
+    email d'un nouvel appareil (voir transport/appareils.py).
+    """
+    username = request.data.get('username', '').strip()
+    password = request.data.get('password', '')
+    if not username or not password:
+        return Response({'erreur': 'Identifiant et mot de passe obligatoires.'}, status=400)
+
+    from django.contrib.auth import authenticate
+    user = authenticate(request, username=username, password=password)
+    if user is None:
+        return Response({'erreur': 'Identifiant ou mot de passe incorrect.'}, status=401)
+
+    from .appareils import authentifier_avec_verification_appareil
+    statut, resultat = authentifier_avec_verification_appareil(user, request.data.get('identifiant_appareil', ''))
+    if statut == 'en_attente':
+        return Response({'erreur': resultat, 'nouvel_appareil': True}, status=403)
+
+    return Response(resultat)
+
+
+@api_view(['GET'])
+def api_confirmer_appareil(request, jeton):
+    """
+    Page visitee via le lien envoye par email pour confirmer un nouvel
+    appareil. Une fois confirme, l'utilisateur doit retourner sur l'app et
+    se reconnecter (le nouvel appareil sera alors reconnu).
+    """
+    demande = DemandeConfirmationAppareil.objects.filter(jeton=jeton, utilisee=False).first()
+    if not demande:
+        return Response({'erreur': 'Lien invalide ou deja utilise.'}, status=400)
+
+    demande.utilisee = True
+    demande.save(update_fields=['utilisee'])
+    AppareilConfirme.objects.get_or_create(user=demande.user, identifiant_appareil=demande.identifiant_appareil)
+
+    return Response({'message': 'Appareil confirme. Vous pouvez retourner sur l\'application et vous reconnecter.'})
 
 
 @api_view(['POST'])
@@ -708,11 +751,13 @@ def api_connexion_chauffeur(request):
     if not chauffeur:
         return Response({'erreur': 'Ce compte n\'est pas un compte chauffeur.'}, status=403)
 
-    from rest_framework_simplejwt.tokens import RefreshToken
-    refresh = RefreshToken.for_user(user)
+    from .appareils import authentifier_avec_verification_appareil
+    statut, resultat = authentifier_avec_verification_appareil(user, request.data.get('identifiant_appareil', ''))
+    if statut == 'en_attente':
+        return Response({'erreur': resultat, 'nouvel_appareil': True}, status=403)
+
     return Response({
-        'access': str(refresh.access_token),
-        'refresh': str(refresh),
+        **resultat,
         'chauffeur_id': chauffeur.id,
         'nom': chauffeur.nom,
         'prenom': chauffeur.prenom,
@@ -977,11 +1022,13 @@ def api_connexion_securite(request):
     if not employe:
         return Response({'erreur': 'Ce compte n\'est pas un compte agent de securite.'}, status=403)
 
-    from rest_framework_simplejwt.tokens import RefreshToken
-    refresh = RefreshToken.for_user(user)
+    from .appareils import authentifier_avec_verification_appareil
+    statut, resultat = authentifier_avec_verification_appareil(user, request.data.get('identifiant_appareil', ''))
+    if statut == 'en_attente':
+        return Response({'erreur': resultat, 'nouvel_appareil': True}, status=403)
+
     return Response({
-        'access': str(refresh.access_token),
-        'refresh': str(refresh),
+        **resultat,
         'nom': employe.nom,
         'prenom': employe.prenom,
         'agence': employe.agence.nom if employe.agence else None,

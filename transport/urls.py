@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from . import api_views
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework_simplejwt.views import TokenRefreshView
 
 app_name = 'transport'
 
@@ -42,8 +42,9 @@ urlpatterns = [
 
     # API - Authentification des comptes clients (JWT)
     path('api/inscription/', api_views.api_inscription, name='api_inscription'),
-    path('api/connexion/', TokenObtainPairView.as_view(), name='api_connexion'),
+    path('api/connexion/', api_views.api_connexion_client, name='api_connexion'),
     path('api/token-refresh/', TokenRefreshView.as_view(), name='api_token_refresh'),
+    path('api/confirmer-appareil/<str:jeton>/', api_views.api_confirmer_appareil, name='api_confirmer_appareil'),
     path('api/mon-profil/', api_views.api_mon_profil, name='api_mon_profil'),
     path('api/modifier-profil/', api_views.api_modifier_profil, name='api_modifier_profil'),
     path('api/changer-mot-de-passe/', api_views.api_changer_mot_de_passe, name='api_changer_mot_de_passe'),
