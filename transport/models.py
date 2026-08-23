@@ -438,6 +438,7 @@ class Employe(models.Model):
     cni = models.CharField(_("Numero de piece"), max_length=50, blank=True, help_text=_("Numero de carte d'identite"))
     date_embauche = models.DateField(_("Date d'embauche"), null=True, blank=True)
     salaire = models.IntegerField(_("Salaire"), null=True, blank=True, help_text=_("Salaire mensuel en FCFA"))
+    photo = models.ImageField(_("Photo"), upload_to='employes/', null=True, blank=True)
     actif = models.BooleanField(_("Actif"), default=True)
 
     def __str__(self):
