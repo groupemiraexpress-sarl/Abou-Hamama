@@ -47,6 +47,7 @@ urlpatterns = [
     path('api/confirmer-appareil/<str:jeton>/', api_views.api_confirmer_appareil, name='api_confirmer_appareil'),
     path('api/mon-profil/', api_views.api_mon_profil, name='api_mon_profil'),
     path('api/modifier-profil/', api_views.api_modifier_profil, name='api_modifier_profil'),
+    path('api/modifier-photo-profil/', api_views.api_modifier_photo_profil, name='api_modifier_photo_profil'),
     path('api/changer-mot-de-passe/', api_views.api_changer_mot_de_passe, name='api_changer_mot_de_passe'),
     path('api/valider-email/<str:uidb64>/<str:token>/', api_views.api_valider_email, name='api_valider_email'),
 

@@ -203,6 +203,7 @@ class Client(models.Model):
     code_parrainage = models.CharField(_("Code de parrainage"), max_length=12, unique=True, blank=True, null=True, help_text=_("Code unique que ce client partage a ses amis"))
     parraine_par = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='filleuls', verbose_name=_("Parraine par"), help_text=_("Client qui a parraine ce client"))
     bonus_parrainage_attribue = models.BooleanField(_("Bonus parrainage attribue"), default=False, help_text=_("Vrai si le bonus de parrainage a deja ete donne (au premier billet paye)"))
+    photo = models.ImageField(_("Photo de profil"), upload_to='profils_clients/', null=True, blank=True)
     actif = models.BooleanField(_("Actif"), default=True)
 
     def mettre_a_jour_niveau(self):

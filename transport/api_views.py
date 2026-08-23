@@ -191,7 +191,42 @@ def api_mon_profil(request):
         'nombre_voyages': client.nombre_voyages if client else 0,
         'code_parrainage': client.code_parrainage if client else '',
         'nombre_filleuls': client.filleuls.count() if client else 0,
+        'photo_url': request.build_absolute_uri(client.photo.url) if (client and client.photo) else None,
     })
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def api_modifier_photo_profil(request):
+    """
+    Recoit une photo de profil encodee en base64 (data URI ou base64 brut)
+    et la stocke sur le serveur, associee au client connecte. Remplace
+    l'ancien systeme ou la photo n'etait gardee que localement sur le
+    telephone (perdue au changement d'appareil).
+    """
+    import base64
+    from django.core.files.base import ContentFile
+
+    client = Client.objects.filter(user=request.user).first()
+    if not client:
+        return Response({'erreur': 'Compte client introuvable.'}, status=404)
+
+    photo_base64 = request.data.get('photo_base64', '')
+    if not photo_base64:
+        return Response({'erreur': 'Aucune photo fournie.'}, status=400)
+
+    if ',' in photo_base64:
+        photo_base64 = photo_base64.split(',', 1)[1]
+    try:
+        contenu = base64.b64decode(photo_base64)
+    except Exception:
+        return Response({'erreur': 'Photo invalide.'}, status=400)
+
+    if len(contenu) > 5 * 1024 * 1024:
+        return Response({'erreur': 'Photo trop volumineuse (5 Mo maximum).'}, status=400)
+
+    client.photo.save(f'client_{client.id}.jpg', ContentFile(contenu), save=True)
+    return Response({'photo_url': request.build_absolute_uri(client.photo.url)})
 
 
 @api_view(['POST'])
