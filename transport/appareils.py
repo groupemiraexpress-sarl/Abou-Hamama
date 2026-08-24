@@ -25,9 +25,9 @@ connexion (une fois le mot de passe verifie par authenticate()) :
 import secrets
 
 from django.conf import settings
-from django.core.mail import send_mail
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from .email_brevo import envoyer_email
 from .models import AppareilConfirme, DemandeConfirmationAppareil
 
 
@@ -40,7 +40,8 @@ def _invalider_autres_sessions(user):
 
 def _envoyer_email_confirmation(user, jeton):
     lien = settings.SITE_URL + '/api/confirmer-appareil/' + jeton + '/'
-    send_mail(
+    envoyer_email(
+        user.email,
         'Nouvelle connexion sur un appareil - Express Abou Hamama',
         (
             'Bonjour ' + user.username + ',\n\n'
@@ -49,9 +50,6 @@ def _envoyer_email_confirmation(user, jeton):
             "Si c'est bien vous, cliquez sur ce lien pour l'autoriser :\n" + lien + '\n\n'
             "Si ce n'est pas vous, ignorez cet email et changez votre mot de passe des que possible."
         ),
-        settings.DEFAULT_FROM_EMAIL,
-        [user.email],
-        fail_silently=True,
     )
 
 
