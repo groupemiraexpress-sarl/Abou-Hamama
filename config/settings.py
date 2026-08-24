@@ -173,18 +173,23 @@ SIMPLE_JWT = {
 }
 
 # --- Configuration de l'envoi d'emails ---
-# Mode console : les emails s'affichent dans le terminal (développement).
-# Pour de vrais emails, on remplacera EMAIL_BACKEND par la config SMTP (Gmail/Brevo).
-# Email : envoi réel via Gmail si les identifiants sont fournis, sinon mode console
+# Mode console : les emails s'affichent dans le terminal (developpement).
+# En production : relais SMTP Brevo (PythonAnywhere bloque le SMTP direct
+# type Gmail sur tous les comptes, Brevo passe par un relai autorise).
+# EMAIL_HOST_USER / EMAIL_HOST_PASSWORD = identifiant et cle SMTP Brevo
+# (Parametres -> SMTP et API sur brevo.com). EMAIL_FROM_ADDRESS = l'adresse
+# affichee comme expediteur, qui doit etre verifiee dans Brevo (Parametres
+# -> Expediteurs, domaine, IP).
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+EMAIL_FROM_ADDRESS = os.environ.get('EMAIL_FROM_ADDRESS', '')
 
 if EMAIL_HOST_USER and EMAIL_HOST_PASSWORD:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    EMAIL_HOST = 'smtp.gmail.com'
-    EMAIL_PORT = 587
+    EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp-relay.brevo.com')
+    EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '587'))
     EMAIL_USE_TLS = True
-    DEFAULT_FROM_EMAIL = f'Express Abou Hamama <{EMAIL_HOST_USER}>'
+    DEFAULT_FROM_EMAIL = f'Express Abou Hamama <{EMAIL_FROM_ADDRESS or EMAIL_HOST_USER}>'
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     DEFAULT_FROM_EMAIL = 'Express Abou Hamama <noreply@abouhamama.com>'
