@@ -28,23 +28,6 @@
         }
         header h1 { font-size: 1.4rem; letter-spacing: .5px; }
         header p { font-size: .85rem; opacity: .85; margin-top: 2px; }
-        .langues {
-            position: absolute;
-            top: 14px;
-            right: 16px;
-            display: flex;
-            gap: 6px;
-        }
-        .langues button {
-            background: rgba(255,255,255,.15);
-            color: #fff;
-            border: none;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: .75rem;
-            cursor: pointer;
-        }
-        .langues button:hover { background: rgba(255,255,255,.3); }
         .container { max-width: 640px; margin: 0 auto; padding: 24px 16px; }
         footer {
             text-align: center;
@@ -98,23 +81,6 @@
 </head>
 <body>
     <header>
-        <div class="langues">
-            <form action="{% url 'set_language' %}" method="post" style="display:inline;">
-                {% csrf_token %}
-                <input name="next" type="hidden" value="{{ request.path }}">
-                <button type="submit" name="language" value="fr">FR</button>
-            </form>
-            <form action="{% url 'set_language' %}" method="post" style="display:inline;">
-                {% csrf_token %}
-                <input name="next" type="hidden" value="{{ request.path }}">
-                <button type="submit" name="language" value="en">EN</button>
-            </form>
-            <form action="{% url 'set_language' %}" method="post" style="display:inline;">
-                {% csrf_token %}
-                <input name="next" type="hidden" value="{{ request.path }}">
-                <button type="submit" name="language" value="ar">ع</button>
-            </form>
-        </div>
         <h1>{% block entete %}{{ branding.nom_entreprise }}{% endblock %}</h1>
         <p>{{ branding.slogan }}</p>
     </header>
