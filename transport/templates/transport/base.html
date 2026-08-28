@@ -81,6 +81,7 @@
         }
         input:focus, select:focus { outline: 2px solid var(--couleur-principale); border-color: transparent; }
     </style>
+    {% block extra_head %}{% endblock %}
 
     <link rel="manifest" href="{% static 'transport/manifest.json' %}">
     <meta name="theme-color" content="#1F3864">

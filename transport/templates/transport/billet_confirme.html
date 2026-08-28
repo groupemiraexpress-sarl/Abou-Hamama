@@ -2,6 +2,17 @@
 {% load static %}
 {% block titre %}Billets confirmes — {{ branding.nom_entreprise }}{% endblock %}
 {% block entete %}Billets confirmes{% endblock %}
+{% block extra_head %}
+<style>
+    @media print {
+        @page { size: 80mm auto; margin: 3mm; }
+        body { background: #fff; }
+        header, footer, .no-print { display: none !important; }
+        .container { max-width: 74mm; padding: 0; margin: 0; }
+        .card { box-shadow: none; padding: 0; border-radius: 0; }
+    }
+</style>
+{% endblock %}
 {% block contenu %}
 {% if reservations %}
 <div class="card">
@@ -44,7 +55,7 @@
         <span style="color:#1F3864; font-weight:700; font-size:1.2rem;">{{ montant_total }} FCFA</span>
     </div>
 </div>
-<div style="display:flex; gap:12px; margin-top:20px;">
+<div class="no-print" style="display:flex; gap:12px; margin-top:20px;">
     <button onclick="window.print()" class="btn" style="flex:1; background:#16a34a;">
         <i class="fa-solid fa-print"></i> Imprimer
     </button>
@@ -57,7 +68,7 @@
     Aucun billet trouve.
 </div>
 {% endif %}
-<div style="text-align:center; margin-top:16px;">
+<div class="no-print" style="text-align:center; margin-top:16px;">
     <a href="{% url 'admin:index' %}" style="color:#6b7280; text-decoration:none; font-size:.9rem;">
         <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
     </a>

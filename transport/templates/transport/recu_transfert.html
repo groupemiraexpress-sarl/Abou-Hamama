@@ -2,6 +2,17 @@
 {% load static %}
 {% block titre %}Recu transfert {{ transfert.code_transfert }} — {{ branding.nom_entreprise }}{% endblock %}
 {% block entete %}Recu transfert{% endblock %}
+{% block extra_head %}
+<style>
+    @media print {
+        @page { size: 80mm auto; margin: 3mm; }
+        body { background: #fff; }
+        header, footer, .no-print { display: none !important; }
+        .container { max-width: 74mm; padding: 0; margin: 0; }
+        .card { box-shadow: none; padding: 0; border-radius: 0; }
+    }
+</style>
+{% endblock %}
 {% block contenu %}
 {% if transfert %}
 <div class="card">
@@ -58,7 +69,7 @@
         </div>
     </div>
 </div>
-<div style="display:flex; gap:12px; margin-top:20px;">
+<div class="no-print" style="display:flex; gap:12px; margin-top:20px;">
     <button onclick="window.print()" class="btn" style="flex:1; background:#16a34a;">
         <i class="fa-solid fa-print"></i> Imprimer
     </button>
@@ -68,7 +79,7 @@
     Transfert introuvable.
 </div>
 {% endif %}
-<div style="text-align:center; margin-top:16px;">
+<div class="no-print" style="text-align:center; margin-top:16px;">
     <a href="{% url 'admin:transport_transfertargent_changelist' %}" style="color:#6b7280; text-decoration:none; font-size:.9rem;">
         <i class="fa-solid fa-arrow-left"></i> Retour a la liste des transferts
     </a>
