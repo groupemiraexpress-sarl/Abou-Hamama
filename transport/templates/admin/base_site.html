@@ -78,17 +78,6 @@
           {% endwith %}
         {% endif %}
 
-        <div class="langue-zone">
-          <div class="langue-titre">Langue / اللغة</div>
-          <form action="{% url 'set_language' %}" method="post" class="langue-form">
-            {% csrf_token %}
-            <input name="next" type="hidden" value="{{ request.path }}">
-            <button type="submit" name="language" value="fr" class="langue-btn {% if LANGUAGE_CODE == 'fr' %}langue-btn-actif{% endif %}">Français</button>
-            <button type="submit" name="language" value="en" class="langue-btn {% if LANGUAGE_CODE == 'en' %}langue-btn-actif{% endif %}">English</button>
-            <button type="submit" name="language" value="ar" class="langue-btn {% if LANGUAGE_CODE == 'ar' %}langue-btn-actif{% endif %}">العربية</button>
-          </form>
-        </div>
-
         <form action="{% url 'admin:logout' %}" method="post" style="margin:0;">
           {% csrf_token %}
           <button type="submit" class="bouton-deconnexion">{% trans "Deconnexion" %}</button>
@@ -102,13 +91,6 @@
 {% block extrahead %}
   {{ block.super }}
   <style>
-    .langue-zone { padding: 8px 12px; border-top: 1px solid #e5e7eb; }
-    .langue-titre { font-size: 11px; color: #6b7280; font-weight: bold; margin-bottom: 6px; }
-    .langue-form { display: flex; gap: 6px; margin: 0; }
-    .langue-btn { flex: 1; padding: 6px 8px; border: 1px solid #d1d5db; border-radius: 8px; background: #ffffff; color: #374151; font-size: 12px; font-weight: bold; cursor: pointer; }
-    .langue-btn:hover { background: #f3f4f6; }
-    .langue-btn-actif { background: #1F3864; color: #ffffff; border-color: #1F3864; }
-
     /* Correction RTL : en arabe, le bouton du compte passe a gauche de l'ecran,
        donc son sous-menu doit s'ouvrir vers la gauche (et non deborder a droite). */
     html[dir="rtl"] .menu-utilisateur {
