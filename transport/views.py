@@ -5,8 +5,9 @@ from django.utils import timezone
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
-from .models import Voyage, Client, Reservation, Agence, Chauffeur, Employe, Colis, TransfertArgent
+from .models import Voyage, Client, Reservation, Agence, Chauffeur, Employe, Colis, TransfertArgent, Siege
 from django.urls import reverse
+from .admin_filtres import agence_de, voit_tout
 
 
 @staff_member_required
@@ -63,13 +64,26 @@ def vendre_billet(request):
     if not autorise:
         return redirect('admin:index')
 
+    # Un agent ne vend que les voyages de sa propre agence (le PDG et le
+    # superutilisateur voient toutes les agences, comme partout ailleurs
+    # dans l'admin - voir admin_filtres.voit_tout).
     voyages = Voyage.objects.filter(
         statut='programme',
         date_depart__gte=timezone.now().date(),
         places_disponibles__gt=0,
-    ).order_by('date_depart', 'heure_depart')
+    ).select_related('bus__agence', 'trajet')
+
+    if not voit_tout(request.user):
+        agence = agence_de(request.user)
+        voyages = voyages.filter(bus__agence=agence) if agence else voyages.none()
+
+    voyages = voyages.order_by('date_depart', 'heure_depart')
 
     contexte = {'voyages': voyages, 'employe': employe}
+
+    # Piece d'identite : meme regle de longueur que l'app mobile
+    # (api_reserver_siege), pour rester coherent entre guichet et app.
+    LONGUEURS_PIECE = {'cni': 10, 'passeport': 7, 'permis': 10, 'acte_naissance': 4}
 
     if request.method == 'POST':
         voyage_id = request.POST.get('voyage')
@@ -89,9 +103,9 @@ def vendre_billet(request):
         if nombre_places < 1:
             nombre_places = 1
 
-        voyage = Voyage.objects.filter(id=voyage_id).first()
+        voyage = voyages.filter(id=voyage_id).first()
         if not voyage:
-            contexte['erreur'] = "Voyage introuvable."
+            contexte['erreur'] = "Voyage introuvable (ou ne fait pas partie de votre agence)."
             return render(request, 'transport/vendre_billet.html', contexte)
 
         if nombre_places > voyage.places_disponibles:
@@ -99,17 +113,36 @@ def vendre_billet(request):
             return render(request, 'transport/vendre_billet.html', contexte)
 
         passagers = []
+        sieges_choisis = set()
         for i in range(1, nombre_places + 1):
             nom_p = request.POST.get(f'passager_nom_{i}', '').strip()
             prenom_p = request.POST.get(f'passager_prenom_{i}', '').strip()
             telephone_p = request.POST.get(f'passager_telephone_{i}', '').strip()
             type_piece_p = request.POST.get(f'passager_type_piece_{i}', '').strip()
             numero_piece_p = request.POST.get(f'passager_numero_piece_{i}', '').strip()
+            siege_p = request.POST.get(f'passager_siege_{i}', '').strip()
 
             if not nom_p:
                 nom_p = client_nom if i == 1 else f"{client_nom} (passager {i})"
             if not telephone_p:
                 telephone_p = client_telephone
+
+            if not type_piece_p or not numero_piece_p:
+                contexte['erreur'] = f"Piece d'identite obligatoire pour le passager {i}."
+                return render(request, 'transport/vendre_billet.html', contexte)
+
+            longueur_attendue = LONGUEURS_PIECE.get(type_piece_p)
+            if longueur_attendue and (not numero_piece_p.isdigit() or len(numero_piece_p) != longueur_attendue):
+                contexte['erreur'] = f"Numero de piece invalide pour le passager {i} (doit contenir {longueur_attendue} chiffres)."
+                return render(request, 'transport/vendre_billet.html', contexte)
+
+            if not siege_p:
+                contexte['erreur'] = f"Veuillez choisir un siege pour le passager {i}."
+                return render(request, 'transport/vendre_billet.html', contexte)
+            if siege_p in sieges_choisis:
+                contexte['erreur'] = f"Le siege {siege_p} a ete choisi pour plusieurs passagers."
+                return render(request, 'transport/vendre_billet.html', contexte)
+            sieges_choisis.add(siege_p)
 
             passagers.append({
                 'nom': nom_p,
@@ -117,6 +150,7 @@ def vendre_billet(request):
                 'telephone': telephone_p,
                 'type_piece': type_piece_p,
                 'numero_piece': numero_piece_p,
+                'siege': siege_p,
             })
 
         client, cree = Client.objects.get_or_create(
@@ -127,10 +161,14 @@ def vendre_billet(request):
         reservations_creees = []
         try:
             for p in passagers:
+                siege_obj = Siege.objects.filter(voyage=voyage, numero=p['siege']).first()
+                if not siege_obj:
+                    raise ValueError(f"Siege {p['siege']} introuvable pour ce voyage.")
                 reservation = Reservation.objects.create(
                     client=client,
                     voyage=voyage,
-                    agence=employe.agence if employe else None,
+                    siege=siege_obj,
+                    agence=voyage.bus.agence,
                     nombre_places=1,
                     voyageur_nom=p['nom'],
                     voyageur_prenom=p['prenom'],

@@ -76,6 +76,30 @@ function optionsPiece() {
     }).join('');
 }
 
+let siegesDisponibles = [];
+
+function optionsSieges(selectionActuelle) {
+    const choisisAilleurs = Array.from(document.querySelectorAll('.select-siege'))
+        .filter(function (sel) { return sel.value && sel.value !== selectionActuelle; })
+        .map(function (sel) { return sel.value; });
+    const libres = siegesDisponibles.filter(function (s) {
+        return !choisisAilleurs.includes(String(s.numero));
+    });
+    let html = '<option value="">-- Choisir --</option>';
+    libres.forEach(function (s) {
+        const selectionne = String(s.numero) === selectionActuelle ? ' selected' : '';
+        html += '<option value="' + s.numero + '"' + selectionne + '>Siege ' + s.numero + '</option>';
+    });
+    return html;
+}
+
+function actualiserOptionsSieges() {
+    document.querySelectorAll('.select-siege').forEach(function (sel) {
+        const valeurActuelle = sel.value;
+        sel.innerHTML = optionsSieges(valeurActuelle);
+    });
+}
+
 function genererPassagers() {
     const n = parseInt(document.getElementById('nombre_places').value, 10) || 1;
     const zone = document.getElementById('zone-passagers');
@@ -85,22 +109,46 @@ function genererPassagers() {
         bloc.style.cssText = 'border:1px solid #e5e7eb; border-radius:10px; padding:14px; margin-bottom:12px; background:#f9fafb;';
         bloc.innerHTML =
             '<p style="font-weight:600; color:#1F3864; margin-bottom:10px;">Passager ' + i + '</p>' +
+            '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">Siege *</label>' +
+            '<select name="passager_siege_' + i + '" class="select-siege" required style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">' +
+            optionsSieges('') + '</select>' +
             '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">Nom</label>' +
             '<input type="text" name="passager_nom_' + i + '" placeholder="Nom du passager" style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">' +
             '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">Prenom</label>' +
             '<input type="text" name="passager_prenom_' + i + '" placeholder="Prenom" style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">' +
             '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">Telephone</label>' +
             '<input type="text" name="passager_telephone_' + i + '" placeholder="66 00 00 00" style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">' +
-            '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">Type de piece</label>' +
-            '<select name="passager_type_piece_' + i + '" style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">' +
+            '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">Type de piece *</label>' +
+            '<select name="passager_type_piece_' + i + '" required style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">' +
             '<option value="">-- Choisir --</option>' + optionsPiece() + '</select>' +
-            '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">Numero de piece</label>' +
-            '<input type="text" name="passager_numero_piece_' + i + '" placeholder="Numero" style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px;">';
+            '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">Numero de piece *</label>' +
+            '<input type="text" name="passager_numero_piece_' + i + '" placeholder="Numero" required style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px;">';
         zone.appendChild(bloc);
+        bloc.querySelector('.select-siege').addEventListener('change', actualiserOptionsSieges);
     }
 }
 
+function chargerSieges() {
+    const voyageId = document.querySelector('select[name="voyage"]').value;
+    if (!voyageId) {
+        siegesDisponibles = [];
+        genererPassagers();
+        return;
+    }
+    fetch('/api/voyage/' + voyageId + '/sieges/')
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            siegesDisponibles = Array.isArray(data) ? data.filter(function (s) { return !s.occupe; }) : [];
+            genererPassagers();
+        })
+        .catch(function () {
+            siegesDisponibles = [];
+            genererPassagers();
+        });
+}
+
 document.getElementById('nombre_places').addEventListener('input', genererPassagers);
-document.addEventListener('DOMContentLoaded', genererPassagers);
+document.querySelector('select[name="voyage"]').addEventListener('change', chargerSieges);
+document.addEventListener('DOMContentLoaded', chargerSieges);
 </script>
 {% endblock %}
