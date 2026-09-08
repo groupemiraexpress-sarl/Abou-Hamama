@@ -107,15 +107,19 @@ function genererPassagers() {
     for (let i = 1; i <= n; i++) {
         const bloc = document.createElement('div');
         bloc.style.cssText = 'border:1px solid #e5e7eb; border-radius:10px; padding:14px; margin-bottom:12px; background:#f9fafb;';
-        bloc.innerHTML =
-            '<p style="font-weight:600; color:#1F3864; margin-bottom:10px;">Passager ' + i + '</p>' +
-            '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">Siege *</label>' +
-            '<select name="passager_siege_' + i + '" class="select-siege" required style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">' +
-            optionsSieges('') + '</select>' +
+        // Avec une seule place, le passager est forcement l'acheteur : pas
+        // besoin de redemander son nom/telephone deja saisis au-dessus.
+        const champsIdentite = n === 1 ? '' :
             '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">Nom et prenom</label>' +
             '<input type="text" name="passager_nom_complet_' + i + '" placeholder="Nom et prenom du passager" style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">' +
             '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">Telephone</label>' +
-            '<input type="text" name="passager_telephone_' + i + '" placeholder="66 00 00 00" style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">' +
+            '<input type="text" name="passager_telephone_' + i + '" placeholder="66 00 00 00" style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">';
+        bloc.innerHTML =
+            '<p style="font-weight:600; color:#1F3864; margin-bottom:10px;">' + (n === 1 ? 'Billet' : 'Passager ' + i) + '</p>' +
+            '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">Siege *</label>' +
+            '<select name="passager_siege_' + i + '" class="select-siege" required style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">' +
+            optionsSieges('') + '</select>' +
+            champsIdentite +
             '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">Type de piece *</label>' +
             '<select name="passager_type_piece_' + i + '" required style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">' +
             '<option value="">-- Choisir --</option>' + optionsPiece() + '</select>' +
