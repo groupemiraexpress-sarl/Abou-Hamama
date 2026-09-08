@@ -63,6 +63,32 @@
             margin-bottom: 14px;
         }
         input:focus, select:focus { outline: 2px solid var(--couleur-principale); border-color: transparent; }
+
+        /* Filigrane du logo en arriere-plan, comme dans l'admin */
+        .container { position: relative; }
+        .container::before {
+            content: "";
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 700px;
+            height: 700px;
+            background-image: url('{% static "transport/logo_abou_hamama.png" %}');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.25;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .container > * {
+            position: relative;
+            z-index: 1;
+        }
+        @media print {
+            .container::before { display: none; }
+        }
     </style>
     {% block extra_head %}{% endblock %}
 
