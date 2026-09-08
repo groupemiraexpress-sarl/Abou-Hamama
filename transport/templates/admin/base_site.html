@@ -79,6 +79,11 @@
         {% endif %}
 
         <div class="langue-zone">
+          <div class="langue-titre">{% trans "Apparence" %}</div>
+          {% include "admin/color_theme_toggle.html" %}
+        </div>
+
+        <div class="langue-zone">
           <div class="langue-titre">Langue / اللغة</div>
           <form action="{% url 'set_language' %}" method="post" class="langue-form">
             {% csrf_token %}
