@@ -1,0 +1,32 @@
+<style>
+    .spinner-chargement {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-top-color: #ffffff;
+        border-radius: 50%;
+        animation: tourner-spinner 0.7s linear infinite;
+        vertical-align: middle;
+        margin-right: 8px;
+    }
+    @keyframes tourner-spinner {
+        to { transform: rotate(360deg); }
+    }
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('form').forEach(function (formulaire) {
+            formulaire.addEventListener('submit', function () {
+                formulaire.querySelectorAll('button[type="submit"], input[type="submit"]').forEach(function (bouton) {
+                    if (bouton.tagName === 'BUTTON') {
+                        bouton.innerHTML = '<span class="spinner-chargement"></span>Chargement...';
+                    } else {
+                        bouton.value = 'Chargement...';
+                    }
+                    bouton.disabled = true;
+                });
+            });
+        });
+    });
+</script>
