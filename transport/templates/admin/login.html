@@ -5,6 +5,19 @@
 {% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static "admin/css/login.css" %}">
 {{ form.media }}
 <style>
+    /* Centrage sans marge fixe (100px en haut/bas dans le CSS par defaut
+       de Django), qui creait une barre de defilement inutile des que la
+       fenetre est plus petite qu'un grand ecran (ex: fenetre d'app PWA). */
+    body.login {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+    }
+    body.login #container {
+        margin: 40px auto !important;
+    }
+
     .mot-de-passe-zone { position: relative; }
     .mot-de-passe-zone input { padding-right: 76px; width: 100%; box-sizing: border-box; }
     .bouton-oeil {
