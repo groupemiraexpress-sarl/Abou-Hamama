@@ -115,8 +115,8 @@ def vendre_billet(request):
         passagers = []
         sieges_choisis = set()
         for i in range(1, nombre_places + 1):
-            nom_p = request.POST.get(f'passager_nom_{i}', '').strip()
-            prenom_p = request.POST.get(f'passager_prenom_{i}', '').strip()
+            nom_p = request.POST.get(f'passager_nom_complet_{i}', '').strip()
+            prenom_p = ''
             telephone_p = request.POST.get(f'passager_telephone_{i}', '').strip()
             type_piece_p = request.POST.get(f'passager_type_piece_{i}', '').strip()
             numero_piece_p = request.POST.get(f'passager_numero_piece_{i}', '').strip()
