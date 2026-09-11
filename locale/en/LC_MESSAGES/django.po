@@ -1,0 +1,1356 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-01 00:00+0000\n"
+"PO-Revision-Date: 2026-08-01 00:00+0000\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "1 = ville de depart, puis 2, 3, 4..."
+msgstr "1 = departure city, then 2, 3, 4..."
+
+msgid "1 point par 100 FCFA depense"
+msgstr "1 point per 100 FCFA spent"
+
+msgid "A traiter"
+msgstr "To process"
+
+msgid "Accompagnateur aimable"
+msgstr "Friendly attendant"
+
+msgid "Acte de naissance"
+msgstr "Birth certificate"
+
+msgid "Actif"
+msgstr "Active"
+
+msgid "Activite"
+msgstr "Activity"
+
+msgid "Administrateur"
+msgstr "Administrator"
+
+msgid "Adresse"
+msgstr "Address"
+
+msgid "Agence"
+msgstr "Agency"
+
+msgid "Agence d'arrivee"
+msgstr "Arrival agency"
+
+msgid "Agence de depart"
+msgstr "Departure agency"
+
+msgid "Agence de rattachement du bus"
+msgstr "Bus's home agency"
+
+msgid "Agence de rattachement du chauffeur"
+msgstr "Driver's home agency"
+
+msgid "Agence de retrait"
+msgstr "Pickup agency"
+
+msgid "Agence ou la reservation a ete faite"
+msgstr "Agency where the booking was made"
+
+msgid "Agences"
+msgstr "Agencies"
+
+msgid "Agent colis"
+msgstr "Parcel agent"
+
+msgid "Agent de securite"
+msgstr "Security agent"
+
+msgid "Agent transfert d'argent"
+msgstr "Money transfer agent"
+
+msgid "Ajouter"
+msgstr "Add"
+
+msgid "Alerte d'expiration envoyee"
+msgstr "Expiration alert sent"
+
+msgid "Alerte de retrait envoyee"
+msgstr "Pickup alert sent"
+
+msgid "Alerte voyage"
+msgstr "Trip alert"
+
+msgid "Alertes de securite"
+msgstr "Security alerts"
+
+msgid "Alertes voyage"
+msgstr "Trip alerts"
+
+msgid "Annee"
+msgstr "Year"
+
+msgid "Annees d'experience"
+msgstr "Years of experience"
+
+msgid "Annule"
+msgstr "Cancelled"
+
+msgid "Annulee"
+msgstr "Cancelled"
+
+msgid "App mobile"
+msgstr "Mobile app"
+
+msgid "Appareil confirme"
+msgstr "Confirmed device"
+
+msgid "Appareils confirmes"
+msgstr "Confirmed devices"
+
+msgid "Apparence"
+msgstr "Appearance"
+
+msgid "Argent"
+msgstr "Silver"
+
+msgid "Arret anormal"
+msgstr "Abnormal stop"
+
+msgid "Arret de descente"
+msgstr "Drop-off stop"
+
+msgid "Arret de ligne"
+msgstr "Route stop"
+
+msgid "Arret de montee"
+msgstr "Boarding stop"
+
+msgid "Arret ou le voyageur descend (si ligne multi-arrets)"
+msgstr "Stop where the passenger gets off (if multi-stop route)"
+
+msgid "Arret ou le voyageur monte (si ligne multi-arrets)"
+msgstr "Stop where the passenger gets on (if multi-stop route)"
+
+msgid "Arrets de ligne"
+msgstr "Route stops"
+
+msgid "Arrive a destination"
+msgstr "Arrived at destination"
+
+msgid "Aucun"
+msgstr "None"
+
+msgid "Aujourd'hui"
+msgstr "Today"
+
+msgid "Autre"
+msgstr "Other"
+
+msgid "Autre piece"
+msgstr "Other document"
+
+msgid "Avis voyage"
+msgstr "Trip review"
+
+msgid "Avis voyages"
+msgstr "Trip reviews"
+
+msgid "Batterie"
+msgstr "Battery"
+
+msgid "Bonus parrainage attribue"
+msgstr "Referral bonus granted"
+
+msgid "Bronze"
+msgstr "Bronze"
+
+msgid "Bus"
+msgstr "Bus"
+
+msgid "Bus en maintenance"
+msgstr "Buses under maintenance"
+
+msgid "Bus en service"
+msgstr "Buses in service"
+
+msgid "Bus propre"
+msgstr "Clean bus"
+
+msgid "Caissier"
+msgstr "Cashier"
+
+msgid "Calcule automatiquement"
+msgstr "Calculated automatically"
+
+msgid "Capacite"
+msgstr "Capacity"
+
+msgid "Carrosserie"
+msgstr "Bodywork"
+
+msgid "Carte bancaire"
+msgstr "Bank card"
+
+msgid "Carte des bus en direct"
+msgstr "Live bus map"
+
+msgid "Carte nationale d'identite"
+msgstr "National ID card"
+
+msgid "Carte professionnelle"
+msgstr "Professional card"
+
+msgid "Ce colis a deja ete remis."
+msgstr "This parcel has already been delivered."
+
+msgid "Ce nom d'utilisateur est deja pris par un autre compte."
+msgstr "This username is already taken by another account."
+
+msgid "Ce nom d'utilisateur est deja pris."
+msgstr "This username is already taken."
+
+msgid "Ce transfert n'est plus disponible pour retrait."
+msgstr "This transfer is no longer available for pickup."
+
+msgid "Chauffeur"
+msgstr "Driver"
+
+msgid "Chauffeur poli"
+msgstr "Polite driver"
+
+msgid "Chauffeurs"
+msgstr "Drivers"
+
+msgid "Client"
+msgstr "Client"
+
+msgid "Client qui a parraine ce client"
+msgstr "Client who referred this client"
+
+msgid "Clients"
+msgstr "Clients"
+
+msgid "Clients actifs"
+msgstr "Active clients"
+
+msgid "Clients et personnel"
+msgstr "Clients and staff"
+
+msgid "Climatisation"
+msgstr "Air conditioning"
+
+msgid "Climatisation OK"
+msgstr "Air conditioning OK"
+
+msgid "Coche automatiquement quand le billet est scanne au controle"
+msgstr "Automatically checked when the ticket is scanned at boarding"
+
+msgid "Cocher une fois verifiee par un responsable"
+msgstr "Check once verified by a manager"
+
+msgid "Code de parrainage"
+msgstr "Referral code"
+
+msgid "Code de retrait"
+msgstr "Pickup code"
+
+msgid "Code de retrait communique par le beneficiaire"
+msgstr "Pickup code given by the recipient"
+
+msgid "Code de retrait communique par le destinataire"
+msgstr "Pickup code given by the recipient"
+
+msgid "Code de retrait incorrect."
+msgstr "Incorrect pickup code."
+
+msgid "Code de suivi"
+msgstr "Tracking code"
+
+msgid "Code de transfert"
+msgstr "Transfer code"
+
+msgid "Code secret remis au beneficiaire"
+msgstr "Secret code given to the recipient"
+
+msgid "Code secret remis au destinataire, exige a la remise"
+msgstr "Secret code given to the recipient, required at delivery"
+
+msgid "Code unique que ce client partage a ses amis"
+msgstr "Unique code this client shares with friends"
+
+msgid "Colis"
+msgstr "Parcel"
+
+msgid "Colis arrives"
+msgstr "Arrived parcels"
+
+msgid "Colis en transit"
+msgstr "Parcels in transit"
+
+msgid "Colis et transferts"
+msgstr "Parcels and transfers"
+
+msgid "Colis remis aujourd'hui"
+msgstr "Parcels delivered today"
+
+msgid "Commentaire"
+msgstr "Comment"
+
+msgid "Commentaire facultatif du client"
+msgstr "Optional client comment"
+
+msgid "Compagnie"
+msgstr "Company"
+
+msgid "Compagnies"
+msgstr "Companies"
+
+msgid "Comptable"
+msgstr "Accountant"
+
+msgid "Compte"
+msgstr "Account"
+
+msgid ""
+"Compte cree : identifiant \"%(identifiant)s\" / mot de passe temporaire "
+"\"%(motdepasse)s\"."
+msgstr ""
+"Account created: username \"%(identifiant)s\" / temporary password "
+"\"%(motdepasse)s\"."
+
+msgid "Compte de connexion"
+msgstr "Login account"
+
+msgid "Compte de connexion de ce chauffeur (cree par le PDG)"
+msgstr "This driver's login account (created by the CEO)"
+
+msgid "Compte de connexion lie a cet employe"
+msgstr "Login account linked to this employee"
+
+msgid "Compte de connexion lie a cette fiche client (app mobile)"
+msgstr "Login account linked to this client record (mobile app)"
+
+msgid "Configuration"
+msgstr "Settings"
+
+msgid "Connexion OK"
+msgstr "Login OK"
+
+msgid "Contenu du colis"
+msgstr "Parcel contents"
+
+msgid "Courroie"
+msgstr "Belt"
+
+msgid "Cout (FCFA)"
+msgstr "Cost (FCFA)"
+
+msgid "Cree par"
+msgstr "Created by"
+
+msgid "Date assurance"
+msgstr "Insurance date"
+
+msgid "Date d'arrivee a l'agence"
+msgstr "Arrival date at the agency"
+
+msgid "Date d'embarquement"
+msgstr "Boarding date"
+
+msgid "Date d'embauche"
+msgstr "Hiring date"
+
+msgid "Date d'emission de la piece"
+msgstr "Document issue date"
+
+msgid "Date d'enregistrement"
+msgstr "Registration date"
+
+msgid "Date d'envoi"
+msgstr "Sending date"
+
+msgid "Date d'expiration de la piece"
+msgstr "Document expiry date"
+
+msgid "Date d'expiration du permis"
+msgstr "License expiry date"
+
+msgid "Date d'inscription"
+msgstr "Registration date"
+
+msgid "Date de confirmation"
+msgstr "Confirmation date"
+
+msgid "Date de creation"
+msgstr "Creation date"
+
+msgid "Date de debut"
+msgstr "Start date"
+
+msgid "Date de debut de validite"
+msgstr "Validity start date"
+
+msgid "Date de demande"
+msgstr "Request date"
+
+msgid "Date de depart"
+msgstr "Departure date"
+
+msgid "Date de fin"
+msgstr "End date"
+
+msgid "Date de fin de validite"
+msgstr "Validity end date"
+
+msgid "Date de l'entretien"
+msgstr "Maintenance date"
+
+msgid "Date de livraison"
+msgstr "Delivery date"
+
+msgid "Date de paiement"
+msgstr "Payment date"
+
+msgid "Date de reponse"
+msgstr "Reply date"
+
+msgid "Date de reservation"
+msgstr "Booking date"
+
+msgid "Date de retrait"
+msgstr "Pickup date"
+
+msgid "Date du plein"
+msgstr "Refuel date"
+
+msgid "Date visite technique"
+msgstr "Technical inspection date"
+
+msgid "Decochez pour masquer"
+msgstr "Uncheck to hide"
+
+msgid "Decochez pour masquer sans supprimer"
+msgstr "Uncheck to hide without deleting"
+
+msgid "Deconnexion"
+msgstr "Log out"
+
+msgid "Demande de colis"
+msgstr "Parcel request"
+
+msgid "Demande de confirmation d'appareil"
+msgstr "Device confirmation request"
+
+msgid "Demande de transfert"
+msgstr "Transfer request"
+
+msgid "Demandes colis en attente"
+msgstr "Pending parcel requests"
+
+msgid "Demandes de colis"
+msgstr "Parcel requests"
+
+msgid "Demandes de confirmation d'appareil"
+msgstr "Device confirmation requests"
+
+msgid "Demandes de transfert"
+msgstr "Transfer requests"
+
+msgid "Demandes transfert en attente"
+msgstr "Pending transfer requests"
+
+msgid ""
+"Demandez ce code au beneficiaire (ne le lui montrez jamais vous-meme) pour "
+"confirmer le paiement."
+msgstr ""
+"Ask the recipient for this code (never show it to them yourself) to confirm "
+"payment."
+
+msgid ""
+"Demandez ce code au destinataire (ne le lui montrez jamais vous-meme) pour "
+"confirmer la remise."
+msgstr ""
+"Ask the recipient for this code (never show it to them yourself) to confirm "
+"delivery."
+
+msgid "Derniere mise a jour"
+msgstr "Last update"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Description de la promotion"
+msgstr "Promotion description"
+
+msgid "Details / pieces changees"
+msgstr "Details / parts changed"
+
+msgid "Disponible"
+msgstr "Available"
+
+msgid "Distance (km)"
+msgstr "Distance (km)"
+
+msgid "Distance en kilometres"
+msgstr "Distance in kilometers"
+
+msgid "Duree estimee (heures)"
+msgstr "Estimated duration (hours)"
+
+msgid "Duree estimee en heures"
+msgstr "Estimated duration in hours"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Embarque"
+msgstr "Boarded"
+
+msgid "Employe"
+msgstr "Employee"
+
+msgid "Employes"
+msgstr "Employees"
+
+msgid "Employes actifs"
+msgstr "Active employees"
+
+msgid "En attente de paiement"
+msgstr "Awaiting payment"
+
+msgid "En attente de retrait"
+msgstr "Awaiting pickup"
+
+msgid "En attente de validation"
+msgstr "Awaiting validation"
+
+msgid "En cours"
+msgstr "In progress"
+
+msgid "En cours de traitement"
+msgstr "Being processed"
+
+msgid "En maintenance"
+msgstr "Under maintenance"
+
+msgid "En mission"
+msgstr "On duty"
+
+msgid "En repos"
+msgstr "Off duty"
+
+msgid "En service"
+msgstr "In service"
+
+msgid "En transit"
+msgstr "In transit"
+
+msgid "Enregistre"
+msgstr "Registered"
+
+msgid "Enregistre par"
+msgstr "Registered by"
+
+msgid "Entreprise"
+msgstr "Business"
+
+msgid "Entretien"
+msgstr "Maintenance"
+
+msgid "Entretiens"
+msgstr "Maintenance records"
+
+msgid "Envoi de colis"
+msgstr "Sending a parcel"
+
+msgid "Especes"
+msgstr "Cash"
+
+msgid "Ex : Ndjamena - Abeche (axe Est)"
+msgstr "Ex: Ndjamena - Abeche (East route)"
+
+msgid "Exploitation"
+msgstr "Operations"
+
+msgid "Frais"
+msgstr "Fee"
+
+msgid "Frais de transfert en FCFA"
+msgstr "Transfer fee in FCFA"
+
+msgid "Frais fixes par l'agence"
+msgstr "Fee set by the agency"
+
+msgid "Freins"
+msgstr "Brakes"
+
+msgid "Guichetier / billettiste"
+msgstr "Ticket clerk"
+
+msgid "Heure d'arrivee prevue"
+msgstr "Expected arrival time"
+
+msgid "Heure de depart"
+msgstr "Departure time"
+
+msgid "Horodatage"
+msgstr "Timestamp"
+
+msgid "Hors service"
+msgstr "Out of service"
+
+msgid "Identifiant de l'appareil"
+msgstr "Device identifier"
+
+msgid "Image"
+msgstr "Image"
+
+msgid "Image de la promotion"
+msgstr "Promotion image"
+
+msgid "Immatriculation"
+msgstr "License plate"
+
+msgid "Impossible de confirmer la remise d'un colis pas encore enregistre."
+msgstr "Cannot confirm delivery of a parcel that is not registered yet."
+
+msgid "Impossible de confirmer un transfert pas encore enregistre."
+msgstr "Cannot confirm a transfer that is not registered yet."
+
+msgid "Inactif"
+msgstr "Inactive"
+
+msgid "J'ai verifie la piece d'identite du beneficiaire"
+msgstr "I have verified the recipient's ID document"
+
+msgid "J'ai verifie la piece d'identite du destinataire"
+msgstr "I have verified the recipient's ID document"
+
+msgid "Jeton"
+msgstr "Token"
+
+msgid "Jeton Expo"
+msgstr "Expo token"
+
+msgid "Jeton push"
+msgstr "Push token"
+
+msgid "Jetons push"
+msgstr "Push tokens"
+
+msgid "Kilometrage"
+msgstr "Mileage"
+
+msgid "Kilometrage du bus"
+msgstr "Bus mileage"
+
+msgid "L'accompagnateur etait-il aimable ?"
+msgstr "Was the attendant friendly?"
+
+msgid "La climatisation fonctionnait-elle ?"
+msgstr "Was the air conditioning working?"
+
+msgid "La connexion Starlink fonctionnait-elle ?"
+msgstr "Was the Starlink connection working?"
+
+msgid "La piece d'identite (type et numero) de %(personne)s est obligatoire."
+msgstr "The ID document (type and number) of %(personne)s is required."
+
+msgid "La piece d'identite (type et numero) du voyageur est obligatoire."
+msgstr "The passenger's ID document (type and number) is required."
+
+msgid "La question posee"
+msgstr "The question asked"
+
+msgid "La reponse affichee au client"
+msgstr "The answer shown to the client"
+
+msgid "La television fonctionnait-elle ?"
+msgstr "Was the TV working?"
+
+msgid ""
+"Laisser vide : a la creation, un mot de passe temporaire sera genere et "
+"affiche."
+msgstr ""
+"Leave blank: on creation, a temporary password will be generated and shown."
+
+msgid "Laisser vide pour un PDG (toute la compagnie)"
+msgstr "Leave blank for a CEO (whole company)"
+
+msgid "Latitude"
+msgstr "Latitude"
+
+msgid "Le bus etait-il propre ?"
+msgstr "Was the bus clean?"
+
+msgid "Le chauffeur etait-il poli ?"
+msgstr "Was the driver polite?"
+
+msgid "Le nom et le telephone du voyageur sont obligatoires."
+msgstr "The passenger's name and phone number are required."
+
+msgid ""
+"Le siege %(numero)s est deja reserve sur ce trajet par une autre reservation"
+" active. Verifiez la liste des reservations avant d'en creer une nouvelle."
+msgstr ""
+"Seat %(numero)s is already booked on this trip by another active booking. "
+"Check the booking list before creating a new one."
+
+msgid "Ligne"
+msgstr "Route"
+
+msgid "Ligne desservie (si le voyage dessert plusieurs villes)"
+msgstr "Route served (if the trip serves several cities)"
+
+msgid "Lignes"
+msgstr "Routes"
+
+msgid "Litres"
+msgstr "Liters"
+
+msgid "Livre"
+msgstr "Delivered"
+
+msgid "Longitude"
+msgstr "Longitude"
+
+msgid "Maintenance du parc"
+msgstr "Fleet maintenance"
+
+msgid "Manifeste de bord"
+msgstr "Boarding manifest"
+
+msgid "Manutentionnaire / bagagiste"
+msgstr "Handler / baggage clerk"
+
+msgid "Marque"
+msgstr "Brand"
+
+msgid "Message"
+msgstr "Message"
+
+msgid "Mise a jour auto"
+msgstr "Auto-refresh"
+
+msgid "Mobile Money"
+msgstr "Mobile Money"
+
+msgid "Mode de paiement"
+msgstr "Payment method"
+
+msgid "Modele"
+msgstr "Model"
+
+msgid "Modifie par"
+msgstr "Modified by"
+
+msgid "Modifier"
+msgstr "Edit"
+
+msgid "Modifier le mot de passe"
+msgstr "Change password"
+
+msgid "Mon activite / Historique par employe"
+msgstr "My activity / History by employee"
+
+msgid "Mon profil"
+msgstr "My profile"
+
+msgid "Montant"
+msgstr "Amount"
+
+msgid "Montant (FCFA)"
+msgstr "Amount (FCFA)"
+
+msgid "Montant a envoyer en FCFA"
+msgstr "Amount to send in FCFA"
+
+msgid "Montant envoye en FCFA"
+msgstr "Amount sent in FCFA"
+
+msgid "Montant total"
+msgstr "Total amount"
+
+msgid "Mot de passe"
+msgstr "Password"
+
+msgid "Mot de passe requis pour creer le compte."
+msgstr "Password required to create the account."
+
+msgid "Nationalite de l'expediteur"
+msgstr "Sender's nationality"
+
+msgid "Nationalite du beneficiaire"
+msgstr "Recipient's nationality"
+
+msgid "Nationalite du destinataire"
+msgstr "Recipient's nationality"
+
+msgid "Nationalite du voyageur"
+msgstr "Passenger's nationality"
+
+msgid "Nationalite indiquee sur la piece"
+msgstr "Nationality shown on the document"
+
+msgid "Niveau de fidelite"
+msgstr "Loyalty tier"
+
+msgid "Nom"
+msgstr "Last name"
+
+msgid "Nom d'utilisateur (connexion)"
+msgstr "Username (login)"
+
+msgid "Nom d'utilisateur app (optionnel)"
+msgstr "App username (optional)"
+
+msgid "Nom de l'expediteur"
+msgstr "Sender's name"
+
+msgid "Nom du beneficiaire"
+msgstr "Recipient's name"
+
+msgid "Nom du destinataire"
+msgstr "Recipient's name"
+
+msgid "Nom du voyageur"
+msgstr "Passenger's name"
+
+msgid "Nom du voyageur de ce billet"
+msgstr "Name of this ticket's passenger"
+
+msgid "Nombre de places"
+msgstr "Number of seats"
+
+msgid "Nombre de voyages"
+msgstr "Number of trips"
+
+msgid "Nombre total de voyages effectues"
+msgstr "Total number of trips taken"
+
+msgid "Nord"
+msgstr "North"
+
+msgid "Note"
+msgstr "Rating"
+
+msgid "Note globale de 1 a 5 etoiles"
+msgstr "Overall rating from 1 to 5 stars"
+
+msgid "Notes"
+msgstr "Notes"
+
+msgid "Nouvelle"
+msgstr "New"
+
+msgid "Numero"
+msgstr "Number"
+
+msgid "Numero de carte d'identite"
+msgstr "ID card number"
+
+msgid "Numero de demande"
+msgstr "Request number"
+
+msgid "Numero de la piece d'identite"
+msgstr "ID document number"
+
+msgid "Numero de permis"
+msgstr "License number"
+
+msgid "Numero de piece"
+msgstr "Document number"
+
+msgid "Numero de piece de l'expediteur"
+msgstr "Sender's document number"
+
+msgid "Numero de piece du beneficiaire"
+msgstr "Recipient's document number"
+
+msgid "Numero de piece du destinataire"
+msgstr "Recipient's document number"
+
+msgid "Numero de piece du voyageur"
+msgstr "Passenger's document number"
+
+msgid "Numero de reservation"
+msgstr "Booking number"
+
+msgid "Numero du siege"
+msgstr "Seat number"
+
+msgid "Or"
+msgstr "Gold"
+
+msgid "Ordre"
+msgstr "Order"
+
+msgid "Ordre d'affichage (petit numero = en haut)"
+msgstr "Display order (lower number = higher up)"
+
+msgid "Origine"
+msgstr "Origin"
+
+msgid "PDG / Directeur general"
+msgstr "CEO / General manager"
+
+msgid "Parraine par"
+msgstr "Referred by"
+
+msgid "Particulier"
+msgstr "Individual"
+
+msgid "Passeport"
+msgstr "Passport"
+
+msgid "Payee"
+msgstr "Paid"
+
+msgid "Permis de conduire"
+msgstr "Driving license"
+
+msgid "Photo"
+msgstr "Photo"
+
+msgid "Photo de profil"
+msgstr "Profile photo"
+
+msgid "Places dispo (reel)"
+msgstr "Available seats (actual)"
+
+msgid "Places disponibles"
+msgstr "Available seats"
+
+msgid "Plainte"
+msgstr "Complaint"
+
+msgid "Plaintes"
+msgstr "Complaints"
+
+msgid "Plein de carburant"
+msgstr "Refueling"
+
+msgid "Pleins de carburant"
+msgstr "Refuelings"
+
+msgid "Pneus"
+msgstr "Tires"
+
+msgid "Poids (kg)"
+msgstr "Weight (kg)"
+
+msgid "Poids en kilogrammes"
+msgstr "Weight in kilograms"
+
+msgid "Poids estime"
+msgstr "Estimated weight"
+
+msgid "Poids estime en kg"
+msgstr "Estimated weight in kg"
+
+msgid "Poids reel"
+msgstr "Actual weight"
+
+msgid "Poids reel pese a l'agence (kg)"
+msgstr "Actual weight measured at the agency (kg)"
+
+msgid "Points attribues"
+msgstr "Points awarded"
+
+msgid "Points de fidelite"
+msgstr "Loyalty points"
+
+msgid "Position bus"
+msgstr "Bus position"
+
+msgid "Positions bus"
+msgstr "Bus positions"
+
+msgid "Poste"
+msgstr "Role"
+
+msgid "Prenom"
+msgstr "First name"
+
+msgid "Prenom du voyageur"
+msgstr "Passenger's first name"
+
+msgid "Prix"
+msgstr "Price"
+
+msgid "Prix de base"
+msgstr "Base price"
+
+msgid "Prix depuis le depart"
+msgstr "Price from departure"
+
+msgid "Prix du billet en FCFA"
+msgstr "Ticket price in FCFA"
+
+msgid "Prix en FCFA"
+msgstr "Price in FCFA"
+
+msgid "Prix en FCFA depuis la ville de depart"
+msgstr "Price in FCFA from the departure city"
+
+msgid "Prix fixe par l'agence (FCFA)"
+msgstr "Price set by the agency (FCFA)"
+
+msgid "Prochaine echeance (km)"
+msgstr "Next due (km)"
+
+msgid "Programme"
+msgstr "Scheduled"
+
+msgid "Promotion"
+msgstr "Promotion"
+
+msgid "Promotions"
+msgstr "Promotions"
+
+msgid "Question"
+msgstr "Question"
+
+msgid "Question FAQ"
+msgstr "FAQ question"
+
+msgid "Questions FAQ"
+msgstr "FAQ questions"
+
+msgid "Rapport RH par agence"
+msgstr "HR report by agency"
+
+msgid "Rapport financier par agence"
+msgstr "Financial report by agency"
+
+msgid "Rapport maintenance par agence"
+msgstr "Maintenance report by agency"
+
+msgid "Recette du jour (FCFA)"
+msgstr "Today's revenue (FCFA)"
+
+msgid "Rembourse"
+msgstr "Refunded"
+
+msgid "Remboursee"
+msgstr "Refunded"
+
+msgid ""
+"Renseignee automatiquement quand le colis passe au statut 'Arrive a "
+"destination'. Sert de point de depart au delai de 5 jours pour le retrait."
+msgstr ""
+"Automatically filled when the parcel status changes to 'Arrived at "
+"destination'. Used as the starting point for the 5-day pickup window."
+
+msgid "Renseignez un telephone ou un nom d'utilisateur pour creer le compte."
+msgstr "Provide a phone number or a username to create the account."
+
+msgid "Reponse"
+msgstr "Reply"
+
+msgid "Reponse donnee au client, visible dans l'app"
+msgstr "Reply given to the client, visible in the app"
+
+msgid "Requis uniquement si un nom d'utilisateur est renseigne ci-dessus."
+msgstr "Required only if a username is provided above."
+
+msgid "Reservation"
+msgstr "Booking"
+
+msgid "Reservation de voyage"
+msgstr "Trip booking"
+
+msgid "Reservations"
+msgstr "Bookings"
+
+msgid "Reservations du jour"
+msgstr "Today's bookings"
+
+msgid "Reservations non payees"
+msgstr "Unpaid bookings"
+
+msgid "Resolue"
+msgstr "Resolved"
+
+msgid "Responsable"
+msgstr "Manager"
+
+msgid "Responsable RH / recrutement"
+msgstr "HR / recruitment manager"
+
+msgid "Responsable d'agence"
+msgstr "Agency manager"
+
+msgid "Responsable maintenance"
+msgstr "Maintenance manager"
+
+msgid "Responsable planning"
+msgstr "Scheduling manager"
+
+msgid "Retire"
+msgstr "Picked up"
+
+msgid "Retourne"
+msgstr "Returned"
+
+msgid "Revision generale"
+msgstr "General overhaul"
+
+msgid "Salaire"
+msgstr "Salary"
+
+msgid "Salaire mensuel en FCFA"
+msgstr "Monthly salary in FCFA"
+
+msgid "Scanne par"
+msgstr "Scanned by"
+
+msgid "Secretaire d'agence"
+msgstr "Agency secretary"
+
+msgid "Securite"
+msgstr "Security"
+
+msgid "Service"
+msgstr "Service"
+
+msgid "Seule l'agence d'arrivee peut confirmer la remise de ce colis."
+msgstr "Only the arrival agency can confirm delivery of this parcel."
+
+msgid "Seule l'agence de retrait peut confirmer le paiement de ce transfert."
+msgstr "Only the pickup agency can confirm payment of this transfer."
+
+msgid "Siege"
+msgstr "Seat"
+
+msgid "Siege physique reserve"
+msgstr "Physical seat booked"
+
+msgid "Siege social"
+msgstr "Head office"
+
+msgid "Sieges"
+msgstr "Seats"
+
+msgid "Sigle"
+msgstr "Acronym"
+
+msgid "Statut"
+msgstr "Status"
+
+msgid "Sud"
+msgstr "South"
+
+msgid "Sujet"
+msgstr "Subject"
+
+msgid "Telephone"
+msgstr "Phone"
+
+msgid "Telephone de l'expediteur"
+msgstr "Sender's phone"
+
+msgid "Telephone du beneficiaire"
+msgstr "Recipient's phone"
+
+msgid "Telephone du destinataire"
+msgstr "Recipient's phone"
+
+msgid "Telephone du voyageur"
+msgstr "Passenger's phone"
+
+msgid "Television OK"
+msgstr "TV OK"
+
+msgid "Termine"
+msgstr "Completed"
+
+msgid "Texte"
+msgstr "Text"
+
+msgid "Titre"
+msgstr "Title"
+
+msgid "Titre de la promotion"
+msgstr "Promotion title"
+
+msgid "Traite par"
+msgstr "Handled by"
+
+msgid "Traitee"
+msgstr "Handled"
+
+msgid "Trajet"
+msgstr "Route"
+
+msgid "Trajets"
+msgstr "Routes"
+
+msgid "Transfert"
+msgstr "Transfer"
+
+msgid "Transfert d'argent"
+msgstr "Money transfer"
+
+msgid "Transferts a retirer"
+msgstr "Transfers to pick up"
+
+msgid "Transferts d'argent"
+msgstr "Money transfers"
+
+msgid "Transferts retires aujourd'hui"
+msgstr "Transfers picked up today"
+
+msgid "Type d'alerte"
+msgstr "Alert type"
+
+msgid "Type d'entretien"
+msgstr "Maintenance type"
+
+msgid "Type de client"
+msgstr "Client type"
+
+msgid "Type de piece"
+msgstr "Document type"
+
+msgid "Type de piece d'identite"
+msgstr "ID document type"
+
+msgid "Type de piece de l'expediteur"
+msgstr "Sender's document type"
+
+msgid "Type de piece du beneficiaire"
+msgstr "Recipient's document type"
+
+msgid "Type de piece du destinataire"
+msgstr "Recipient's document type"
+
+msgid "Type de piece du voyageur"
+msgstr "Passenger's document type"
+
+msgid "Un seul compte PDG est autorise dans le logiciel. Un PDG existe deja."
+msgstr ""
+"Only one CEO account is allowed in the software. A CEO already exists."
+
+msgid "Utilisateur"
+msgstr "User"
+
+msgid "Utilisee"
+msgstr "Used"
+
+msgid "Valeur declaree"
+msgstr "Declared value"
+
+msgid "Valeur declaree en FCFA"
+msgstr "Declared value in FCFA"
+
+msgid "Validee (colis cree)"
+msgstr "Validated (parcel created)"
+
+msgid "Validee (transfert cree)"
+msgstr "Validated (transfer created)"
+
+msgid "Vendre un billet"
+msgstr "Sell a ticket"
+
+msgid "Vers quel service renvoie la promotion"
+msgstr "Which service the promotion links to"
+
+msgid "Vidange boite de vitesse"
+msgstr "Gearbox oil change"
+
+msgid "Vidange moteur"
+msgstr "Engine oil change"
+
+msgid "Ville"
+msgstr "City"
+
+msgid "Ville d'arrivee"
+msgstr "Arrival city"
+
+msgid "Ville de depart"
+msgstr "Departure city"
+
+msgid "Ville de residence"
+msgstr "City of residence"
+
+msgid "Virement bancaire"
+msgstr "Bank transfer"
+
+msgid "Vitesse (km/h)"
+msgstr "Speed (km/h)"
+
+msgid "Vitesse en km/h si disponible"
+msgstr "Speed in km/h if available"
+
+msgid "Voir"
+msgstr "View"
+
+msgid "Voir les billets vendus"
+msgstr "View sold tickets"
+
+msgid ""
+"Vous devez confirmer avoir verifie la piece d'identite du beneficiaire."
+msgstr "You must confirm you have verified the recipient's ID document."
+
+msgid ""
+"Vous devez confirmer avoir verifie la piece d'identite du destinataire."
+msgstr "You must confirm you have verified the recipient's ID document."
+
+msgid "Voyage"
+msgstr "Trip"
+
+msgid "Voyage sur lequel le colis est transporte"
+msgstr "Trip the parcel is transported on"
+
+msgid "Voyages"
+msgstr "Trips"
+
+msgid "Voyages a venir"
+msgstr "Upcoming trips"
+
+msgid "Voyages du jour"
+msgstr "Today's trips"
+
+msgid ""
+"Vrai si l'avertissement (2h avant l'annulation automatique) a deja ete "
+"envoye"
+msgstr ""
+"True if the warning (2h before automatic cancellation) has already been sent"
+
+msgid ""
+"Vrai si l'avertissement (2h avant le retour automatique) a deja ete envoye"
+msgstr ""
+"True if the warning (2h before automatic return) has already been sent"
+
+msgid ""
+"Vrai si le bonus de parrainage a deja ete donne (au premier billet paye)"
+msgstr ""
+"True if the referral bonus has already been given (on first paid ticket)"
+
+msgid ""
+"Vrai si les points de fidelite ont deja ete comptes pour cette reservation"
+msgstr "True if loyalty points have already been counted for this booking"
+
+msgid "Vue d'ensemble PDG"
+msgstr "CEO overview"
+
+msgid "Zone"
+msgstr "Zone"
+
+msgid "Zone geographique (pour le planning)"
+msgstr "Geographic zone (for scheduling)"
+
+msgid "Zone geographique geree (uniquement pour Responsable planning)"
+msgstr "Geographic zone managed (Scheduling manager only)"
+
+msgid "l'expediteur"
+msgstr "the sender"
+
+msgid "le beneficiaire"
+msgstr "the recipient"
+
+msgid "le destinataire"
+msgstr "the recipient"
