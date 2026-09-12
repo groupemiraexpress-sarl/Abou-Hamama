@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import JsonResponse
 from django.utils import timezone
+from django.utils.translation import gettext as _
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
@@ -93,7 +94,7 @@ def vendre_billet(request):
         mode_paiement = request.POST.get('mode_paiement', 'especes')
 
         if not voyage_id or not client_nom or not client_telephone:
-            contexte['erreur'] = "Veuillez remplir tous les champs obligatoires."
+            contexte['erreur'] = _("Veuillez remplir tous les champs obligatoires.")
             return render(request, 'transport/vendre_billet.html', contexte)
 
         try:
@@ -105,11 +106,11 @@ def vendre_billet(request):
 
         voyage = voyages.filter(id=voyage_id).first()
         if not voyage:
-            contexte['erreur'] = "Voyage introuvable (ou ne fait pas partie de votre agence)."
+            contexte['erreur'] = _("Voyage introuvable (ou ne fait pas partie de votre agence).")
             return render(request, 'transport/vendre_billet.html', contexte)
 
         if nombre_places > voyage.places_disponibles:
-            contexte['erreur'] = f"Plus que {voyage.places_disponibles} place(s) disponible(s)."
+            contexte['erreur'] = _("Plus que %(n)s place(s) disponible(s).") % {'n': voyage.places_disponibles}
             return render(request, 'transport/vendre_billet.html', contexte)
 
         passagers = []
@@ -128,19 +129,19 @@ def vendre_billet(request):
                 telephone_p = client_telephone
 
             if not type_piece_p or not numero_piece_p:
-                contexte['erreur'] = f"Piece d'identite obligatoire pour le passager {i}."
+                contexte['erreur'] = _("Piece d'identite obligatoire pour le passager %(i)s.") % {'i': i}
                 return render(request, 'transport/vendre_billet.html', contexte)
 
             longueur_attendue = LONGUEURS_PIECE.get(type_piece_p)
             if longueur_attendue and (not numero_piece_p.isdigit() or len(numero_piece_p) != longueur_attendue):
-                contexte['erreur'] = f"Numero de piece invalide pour le passager {i} (doit contenir {longueur_attendue} chiffres)."
+                contexte['erreur'] = _("Numero de piece invalide pour le passager %(i)s (doit contenir %(n)s chiffres).") % {'i': i, 'n': longueur_attendue}
                 return render(request, 'transport/vendre_billet.html', contexte)
 
             if not siege_p:
-                contexte['erreur'] = f"Veuillez choisir un siege pour le passager {i}."
+                contexte['erreur'] = _("Veuillez choisir un siege pour le passager %(i)s.") % {'i': i}
                 return render(request, 'transport/vendre_billet.html', contexte)
             if siege_p in sieges_choisis:
-                contexte['erreur'] = f"Le siege {siege_p} a ete choisi pour plusieurs passagers."
+                contexte['erreur'] = _("Le siege %(s)s a ete choisi pour plusieurs passagers.") % {'s': siege_p}
                 return render(request, 'transport/vendre_billet.html', contexte)
             sieges_choisis.add(siege_p)
 
@@ -163,7 +164,7 @@ def vendre_billet(request):
             for p in passagers:
                 siege_obj = Siege.objects.filter(voyage=voyage, numero=p['siege']).first()
                 if not siege_obj:
-                    raise ValueError(f"Siege {p['siege']} introuvable pour ce voyage.")
+                    raise ValueError(_("Siege %(s)s introuvable pour ce voyage.") % {'s': p['siege']})
                 reservation = Reservation.objects.create(
                     client=client,
                     voyage=voyage,
@@ -434,7 +435,7 @@ def modifier_billet(request, reservation_id):
             reservation.save()
             return redirect('transport:liste_billets')
         else:
-            contexte['erreur'] = "Action non autorisee pour votre poste."
+            contexte['erreur'] = _("Action non autorisee pour votre poste.")
 
     return render(request, 'transport/modifier_billet.html', contexte)
 

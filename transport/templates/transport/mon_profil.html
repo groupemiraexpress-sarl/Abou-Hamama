@@ -1,7 +1,8 @@
 {% extends "transport/base.html" %}
 {% load static %}
-{% block titre %}Mon profil — {{ branding.nom_entreprise }}{% endblock %}
-{% block entete %}Mon profil{% endblock %}
+{% load i18n %}
+{% block titre %}{% trans "Mon profil" %} — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}{% trans "Mon profil" %}{% endblock %}
 {% block contenu %}
 <div class="card">
     <div style="text-align:center; margin-bottom:20px;">
@@ -13,24 +14,24 @@
     </div>
     {% if employe %}
     <table style="width:100%; border-collapse:collapse;">
-        <tr><td style="padding:8px 0; color:#6b7280;">Nom</td>
+        <tr><td style="padding:8px 0; color:#6b7280;">{% trans "Nom" %}</td>
             <td style="padding:8px 0; text-align:right; font-weight:600;">{{ employe.prenom }} {{ employe.nom }}</td></tr>
-        <tr><td style="padding:8px 0; color:#6b7280;">Poste</td>
+        <tr><td style="padding:8px 0; color:#6b7280;">{% trans "Poste" %}</td>
             <td style="padding:8px 0; text-align:right;">{{ employe.get_poste_display }}</td></tr>
-        <tr><td style="padding:8px 0; color:#6b7280;">Agence</td>
+        <tr><td style="padding:8px 0; color:#6b7280;">{% trans "Agence" %}</td>
             <td style="padding:8px 0; text-align:right;">{{ employe.agence.nom|default:"—" }}</td></tr>
-        <tr><td style="padding:8px 0; color:#6b7280;">Telephone</td>
+        <tr><td style="padding:8px 0; color:#6b7280;">{% trans "Telephone" %}</td>
             <td style="padding:8px 0; text-align:right;">{{ employe.telephone|default:"—" }}</td></tr>
-        <tr><td style="padding:8px 0; color:#6b7280;">Date d'embauche</td>
+        <tr><td style="padding:8px 0; color:#6b7280;">{% trans "Date d'embauche" %}</td>
             <td style="padding:8px 0; text-align:right;">{{ employe.date_embauche|date:"d/m/Y"|default:"—" }}</td></tr>
     </table>
     {% else %}
-    <p style="text-align:center; color:#6b7280;">Aucune fiche employe liee a ce compte.</p>
+    <p style="text-align:center; color:#6b7280;">{% trans "Aucune fiche employe liee a ce compte." %}</p>
     {% endif %}
 </div>
 <div style="text-align:center; margin-top:20px;">
     <a href="{% url 'admin:index' %}" class="btn" style="background:#6b7280;">
-        <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
+        <i class="fa-solid fa-arrow-left"></i> {% trans "Retour au tableau de bord" %}
     </a>
 </div>
 {% endblock %}

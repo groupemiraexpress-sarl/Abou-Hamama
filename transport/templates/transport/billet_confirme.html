@@ -1,7 +1,8 @@
 {% extends "transport/base.html" %}
 {% load static %}
-{% block titre %}Billets confirmes — {{ branding.nom_entreprise }}{% endblock %}
-{% block entete %}Billets confirmes{% endblock %}
+{% load i18n %}
+{% block titre %}{% trans "Billets confirmes" %} — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}{% trans "Billets confirmes" %}{% endblock %}
 {% block extra_head %}
 <style>
     @media print {
@@ -20,57 +21,57 @@
         <img src="{% static 'transport/logo_abou_hamama.png' %}" alt="Express Abou Hamama" style="width:60px; height:60px; border-radius:50%; box-shadow:0 2px 6px rgba(0,0,0,.2); margin-bottom:10px;">
         <br>
         <i class="fa-solid fa-circle-check" style="font-size:2.5rem; color:#16a34a;"></i>
-        <h2 style="color:#16a34a; margin-top:8px;">Vente reussie</h2>
-        <p style="color:#6b7280; font-size:.9rem;">{{ reservations|length }} billet(s)</p>
+        <h2 style="color:#16a34a; margin-top:8px;">{% trans "Vente reussie" %}</h2>
+        <p style="color:#6b7280; font-size:.9rem;">{{ reservations|length }} {% trans "billet(s)" %}</p>
     </div>
 
     {% for reservation in reservations %}
     <div style="border-top:1px solid #e5e7eb; padding-top:14px; margin-top:14px;">
-        <p style="font-weight:600; color:#1F3864;">Reservation {{ reservation.numero_reservation }}</p>
+        <p style="font-weight:600; color:#1F3864;">{% trans "Reservation" %} {{ reservation.numero_reservation }}</p>
         <table style="width:100%; border-collapse:collapse; font-size:.9rem;">
-            <tr><td style="padding:4px 0; color:#6b7280;">Passager</td>
+            <tr><td style="padding:4px 0; color:#6b7280;">{% trans "Passager" %}</td>
                 <td style="padding:4px 0; text-align:right; font-weight:600;">{{ reservation.voyageur_prenom }} {{ reservation.voyageur_nom }}</td></tr>
-            <tr><td style="padding:4px 0; color:#6b7280;">Telephone</td>
+            <tr><td style="padding:4px 0; color:#6b7280;">{% trans "Telephone" %}</td>
                 <td style="padding:4px 0; text-align:right;">{{ reservation.voyageur_telephone }}</td></tr>
             {% if reservation.voyageur_numero_piece %}
-            <tr><td style="padding:4px 0; color:#6b7280;">Piece</td>
+            <tr><td style="padding:4px 0; color:#6b7280;">{% trans "Piece" %}</td>
                 <td style="padding:4px 0; text-align:right;">{{ reservation.get_voyageur_type_piece_display }} — {{ reservation.voyageur_numero_piece }}</td></tr>
             {% endif %}
-            <tr><td style="padding:4px 0; color:#6b7280;">Trajet</td>
+            <tr><td style="padding:4px 0; color:#6b7280;">{% trans "Trajet" %}</td>
                 <td style="padding:4px 0; text-align:right;">{{ reservation.voyage.trajet.ville_depart }} → {{ reservation.voyage.trajet.ville_arrivee }}</td></tr>
-            <tr><td style="padding:4px 0; color:#6b7280;">Date</td>
+            <tr><td style="padding:4px 0; color:#6b7280;">{% trans "Date" %}</td>
                 <td style="padding:4px 0; text-align:right;">{{ reservation.voyage.date_depart|date:"d/m/Y" }} {{ reservation.voyage.heure_depart|time:"H:i" }}</td></tr>
-            <tr><td style="padding:6px 0 0; color:#1F3864; font-weight:600;">Montant</td>
+            <tr><td style="padding:6px 0 0; color:#1F3864; font-weight:600;">{% trans "Montant" %}</td>
                 <td style="padding:6px 0 0; text-align:right; font-weight:700; color:#1F3864;">{{ reservation.montant_total }} FCFA</td></tr>
         </table>
         <div style="text-align:center; margin-top:14px; padding-top:14px; border-top:1px dashed #d1d5db;">
-            <p style="color:#6b7280; font-size:.8rem; margin-bottom:8px;">Presenter ce code au controle</p>
+            <p style="color:#6b7280; font-size:.8rem; margin-bottom:8px;">{% trans "Presenter ce code au controle" %}</p>
             <div id="qr-{{ reservation.id }}" style="display:inline-block;"></div>
         </div>
     </div>
     {% endfor %}
 
     <div style="border-top:2px solid #1F3864; margin-top:16px; padding-top:12px; text-align:right;">
-        <span style="color:#1F3864; font-weight:600;">Total : </span>
+        <span style="color:#1F3864; font-weight:600;">{% trans "Total" %} : </span>
         <span style="color:#1F3864; font-weight:700; font-size:1.2rem;">{{ montant_total }} FCFA</span>
     </div>
 </div>
 <div class="no-print" style="display:flex; gap:12px; margin-top:20px;">
     <button onclick="window.print()" class="btn" style="flex:1; background:#16a34a;">
-        <i class="fa-solid fa-print"></i> Imprimer
+        <i class="fa-solid fa-print"></i> {% trans "Imprimer" %}
     </button>
     <a href="{% url 'transport:vendre_billet' %}" class="btn" style="flex:1;">
-        <i class="fa-solid fa-plus"></i> Nouvelle vente
+        <i class="fa-solid fa-plus"></i> {% trans "Nouvelle vente" %}
     </a>
 </div>
 {% else %}
 <div class="card" style="text-align:center; color:#b91c1c;">
-    Aucun billet trouve.
+    {% trans "Aucun billet trouve." %}
 </div>
 {% endif %}
 <div class="no-print" style="text-align:center; margin-top:16px;">
     <a href="{% url 'admin:index' %}" style="color:#6b7280; text-decoration:none; font-size:.9rem;">
-        <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
+        <i class="fa-solid fa-arrow-left"></i> {% trans "Retour au tableau de bord" %}
     </a>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>

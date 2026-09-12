@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-01 00:00+0000\n"
-"PO-Revision-Date: 2026-08-01 00:00+0000\n"
+"POT-Creation-Date: 2026-09-11 00:00+0000\n"
+"PO-Revision-Date: 2026-09-11 00:00+0000\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +28,12 @@ msgstr "Birth certificate"
 msgid "Actif"
 msgstr "Active"
 
+msgid "Action"
+msgstr "Action"
+
+msgid "Action non autorisee pour votre poste."
+msgstr "Action not authorized for your position."
+
 msgid "Activite"
 msgstr "Activity"
 
@@ -36,6 +42,9 @@ msgstr "Administrator"
 
 msgid "Adresse"
 msgstr "Address"
+
+msgid "Afficher"
+msgstr "Show"
 
 msgid "Agence"
 msgstr "Agency"
@@ -82,6 +91,9 @@ msgstr "Pickup alert sent"
 msgid "Alerte voyage"
 msgstr "Trip alert"
 
+msgid "Alertes actives"
+msgstr "Active alerts"
+
 msgid "Alertes de securite"
 msgstr "Security alerts"
 
@@ -112,6 +124,9 @@ msgstr "Confirmed devices"
 msgid "Apparence"
 msgstr "Appearance"
 
+msgid "Archive du"
+msgstr "Archive of"
+
 msgid "Argent"
 msgstr "Silver"
 
@@ -139,8 +154,81 @@ msgstr "Route stops"
 msgid "Arrive a destination"
 msgstr "Arrived at destination"
 
+msgid "Arrivee estimee"
+msgstr "Estimated arrival"
+
 msgid "Aucun"
 msgstr "None"
+
+msgid "Aucun billet trouve."
+msgstr "No ticket found."
+
+msgid "Aucun billet vendu ce jour."
+msgstr "No ticket sold today."
+
+msgid "Aucun billet vendu pour ce voyage."
+msgstr "No ticket sold for this trip."
+
+msgid "Aucun billet vendu pour le moment."
+msgstr "No ticket sold at the moment."
+
+msgid "Aucun bus en cours de voyage actuellement."
+msgstr "No bus currently on a trip."
+
+msgid "Aucun bus rattache a cette agence."
+msgstr "No bus attached to this agency."
+
+msgid "Aucun bus."
+msgstr "No bus."
+
+msgid "Aucun chauffeur."
+msgstr "No driver."
+
+msgid "Aucun colis enregistre ce jour."
+msgstr "No parcel registered today."
+
+msgid "Aucun colis remis ce jour."
+msgstr "No parcel delivered today."
+
+msgid "Aucun employe actif dans cette agence."
+msgstr "No active employee in this agency."
+
+msgid "Aucun employe actif."
+msgstr "No active employee."
+
+msgid "Aucun employe rattache a ce compte."
+msgstr "No employee attached to this account."
+
+msgid "Aucun employe."
+msgstr "No employee."
+
+msgid "Aucun entretien enregistre."
+msgstr "No maintenance recorded."
+
+msgid "Aucun signal"
+msgstr "No signal"
+
+msgid "Aucun transfert enregistre ce jour."
+msgstr "No transfer registered today."
+
+msgid "Aucun transfert retire ce jour."
+msgstr "No transfer withdrawn today."
+
+msgid "Aucun voyage disponible a la vente pour le moment."
+msgstr "No trip available for sale at the moment."
+
+msgid "Aucune agence rattachee a ce compte. Choisis-en une pour tester :"
+msgstr "No agency attached to this account. Choose one to test:"
+
+msgid ""
+"Aucune agence rattachee a votre compte. Contactez votre administrateur."
+msgstr "No agency attached to your account. Contact your administrator."
+
+msgid "Aucune fiche employe liee a ce compte."
+msgstr "No employee record linked to this account."
+
+msgid "Aucune vente aujourd'hui."
+msgstr "No sales today."
 
 msgid "Aujourd'hui"
 msgstr "Today"
@@ -160,6 +248,24 @@ msgstr "Trip reviews"
 msgid "Batterie"
 msgstr "Battery"
 
+msgid "Beneficiaire"
+msgstr "Beneficiary"
+
+msgid "Billet"
+msgstr "Ticket"
+
+msgid "Billets"
+msgstr "Tickets"
+
+msgid "Billets confirmes"
+msgstr "Confirmed tickets"
+
+msgid "Billets de votre agence"
+msgstr "Your agency's tickets"
+
+msgid "Billets vendus"
+msgstr "Tickets sold"
+
 msgid "Bonus parrainage attribue"
 msgstr "Referral bonus granted"
 
@@ -169,11 +275,23 @@ msgstr "Bronze"
 msgid "Bus"
 msgstr "Bus"
 
+msgid "Bus de l'agence"
+msgstr "Agency's buses"
+
+msgid "Bus en circulation"
+msgstr "Buses in service"
+
+msgid "Bus en cours de voyage"
+msgstr "Buses currently on trips"
+
 msgid "Bus en maintenance"
 msgstr "Buses under maintenance"
 
 msgid "Bus en service"
 msgstr "Buses in service"
+
+msgid "Bus en temps reel"
+msgstr "Real-time buses"
 
 msgid "Bus propre"
 msgstr "Clean bus"
@@ -187,14 +305,23 @@ msgstr "Calculated automatically"
 msgid "Capacite"
 msgstr "Capacity"
 
+msgid "Carburant (total)"
+msgstr "Fuel (total)"
+
 msgid "Carrosserie"
 msgstr "Bodywork"
 
 msgid "Carte bancaire"
 msgstr "Bank card"
 
+msgid "Carte des bus"
+msgstr "Bus map"
+
 msgid "Carte des bus en direct"
 msgstr "Live bus map"
+
+msgid "Carte nationale d'identite"
+msgstr "National ID card"
 
 msgid "Carte nationale d'identite"
 msgstr "National ID card"
@@ -211,6 +338,13 @@ msgstr "This username is already taken by another account."
 msgid "Ce nom d'utilisateur est deja pris."
 msgstr "This username is already taken."
 
+msgid ""
+"Ce poste n'enregistre pas de billets, colis ou transferts suivis dans cette "
+"archive."
+msgstr ""
+"This position does not record tickets, parcels or transfers tracked in this "
+"archive."
+
 msgid "Ce transfert n'est plus disponible pour retrait."
 msgstr "This transfer is no longer available for pickup."
 
@@ -222,6 +356,18 @@ msgstr "Polite driver"
 
 msgid "Chauffeurs"
 msgstr "Drivers"
+
+msgid "Chauffeurs et bus"
+msgstr "Drivers and buses"
+
+msgid "Choisir"
+msgstr "Choose"
+
+msgid "Choisir un voyage"
+msgstr "Choose a trip"
+
+msgid "Choisir une agence"
+msgstr "Choose an agency"
 
 msgid "Client"
 msgstr "Client"
@@ -250,6 +396,9 @@ msgstr "Automatically checked when the ticket is scanned at boarding"
 msgid "Cocher une fois verifiee par un responsable"
 msgstr "Check once verified by a manager"
 
+msgid "Code"
+msgstr "Code"
+
 msgid "Code de parrainage"
 msgstr "Referral code"
 
@@ -268,8 +417,14 @@ msgstr "Incorrect pickup code."
 msgid "Code de suivi"
 msgstr "Tracking code"
 
+msgid "Code de suivi (a donner a l'expediteur)"
+msgstr "Tracking code (to give to the sender)"
+
 msgid "Code de transfert"
 msgstr "Transfer code"
+
+msgid "Code de transfert (a donner a l'expediteur)"
+msgstr "Transfer code (to give to the sender)"
 
 msgid "Code secret remis au beneficiaire"
 msgstr "Secret code given to the recipient"
@@ -286,11 +441,26 @@ msgstr "Parcel"
 msgid "Colis arrives"
 msgstr "Arrived parcels"
 
+msgid "Colis du jour"
+msgstr "Parcels today"
+
 msgid "Colis en transit"
 msgstr "Parcels in transit"
 
+msgid "Colis enregistre"
+msgstr "Parcel registered"
+
+msgid "Colis enregistres"
+msgstr "Parcels registered"
+
 msgid "Colis et transferts"
 msgstr "Parcels and transfers"
+
+msgid "Colis introuvable."
+msgstr "Parcel not found."
+
+msgid "Colis remis"
+msgstr "Parcels delivered"
 
 msgid "Colis remis aujourd'hui"
 msgstr "Parcels delivered today"
@@ -338,17 +508,26 @@ msgstr "Settings"
 msgid "Connexion OK"
 msgstr "Login OK"
 
+msgid "Consultation seule"
+msgstr "View only"
+
 msgid "Contenu du colis"
 msgstr "Parcel contents"
 
 msgid "Courroie"
 msgstr "Belt"
 
+msgid "Cout"
+msgstr "Cost"
+
 msgid "Cout (FCFA)"
 msgstr "Cost (FCFA)"
 
 msgid "Cree par"
 msgstr "Created by"
+
+msgid "Date"
+msgstr "Date"
 
 msgid "Date assurance"
 msgstr "Insurance date"
@@ -478,11 +657,20 @@ msgstr ""
 msgid "Derniere mise a jour"
 msgstr "Last update"
 
+msgid "Derniere position"
+msgstr "Last position"
+
+msgid "Derniers entretiens"
+msgstr "Latest maintenance"
+
 msgid "Description"
 msgstr "Description"
 
 msgid "Description de la promotion"
 msgstr "Promotion description"
+
+msgid "Destinataire"
+msgstr "Recipient"
 
 msgid "Details / pieces changees"
 msgstr "Details / parts changed"
@@ -502,10 +690,16 @@ msgstr "Estimated duration (hours)"
 msgid "Duree estimee en heures"
 msgstr "Estimated duration in hours"
 
+msgid "Effectifs par poste"
+msgstr "Staff by position"
+
 msgid "Email"
 msgstr "Email"
 
 msgid "Embarque"
+msgstr "Boarded"
+
+msgid "Embarques"
 msgstr "Boarded"
 
 msgid "Employe"
@@ -553,6 +747,9 @@ msgstr "Registered"
 msgid "Enregistre par"
 msgstr "Registered by"
 
+msgid "Enregistrer la modification"
+msgstr "Save the change"
+
 msgid "Entreprise"
 msgstr "Business"
 
@@ -561,6 +758,9 @@ msgstr "Maintenance"
 
 msgid "Entretiens"
 msgstr "Maintenance records"
+
+msgid "Environ"
+msgstr "About"
 
 msgid "Envoi de colis"
 msgstr "Sending a parcel"
@@ -571,8 +771,23 @@ msgstr "Cash"
 msgid "Ex : Ndjamena - Abeche (axe Est)"
 msgstr "Ex: Ndjamena - Abeche (East route)"
 
+msgid "Expediteur"
+msgstr "Sender"
+
 msgid "Exploitation"
 msgstr "Operations"
+
+msgid "Fiche bus"
+msgstr "Bus record"
+
+msgid "Fiche employe"
+msgstr "Employee record"
+
+msgid "Fiche individuelle"
+msgstr "Individual record"
+
+msgid "Finances du mois"
+msgstr "This month's finances"
 
 msgid "Frais"
 msgstr "Fee"
@@ -589,11 +804,20 @@ msgstr "Brakes"
 msgid "Guichetier / billettiste"
 msgstr "Ticket clerk"
 
+msgid "Heure"
+msgstr "Time"
+
 msgid "Heure d'arrivee prevue"
 msgstr "Expected arrival time"
 
 msgid "Heure de depart"
 msgstr "Departure time"
+
+msgid "Historique employe"
+msgstr "Employee history"
+
+msgid "Historique entretiens"
+msgstr "Maintenance history"
 
 msgid "Horodatage"
 msgstr "Timestamp"
@@ -618,6 +842,18 @@ msgstr "Cannot confirm delivery of a parcel that is not registered yet."
 
 msgid "Impossible de confirmer un transfert pas encore enregistre."
 msgstr "Cannot confirm a transfer that is not registered yet."
+
+msgid "Imprimer"
+msgstr "Print"
+
+msgid "Imprimer ce rapport"
+msgstr "Print this report"
+
+msgid "Imprimer cette archive"
+msgstr "Print this archive"
+
+msgid "Imprimer le manifeste"
+msgstr "Print the manifest"
 
 msgid "Inactif"
 msgstr "Inactive"
@@ -691,12 +927,18 @@ msgstr "Was the driver polite?"
 msgid "Le nom et le telephone du voyageur sont obligatoires."
 msgstr "The passenger's name and phone number are required."
 
+msgid "Le remboursement est reserve a la direction."
+msgstr "Refunds are reserved for management."
+
 msgid ""
 "Le siege %(numero)s est deja reserve sur ce trajet par une autre reservation"
 " active. Verifiez la liste des reservations avant d'en creer une nouvelle."
 msgstr ""
 "Seat %(numero)s is already booked on this trip by another active booking. "
 "Check the booking list before creating a new one."
+
+msgid "Le siege %(s)s a ete choisi pour plusieurs passagers."
+msgstr "Seat %(s)s was selected for multiple passengers."
 
 msgid "Ligne"
 msgstr "Route"
@@ -706,6 +948,15 @@ msgstr "Route served (if the trip serves several cities)"
 
 msgid "Lignes"
 msgstr "Routes"
+
+msgid "Liste des billets"
+msgstr "Ticket list"
+
+msgid "Liste des bus"
+msgstr "Bus list"
+
+msgid "Liste des employes"
+msgstr "Employee list"
 
 msgid "Litres"
 msgstr "Liters"
@@ -731,6 +982,9 @@ msgstr "Brand"
 msgid "Message"
 msgstr "Message"
 
+msgid "Mettre a jour le rapport"
+msgstr "Update the report"
+
 msgid "Mise a jour auto"
 msgstr "Auto-refresh"
 
@@ -752,6 +1006,15 @@ msgstr "Edit"
 msgid "Modifier le mot de passe"
 msgstr "Change password"
 
+msgid "Modifier un billet"
+msgstr "Edit a ticket"
+
+msgid "Mois en cours"
+msgstr "Current month"
+
+msgid "Mon activite / Historique"
+msgstr "My activity / History"
+
 msgid "Mon activite / Historique par employe"
 msgstr "My activity / History by employee"
 
@@ -766,6 +1029,9 @@ msgstr "Amount (FCFA)"
 
 msgid "Montant a envoyer en FCFA"
 msgstr "Amount to send in FCFA"
+
+msgid "Montant envoye"
+msgstr "Amount sent"
 
 msgid "Montant envoye en FCFA"
 msgstr "Amount sent in FCFA"
@@ -794,6 +1060,15 @@ msgstr "Passenger's nationality"
 msgid "Nationalite indiquee sur la piece"
 msgstr "Nationality shown on the document"
 
+msgid ""
+"Ne communiquez le code de retrait qu'au beneficiaire, jamais a l'expediteur."
+msgstr ""
+"Only give the withdrawal code to the beneficiary, never to the sender."
+
+msgid ""
+"Ne communiquez le code de retrait qu'au destinataire, jamais a l'expediteur."
+msgstr "Only give the withdrawal code to the recipient, never to the sender."
+
 msgid "Niveau de fidelite"
 msgstr "Loyalty tier"
 
@@ -805,6 +1080,9 @@ msgstr "Username (login)"
 
 msgid "Nom d'utilisateur app (optionnel)"
 msgstr "App username (optional)"
+
+msgid "Nom de l'acheteur"
+msgstr "Buyer's name"
 
 msgid "Nom de l'expediteur"
 msgstr "Sender's name"
@@ -821,6 +1099,12 @@ msgstr "Passenger's name"
 msgid "Nom du voyageur de ce billet"
 msgstr "Name of this ticket's passenger"
 
+msgid "Nom et prenom"
+msgstr "Full name"
+
+msgid "Nom et prenom du passager"
+msgstr "Passenger's full name"
+
 msgid "Nombre de places"
 msgstr "Number of seats"
 
@@ -829,6 +1113,9 @@ msgstr "Number of trips"
 
 msgid "Nombre total de voyages effectues"
 msgstr "Total number of trips taken"
+
+msgid "Non embarque"
+msgstr "Not boarded"
 
 msgid "Nord"
 msgstr "North"
@@ -842,8 +1129,14 @@ msgstr "Overall rating from 1 to 5 stars"
 msgid "Notes"
 msgstr "Notes"
 
+msgid "Nouveau statut"
+msgstr "New status"
+
 msgid "Nouvelle"
 msgstr "New"
+
+msgid "Nouvelle vente"
+msgstr "New sale"
 
 msgid "Numero"
 msgstr "Number"
@@ -875,6 +1168,11 @@ msgstr "Recipient's document number"
 msgid "Numero de piece du voyageur"
 msgstr "Passenger's document number"
 
+msgid ""
+"Numero de piece invalide pour le passager %(i)s (doit contenir %(n)s "
+"chiffres)."
+msgstr "Invalid ID number for passenger %(i)s (must contain %(n)s digits)."
+
 msgid "Numero de reservation"
 msgstr "Booking number"
 
@@ -902,11 +1200,17 @@ msgstr "Referred by"
 msgid "Particulier"
 msgstr "Individual"
 
+msgid "Passager"
+msgstr "Passenger"
+
 msgid "Passeport"
 msgstr "Passport"
 
 msgid "Payee"
 msgstr "Paid"
+
+msgid "Permis"
+msgstr "License"
 
 msgid "Permis de conduire"
 msgstr "Driving license"
@@ -916,6 +1220,12 @@ msgstr "Photo"
 
 msgid "Photo de profil"
 msgstr "Profile photo"
+
+msgid "Piece"
+msgstr "ID"
+
+msgid "Piece d'identite obligatoire pour le passager %(i)s."
+msgstr "ID document required for passenger %(i)s."
 
 msgid "Places dispo (reel)"
 msgstr "Available seats (actual)"
@@ -935,8 +1245,14 @@ msgstr "Refueling"
 msgid "Pleins de carburant"
 msgstr "Refuelings"
 
+msgid "Plus que %(n)s place(s) disponible(s)."
+msgstr "Only %(n)s seat(s) available."
+
 msgid "Pneus"
 msgstr "Tires"
+
+msgid "Poids"
+msgstr "Weight"
 
 msgid "Poids (kg)"
 msgstr "Weight (kg)"
@@ -976,6 +1292,9 @@ msgstr "First name"
 
 msgid "Prenom du voyageur"
 msgstr "Passenger's first name"
+
+msgid "Presenter ce code au controle"
+msgstr "Show this code at the checkpoint"
 
 msgid "Prix"
 msgstr "Price"
@@ -1019,23 +1338,56 @@ msgstr "FAQ question"
 msgid "Questions FAQ"
 msgstr "FAQ questions"
 
+msgid "Rapport"
+msgstr "Report"
+
 msgid "Rapport RH par agence"
 msgstr "HR report by agency"
+
+msgid "Rapport agence"
+msgstr "Agency report"
+
+msgid "Rapport complet"
+msgstr "Full report"
+
+msgid "Rapport de mon agence"
+msgstr "My agency's report"
+
+msgid "Rapport financier"
+msgstr "Financial report"
 
 msgid "Rapport financier par agence"
 msgstr "Financial report by agency"
 
+msgid "Rapport maintenance"
+msgstr "Maintenance report"
+
 msgid "Rapport maintenance par agence"
 msgstr "Maintenance report by agency"
 
+msgid "Rapport par agence"
+msgstr "Report by agency"
+
 msgid "Recette du jour (FCFA)"
 msgstr "Today's revenue (FCFA)"
+
+msgid "Recette totale du jour"
+msgstr "Total revenue today"
+
+msgid "Recu colis"
+msgstr "Parcel receipt"
+
+msgid "Recu transfert"
+msgstr "Transfer receipt"
 
 msgid "Rembourse"
 msgstr "Refunded"
 
 msgid "Remboursee"
 msgstr "Refunded"
+
+msgid "Remplissage moyen"
+msgstr "Average occupancy"
 
 msgid ""
 "Renseignee automatiquement quand le colis passe au statut 'Arrive a "
@@ -1046,6 +1398,9 @@ msgstr ""
 
 msgid "Renseignez un telephone ou un nom d'utilisateur pour creer le compte."
 msgstr "Provide a phone number or a username to create the account."
+
+msgid "Repartition Nord / Sud"
+msgstr "North / South distribution"
 
 msgid "Reponse"
 msgstr "Reply"
@@ -1092,6 +1447,18 @@ msgstr "Scheduling manager"
 msgid "Retire"
 msgstr "Picked up"
 
+msgid "Retour a la liste"
+msgstr "Back to the list"
+
+msgid "Retour a la liste des colis"
+msgstr "Back to the parcel list"
+
+msgid "Retour a la liste des transferts"
+msgstr "Back to the transfer list"
+
+msgid "Retour au tableau de bord"
+msgstr "Back to the dashboard"
+
 msgid "Retourne"
 msgstr "Returned"
 
@@ -1110,8 +1477,14 @@ msgstr "Scanned by"
 msgid "Secretaire d'agence"
 msgstr "Agency secretary"
 
+msgid "Sections a inclure"
+msgstr "Sections to include"
+
 msgid "Securite"
 msgstr "Security"
+
+msgid "Selectionner"
+msgstr "Select"
 
 msgid "Service"
 msgstr "Service"
@@ -1124,6 +1497,9 @@ msgstr "Only the pickup agency can confirm payment of this transfer."
 
 msgid "Siege"
 msgstr "Seat"
+
+msgid "Siege %(s)s introuvable pour ce voyage."
+msgstr "Seat %(s)s not found for this trip."
 
 msgid "Siege physique reserve"
 msgstr "Physical seat booked"
@@ -1140,14 +1516,23 @@ msgstr "Acronym"
 msgid "Statut"
 msgstr "Status"
 
+msgid "Statut actuel"
+msgstr "Current status"
+
 msgid "Sud"
 msgstr "South"
 
 msgid "Sujet"
 msgstr "Subject"
 
+msgid "Tableau de bord PDG"
+msgstr "CEO Dashboard"
+
 msgid "Telephone"
 msgstr "Phone"
+
+msgid "Telephone de l'acheteur"
+msgstr "Buyer's phone number"
 
 msgid "Telephone de l'expediteur"
 msgstr "Sender's phone"
@@ -1176,6 +1561,30 @@ msgstr "Title"
 msgid "Titre de la promotion"
 msgstr "Promotion title"
 
+msgid "Top 3 agences (recette du jour)"
+msgstr "Top 3 agencies (today's revenue)"
+
+msgid "Total"
+msgstr "Total"
+
+msgid "Total billets vendus"
+msgstr "Total tickets sold"
+
+msgid "Total carburant"
+msgstr "Total fuel"
+
+msgid "Total general"
+msgstr "Grand total"
+
+msgid "Total genere"
+msgstr "Total generated"
+
+msgid "Tous les bus"
+msgstr "All buses"
+
+msgid "Tous les employes"
+msgstr "All employees"
+
 msgid "Traite par"
 msgstr "Handled by"
 
@@ -1194,14 +1603,38 @@ msgstr "Transfer"
 msgid "Transfert d'argent"
 msgstr "Money transfer"
 
+msgid "Transfert enregistre"
+msgstr "Transfer registered"
+
+msgid "Transfert introuvable."
+msgstr "Transfer not found."
+
+msgid "Transferts"
+msgstr "Transfers"
+
+msgid "Transferts (frais)"
+msgstr "Transfers (fees)"
+
 msgid "Transferts a retirer"
 msgstr "Transfers to pick up"
 
 msgid "Transferts d'argent"
 msgstr "Money transfers"
 
+msgid "Transferts du jour"
+msgstr "Transfers today"
+
+msgid "Transferts enregistres"
+msgstr "Transfers registered"
+
+msgid "Transferts retires"
+msgstr "Transfers withdrawn"
+
 msgid "Transferts retires aujourd'hui"
 msgstr "Transfers picked up today"
+
+msgid "Type"
+msgstr "Type"
 
 msgid "Type d'alerte"
 msgstr "Alert type"
@@ -1230,9 +1663,15 @@ msgstr "Recipient's document type"
 msgid "Type de piece du voyageur"
 msgstr "Passenger's document type"
 
+msgid "Un seul bus (facultatif)"
+msgstr "A single bus (optional)"
+
 msgid "Un seul compte PDG est autorise dans le logiciel. Un PDG existe deja."
 msgstr ""
 "Only one CEO account is allowed in the software. A CEO already exists."
+
+msgid "Un seul employe (facultatif)"
+msgstr "A single employee (optional)"
 
 msgid "Utilisateur"
 msgstr "User"
@@ -1252,11 +1691,23 @@ msgstr "Validated (parcel created)"
 msgid "Validee (transfert cree)"
 msgstr "Validated (transfer created)"
 
+msgid "Valider la vente"
+msgstr "Confirm the sale"
+
 msgid "Vendre un billet"
 msgstr "Sell a ticket"
 
+msgid "Vente reussie"
+msgstr "Sale successful"
+
 msgid "Vers quel service renvoie la promotion"
 msgstr "Which service the promotion links to"
+
+msgid "Veuillez choisir un siege pour le passager %(i)s."
+msgstr "Please choose a seat for passenger %(i)s."
+
+msgid "Veuillez remplir tous les champs obligatoires."
+msgstr "Please fill in all required fields."
 
 msgid "Vidange boite de vitesse"
 msgstr "Gearbox oil change"
@@ -1302,6 +1753,9 @@ msgstr "You must confirm you have verified the recipient's ID document."
 msgid "Voyage"
 msgstr "Trip"
 
+msgid "Voyage introuvable (ou ne fait pas partie de votre agence)."
+msgstr "Trip not found (or does not belong to your agency)."
+
 msgid "Voyage sur lequel le colis est transporte"
 msgstr "Trip the parcel is transported on"
 
@@ -1334,17 +1788,50 @@ msgid ""
 "Vrai si les points de fidelite ont deja ete comptes pour cette reservation"
 msgstr "True if loyalty points have already been counted for this booking"
 
+msgid "Vue d'ensemble"
+msgstr "Overview"
+
 msgid "Vue d'ensemble PDG"
 msgstr "CEO overview"
 
 msgid "Zone"
 msgstr "Zone"
 
+msgid "Zone Nord"
+msgstr "North zone"
+
+msgid "Zone Sud"
+msgstr "South zone"
+
 msgid "Zone geographique (pour le planning)"
 msgstr "Geographic zone (for scheduling)"
 
 msgid "Zone geographique geree (uniquement pour Responsable planning)"
 msgstr "Geographic zone managed (Scheduling manager only)"
+
+msgid "a"
+msgstr "at"
+
+msgid "billet(s)"
+msgstr "ticket(s)"
+
+msgid "billet(s) au total"
+msgstr "ticket(s) total"
+
+msgid "billets"
+msgstr "tickets"
+
+msgid "colis"
+msgstr "parcels"
+
+msgid "genere le"
+msgstr "generated on"
+
+msgid "il y a"
+msgstr "ago"
+
+msgid "il y a ..."
+msgstr "..."
 
 msgid "l'expediteur"
 msgstr "the sender"
@@ -1354,3 +1841,12 @@ msgstr "the recipient"
 
 msgid "le destinataire"
 msgstr "the recipient"
+
+msgid "place(s)"
+msgstr "seat(s)"
+
+msgid "transfert(s)"
+msgstr "transfer(s)"
+
+msgid "vente(s)"
+msgstr "sale(s)"

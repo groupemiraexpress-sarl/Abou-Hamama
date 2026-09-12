@@ -1,20 +1,21 @@
 {% extends "transport/base.html" %}
+{% load i18n %}
 
-{% block titre %}Liste des billets — {{ branding.nom_entreprise }}{% endblock %}
-{% block entete %}Liste des billets{% endblock %}
+{% block titre %}{% trans "Liste des billets" %} — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}{% trans "Liste des billets" %}{% endblock %}
 
 {% block contenu %}
 
 {% if mes_ventes is not None %}
 <div class="card" style="text-align:center; margin-bottom:20px; background:#1F3864; color:#fff;">
-    <p style="font-size:.85rem; opacity:.85;">Billets de votre agence</p>
+    <p style="font-size:.85rem; opacity:.85;">{% trans "Billets de votre agence" %}</p>
     <p style="font-size:2rem; font-weight:700; margin:4px 0;">{{ mes_ventes }}</p>
 </div>
 {% endif %}
 
 {% if not peut_modifier %}
 <p style="color:#6b7280; font-size:.85rem; margin-bottom:12px; text-align:center;">
-    <i class="fa-solid fa-eye"></i> Consultation seule
+    <i class="fa-solid fa-eye"></i> {% trans "Consultation seule" %}
 </p>
 {% endif %}
 
@@ -24,10 +25,10 @@
         <thead>
             <tr style="background:#f4f6f9;">
                 <th style="padding:10px; text-align:left; font-size:.8rem; color:#374151;">N°</th>
-                <th style="padding:10px; text-align:left; font-size:.8rem; color:#374151;">Client</th>
-                <th style="padding:10px; text-align:left; font-size:.8rem; color:#374151;">Trajet</th>
-                <th style="padding:10px; text-align:right; font-size:.8rem; color:#374151;">Montant</th>
-                {% if peut_modifier %}<th style="padding:10px; text-align:center; font-size:.8rem; color:#374151;">Action</th>{% endif %}
+                <th style="padding:10px; text-align:left; font-size:.8rem; color:#374151;">{% trans "Client" %}</th>
+                <th style="padding:10px; text-align:left; font-size:.8rem; color:#374151;">{% trans "Trajet" %}</th>
+                <th style="padding:10px; text-align:right; font-size:.8rem; color:#374151;">{% trans "Montant" %}</th>
+                {% if peut_modifier %}<th style="padding:10px; text-align:center; font-size:.8rem; color:#374151;">{% trans "Action" %}</th>{% endif %}
             </tr>
         </thead>
         <tbody>
@@ -51,18 +52,18 @@
 </div>
 
 <p style="color:#6b7280; font-size:.85rem; margin-top:12px; text-align:center;">
-    {{ billets|length }} billet(s) au total
+    {{ billets|length }} {% trans "billet(s) au total" %}
 </p>
 
 {% else %}
 <div class="card" style="text-align:center; color:#6b7280;">
-    Aucun billet vendu pour le moment.
+    {% trans "Aucun billet vendu pour le moment." %}
 </div>
 {% endif %}
 
 <div style="text-align:center; margin-top:20px;">
-    <a href="{% url 'admin:index' %}" class="btn" style="background:#6b7280;"></a>
-        <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
+    <a href="{% url 'admin:index' %}" class="btn" style="background:#6b7280;">
+        <i class="fa-solid fa-arrow-left"></i> {% trans "Retour au tableau de bord" %}
     </a>
 </div>
 

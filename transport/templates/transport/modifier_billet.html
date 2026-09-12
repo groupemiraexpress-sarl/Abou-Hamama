@@ -1,7 +1,8 @@
 {% extends "transport/base.html" %}
+{% load i18n %}
 
-{% block titre %}Modifier un billet — {{ branding.nom_entreprise }}{% endblock %}
-{% block entete %}Modifier un billet{% endblock %}
+{% block titre %}{% trans "Modifier un billet" %} — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}{% trans "Modifier un billet" %}{% endblock %}
 
 {% block contenu %}
 
@@ -14,13 +15,13 @@
 <div class="card" style="margin-bottom:20px;">
     <h3 style="font-size:1rem; color:#1F3864; margin-bottom:12px;">{{ reservation.numero_reservation }}</h3>
     <table style="width:100%; border-collapse:collapse;">
-        <tr><td style="padding:6px 0; color:#6b7280;">Client</td>
+        <tr><td style="padding:6px 0; color:#6b7280;">{% trans "Client" %}</td>
             <td style="padding:6px 0; text-align:right; font-weight:600;">{{ reservation.client.nom }}</td></tr>
-        <tr><td style="padding:6px 0; color:#6b7280;">Trajet</td>
+        <tr><td style="padding:6px 0; color:#6b7280;">{% trans "Trajet" %}</td>
             <td style="padding:6px 0; text-align:right;">{{ reservation.voyage.trajet.ville_depart }} → {{ reservation.voyage.trajet.ville_arrivee }}</td></tr>
-        <tr><td style="padding:6px 0; color:#6b7280;">Montant</td>
+        <tr><td style="padding:6px 0; color:#6b7280;">{% trans "Montant" %}</td>
             <td style="padding:6px 0; text-align:right; font-weight:600;">{{ reservation.montant_total }} FCFA</td></tr>
-        <tr><td style="padding:6px 0; color:#6b7280;">Statut actuel</td>
+        <tr><td style="padding:6px 0; color:#6b7280;">{% trans "Statut actuel" %}</td>
             <td style="padding:6px 0; text-align:right;">{{ reservation.get_statut_display }}</td></tr>
     </table>
 </div>
@@ -29,7 +30,7 @@
     <form method="post" action="{% url 'transport:modifier_billet' reservation.id %}">
         {% csrf_token %}
 
-        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Nouveau statut</label>
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">{% trans "Nouveau statut" %}</label>
         <select name="statut" required>
             {% for valeur, libelle in statuts %}
                 <option value="{{ valeur }}" {% if reservation.statut == valeur %}selected{% endif %}>{{ libelle }}</option>
@@ -38,19 +39,19 @@
 
         {% if not peut_rembourser %}
         <p style="color:#6b7280; font-size:.8rem; margin-bottom:14px;">
-            <i class="fa-solid fa-circle-info"></i> Le remboursement est réservé à la direction.
+            <i class="fa-solid fa-circle-info"></i> {% trans "Le remboursement est reserve a la direction." %}
         </p>
         {% endif %}
 
         <button type="submit" class="btn" style="width:100%; margin-top:8px;">
-            <i class="fa-solid fa-floppy-disk"></i> Enregistrer la modification
+            <i class="fa-solid fa-floppy-disk"></i> {% trans "Enregistrer la modification" %}
         </button>
     </form>
 </div>
 
 <div style="text-align:center; margin-top:20px;">
     <a href="{% url 'transport:liste_billets' %}" class="btn" style="background:#6b7280;">
-        <i class="fa-solid fa-arrow-left"></i> Retour à la liste
+        <i class="fa-solid fa-arrow-left"></i> {% trans "Retour a la liste" %}
     </a>
 </div>
 

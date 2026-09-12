@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-01 00:00+0000\n"
-"PO-Revision-Date: 2026-08-01 00:00+0000\n"
+"POT-Creation-Date: 2026-09-11 00:00+0000\n"
+"PO-Revision-Date: 2026-09-11 00:00+0000\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +29,12 @@ msgstr "شهادة الميلاد"
 msgid "Actif"
 msgstr "نشط"
 
+msgid "Action"
+msgstr "إجراء"
+
+msgid "Action non autorisee pour votre poste."
+msgstr "إجراء غير مسموح به لوظيفتك."
+
 msgid "Activite"
 msgstr "النشاط"
 
@@ -37,6 +43,9 @@ msgstr "المدير"
 
 msgid "Adresse"
 msgstr "العنوان"
+
+msgid "Afficher"
+msgstr "عرض"
 
 msgid "Agence"
 msgstr "الوكالة"
@@ -83,6 +92,9 @@ msgstr "تم إرسال تنبيه الاستلام"
 msgid "Alerte voyage"
 msgstr "تنبيه رحلة"
 
+msgid "Alertes actives"
+msgstr "تنبيهات نشطة"
+
 msgid "Alertes de securite"
 msgstr "تنبيهات الأمن"
 
@@ -113,6 +125,9 @@ msgstr "الأجهزة المؤكدة"
 msgid "Apparence"
 msgstr "المظهر"
 
+msgid "Archive du"
+msgstr "أرشيف بتاريخ"
+
 msgid "Argent"
 msgstr "فضي"
 
@@ -140,8 +155,81 @@ msgstr "محطات الخط"
 msgid "Arrive a destination"
 msgstr "وصل إلى الوجهة"
 
+msgid "Arrivee estimee"
+msgstr "الوصول المتوقع"
+
 msgid "Aucun"
 msgstr "لا شيء"
+
+msgid "Aucun billet trouve."
+msgstr "لم يتم العثور على أي تذكرة."
+
+msgid "Aucun billet vendu ce jour."
+msgstr "لم يتم بيع أي تذكرة اليوم."
+
+msgid "Aucun billet vendu pour ce voyage."
+msgstr "لم يتم بيع أي تذكرة لهذه الرحلة."
+
+msgid "Aucun billet vendu pour le moment."
+msgstr "لم يتم بيع أي تذكرة حتى الآن."
+
+msgid "Aucun bus en cours de voyage actuellement."
+msgstr "لا توجد حافلة في رحلة حاليا."
+
+msgid "Aucun bus rattache a cette agence."
+msgstr "لا توجد حافلة تابعة لهذه الوكالة."
+
+msgid "Aucun bus."
+msgstr "لا توجد حافلة."
+
+msgid "Aucun chauffeur."
+msgstr "لا يوجد سائق."
+
+msgid "Aucun colis enregistre ce jour."
+msgstr "لم يتم تسجيل أي طرد اليوم."
+
+msgid "Aucun colis remis ce jour."
+msgstr "لم يتم تسليم أي طرد اليوم."
+
+msgid "Aucun employe actif dans cette agence."
+msgstr "لا يوجد موظف نشط في هذه الوكالة."
+
+msgid "Aucun employe actif."
+msgstr "لا يوجد موظف نشط."
+
+msgid "Aucun employe rattache a ce compte."
+msgstr "لا يوجد موظف مرتبط بهذا الحساب."
+
+msgid "Aucun employe."
+msgstr "لا يوجد موظف."
+
+msgid "Aucun entretien enregistre."
+msgstr "لم يتم تسجيل أي صيانة."
+
+msgid "Aucun signal"
+msgstr "لا توجد إشارة"
+
+msgid "Aucun transfert enregistre ce jour."
+msgstr "لم يتم تسجيل أي حوالة اليوم."
+
+msgid "Aucun transfert retire ce jour."
+msgstr "لم يتم سحب أي حوالة اليوم."
+
+msgid "Aucun voyage disponible a la vente pour le moment."
+msgstr "لا توجد رحلة متاحة للبيع حاليا."
+
+msgid "Aucune agence rattachee a ce compte. Choisis-en une pour tester :"
+msgstr "لا توجد وكالة مرتبطة بهذا الحساب. اختر واحدة للتجربة:"
+
+msgid ""
+"Aucune agence rattachee a votre compte. Contactez votre administrateur."
+msgstr "لا توجد وكالة مرتبطة بحسابك. تواصل مع المسؤول."
+
+msgid "Aucune fiche employe liee a ce compte."
+msgstr "لا توجد بطاقة موظف مرتبطة بهذا الحساب."
+
+msgid "Aucune vente aujourd'hui."
+msgstr "لا توجد أي عملية بيع اليوم."
 
 msgid "Aujourd'hui"
 msgstr "اليوم"
@@ -161,6 +249,24 @@ msgstr "تقييمات الرحلات"
 msgid "Batterie"
 msgstr "البطارية"
 
+msgid "Beneficiaire"
+msgstr "المستفيد"
+
+msgid "Billet"
+msgstr "تذكرة"
+
+msgid "Billets"
+msgstr "التذاكر"
+
+msgid "Billets confirmes"
+msgstr "تذاكر مؤكدة"
+
+msgid "Billets de votre agence"
+msgstr "تذاكر وكالتك"
+
+msgid "Billets vendus"
+msgstr "التذاكر المباعة"
+
 msgid "Bonus parrainage attribue"
 msgstr "مكافأة الإحالة ممنوحة"
 
@@ -170,11 +276,23 @@ msgstr "برونزي"
 msgid "Bus"
 msgstr "الحافلة"
 
+msgid "Bus de l'agence"
+msgstr "حافلات الوكالة"
+
+msgid "Bus en circulation"
+msgstr "الحافلات العاملة"
+
+msgid "Bus en cours de voyage"
+msgstr "الحافلات في رحلة"
+
 msgid "Bus en maintenance"
 msgstr "قيد الصيانة"
 
 msgid "Bus en service"
 msgstr "الحافلات في الخدمة"
+
+msgid "Bus en temps reel"
+msgstr "الحافلات في الوقت الفعلي"
 
 msgid "Bus propre"
 msgstr "الحافلة نظيفة"
@@ -188,14 +306,23 @@ msgstr "يحسب تلقائيا"
 msgid "Capacite"
 msgstr "السعة"
 
+msgid "Carburant (total)"
+msgstr "الوقود (الإجمالي)"
+
 msgid "Carrosserie"
 msgstr "الهيكل"
 
 msgid "Carte bancaire"
 msgstr "بطاقة بنكية"
 
+msgid "Carte des bus"
+msgstr "خريطة الحافلات"
+
 msgid "Carte des bus en direct"
 msgstr "خريطة الحافلات المباشرة"
+
+msgid "Carte nationale d'identite"
+msgstr "بطاقة الهوية الوطنية"
 
 msgid "Carte nationale d'identite"
 msgstr "بطاقة الهوية الوطنية"
@@ -212,6 +339,11 @@ msgstr "اسم المستخدم هذا مستخدم بالفعل من قبل ح�
 msgid "Ce nom d'utilisateur est deja pris."
 msgstr "اسم المستخدم هذا مستخدم بالفعل."
 
+msgid ""
+"Ce poste n'enregistre pas de billets, colis ou transferts suivis dans cette "
+"archive."
+msgstr "هذه الوظيفة لا تسجل تذاكر أو طرودا أو حوالات متتبعة في هذا الأرشيف."
+
 msgid "Ce transfert n'est plus disponible pour retrait."
 msgstr "هذا التحويل لم يعد متاحًا للاستلام."
 
@@ -223,6 +355,18 @@ msgstr "السائق مهذب"
 
 msgid "Chauffeurs"
 msgstr "السائقون"
+
+msgid "Chauffeurs et bus"
+msgstr "السائقون والحافلات"
+
+msgid "Choisir"
+msgstr "اختيار"
+
+msgid "Choisir un voyage"
+msgstr "اختيار رحلة"
+
+msgid "Choisir une agence"
+msgstr "اختيار وكالة"
 
 msgid "Client"
 msgstr "العميل"
@@ -251,6 +395,9 @@ msgstr "يتم تحديده تلقائيا عند مسح التذكرة في ا�
 msgid "Cocher une fois verifiee par un responsable"
 msgstr "حدد بعد التحقق من قبل مسؤول"
 
+msgid "Code"
+msgstr "الرمز"
+
 msgid "Code de parrainage"
 msgstr "رمز الإحالة"
 
@@ -269,8 +416,14 @@ msgstr "رمز الاستلام غير صحيح."
 msgid "Code de suivi"
 msgstr "رمز التتبع"
 
+msgid "Code de suivi (a donner a l'expediteur)"
+msgstr "رمز التتبع (يُعطى للمرسل)"
+
 msgid "Code de transfert"
 msgstr "رمز التحويل"
+
+msgid "Code de transfert (a donner a l'expediteur)"
+msgstr "رمز الحوالة (يُعطى للمرسل)"
 
 msgid "Code secret remis au beneficiaire"
 msgstr "الرمز السري المسلم للمستفيد"
@@ -287,11 +440,26 @@ msgstr "الطرود"
 msgid "Colis arrives"
 msgstr "الطرود الواصلة"
 
+msgid "Colis du jour"
+msgstr "طرود اليوم"
+
 msgid "Colis en transit"
 msgstr "الطرود في الطريق"
 
+msgid "Colis enregistre"
+msgstr "تم تسجيل الطرد"
+
+msgid "Colis enregistres"
+msgstr "الطرود المسجلة"
+
 msgid "Colis et transferts"
 msgstr "الطرود والتحويلات"
+
+msgid "Colis introuvable."
+msgstr "الطرد غير موجود."
+
+msgid "Colis remis"
+msgstr "الطرود المسلمة"
 
 msgid "Colis remis aujourd'hui"
 msgstr "الطرود المسلمة اليوم"
@@ -339,17 +507,26 @@ msgstr "الإعدادات"
 msgid "Connexion OK"
 msgstr "الاتصال يعمل"
 
+msgid "Consultation seule"
+msgstr "عرض فقط"
+
 msgid "Contenu du colis"
 msgstr "محتوى الطرد"
 
 msgid "Courroie"
 msgstr "الحزام"
 
+msgid "Cout"
+msgstr "التكلفة"
+
 msgid "Cout (FCFA)"
 msgstr "التكلفة (فرنك)"
 
 msgid "Cree par"
 msgstr "أنشأه"
+
+msgid "Date"
+msgstr "التاريخ"
 
 msgid "Date assurance"
 msgstr "تاريخ التأمين"
@@ -475,11 +652,20 @@ msgstr "اطلب هذا الرمز من المستلم (لا تعرضه عليه
 msgid "Derniere mise a jour"
 msgstr "آخر تحديث"
 
+msgid "Derniere position"
+msgstr "آخر موقع"
+
+msgid "Derniers entretiens"
+msgstr "آخر عمليات الصيانة"
+
 msgid "Description"
 msgstr "الوصف"
 
 msgid "Description de la promotion"
 msgstr "وصف العرض"
+
+msgid "Destinataire"
+msgstr "المستلم"
 
 msgid "Details / pieces changees"
 msgstr "التفاصيل / القطع المغيرة"
@@ -499,11 +685,17 @@ msgstr "المدة المقدرة (ساعات)"
 msgid "Duree estimee en heures"
 msgstr "المدة المقدرة بالساعات"
 
+msgid "Effectifs par poste"
+msgstr "عدد الموظفين حسب الوظيفة"
+
 msgid "Email"
 msgstr "البريد الإلكتروني"
 
 msgid "Embarque"
 msgstr "صعد"
+
+msgid "Embarques"
+msgstr "صعدوا"
 
 msgid "Employe"
 msgstr "الموظف"
@@ -550,6 +742,9 @@ msgstr "مسجل"
 msgid "Enregistre par"
 msgstr "سجله"
 
+msgid "Enregistrer la modification"
+msgstr "حفظ التعديل"
+
 msgid "Entreprise"
 msgstr "شركة"
 
@@ -558,6 +753,9 @@ msgstr "الصيانة"
 
 msgid "Entretiens"
 msgstr "الصيانات"
+
+msgid "Environ"
+msgstr "حوالي"
 
 msgid "Envoi de colis"
 msgstr "إرسال طرد"
@@ -568,8 +766,23 @@ msgstr "نقدا"
 msgid "Ex : Ndjamena - Abeche (axe Est)"
 msgstr "مثال: نجامينا - أبشة (المحور الشرقي)"
 
+msgid "Expediteur"
+msgstr "المرسل"
+
 msgid "Exploitation"
 msgstr "التشغيل"
+
+msgid "Fiche bus"
+msgstr "بطاقة الحافلة"
+
+msgid "Fiche employe"
+msgstr "بطاقة الموظف"
+
+msgid "Fiche individuelle"
+msgstr "بطاقة فردية"
+
+msgid "Finances du mois"
+msgstr "الشؤون المالية للشهر"
 
 msgid "Frais"
 msgstr "الرسوم"
@@ -586,11 +799,20 @@ msgstr "الفرامل"
 msgid "Guichetier / billettiste"
 msgstr "موظف شباك التذاكر"
 
+msgid "Heure"
+msgstr "الوقت"
+
 msgid "Heure d'arrivee prevue"
 msgstr "ساعة الوصول المتوقعة"
 
 msgid "Heure de depart"
 msgstr "ساعة الانطلاق"
+
+msgid "Historique employe"
+msgstr "سجل الموظف"
+
+msgid "Historique entretiens"
+msgstr "سجل الصيانة"
 
 msgid "Horodatage"
 msgstr "الوقت والتاريخ"
@@ -615,6 +837,18 @@ msgstr "لا يمكن تأكيد تسليم طرد لم يتم تسجيله بع
 
 msgid "Impossible de confirmer un transfert pas encore enregistre."
 msgstr "لا يمكن تأكيد تحويل لم يتم تسجيله بعد."
+
+msgid "Imprimer"
+msgstr "طباعة"
+
+msgid "Imprimer ce rapport"
+msgstr "طباعة هذا التقرير"
+
+msgid "Imprimer cette archive"
+msgstr "طباعة هذا الأرشيف"
+
+msgid "Imprimer le manifeste"
+msgstr "طباعة قائمة الركاب"
 
 msgid "Inactif"
 msgstr "غير نشط"
@@ -687,12 +921,18 @@ msgstr "هل كان السائق مهذبا؟"
 msgid "Le nom et le telephone du voyageur sont obligatoires."
 msgstr "اسم المسافر ورقم هاتفه إلزاميان."
 
+msgid "Le remboursement est reserve a la direction."
+msgstr "الاسترداد مخصص للإدارة فقط."
+
 msgid ""
 "Le siege %(numero)s est deja reserve sur ce trajet par une autre reservation"
 " active. Verifiez la liste des reservations avant d'en creer une nouvelle."
 msgstr ""
 "المقعد %(numero)s محجوز بالفعل على هذه الرحلة بحجز نشط آخر. تحقق من قائمة "
 "الحجوزات قبل إنشاء حجز جديد."
+
+msgid "Le siege %(s)s a ete choisi pour plusieurs passagers."
+msgstr "تم اختيار المقعد %(s)s لعدة ركاب."
 
 msgid "Ligne"
 msgstr "الخط"
@@ -702,6 +942,15 @@ msgstr "الخط المخدوم (إذا كانت الرحلة تخدم عدة م
 
 msgid "Lignes"
 msgstr "الخطوط"
+
+msgid "Liste des billets"
+msgstr "قائمة التذاكر"
+
+msgid "Liste des bus"
+msgstr "قائمة الحافلات"
+
+msgid "Liste des employes"
+msgstr "قائمة الموظفين"
 
 msgid "Litres"
 msgstr "اللترات"
@@ -727,6 +976,9 @@ msgstr "الماركة"
 msgid "Message"
 msgstr "الرسالة"
 
+msgid "Mettre a jour le rapport"
+msgstr "تحديث التقرير"
+
 msgid "Mise a jour auto"
 msgstr "تحديث تلقائي"
 
@@ -748,6 +1000,15 @@ msgstr "تعديل"
 msgid "Modifier le mot de passe"
 msgstr "تغيير كلمة المرور"
 
+msgid "Modifier un billet"
+msgstr "تعديل تذكرة"
+
+msgid "Mois en cours"
+msgstr "الشهر الحالي"
+
+msgid "Mon activite / Historique"
+msgstr "نشاطي / السجل"
+
 msgid "Mon activite / Historique par employe"
 msgstr "نشاطي / السجل حسب الموظف"
 
@@ -762,6 +1023,9 @@ msgstr "المبلغ (فرنك)"
 
 msgid "Montant a envoyer en FCFA"
 msgstr "المبلغ المراد إرساله بالفرنك"
+
+msgid "Montant envoye"
+msgstr "المبلغ المرسل"
 
 msgid "Montant envoye en FCFA"
 msgstr "المبلغ المرسل بالفرنك"
@@ -790,6 +1054,14 @@ msgstr "اسم المسافر"
 msgid "Nationalite indiquee sur la piece"
 msgstr "الجنسية المذكورة في الوثيقة"
 
+msgid ""
+"Ne communiquez le code de retrait qu'au beneficiaire, jamais a l'expediteur."
+msgstr "لا تعطِ رمز السحب إلا للمستفيد، وليس للمرسل أبدا."
+
+msgid ""
+"Ne communiquez le code de retrait qu'au destinataire, jamais a l'expediteur."
+msgstr "لا تعطِ رمز الاستلام إلا للمستلم، وليس للمرسل أبدا."
+
 msgid "Niveau de fidelite"
 msgstr "مستوى الولاء"
 
@@ -801,6 +1073,9 @@ msgstr "اسم المستخدم (تسجيل الدخول)"
 
 msgid "Nom d'utilisateur app (optionnel)"
 msgstr "اسم المستخدم للتطبيق (اختياري)"
+
+msgid "Nom de l'acheteur"
+msgstr "اسم المشتري"
 
 msgid "Nom de l'expediteur"
 msgstr "اسم المرسل"
@@ -817,6 +1092,12 @@ msgstr "اسم المسافر"
 msgid "Nom du voyageur de ce billet"
 msgstr "اسم المسافر لهذه التذكرة"
 
+msgid "Nom et prenom"
+msgstr "الاسم الكامل"
+
+msgid "Nom et prenom du passager"
+msgstr "الاسم الكامل للراكب"
+
 msgid "Nombre de places"
 msgstr "عدد المقاعد"
 
@@ -825,6 +1106,9 @@ msgstr "عدد الرحلات"
 
 msgid "Nombre total de voyages effectues"
 msgstr "العدد الإجمالي للرحلات المنجزة"
+
+msgid "Non embarque"
+msgstr "لم يصعد"
 
 msgid "Nord"
 msgstr "الشمال"
@@ -838,8 +1122,14 @@ msgstr "تقييم عام من 1 إلى 5 نجوم"
 msgid "Notes"
 msgstr "ملاحظات"
 
+msgid "Nouveau statut"
+msgstr "الحالة الجديدة"
+
 msgid "Nouvelle"
 msgstr "جديدة"
+
+msgid "Nouvelle vente"
+msgstr "عملية بيع جديدة"
 
 msgid "Numero"
 msgstr "الرقم"
@@ -871,6 +1161,11 @@ msgstr "رقم وثيقة المستلم"
 msgid "Numero de piece du voyageur"
 msgstr "رقم وثيقة المسافر"
 
+msgid ""
+"Numero de piece invalide pour le passager %(i)s (doit contenir %(n)s "
+"chiffres)."
+msgstr "رقم الوثيقة غير صالح للراكب %(i)s (يجب أن يحتوي على %(n)s أرقام)."
+
 msgid "Numero de reservation"
 msgstr "رقم الحجز"
 
@@ -898,11 +1193,17 @@ msgstr "أحاله"
 msgid "Particulier"
 msgstr "فرد"
 
+msgid "Passager"
+msgstr "الراكب"
+
 msgid "Passeport"
 msgstr "جواز السفر"
 
 msgid "Payee"
 msgstr "مدفوعة"
+
+msgid "Permis"
+msgstr "رخصة القيادة"
 
 msgid "Permis de conduire"
 msgstr "رخصة القيادة"
@@ -912,6 +1213,12 @@ msgstr "الصورة"
 
 msgid "Photo de profil"
 msgstr "صورة الملف الشخصي"
+
+msgid "Piece"
+msgstr "الوثيقة"
+
+msgid "Piece d'identite obligatoire pour le passager %(i)s."
+msgstr "وثيقة الهوية إلزامية للراكب %(i)s."
 
 msgid "Places dispo (reel)"
 msgstr "الأماكن المتاحة (فعلي)"
@@ -931,8 +1238,14 @@ msgstr "تعبئة الوقود"
 msgid "Pleins de carburant"
 msgstr "تعبئات الوقود"
 
+msgid "Plus que %(n)s place(s) disponible(s)."
+msgstr "لم يتبق سوى %(n)s مقعد (مقاعد) متاحة."
+
 msgid "Pneus"
 msgstr "الإطارات"
+
+msgid "Poids"
+msgstr "الوزن"
 
 msgid "Poids (kg)"
 msgstr "الوزن (كغ)"
@@ -972,6 +1285,9 @@ msgstr "الاسم الأول"
 
 msgid "Prenom du voyageur"
 msgstr "الاسم الأول للمسافر"
+
+msgid "Presenter ce code au controle"
+msgstr "قدّم هذا الرمز عند المراقبة"
 
 msgid "Prix"
 msgstr "السعر"
@@ -1015,23 +1331,56 @@ msgstr "سؤال شائع"
 msgid "Questions FAQ"
 msgstr "الأسئلة الشائعة"
 
+msgid "Rapport"
+msgstr "تقرير"
+
 msgid "Rapport RH par agence"
 msgstr "تقرير الموارد البشرية حسب الوكالة"
+
+msgid "Rapport agence"
+msgstr "تقرير الوكالة"
+
+msgid "Rapport complet"
+msgstr "تقرير كامل"
+
+msgid "Rapport de mon agence"
+msgstr "تقرير وكالتي"
+
+msgid "Rapport financier"
+msgstr "تقرير مالي"
 
 msgid "Rapport financier par agence"
 msgstr "التقرير المالي حسب الوكالة"
 
+msgid "Rapport maintenance"
+msgstr "تقرير الصيانة"
+
 msgid "Rapport maintenance par agence"
 msgstr "تقرير الصيانة حسب الوكالة"
 
+msgid "Rapport par agence"
+msgstr "تقرير حسب الوكالة"
+
 msgid "Recette du jour (FCFA)"
 msgstr "إيرادات اليوم (فرنك)"
+
+msgid "Recette totale du jour"
+msgstr "إجمالي إيرادات اليوم"
+
+msgid "Recu colis"
+msgstr "إيصال الطرد"
+
+msgid "Recu transfert"
+msgstr "إيصال الحوالة"
 
 msgid "Rembourse"
 msgstr "مسترد"
 
 msgid "Remboursee"
 msgstr "مستردة"
+
+msgid "Remplissage moyen"
+msgstr "متوسط الإشغال"
 
 msgid ""
 "Renseignee automatiquement quand le colis passe au statut 'Arrive a "
@@ -1042,6 +1391,9 @@ msgstr ""
 
 msgid "Renseignez un telephone ou un nom d'utilisateur pour creer le compte."
 msgstr "أدخل رقم هاتف أو اسم مستخدم لإنشاء الحساب."
+
+msgid "Repartition Nord / Sud"
+msgstr "التوزيع بين الشمال والجنوب"
 
 msgid "Reponse"
 msgstr "الجواب"
@@ -1088,6 +1440,18 @@ msgstr "مسؤول التخطيط"
 msgid "Retire"
 msgstr "مسحوب"
 
+msgid "Retour a la liste"
+msgstr "العودة إلى القائمة"
+
+msgid "Retour a la liste des colis"
+msgstr "العودة إلى قائمة الطرود"
+
+msgid "Retour a la liste des transferts"
+msgstr "العودة إلى قائمة الحوالات"
+
+msgid "Retour au tableau de bord"
+msgstr "العودة إلى لوحة التحكم"
+
 msgid "Retourne"
 msgstr "مرتجع"
 
@@ -1106,8 +1470,14 @@ msgstr "مسحه"
 msgid "Secretaire d'agence"
 msgstr "سكرتير الوكالة"
 
+msgid "Sections a inclure"
+msgstr "الأقسام المراد تضمينها"
+
 msgid "Securite"
 msgstr "الأمن"
+
+msgid "Selectionner"
+msgstr "اختيار"
 
 msgid "Service"
 msgstr "الخدمة"
@@ -1120,6 +1490,9 @@ msgstr "وكالة الاستلام فقط هي من يمكنها تأكيد د�
 
 msgid "Siege"
 msgstr "المقعد"
+
+msgid "Siege %(s)s introuvable pour ce voyage."
+msgstr "المقعد %(s)s غير موجود لهذه الرحلة."
 
 msgid "Siege physique reserve"
 msgstr "المقعد المحجوز"
@@ -1136,14 +1509,23 @@ msgstr "الاختصار"
 msgid "Statut"
 msgstr "الحالة"
 
+msgid "Statut actuel"
+msgstr "الحالة الحالية"
+
 msgid "Sud"
 msgstr "الجنوب"
 
 msgid "Sujet"
 msgstr "الموضوع"
 
+msgid "Tableau de bord PDG"
+msgstr "لوحة تحكم المدير العام"
+
 msgid "Telephone"
 msgstr "الهاتف"
+
+msgid "Telephone de l'acheteur"
+msgstr "هاتف المشتري"
 
 msgid "Telephone de l'expediteur"
 msgstr "هاتف المرسل"
@@ -1172,6 +1554,30 @@ msgstr "العنوان"
 msgid "Titre de la promotion"
 msgstr "عنوان العرض"
 
+msgid "Top 3 agences (recette du jour)"
+msgstr "أفضل 3 وكالات (إيرادات اليوم)"
+
+msgid "Total"
+msgstr "المجموع"
+
+msgid "Total billets vendus"
+msgstr "إجمالي التذاكر المباعة"
+
+msgid "Total carburant"
+msgstr "إجمالي الوقود"
+
+msgid "Total general"
+msgstr "المجموع العام"
+
+msgid "Total genere"
+msgstr "إجمالي المبلغ المحقق"
+
+msgid "Tous les bus"
+msgstr "جميع الحافلات"
+
+msgid "Tous les employes"
+msgstr "جميع الموظفين"
+
 msgid "Traite par"
 msgstr "عولج بواسطة"
 
@@ -1190,14 +1596,38 @@ msgstr "التحويل"
 msgid "Transfert d'argent"
 msgstr "تحويل الأموال"
 
+msgid "Transfert enregistre"
+msgstr "تم تسجيل الحوالة"
+
+msgid "Transfert introuvable."
+msgstr "الحوالة غير موجودة."
+
+msgid "Transferts"
+msgstr "الحوالات"
+
+msgid "Transferts (frais)"
+msgstr "الحوالات (الرسوم)"
+
 msgid "Transferts a retirer"
 msgstr "التحويلات للسحب"
 
 msgid "Transferts d'argent"
 msgstr "تحويلات الأموال"
 
+msgid "Transferts du jour"
+msgstr "حوالات اليوم"
+
+msgid "Transferts enregistres"
+msgstr "الحوالات المسجلة"
+
+msgid "Transferts retires"
+msgstr "الحوالات المسحوبة"
+
 msgid "Transferts retires aujourd'hui"
 msgstr "التحويلات المستلمة اليوم"
+
+msgid "Type"
+msgstr "النوع"
 
 msgid "Type d'alerte"
 msgstr "نوع التنبيه"
@@ -1226,8 +1656,14 @@ msgstr "نوع وثيقة المستلم"
 msgid "Type de piece du voyageur"
 msgstr "نوع وثيقة المسافر"
 
+msgid "Un seul bus (facultatif)"
+msgstr "حافلة واحدة (اختياري)"
+
 msgid "Un seul compte PDG est autorise dans le logiciel. Un PDG existe deja."
 msgstr "لا يُسمح إلا بحساب مدير عام واحد في النظام. يوجد مدير عام بالفعل."
+
+msgid "Un seul employe (facultatif)"
+msgstr "موظف واحد (اختياري)"
 
 msgid "Utilisateur"
 msgstr "المستخدم"
@@ -1247,11 +1683,23 @@ msgstr "مؤكدة (تم إنشاء الطرد)"
 msgid "Validee (transfert cree)"
 msgstr "مؤكدة (تم إنشاء التحويل)"
 
+msgid "Valider la vente"
+msgstr "تأكيد البيع"
+
 msgid "Vendre un billet"
 msgstr "بيع تذكرة"
 
+msgid "Vente reussie"
+msgstr "تمت عملية البيع بنجاح"
+
 msgid "Vers quel service renvoie la promotion"
 msgstr "إلى أي خدمة يوجه العرض"
+
+msgid "Veuillez choisir un siege pour le passager %(i)s."
+msgstr "يرجى اختيار مقعد للراكب %(i)s."
+
+msgid "Veuillez remplir tous les champs obligatoires."
+msgstr "يرجى ملء جميع الحقول الإلزامية."
 
 msgid "Vidange boite de vitesse"
 msgstr "تغيير زيت علبة السرعة"
@@ -1297,6 +1745,9 @@ msgstr "يجب عليك تأكيد أنك تحققت من وثيقة هوية ا
 msgid "Voyage"
 msgstr "الرحلة"
 
+msgid "Voyage introuvable (ou ne fait pas partie de votre agence)."
+msgstr "الرحلة غير موجودة (أو لا تنتمي إلى وكالتك)."
+
 msgid "Voyage sur lequel le colis est transporte"
 msgstr "الرحلة التي ينقل عليها الطرد"
 
@@ -1326,17 +1777,50 @@ msgid ""
 "Vrai si les points de fidelite ont deja ete comptes pour cette reservation"
 msgstr "صحيح إذا تم احتساب نقاط الولاء لهذا الحجز"
 
+msgid "Vue d'ensemble"
+msgstr "نظرة عامة"
+
 msgid "Vue d'ensemble PDG"
 msgstr "نظرة عامة للمدير العام"
 
 msgid "Zone"
 msgstr "المنطقة"
 
+msgid "Zone Nord"
+msgstr "منطقة الشمال"
+
+msgid "Zone Sud"
+msgstr "منطقة الجنوب"
+
 msgid "Zone geographique (pour le planning)"
 msgstr "المنطقة الجغرافية (للتخطيط)"
 
 msgid "Zone geographique geree (uniquement pour Responsable planning)"
 msgstr "المنطقة الجغرافية المدارة (لمسؤول التخطيط فقط)"
+
+msgid "a"
+msgstr "في"
+
+msgid "billet(s)"
+msgstr "تذكرة (تذاكر)"
+
+msgid "billet(s) au total"
+msgstr "تذكرة (تذاكر) في المجموع"
+
+msgid "billets"
+msgstr "تذاكر"
+
+msgid "colis"
+msgstr "طرد"
+
+msgid "genere le"
+msgstr "تم إنشاؤه في"
+
+msgid "il y a"
+msgstr "منذ"
+
+msgid "il y a ..."
+msgstr "منذ ..."
 
 msgid "l'expediteur"
 msgstr "المرسل"
@@ -1346,3 +1830,12 @@ msgstr "المستفيد"
 
 msgid "le destinataire"
 msgstr "المستلم"
+
+msgid "place(s)"
+msgstr "مقعد (مقاعد)"
+
+msgid "transfert(s)"
+msgstr "حوالة (حوالات)"
+
+msgid "vente(s)"
+msgstr "عملية بيع (عمليات بيع)"

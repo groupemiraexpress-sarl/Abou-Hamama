@@ -1,7 +1,8 @@
 {% extends "transport/base.html" %}
 {% load static %}
-{% block titre %}Carte des bus — {{ branding.nom_entreprise }}{% endblock %}
-{% block entete %}Bus en temps reel{% endblock %}
+{% load i18n %}
+{% block titre %}{% trans "Carte des bus" %} — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}{% trans "Bus en temps reel" %}{% endblock %}
 {% block contenu %}
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
@@ -14,15 +15,15 @@
 </div>
 
 <div class="card" style="margin-top:16px;">
-    <h3 style="color:#1F3864; font-size:1rem; margin-bottom:10px;">Bus en cours de voyage ({{ voyages_data|length }})</h3>
+    <h3 style="color:#1F3864; font-size:1rem; margin-bottom:10px;">{% trans "Bus en cours de voyage" %} ({{ voyages_data|length }})</h3>
     {% if voyages_data %}
     <table style="width:100%; border-collapse:collapse; font-size:.9rem;">
         <tr style="background:#f4f6f9; text-align:left;">
-            <th style="padding:8px;">Trajet</th>
-            <th style="padding:8px;">Bus</th>
-            <th style="padding:8px;">Chauffeur</th>
-            <th style="padding:8px;">Derniere position</th>
-            <th style="padding:8px;">Arrivee estimee</th>
+            <th style="padding:8px;">{% trans "Trajet" %}</th>
+            <th style="padding:8px;">{% trans "Bus" %}</th>
+            <th style="padding:8px;">{% trans "Chauffeur" %}</th>
+            <th style="padding:8px;">{% trans "Derniere position" %}</th>
+            <th style="padding:8px;">{% trans "Arrivee estimee" %}</th>
         </tr>
         {% for item in voyages_data %}
         <tr id="ligne-{{ item.voyage.id }}" style="border-bottom:1px solid #eef0f3;">
@@ -31,9 +32,9 @@
             <td style="padding:8px;">{{ item.voyage.chauffeur.prenom }} {{ item.voyage.chauffeur.nom }}</td>
             <td style="padding:8px;">
                 {% if item.derniere_position %}
-                    <span id="temps-{{ item.voyage.id }}">il y a ...</span>
+                    <span id="temps-{{ item.voyage.id }}">{% trans "il y a ..." %}</span>
                 {% else %}
-                    <span style="color:#b91c1c;">Aucun signal</span>
+                    <span style="color:#b91c1c;">{% trans "Aucun signal" %}</span>
                 {% endif %}
             </td>
             <td style="padding:8px;" id="estimation-{{ item.voyage.id }}">—</td>
@@ -41,13 +42,13 @@
         {% endfor %}
     </table>
     {% else %}
-    <p style="color:#6b7280;">Aucun bus en cours de voyage actuellement.</p>
+    <p style="color:#6b7280;">{% trans "Aucun bus en cours de voyage actuellement." %}</p>
     {% endif %}
 </div>
 
 <div style="text-align:center; margin-top:20px;">
     <a href="{% url 'admin:index' %}" class="btn" style="background:#6b7280;">
-        <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
+        <i class="fa-solid fa-arrow-left"></i> {% trans "Retour au tableau de bord" %}
     </a>
 </div>
 
@@ -87,12 +88,12 @@ function afficherMarqueurs() {
 }
 
 function tempsEcoule(iso) {
-    if (!iso) return 'Aucun signal';
+    if (!iso) return "{% trans 'Aucun signal' %}";
     const diffSec = Math.floor((new Date() - new Date(iso)) / 1000);
-    if (diffSec < 60) return 'il y a ' + diffSec + ' sec';
+    if (diffSec < 60) return "{% trans 'il y a' %}" + ' ' + diffSec + ' sec';
     const diffMin = Math.floor(diffSec / 60);
-    if (diffMin < 60) return 'il y a ' + diffMin + ' min';
-    return 'il y a ' + Math.floor(diffMin / 60) + ' h';
+    if (diffMin < 60) return "{% trans 'il y a' %}" + ' ' + diffMin + ' min';
+    return "{% trans 'il y a' %}" + ' ' + Math.floor(diffMin / 60) + ' h';
 }
 
 function majTemps() {
@@ -132,7 +133,7 @@ async function rafraichirPositions() {
             const cellEstimation = document.getElementById('estimation-' + v.voyageId);
             if (cellEstimation) {
                 if (data.estimation) {
-                    cellEstimation.textContent = 'Environ ' + data.estimation.minutes_restantes + ' min (' + data.estimation.distance_restante_km + ' km)';
+                    cellEstimation.textContent = "{% trans 'Environ' %}" + ' ' + data.estimation.minutes_restantes + ' min (' + data.estimation.distance_restante_km + ' km)';
                 } else {
                     cellEstimation.textContent = '—';
                 }

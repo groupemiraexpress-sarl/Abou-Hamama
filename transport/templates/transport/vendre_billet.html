@@ -1,6 +1,7 @@
 {% extends "transport/base.html" %}
-{% block titre %}Vendre un billet — {{ branding.nom_entreprise }}{% endblock %}
-{% block entete %}Vendre un billet{% endblock %}
+{% load i18n %}
+{% block titre %}{% trans "Vendre un billet" %} — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}{% trans "Vendre un billet" %}{% endblock %}
 {% block contenu %}
 {% if erreur %}
 <div style="background:#fef2f2; color:#b91c1c; padding:12px; border-radius:8px; margin-bottom:16px; font-size:.9rem; text-align:center;">
@@ -11,63 +12,63 @@
 <div class="card">
     <form method="post" action="{% url 'transport:vendre_billet' %}" id="form-vente">
         {% csrf_token %}
-        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Voyage</label>
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">{% trans "Voyage" %}</label>
         <select name="voyage" required>
-            <option value="">-- Choisir un voyage --</option>
+            <option value="">-- {% trans "Choisir un voyage" %} --</option>
             {% for voyage in voyages %}
                 <option value="{{ voyage.id }}">
                     {{ voyage.trajet.ville_depart }} → {{ voyage.trajet.ville_arrivee }}
                     | {{ voyage.date_depart|date:"d/m/Y" }} {{ voyage.heure_depart|time:"H:i" }}
                     | {{ voyage.prix }} FCFA
-                    | {{ voyage.places_disponibles }} place(s)
+                    | {{ voyage.places_disponibles }} {% trans "place(s)" %}
                 </option>
             {% endfor %}
         </select>
 
-        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Nom de l'acheteur</label>
-        <input type="text" name="client_nom" placeholder="Nom et prenom" required>
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">{% trans "Nom de l'acheteur" %}</label>
+        <input type="text" name="client_nom" placeholder="{% trans 'Nom et prenom' %}" required>
 
-        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Telephone de l'acheteur</label>
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">{% trans "Telephone de l'acheteur" %}</label>
         <input type="text" name="client_telephone" placeholder="66 00 00 00" required>
 
-        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Nombre de places</label>
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">{% trans "Nombre de places" %}</label>
         <input type="number" name="nombre_places" id="nombre_places" value="1" min="1"
                style="width:100%; padding:14px; font-size:1rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:14px;">
 
-        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">Mode de paiement</label>
+        <label style="display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600;">{% trans "Mode de paiement" %}</label>
         <select name="mode_paiement">
-            <option value="especes">Especes</option>
+            <option value="especes">{% trans "Especes" %}</option>
             <option value="mobile_money">Mobile Money</option>
-            <option value="virement">Virement bancaire</option>
-            <option value="carte">Carte bancaire</option>
+            <option value="virement">{% trans "Virement bancaire" %}</option>
+            <option value="carte">{% trans "Carte bancaire" %}</option>
         </select>
 
         <div id="zone-passagers" style="margin-top:18px;"></div>
 
         <button type="submit" class="btn" style="width:100%; margin-top:8px;">
-            <i class="fa-solid fa-ticket"></i> Valider la vente
+            <i class="fa-solid fa-ticket"></i> {% trans "Valider la vente" %}
         </button>
     </form>
 </div>
 {% else %}
 <div class="card" style="text-align:center; color:#6b7280;">
-    Aucun voyage disponible a la vente pour le moment.
+    {% trans "Aucun voyage disponible a la vente pour le moment." %}
 </div>
 {% endif %}
 <div style="text-align:center; margin-top:20px;">
     <a href="{% url 'admin:index' %}" class="btn" style="background:#6b7280;">
-        <i class="fa-solid fa-arrow-left"></i> Retour au tableau de bord
+        <i class="fa-solid fa-arrow-left"></i> {% trans "Retour au tableau de bord" %}
     </a>
 </div>
 
 <script>
 const TYPES_PIECE = [
-    ['cni', "Carte nationale d'identite"],
-    ['passeport', 'Passeport'],
-    ['acte_naissance', 'Acte de naissance'],
-    ['carte_pro', 'Carte professionnelle'],
-    ['permis', 'Permis de conduire'],
-    ['autre', 'Autre piece'],
+    ['cni', "{% trans "Carte nationale d'identite" %}"],
+    ['passeport', '{% trans "Passeport" %}'],
+    ['acte_naissance', '{% trans "Acte de naissance" %}'],
+    ['carte_pro', '{% trans "Carte professionnelle" %}'],
+    ['permis', '{% trans "Permis de conduire" %}'],
+    ['autre', '{% trans "Autre piece" %}'],
 ];
 
 function optionsPiece() {
@@ -85,10 +86,10 @@ function optionsSieges(selectionActuelle) {
     const libres = siegesDisponibles.filter(function (s) {
         return !choisisAilleurs.includes(String(s.numero));
     });
-    let html = '<option value="">-- Choisir --</option>';
+    let html = '<option value="">-- {% trans "Choisir" %} --</option>';
     libres.forEach(function (s) {
         const selectionne = String(s.numero) === selectionActuelle ? ' selected' : '';
-        html += '<option value="' + s.numero + '"' + selectionne + '>Siege ' + s.numero + '</option>';
+        html += '<option value="' + s.numero + '"' + selectionne + '>{% trans "Siege" %} ' + s.numero + '</option>';
     });
     return html;
 }
@@ -110,21 +111,21 @@ function genererPassagers() {
         // Avec une seule place, le passager est forcement l'acheteur : pas
         // besoin de redemander son nom/telephone deja saisis au-dessus.
         const champsIdentite = n === 1 ? '' :
-            '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">Nom et prenom</label>' +
-            '<input type="text" name="passager_nom_complet_' + i + '" placeholder="Nom et prenom du passager" style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">' +
-            '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">Telephone</label>' +
+            '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">{% trans "Nom et prenom" %}</label>' +
+            '<input type="text" name="passager_nom_complet_' + i + '" placeholder="{% trans "Nom et prenom du passager" %}" style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">' +
+            '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">{% trans "Telephone" %}</label>' +
             '<input type="text" name="passager_telephone_' + i + '" placeholder="66 00 00 00" style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">';
         bloc.innerHTML =
-            '<p style="font-weight:600; color:#1F3864; margin-bottom:10px;">' + (n === 1 ? 'Billet' : 'Passager ' + i) + '</p>' +
-            '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">Siege *</label>' +
+            '<p style="font-weight:600; color:#1F3864; margin-bottom:10px;">' + (n === 1 ? '{% trans "Billet" %}' : '{% trans "Passager" %} ' + i) + '</p>' +
+            '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">{% trans "Siege" %} *</label>' +
             '<select name="passager_siege_' + i + '" class="select-siege" required style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">' +
             optionsSieges('') + '</select>' +
             champsIdentite +
-            '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">Type de piece *</label>' +
+            '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">{% trans "Type de piece" %} *</label>' +
             '<select name="passager_type_piece_' + i + '" required style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">' +
-            '<option value="">-- Choisir --</option>' + optionsPiece() + '</select>' +
-            '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">Numero de piece *</label>' +
-            '<input type="text" name="passager_numero_piece_' + i + '" placeholder="Numero" required style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px;">';
+            '<option value="">-- {% trans "Choisir" %} --</option>' + optionsPiece() + '</select>' +
+            '<label style="display:block; margin-bottom:4px; font-size:.85rem; color:#374151;">{% trans "Numero de piece" %} *</label>' +
+            '<input type="text" name="passager_numero_piece_' + i + '" placeholder="{% trans "Numero" %}" required style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px;">';
         zone.appendChild(bloc);
         bloc.querySelector('.select-siege').addEventListener('change', actualiserOptionsSieges);
     }
