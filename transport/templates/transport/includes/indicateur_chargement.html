@@ -18,14 +18,22 @@
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('form').forEach(function (formulaire) {
             formulaire.addEventListener('submit', function () {
-                formulaire.querySelectorAll('button[type="submit"], input[type="submit"]').forEach(function (bouton) {
-                    if (bouton.tagName === 'BUTTON') {
-                        bouton.innerHTML = '<span class="spinner-chargement"></span>Chargement...';
-                    } else {
-                        bouton.value = 'Chargement...';
-                    }
-                    bouton.disabled = true;
-                });
+                // Le disabled est applique apres un delai (setTimeout 0) : si on
+                // desactive le bouton pendant l'evenement submit lui-meme, le
+                // navigateur exclut sa paire nom/valeur de l'envoi (cas des
+                // formulaires a plusieurs boutons submit nommes, comme le
+                // selecteur de langue Français/English/العربية), et le serveur
+                // ne recoit alors aucune valeur.
+                setTimeout(function () {
+                    formulaire.querySelectorAll('button[type="submit"], input[type="submit"]').forEach(function (bouton) {
+                        if (bouton.tagName === 'BUTTON') {
+                            bouton.innerHTML = '<span class="spinner-chargement"></span>Chargement...';
+                        } else {
+                            bouton.value = 'Chargement...';
+                        }
+                        bouton.disabled = true;
+                    });
+                }, 0);
             });
         });
     });
