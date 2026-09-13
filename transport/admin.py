@@ -176,7 +176,8 @@ class VoyageAdmin(FiltreAgenceMixin, admin.ModelAdmin):
         return f"{total - occupes} / {total}"
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name in ('bus', 'chauffeur', 'ligne') and not voit_tout(request.user):
+        if db_field.name in ('bus', 'chauffeur', 'ligne', 'trajet') and not voit_tout(request.user):
+            from django.db.models import Q
             employe = getattr(request.user, 'employe', None)
             poste = employe.poste if employe else None
 
@@ -185,6 +186,11 @@ class VoyageAdmin(FiltreAgenceMixin, admin.ModelAdmin):
                 if db_field.name == 'ligne':
                     kwargs['queryset'] = (
                         Ligne.objects.filter(arrets__agence__zone=zone).distinct() if zone else Ligne.objects.none()
+                    )
+                elif db_field.name == 'trajet':
+                    villes = Agence.objects.filter(zone=zone).values_list('ville', flat=True) if zone else []
+                    kwargs['queryset'] = (
+                        Trajet.objects.filter(Q(ville_depart__in=villes) | Q(ville_arrivee__in=villes)) if zone else Trajet.objects.none()
                     )
                 else:
                     kwargs['queryset'] = (
@@ -195,6 +201,10 @@ class VoyageAdmin(FiltreAgenceMixin, admin.ModelAdmin):
                 if db_field.name == 'ligne':
                     kwargs['queryset'] = (
                         Ligne.objects.filter(arrets__agence=agence).distinct() if agence else Ligne.objects.none()
+                    )
+                elif db_field.name == 'trajet':
+                    kwargs['queryset'] = (
+                        Trajet.objects.filter(Q(ville_depart=agence.ville) | Q(ville_arrivee=agence.ville)) if agence else Trajet.objects.none()
                     )
                 else:
                     kwargs['queryset'] = (
