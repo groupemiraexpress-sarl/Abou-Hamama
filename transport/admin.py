@@ -175,9 +175,43 @@ class VoyageAdmin(FiltreAgenceMixin, admin.ModelAdmin):
         occupes = obj.sieges.filter(reservations__statut__in=['en_attente', 'payee']).distinct().count()
         return f"{total - occupes} / {total}"
 
+    @staticmethod
+    def _normaliser_ville(v):
+        # Trajet stocke ses villes en texte libre, independamment du champ
+        # Agence.ville (ex: "Ndjamena" cote Trajet contre "N'Djamena" cote
+        # Agence) : une comparaison exacte en base rate ce genre de trajets.
+        return (v or '').replace("'", "").replace("’", "").strip().lower()
+
+    @classmethod
+    def _trajets_pour_agence(cls, agence):
+        ville = cls._normaliser_ville(agence.ville)
+        ids = [
+            t.id for t in Trajet.objects.all()
+            if cls._normaliser_ville(t.ville_depart) == ville or cls._normaliser_ville(t.ville_arrivee) == ville
+        ]
+        return Trajet.objects.filter(id__in=ids)
+
+    @classmethod
+    def _trajets_pour_zone(cls, zone):
+        # Une ville "hub" (ex: N'Djamena) peut avoir une agence Nord ET une
+        # agence Sud : si on l'utilisait telle quelle, tout trajet partant
+        # de cette ville matcherait les deux zones a la fois et annulerait
+        # le filtrage. On ne garde donc que les villes qui n'appartiennent
+        # QU'a la zone demandee pour decider si un trajet en fait partie.
+        villes_zones = {}
+        for ville, z in Agence.objects.exclude(zone='').values_list('ville', 'zone'):
+            villes_zones.setdefault(cls._normaliser_ville(ville), set()).add(z)
+        villes_de_la_zone = {v for v, zs in villes_zones.items() if zs == {zone}}
+
+        ids = [
+            t.id for t in Trajet.objects.all()
+            if cls._normaliser_ville(t.ville_depart) in villes_de_la_zone
+            or cls._normaliser_ville(t.ville_arrivee) in villes_de_la_zone
+        ]
+        return Trajet.objects.filter(id__in=ids)
+
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name in ('bus', 'chauffeur', 'ligne', 'trajet') and not voit_tout(request.user):
-            from django.db.models import Q
             employe = getattr(request.user, 'employe', None)
             poste = employe.poste if employe else None
 
@@ -188,10 +222,7 @@ class VoyageAdmin(FiltreAgenceMixin, admin.ModelAdmin):
                         Ligne.objects.filter(arrets__agence__zone=zone).distinct() if zone else Ligne.objects.none()
                     )
                 elif db_field.name == 'trajet':
-                    villes = Agence.objects.filter(zone=zone).values_list('ville', flat=True) if zone else []
-                    kwargs['queryset'] = (
-                        Trajet.objects.filter(Q(ville_depart__in=villes) | Q(ville_arrivee__in=villes)) if zone else Trajet.objects.none()
-                    )
+                    kwargs['queryset'] = self._trajets_pour_zone(zone) if zone else Trajet.objects.none()
                 else:
                     kwargs['queryset'] = (
                         db_field.related_model.objects.filter(agence__zone=zone) if zone else db_field.related_model.objects.none()
@@ -203,9 +234,7 @@ class VoyageAdmin(FiltreAgenceMixin, admin.ModelAdmin):
                         Ligne.objects.filter(arrets__agence=agence).distinct() if agence else Ligne.objects.none()
                     )
                 elif db_field.name == 'trajet':
-                    kwargs['queryset'] = (
-                        Trajet.objects.filter(Q(ville_depart=agence.ville) | Q(ville_arrivee=agence.ville)) if agence else Trajet.objects.none()
-                    )
+                    kwargs['queryset'] = self._trajets_pour_agence(agence) if agence else Trajet.objects.none()
                 else:
                     kwargs['queryset'] = (
                         db_field.related_model.objects.filter(agence=agence) if agence else db_field.related_model.objects.none()
