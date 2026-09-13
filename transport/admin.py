@@ -1,5 +1,8 @@
 from django.contrib import admin
-from .admin_filtres import FiltreAgenceMixin, FiltreAgenceListFilter, FiltreAgenceDepartArrivee, FiltreAgenceDepartRetrait
+from .admin_filtres import (
+    FiltreAgenceMixin, FiltreAgenceListFilter, FiltreAgenceDepartArrivee, FiltreAgenceDepartRetrait,
+    voit_tout, agence_de, zone_de,
+)
 from .models import (
     Compagnie, Agence, Bus, Chauffeur, Trajet, Voyage,
     Client, Reservation, Colis, Employe, TransfertArgent,
@@ -171,6 +174,33 @@ class VoyageAdmin(FiltreAgenceMixin, admin.ModelAdmin):
         total = obj.sieges.count()
         occupes = obj.sieges.filter(reservations__statut__in=['en_attente', 'payee']).distinct().count()
         return f"{total - occupes} / {total}"
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name in ('bus', 'chauffeur', 'ligne') and not voit_tout(request.user):
+            employe = getattr(request.user, 'employe', None)
+            poste = employe.poste if employe else None
+
+            if poste == 'resp_planning':
+                zone = zone_de(request.user)
+                if db_field.name == 'ligne':
+                    kwargs['queryset'] = (
+                        Ligne.objects.filter(arrets__agence__zone=zone).distinct() if zone else Ligne.objects.none()
+                    )
+                else:
+                    kwargs['queryset'] = (
+                        db_field.related_model.objects.filter(agence__zone=zone) if zone else db_field.related_model.objects.none()
+                    )
+            else:
+                agence = agence_de(request.user)
+                if db_field.name == 'ligne':
+                    kwargs['queryset'] = (
+                        Ligne.objects.filter(arrets__agence=agence).distinct() if agence else Ligne.objects.none()
+                    )
+                else:
+                    kwargs['queryset'] = (
+                        db_field.related_model.objects.filter(agence=agence) if agence else db_field.related_model.objects.none()
+                    )
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 class ClientAdminForm(forms.ModelForm):
