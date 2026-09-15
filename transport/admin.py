@@ -140,8 +140,8 @@ class ChauffeurAdmin(FiltreAgenceMixin, admin.ModelAdmin):
 
 @admin.register(Trajet)
 class TrajetAdmin(admin.ModelAdmin):
-    list_display = ('ville_depart', 'ville_arrivee', 'distance_km', 'duree_estimee_heures', 'prix_base', 'compagnie', 'actif')
-    list_filter = ('compagnie', 'actif', 'ville_depart')
+    list_display = ('ville_depart', 'ville_arrivee', 'zone', 'distance_km', 'duree_estimee_heures', 'prix_base', 'compagnie', 'actif')
+    list_filter = ('compagnie', 'zone', 'actif', 'ville_depart')
     search_fields = ('ville_depart', 'ville_arrivee')
     list_editable = ('prix_base', 'actif')
     ordering = ('ville_depart', 'ville_arrivee')
@@ -175,47 +175,6 @@ class VoyageAdmin(FiltreAgenceMixin, admin.ModelAdmin):
         occupes = obj.sieges.filter(reservations__statut__in=['en_attente', 'payee']).distinct().count()
         return f"{total - occupes} / {total}"
 
-    @staticmethod
-    def _normaliser_ville(v):
-        # Trajet stocke ses villes en texte libre, independamment du champ
-        # Agence.ville, et l'orthographe varie d'une fiche a l'autre :
-        # apostrophe presente ou non ("N'Djamena" / "Ndjamena" / "N'djamena"),
-        # accents presents ou non ("Abeche" / "Abéché"). Une comparaison
-        # exacte en base rate ces variantes, donc on normalise (apostrophes,
-        # accents, casse, espaces) avant de comparer en Python.
-        import unicodedata
-        v = (v or '').replace("'", "").replace("’", "").strip().lower()
-        v = unicodedata.normalize('NFKD', v)
-        return ''.join(c for c in v if not unicodedata.combining(c))
-
-    @classmethod
-    def _trajets_pour_agence(cls, agence):
-        ville = cls._normaliser_ville(agence.ville)
-        ids = [
-            t.id for t in Trajet.objects.all()
-            if cls._normaliser_ville(t.ville_depart) == ville or cls._normaliser_ville(t.ville_arrivee) == ville
-        ]
-        return Trajet.objects.filter(id__in=ids)
-
-    @classmethod
-    def _trajets_pour_zone(cls, zone):
-        # Une ville "hub" (ex: N'Djamena) peut avoir une agence Nord ET une
-        # agence Sud : si on l'utilisait telle quelle, tout trajet partant
-        # de cette ville matcherait les deux zones a la fois et annulerait
-        # le filtrage. On ne garde donc que les villes qui n'appartiennent
-        # QU'a la zone demandee pour decider si un trajet en fait partie.
-        villes_zones = {}
-        for ville, z in Agence.objects.exclude(zone='').values_list('ville', 'zone'):
-            villes_zones.setdefault(cls._normaliser_ville(ville), set()).add(z)
-        villes_de_la_zone = {v for v, zs in villes_zones.items() if zs == {zone}}
-
-        ids = [
-            t.id for t in Trajet.objects.all()
-            if cls._normaliser_ville(t.ville_depart) in villes_de_la_zone
-            or cls._normaliser_ville(t.ville_arrivee) in villes_de_la_zone
-        ]
-        return Trajet.objects.filter(id__in=ids)
-
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name in ('bus', 'chauffeur', 'ligne', 'trajet') and not voit_tout(request.user):
             employe = getattr(request.user, 'employe', None)
@@ -228,7 +187,7 @@ class VoyageAdmin(FiltreAgenceMixin, admin.ModelAdmin):
                         Ligne.objects.filter(arrets__agence__zone=zone).distinct() if zone else Ligne.objects.none()
                     )
                 elif db_field.name == 'trajet':
-                    kwargs['queryset'] = self._trajets_pour_zone(zone) if zone else Trajet.objects.none()
+                    kwargs['queryset'] = Trajet.objects.filter(zone=zone) if zone else Trajet.objects.none()
                 else:
                     kwargs['queryset'] = (
                         db_field.related_model.objects.filter(agence__zone=zone) if zone else db_field.related_model.objects.none()
@@ -240,7 +199,9 @@ class VoyageAdmin(FiltreAgenceMixin, admin.ModelAdmin):
                         Ligne.objects.filter(arrets__agence=agence).distinct() if agence else Ligne.objects.none()
                     )
                 elif db_field.name == 'trajet':
-                    kwargs['queryset'] = self._trajets_pour_agence(agence) if agence else Trajet.objects.none()
+                    kwargs['queryset'] = (
+                        Trajet.objects.filter(zone=agence.zone) if agence and agence.zone else Trajet.objects.none()
+                    )
                 else:
                     kwargs['queryset'] = (
                         db_field.related_model.objects.filter(agence=agence) if agence else db_field.related_model.objects.none()

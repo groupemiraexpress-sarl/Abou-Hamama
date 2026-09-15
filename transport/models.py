@@ -104,6 +104,7 @@ class Chauffeur(models.Model):
 
 class Trajet(models.Model):
     compagnie = models.ForeignKey(Compagnie, on_delete=models.CASCADE, related_name='trajets', verbose_name=_("Compagnie"))
+    zone = models.CharField(_("Zone"), max_length=10, choices=Agence.ZONE_CHOICES, blank=True, help_text=_("Zone geographique (pour le filtrage par responsable planning)"))
     ville_depart = models.CharField(_("Ville de depart"), max_length=50)
     ville_arrivee = models.CharField(_("Ville d'arrivee"), max_length=50)
     distance_km = models.IntegerField(_("Distance (km)"), help_text=_("Distance en kilometres"))
