@@ -178,9 +178,15 @@ class VoyageAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     @staticmethod
     def _normaliser_ville(v):
         # Trajet stocke ses villes en texte libre, independamment du champ
-        # Agence.ville (ex: "Ndjamena" cote Trajet contre "N'Djamena" cote
-        # Agence) : une comparaison exacte en base rate ce genre de trajets.
-        return (v or '').replace("'", "").replace("’", "").strip().lower()
+        # Agence.ville, et l'orthographe varie d'une fiche a l'autre :
+        # apostrophe presente ou non ("N'Djamena" / "Ndjamena" / "N'djamena"),
+        # accents presents ou non ("Abeche" / "Abéché"). Une comparaison
+        # exacte en base rate ces variantes, donc on normalise (apostrophes,
+        # accents, casse, espaces) avant de comparer en Python.
+        import unicodedata
+        v = (v or '').replace("'", "").replace("’", "").strip().lower()
+        v = unicodedata.normalize('NFKD', v)
+        return ''.join(c for c in v if not unicodedata.combining(c))
 
     @classmethod
     def _trajets_pour_agence(cls, agence):
