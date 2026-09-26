@@ -424,13 +424,14 @@ class Employe(models.Model):
         ('comptable', _('Comptable')),
         ('rh', _('Responsable RH / recrutement')),
         ('resp_maintenance', _('Responsable maintenance')),
+        ('magasinier', _('Magasinier')),
         ('securite', _('Agent de securite')),
         ('autre', _('Autre')),
     ]
 
     user = models.OneToOneField('auth.User', on_delete=models.SET_NULL, related_name='employe', null=True, blank=True, verbose_name=_("Compte de connexion"), help_text=_("Compte de connexion lie a cet employe"))
     compagnie = models.ForeignKey(Compagnie, on_delete=models.CASCADE, related_name='employes', verbose_name=_("Compagnie"))
-    agence = models.ForeignKey(Agence, on_delete=models.SET_NULL, related_name='employes', null=True, blank=True, verbose_name=_("Agence"), help_text=_("Laisser vide pour un PDG (toute la compagnie)"))
+    agence = models.ForeignKey(Agence, on_delete=models.SET_NULL, related_name='employes', null=True, blank=True, verbose_name=_("Agence"), help_text=_("Laisser vide pour un PDG ou un Magasinier (magasin unique pour toute la compagnie)"))
     zone = models.CharField(_("Zone"), max_length=10, choices=Agence.ZONE_CHOICES, blank=True, help_text=_("Zone geographique geree (uniquement pour Responsable planning)"))
     nom = models.CharField(_("Nom"), max_length=100)
     prenom = models.CharField(_("Prenom"), max_length=100)
@@ -544,6 +545,58 @@ class Entretien(models.Model):
 
     def __str__(self):
         return f"{self.get_type_entretien_display()} - {self.bus} ({self.date_entretien})"
+
+
+class ArticleStock(models.Model):
+    """Catalogue des pieces/materiel geres par le magasin (unique pour toute
+    la compagnie). La quantite en stock est decrementee automatiquement
+    quand une DemandeMateriel est marquee comme livree."""
+    nom = models.CharField(_("Nom de l'article"), max_length=150, unique=True)
+    reference = models.CharField(_("Reference"), max_length=50, blank=True)
+    unite = models.CharField(_("Unite"), max_length=20, default='piece', help_text=_("Ex : piece, litre, kg..."))
+    quantite_stock = models.PositiveIntegerField(_("Quantite en stock"), default=0)
+    seuil_alerte = models.PositiveIntegerField(_("Seuil d'alerte"), default=5, help_text=_("En dessous de ce niveau, l'article est signale comme stock faible"))
+    actif = models.BooleanField(_("Actif"), default=True)
+
+    class Meta:
+        verbose_name = _("Article de stock")
+        verbose_name_plural = _("Articles de stock")
+        ordering = ['nom']
+
+    def __str__(self):
+        return f"{self.nom} ({self.quantite_stock} {self.unite})"
+
+    @property
+    def stock_faible(self):
+        return self.quantite_stock <= self.seuil_alerte
+
+
+class DemandeMateriel(models.Model):
+    STATUT_CHOICES = [
+        ('en_attente', _('En attente')),
+        ('confirmee', _('Confirmee (materiel disponible)')),
+        ('refusee', _('Refusee')),
+        ('livree', _('Livree')),
+    ]
+
+    bus = models.ForeignKey('Bus', on_delete=models.CASCADE, related_name='demandes_materiel', verbose_name=_("Bus"))
+    article = models.ForeignKey('ArticleStock', on_delete=models.PROTECT, related_name='demandes', verbose_name=_("Article"))
+    quantite = models.PositiveIntegerField(_("Quantite demandee"), default=1)
+    description = models.TextField(_("Precisions"), blank=True, help_text=_("Details complementaires (facultatif)"))
+    statut = models.CharField(_("Statut"), max_length=20, choices=STATUT_CHOICES, default='en_attente')
+    reponse_magasin = models.TextField(_("Reponse du magasin"), blank=True, help_text=_("Ex : delai de livraison, ou raison du refus (rupture de stock...)"))
+    demande_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='demandes_materiel_creees', verbose_name=_("Demande par"))
+    traite_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='demandes_materiel_traitees', verbose_name=_("Traite par (magasin)"))
+    date_demande = models.DateTimeField(_("Date de la demande"), auto_now_add=True)
+    date_traitement = models.DateTimeField(_("Date de traitement"), null=True, blank=True)
+
+    class Meta:
+        verbose_name = _("Demande de materiel")
+        verbose_name_plural = _("Demandes de materiel")
+        ordering = ['-date_demande']
+
+    def __str__(self):
+        return f"Demande #{self.pk} - {self.bus} ({self.get_statut_display()})"
 
 
 class PleinCarburant(models.Model):

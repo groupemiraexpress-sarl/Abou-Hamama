@@ -55,7 +55,9 @@ POSTES_RECRUTEURS = ('responsable', 'rh')
 
 # Postes qu'un Responsable ou un RH d'agence peuvent attribuer a un nouvel
 # employe. N'inclut pas 'pdg' (compte unique, reserve au PDG lui-meme),
-# ni 'responsable' ni 'resp_planning' (nominations reservees au PDG).
+# ni 'responsable' ni 'resp_planning' ni 'magasinier' (nominations
+# reservees au PDG - le magasinier n'appartient d'ailleurs a aucune
+# agence, le magasin etant unique pour toute la compagnie).
 POSTES_RECRUTABLES_PAR_AGENCE = (
     'secretaire', 'guichetier', 'caissier', 'agent_colis', 'agent_transfert',
     'manutentionnaire', 'comptable', 'resp_maintenance', 'securite', 'rh', 'autre',
@@ -80,6 +82,7 @@ POSTE_VERS_GROUPE = {
     'comptable': 'Comptable',
     'rh': 'Responsable RH',
     'resp_maintenance': 'Responsable maintenance',
+    'magasinier': 'Magasinier',
     'securite': 'Agent de securite',
     'autre': 'Autre (lecture seule)',
 }
@@ -353,6 +356,9 @@ PROFILS_TABLEAU_BORD = {
     },
     'resp_maintenance': {
         'voit_historique_employe', 'voit_bus_service', 'voit_bus_maintenance', 'voit_groupe_maintenance',
+    },
+    'magasinier': {
+        'voit_historique_employe', 'voit_groupe_maintenance',
     },
     'securite': {
         'voit_historique_employe', 'voit_alertes_non_resolues', 'voit_groupe_securite',

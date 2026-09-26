@@ -7,7 +7,8 @@ from .models import (
     Compagnie, Agence, Bus, Chauffeur, Trajet, Voyage,
     Client, Reservation, Colis, Employe, TransfertArgent,
     Entretien, PleinCarburant, Promotion, DemandeColis, DemandeTransfert, Ligne, ArretLigne,
-    AlerteVoyage, AvisVoyage, QuestionFAQ, PushToken, AppareilConfirme, DemandeConfirmationAppareil, Plainte
+    AlerteVoyage, AvisVoyage, QuestionFAQ, PushToken, AppareilConfirme, DemandeConfirmationAppareil, Plainte,
+    ArticleStock, DemandeMateriel,
 )
 from django import forms
 from django.contrib.auth.models import User
@@ -939,6 +940,131 @@ class PleinCarburantAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     search_fields = ('bus__immatriculation',)
     ordering = ('-date_plein',)
     autocomplete_fields = ('bus', 'voyage', 'cree_par')
+
+
+def _est_magasinier_ou_pdg(request):
+    if request.user.is_superuser:
+        return True
+    employe = getattr(request.user, 'employe', None)
+    return employe is not None and employe.poste in ('pdg', 'magasinier')
+
+
+@admin.register(ArticleStock)
+class ArticleStockAdmin(admin.ModelAdmin):
+    list_display = ('nom', 'reference', 'unite', 'quantite_stock', 'seuil_alerte', 'indicateur_stock', 'actif')
+    list_filter = ('actif',)
+    search_fields = ('nom', 'reference')
+    list_editable = ('quantite_stock', 'seuil_alerte', 'actif')
+    ordering = ('nom',)
+
+    @admin.display(description=_("Stock"))
+    def indicateur_stock(self, obj):
+        from django.utils.html import format_html
+        if obj.stock_faible:
+            return format_html('<span style="color:#b91c1c; font-weight:600;">&#9888; {}</span>', _("Stock faible"))
+        return format_html('<span style="color:#059669;">OK</span>')
+
+    def has_add_permission(self, request):
+        return _est_magasinier_ou_pdg(request)
+
+    def has_change_permission(self, request, obj=None):
+        return _est_magasinier_ou_pdg(request)
+
+    def has_delete_permission(self, request, obj=None):
+        return _config_modifiable_uniquement_par_pdg(request)
+
+
+class DemandeMaterielForm(forms.ModelForm):
+    class Meta:
+        model = DemandeMateriel
+        fields = '__all__'
+
+    def clean(self):
+        cleaned = super().clean()
+        statut = cleaned.get('statut')
+        article = cleaned.get('article')
+        quantite = cleaned.get('quantite')
+        if statut in ('confirmee', 'livree') and article and quantite and article.quantite_stock < quantite:
+            raise forms.ValidationError(
+                _("Stock insuffisant pour '%(article)s' : %(dispo)s %(unite)s disponible(s), %(demande)s demande(s).") % {
+                    'article': article.nom, 'dispo': article.quantite_stock, 'unite': article.unite, 'demande': quantite,
+                }
+            )
+        return cleaned
+
+
+@admin.register(DemandeMateriel)
+class DemandeMaterielAdmin(admin.ModelAdmin):
+    form = DemandeMaterielForm
+    list_display = ('bus', 'article', 'quantite', 'statut', 'demande_par', 'traite_par', 'date_demande')
+    list_filter = ('statut', 'article')
+    search_fields = ('bus__immatriculation', 'article__nom')
+    ordering = ('-date_demande',)
+    autocomplete_fields = ('bus', 'article')
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        user = request.user
+        if voit_tout(user):
+            return qs
+        employe = getattr(user, 'employe', None)
+        poste = employe.poste if employe else None
+        if poste == 'magasinier':
+            # Magasin unique pour toute la compagnie : voit toutes les
+            # demandes, quelle que soit l'agence d'origine du bus.
+            return qs
+        agence = agence_de(user)
+        if agence is None:
+            return qs.none()
+        return qs.filter(bus__agence=agence)
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'bus' and not voit_tout(request.user):
+            agence = agence_de(request.user)
+            kwargs['queryset'] = Bus.objects.filter(agence=agence) if agence else Bus.objects.none()
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def get_readonly_fields(self, request, obj=None):
+        employe = getattr(request.user, 'employe', None)
+        poste = employe.poste if employe else None
+        if request.user.is_superuser or poste == 'pdg':
+            return ()
+        if poste == 'magasinier':
+            # Le magasin traite la demande (statut + reponse) mais ne modifie
+            # jamais ce que le responsable maintenance a demande.
+            return ('bus', 'article', 'quantite', 'description', 'demande_par', 'date_demande')
+        # Le responsable maintenance (ou tout autre poste) peut ajuster sa
+        # propre demande, mais jamais la decision du magasin.
+        return ('statut', 'reponse_magasin', 'traite_par', 'date_traitement', 'demande_par', 'date_demande')
+
+    def has_add_permission(self, request):
+        if request.user.is_superuser:
+            return True
+        employe = getattr(request.user, 'employe', None)
+        return employe is not None and employe.poste in ('pdg', 'resp_maintenance')
+
+    def has_delete_permission(self, request, obj=None):
+        return _config_modifiable_uniquement_par_pdg(request)
+
+    def save_model(self, request, obj, form, change):
+        employe = getattr(request.user, 'employe', None)
+        if not change and employe:
+            obj.demande_par = employe
+
+        ancien_statut = None
+        if change:
+            ancien_statut = DemandeMateriel.objects.get(pk=obj.pk).statut
+
+        if employe and employe.poste in ('magasinier', 'pdg') and obj.statut != 'en_attente' and ancien_statut != obj.statut:
+            from django.utils import timezone
+            obj.traite_par = employe
+            obj.date_traitement = timezone.now()
+
+        if obj.statut == 'livree' and ancien_statut != 'livree':
+            obj.article.quantite_stock = max(0, obj.article.quantite_stock - obj.quantite)
+            obj.article.save(update_fields=['quantite_stock'])
+
+        super().save_model(request, obj, form, change)
 
 
 @admin.register(Promotion)

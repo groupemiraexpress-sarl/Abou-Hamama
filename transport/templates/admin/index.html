@@ -343,7 +343,7 @@
         <h2 class="groupe-titre">{% trans "Maintenance du parc" %}</h2>
         <div class="groupe-liste">
           {% for model in app.models %}
-            {% if model.object_name == 'Entretien' or model.object_name == 'PleinCarburant' %}
+            {% if model.object_name == 'Entretien' or model.object_name == 'PleinCarburant' or model.object_name == 'ArticleStock' or model.object_name == 'DemandeMateriel' %}
               <div class="groupe-ligne">
                 <a class="nom" href="{{ model.admin_url }}">{{ model.name }}</a>
                 <span class="groupe-actions">
