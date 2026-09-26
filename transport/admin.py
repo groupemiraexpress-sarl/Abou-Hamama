@@ -331,6 +331,12 @@ class ReservationAdmin(FiltreAgenceMixin, admin.ModelAdmin):
     class Media:
         js = ('transport/admin_reservation_sieges.js',)
     champs_agence = ['agence']
+    # Meme raisonnement que pour ColisAdmin/TransfertArgentAdmin : une
+    # reservation faite par un client depuis l'app mobile n'a pas de
+    # cree_par (aucun employe), donc restreindre par createur (comme pour
+    # les autres postes "personnel") la rendrait invisible pour TOUS les
+    # guichetiers de l'agence, meme celle qui devrait la traiter au comptoir.
+    champ_createur = None
     list_display = ('numero_reservation', 'client', 'voyage', 'nombre_places', 'montant_total', 'statut', 'origine', 'mode_paiement', 'modifie_par', 'date_reservation')
     list_filter = ('statut', 'mode_paiement', 'voyage__date_depart', FiltreAgenceListFilter)
     search_fields = ('numero_reservation', 'client__nom', 'client__telephone')
