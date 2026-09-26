@@ -1,10 +1,11 @@
 """Calcul des statistiques pour le tableau de bord de l'admin."""
 from datetime import timedelta
 from django.utils import timezone
-from django.db.models import Q
+from django.db.models import Q, F
 from .models import (
     Voyage, Reservation, Colis, TransfertArgent,
-    DemandeColis, DemandeTransfert, Client, Bus, Employe, Chauffeur
+    DemandeColis, DemandeTransfert, Client, Bus, Employe, Chauffeur,
+    DemandeMateriel, ArticleStock,
 )
 from .admin_filtres import voit_tout, agence_de, zone_de, POSTES_PERSONNEL
 
@@ -98,6 +99,17 @@ def statistiques_tableau_bord(user=None):
     date_limite_permis = aujourd_hui + timedelta(days=30)
     permis_a_renouveler = chauffeurs_qs.filter(date_expiration_permis__lte=date_limite_permis).count()
 
+    # Demandes de materiel (filtrees) : le magasinier n'a pas d'agence propre
+    # (magasin unique pour toute la compagnie), il voit donc toujours tout.
+    demandes_materiel_qs = DemandeMateriel.objects.all()
+    if not scope_global and poste != 'magasinier':
+        demandes_materiel_qs = demandes_materiel_qs.filter(bus__agence=agence) if agence else demandes_materiel_qs.none()
+    demandes_materiel_attente = demandes_materiel_qs.filter(statut='en_attente').count()
+
+    # Stock (global, un seul magasin pour toute la compagnie)
+    total_articles_stock = ArticleStock.objects.filter(actif=True).count()
+    articles_stock_faible = ArticleStock.objects.filter(actif=True, quantite_stock__lte=F('seuil_alerte')).count()
+
     return {
         'voyages_aujourd_hui': voyages_aujourd_hui,
         'voyages_a_venir': voyages_a_venir,
@@ -118,4 +130,7 @@ def statistiques_tableau_bord(user=None):
         'total_clients': total_clients,
         'total_employes': total_employes,
         'permis_a_renouveler': permis_a_renouveler,
+        'demandes_materiel_attente': demandes_materiel_attente,
+        'total_articles_stock': total_articles_stock,
+        'articles_stock_faible': articles_stock_faible,
     }

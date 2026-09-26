@@ -162,7 +162,7 @@
     </div>
     {% endif %}
 
-    {% if stats_profil.voit_alertes_non_resolues or stats_profil.voit_demandes_colis_attente or stats_profil.voit_demandes_transfert_attente or stats_profil.voit_reservations_attente or stats_profil.voit_transferts_attente %}
+    {% if stats_profil.voit_alertes_non_resolues or stats_profil.voit_demandes_colis_attente or stats_profil.voit_demandes_transfert_attente or stats_profil.voit_reservations_attente or stats_profil.voit_transferts_attente or stats_profil.voit_demandes_materiel_attente or stats_profil.voit_articles_stock_faible %}
     <h2 class="stats-titre">{% trans "A traiter" %}</h2>
     <div class="stats-grille">
       {% if stats_profil.voit_alertes_non_resolues %}
@@ -195,10 +195,22 @@
         <div class="stat-label">{% trans "Transferts a retirer" %}</div>
       </div>
       {% endif %}
+      {% if stats_profil.voit_demandes_materiel_attente %}
+      <div class="stat-carte alerte">
+        <div class="stat-valeur" data-stat="demandes_materiel_attente">{{ stats.demandes_materiel_attente }}</div>
+        <div class="stat-label">{% trans "Demandes de materiel en attente" %}</div>
+      </div>
+      {% endif %}
+      {% if stats_profil.voit_articles_stock_faible %}
+      <div class="stat-carte alerte">
+        <div class="stat-valeur" data-stat="articles_stock_faible">{{ stats.articles_stock_faible }}</div>
+        <div class="stat-label">{% trans "Articles en stock faible" %}</div>
+      </div>
+      {% endif %}
     </div>
     {% endif %}
 
-    {% if stats_profil.voit_colis_transit or stats_profil.voit_colis_arrives or stats_profil.voit_colis_livres_jour or stats_profil.voit_transferts_retires_jour or stats_profil.voit_bus_service or stats_profil.voit_bus_maintenance or stats_profil.voit_total_clients or stats_profil.voit_total_employes %}
+    {% if stats_profil.voit_colis_transit or stats_profil.voit_colis_arrives or stats_profil.voit_colis_livres_jour or stats_profil.voit_transferts_retires_jour or stats_profil.voit_bus_service or stats_profil.voit_bus_maintenance or stats_profil.voit_total_clients or stats_profil.voit_total_employes or stats_profil.voit_total_articles_stock %}
     <h2 class="stats-titre">{% trans "Activite" %}</h2>
     <div class="stats-grille">
       {% if stats_profil.voit_colis_transit %}
@@ -247,6 +259,12 @@
       <div class="stat-carte">
         <div class="stat-valeur" data-stat="total_employes">{{ stats.total_employes }}</div>
         <div class="stat-label">{% trans "Employes actifs" %}</div>
+      </div>
+      {% endif %}
+      {% if stats_profil.voit_total_articles_stock %}
+      <div class="stat-carte">
+        <div class="stat-valeur" data-stat="total_articles_stock">{{ stats.total_articles_stock }}</div>
+        <div class="stat-label">{% trans "Articles en stock" %}</div>
       </div>
       {% endif %}
     </div>

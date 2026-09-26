@@ -300,6 +300,7 @@ DRAPEAUX_TABLEAU_BORD = [
     'voit_colis_transit', 'voit_colis_arrives', 'voit_colis_livres_jour', 'voit_transferts_retires_jour',
     'voit_bus_service', 'voit_bus_maintenance',
     'voit_total_clients', 'voit_total_employes',
+    'voit_demandes_materiel_attente', 'voit_total_articles_stock', 'voit_articles_stock_faible',
     'voit_groupe_exploitation', 'voit_groupe_securite', 'voit_groupe_colis_transferts',
     'voit_groupe_clients_personnel', 'voit_groupe_maintenance', 'voit_groupe_configuration',
 ]
@@ -356,9 +357,11 @@ PROFILS_TABLEAU_BORD = {
     },
     'resp_maintenance': {
         'voit_historique_employe', 'voit_bus_service', 'voit_bus_maintenance', 'voit_groupe_maintenance',
+        'voit_demandes_materiel_attente', 'voit_articles_stock_faible',
     },
     'magasinier': {
         'voit_historique_employe', 'voit_groupe_maintenance',
+        'voit_demandes_materiel_attente', 'voit_total_articles_stock', 'voit_articles_stock_faible',
     },
     'securite': {
         'voit_historique_employe', 'voit_alertes_non_resolues', 'voit_groupe_securite',
