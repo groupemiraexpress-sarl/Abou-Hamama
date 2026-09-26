@@ -962,7 +962,7 @@ class ArticleStockAdmin(admin.ModelAdmin):
         from django.utils.html import format_html
         if obj.stock_faible:
             return format_html('<span style="color:#b91c1c; font-weight:600;">&#9888; {}</span>', _("Stock faible"))
-        return format_html('<span style="color:#059669;">OK</span>')
+        return format_html('<span style="color:#059669;">{}</span>', "OK")
 
     def has_add_permission(self, request):
         return _est_magasinier_ou_pdg(request)
