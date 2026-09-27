@@ -564,7 +564,7 @@ class ArticleStock(models.Model):
         ordering = ['nom']
 
     def __str__(self):
-        return f"{self.nom} ({self.quantite_stock} {self.unite})"
+        return self.nom
 
     @property
     def stock_faible(self):
