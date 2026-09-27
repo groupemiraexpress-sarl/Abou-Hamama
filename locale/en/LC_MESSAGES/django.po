@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 00:00+0000\n"
-"PO-Revision-Date: 2026-09-11 00:00+0000\n"
+"POT-Creation-Date: 2026-09-27 00:00+0000\n"
+"PO-Revision-Date: 2026-09-27 00:00+0000\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -156,6 +156,21 @@ msgstr "Arrived at destination"
 
 msgid "Arrivee estimee"
 msgstr "Estimated arrival"
+
+msgid "Article"
+msgstr "Article"
+
+msgid "Article de stock"
+msgstr "Stock item"
+
+msgid "Articles de stock"
+msgstr "Stock items"
+
+msgid "Articles en stock"
+msgstr "Items in stock"
+
+msgid "Articles en stock faible"
+msgstr "Low-stock items"
 
 msgid "Aucun"
 msgstr "None"
@@ -505,6 +520,9 @@ msgstr "Login account linked to this client record (mobile app)"
 msgid "Configuration"
 msgstr "Settings"
 
+msgid "Confirmee (materiel disponible)"
+msgstr "Confirmed (material available)"
+
 msgid "Connexion OK"
 msgstr "Login OK"
 
@@ -586,6 +604,9 @@ msgstr "Validity end date"
 msgid "Date de l'entretien"
 msgstr "Maintenance date"
 
+msgid "Date de la demande"
+msgstr "Request date"
+
 msgid "Date de livraison"
 msgstr "Delivery date"
 
@@ -600,6 +621,9 @@ msgstr "Booking date"
 
 msgid "Date de retrait"
 msgstr "Pickup date"
+
+msgid "Date de traitement"
+msgstr "Processing date"
 
 msgid "Date du plein"
 msgstr "Refuel date"
@@ -622,8 +646,17 @@ msgstr "Parcel request"
 msgid "Demande de confirmation d'appareil"
 msgstr "Device confirmation request"
 
+msgid "Demande de materiel"
+msgstr "Material request"
+
 msgid "Demande de transfert"
 msgstr "Transfer request"
+
+msgid "Demande introuvable."
+msgstr "Request not found."
+
+msgid "Demande par"
+msgstr "Requested by"
 
 msgid "Demandes colis en attente"
 msgstr "Pending parcel requests"
@@ -633,6 +666,12 @@ msgstr "Parcel requests"
 
 msgid "Demandes de confirmation d'appareil"
 msgstr "Device confirmation requests"
+
+msgid "Demandes de materiel"
+msgstr "Material requests"
+
+msgid "Demandes de materiel en attente"
+msgstr "Pending material requests"
 
 msgid "Demandes de transfert"
 msgstr "Transfer requests"
@@ -675,6 +714,9 @@ msgstr "Recipient"
 msgid "Details / pieces changees"
 msgstr "Details / parts changed"
 
+msgid "Details complementaires (facultatif)"
+msgstr "Additional details (optional)"
+
 msgid "Disponible"
 msgstr "Available"
 
@@ -711,6 +753,9 @@ msgstr "Employees"
 msgid "Employes actifs"
 msgstr "Active employees"
 
+msgid "En attente"
+msgstr "Pending"
+
 msgid "En attente de paiement"
 msgstr "Awaiting payment"
 
@@ -725,6 +770,9 @@ msgstr "In progress"
 
 msgid "En cours de traitement"
 msgstr "Being processed"
+
+msgid "En dessous de ce niveau, l'article est signale comme stock faible"
+msgstr "Below this level, the item is flagged as low stock"
 
 msgid "En maintenance"
 msgstr "Under maintenance"
@@ -770,6 +818,12 @@ msgstr "Cash"
 
 msgid "Ex : Ndjamena - Abeche (axe Est)"
 msgstr "Ex: Ndjamena - Abeche (East route)"
+
+msgid "Ex : delai de livraison, ou raison du refus (rupture de stock...)"
+msgstr "E.g.: delivery delay, or reason for refusal (out of stock...)"
+
+msgid "Ex : piece, litre, kg..."
+msgstr "E.g.: piece, liter, kg..."
 
 msgid "Expediteur"
 msgstr "Sender"
@@ -912,8 +966,12 @@ msgid ""
 msgstr ""
 "Leave blank: on creation, a temporary password will be generated and shown."
 
-msgid "Laisser vide pour un PDG (toute la compagnie)"
-msgstr "Leave blank for a CEO (whole company)"
+msgid ""
+"Laisser vide pour un PDG ou un Magasinier (magasin unique pour toute la "
+"compagnie)"
+msgstr ""
+"Leave empty for a CEO or a Storekeeper (single warehouse for the whole "
+"company)"
 
 msgid "Latitude"
 msgstr "Latitude"
@@ -964,8 +1022,14 @@ msgstr "Liters"
 msgid "Livre"
 msgstr "Delivered"
 
+msgid "Livree"
+msgstr "Delivered"
+
 msgid "Longitude"
 msgstr "Longitude"
+
+msgid "Magasinier"
+msgstr "Storekeeper"
 
 msgid "Maintenance du parc"
 msgstr "Fleet maintenance"
@@ -1083,6 +1147,9 @@ msgstr "App username (optional)"
 
 msgid "Nom de l'acheteur"
 msgstr "Buyer's name"
+
+msgid "Nom de l'article"
+msgstr "Item name"
 
 msgid "Nom de l'expediteur"
 msgstr "Sender's name"
@@ -1287,6 +1354,9 @@ msgstr "Bus positions"
 msgid "Poste"
 msgstr "Role"
 
+msgid "Precisions"
+msgstr "Details"
+
 msgid "Prenom"
 msgstr "First name"
 
@@ -1328,6 +1398,12 @@ msgstr "Promotion"
 
 msgid "Promotions"
 msgstr "Promotions"
+
+msgid "Quantite demandee"
+msgstr "Requested quantity"
+
+msgid "Quantite en stock"
+msgstr "Stock quantity"
 
 msgid "Question"
 msgstr "Question"
@@ -1374,11 +1450,23 @@ msgstr "Today's revenue (FCFA)"
 msgid "Recette totale du jour"
 msgstr "Total revenue today"
 
+msgid "Recu"
+msgstr "Receipt"
+
 msgid "Recu colis"
 msgstr "Parcel receipt"
 
+msgid "Recu demande de materiel"
+msgstr "Material request receipt"
+
 msgid "Recu transfert"
 msgstr "Transfer receipt"
+
+msgid "Reference"
+msgstr "Reference"
+
+msgid "Refusee"
+msgstr "Refused"
 
 msgid "Rembourse"
 msgstr "Refunded"
@@ -1407,6 +1495,9 @@ msgstr "Reply"
 
 msgid "Reponse donnee au client, visible dans l'app"
 msgstr "Reply given to the client, visible in the app"
+
+msgid "Reponse du magasin"
+msgstr "Warehouse response"
 
 msgid "Requis uniquement si un nom d'utilisateur est renseigne ci-dessus."
 msgstr "Required only if a username is provided above."
@@ -1453,6 +1544,9 @@ msgstr "Back to the list"
 msgid "Retour a la liste des colis"
 msgstr "Back to the parcel list"
 
+msgid "Retour a la liste des demandes de materiel"
+msgstr "Back to the material request list"
+
 msgid "Retour a la liste des transferts"
 msgstr "Back to the transfer list"
 
@@ -1489,6 +1583,9 @@ msgstr "Select"
 msgid "Service"
 msgstr "Service"
 
+msgid "Seuil d'alerte"
+msgstr "Alert threshold"
+
 msgid "Seule l'agence d'arrivee peut confirmer la remise de ce colis."
 msgstr "Only the arrival agency can confirm delivery of this parcel."
 
@@ -1518,6 +1615,19 @@ msgstr "Status"
 
 msgid "Statut actuel"
 msgstr "Current status"
+
+msgid "Stock"
+msgstr "Stock"
+
+msgid "Stock faible"
+msgstr "Low stock"
+
+msgid ""
+"Stock insuffisant pour '%(article)s' : %(dispo)s %(unite)s disponible(s), "
+"%(demande)s demande(s)."
+msgstr ""
+"Insufficient stock for '%(article)s': %(dispo)s %(unite)s available, "
+"%(demande)s requested."
 
 msgid "Sud"
 msgstr "South"
@@ -1587,6 +1697,9 @@ msgstr "All employees"
 
 msgid "Traite par"
 msgstr "Handled by"
+
+msgid "Traite par (magasin)"
+msgstr "Processed by (warehouse)"
 
 msgid "Traitee"
 msgstr "Handled"
@@ -1672,6 +1785,9 @@ msgstr ""
 
 msgid "Un seul employe (facultatif)"
 msgstr "A single employee (optional)"
+
+msgid "Unite"
+msgstr "Unit"
 
 msgid "Utilisateur"
 msgstr "User"
@@ -1802,6 +1918,9 @@ msgstr "North zone"
 
 msgid "Zone Sud"
 msgstr "South zone"
+
+msgid "Zone geographique (pour le filtrage par responsable planning)"
+msgstr "Geographic zone (for filtering by planning manager)"
 
 msgid "Zone geographique (pour le planning)"
 msgstr "Geographic zone (for scheduling)"

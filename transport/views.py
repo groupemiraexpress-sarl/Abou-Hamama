@@ -6,7 +6,7 @@ from django.utils.translation import gettext as _
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
-from .models import Voyage, Client, Reservation, Agence, Chauffeur, Employe, Colis, TransfertArgent, Siege
+from .models import Voyage, Client, Reservation, Agence, Chauffeur, Employe, Colis, TransfertArgent, Siege, DemandeMateriel
 from django.urls import reverse
 from .admin_filtres import agence_de, voit_tout
 
@@ -225,6 +225,13 @@ def recu_transfert(request, transfert_id):
     """Affiche un recu imprimable pour un transfert d'argent (comme le recu de billet)."""
     transfert = TransfertArgent.objects.filter(id=transfert_id).select_related('agence_depart', 'agence_retrait').first()
     return render(request, 'transport/recu_transfert.html', {'transfert': transfert})
+
+
+@staff_member_required
+def recu_demande_materiel(request, demande_id):
+    """Affiche un recu imprimable pour une demande de materiel (remise au magasin)."""
+    demande = DemandeMateriel.objects.filter(id=demande_id).select_related('bus', 'article', 'demande_par', 'traite_par').first()
+    return render(request, 'transport/recu_demande_materiel.html', {'demande': demande})
 
 
 # Pour chaque poste, quelles sections de transactions sont pertinentes sur

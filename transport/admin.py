@@ -996,11 +996,20 @@ class DemandeMaterielForm(forms.ModelForm):
 @admin.register(DemandeMateriel)
 class DemandeMaterielAdmin(admin.ModelAdmin):
     form = DemandeMaterielForm
-    list_display = ('bus', 'article', 'quantite', 'statut', 'demande_par', 'traite_par', 'date_demande')
+    list_display = ('bus', 'article', 'quantite', 'statut', 'demande_par', 'traite_par', 'date_demande', 'lien_recu')
     list_filter = ('statut', 'article')
     search_fields = ('bus__immatriculation', 'article__nom')
     ordering = ('-date_demande',)
     autocomplete_fields = ('bus', 'article')
+
+    @admin.display(description=_("Recu"))
+    def lien_recu(self, obj):
+        from django.urls import reverse
+        from django.utils.html import format_html
+        return format_html(
+            '<a href="{}" target="_blank" class="button">🖨️ {}</a>',
+            reverse('transport:recu_demande_materiel', args=[obj.id]), _("Imprimer"),
+        )
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
