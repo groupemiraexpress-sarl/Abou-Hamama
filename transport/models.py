@@ -589,6 +589,7 @@ class DemandeMateriel(models.Model):
     traite_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='demandes_materiel_traitees', verbose_name=_("Traite par (magasin)"))
     date_demande = models.DateTimeField(_("Date de la demande"), auto_now_add=True)
     date_traitement = models.DateTimeField(_("Date de traitement"), null=True, blank=True)
+    vu_par_demandeur = models.BooleanField(_("Vu par le demandeur"), default=True, help_text=_("Mis a False des que le magasin traite la demande, pour notifier le responsable qui l'a creee"))
 
     class Meta:
         verbose_name = _("Demande de materiel")

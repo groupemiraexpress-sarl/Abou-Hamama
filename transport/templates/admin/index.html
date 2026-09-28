@@ -162,7 +162,7 @@
     </div>
     {% endif %}
 
-    {% if stats_profil.voit_alertes_non_resolues or stats_profil.voit_demandes_colis_attente or stats_profil.voit_demandes_transfert_attente or stats_profil.voit_reservations_attente or stats_profil.voit_transferts_attente or stats_profil.voit_demandes_materiel_attente or stats_profil.voit_articles_stock_faible %}
+    {% if stats_profil.voit_alertes_non_resolues or stats_profil.voit_demandes_colis_attente or stats_profil.voit_demandes_transfert_attente or stats_profil.voit_reservations_attente or stats_profil.voit_transferts_attente or stats_profil.voit_demandes_materiel_attente or stats_profil.voit_demandes_materiel_reponses_a_voir or stats_profil.voit_articles_stock_faible %}
     <h2 class="stats-titre">{% trans "A traiter" %}</h2>
     <div class="stats-grille">
       {% if stats_profil.voit_alertes_non_resolues %}
@@ -200,6 +200,12 @@
         <div class="stat-valeur" data-stat="demandes_materiel_attente">{{ stats.demandes_materiel_attente }}</div>
         <div class="stat-label">{% trans "Demandes de materiel en attente" %}</div>
       </div>
+      {% endif %}
+      {% if stats_profil.voit_demandes_materiel_reponses_a_voir and stats.demandes_materiel_reponses_a_voir %}
+      <a href="{% url 'admin:transport_demandemateriel_changelist' %}" class="stat-carte alerte" style="text-decoration:none; display:block;">
+        <div class="stat-valeur" data-stat="demandes_materiel_reponses_a_voir">{{ stats.demandes_materiel_reponses_a_voir }}</div>
+        <div class="stat-label">{% trans "Reponses du magasin a consulter" %}</div>
+      </a>
       {% endif %}
       {% if stats_profil.voit_articles_stock_faible %}
       <div class="stat-carte alerte">

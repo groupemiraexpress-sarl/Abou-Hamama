@@ -1041,6 +1041,11 @@ msgstr "الرسالة"
 msgid "Mettre a jour le rapport"
 msgstr "تحديث التقرير"
 
+msgid ""
+"Mis a False des que le magasin traite la demande, pour notifier le "
+"responsable qui l'a creee"
+msgstr "يصبح False حالما يعالج المخزن الطلب، لإخطار المسؤول الذي أنشأه"
+
 msgid "Mise a jour auto"
 msgstr "تحديث تلقائي"
 
@@ -1490,6 +1495,9 @@ msgstr "الرد المقدم للعميل، مرئي في التطبيق"
 msgid "Reponse du magasin"
 msgstr "رد المخزن"
 
+msgid "Reponses du magasin a consulter"
+msgstr "ردود المخزن للاطلاع عليها"
+
 msgid "Requis uniquement si un nom d'utilisateur est renseigne ci-dessus."
 msgstr "مطلوب فقط إذا تم إدخال اسم مستخدم أعلاه."
 
@@ -1890,6 +1898,9 @@ msgstr "صحيح إذا تم منح مكافأة الإحالة (عند أول �
 msgid ""
 "Vrai si les points de fidelite ont deja ete comptes pour cette reservation"
 msgstr "صحيح إذا تم احتساب نقاط الولاء لهذا الحجز"
+
+msgid "Vu par le demandeur"
+msgstr "شوهد من طرف الطالب"
 
 msgid "Vue d'ensemble"
 msgstr "نظرة عامة"

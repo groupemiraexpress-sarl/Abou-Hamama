@@ -105,6 +105,13 @@ def statistiques_tableau_bord(user=None):
     if not scope_global and poste != 'magasinier':
         demandes_materiel_qs = demandes_materiel_qs.filter(bus__agence=agence) if agence else demandes_materiel_qs.none()
     demandes_materiel_attente = demandes_materiel_qs.filter(statut='en_attente').count()
+    # Reponses du magasin (confirmee/refusee/livree) pas encore consultees
+    # par celui qui a fait la demande - sert de notification sur son tableau
+    # de bord. Non pertinent pour le magasinier lui-meme (c'est lui qui
+    # traite, pas qui attend une reponse).
+    demandes_materiel_reponses_a_voir = 0
+    if poste != 'magasinier':
+        demandes_materiel_reponses_a_voir = demandes_materiel_qs.exclude(statut='en_attente').filter(vu_par_demandeur=False).count()
 
     # Stock (global, un seul magasin pour toute la compagnie)
     total_articles_stock = ArticleStock.objects.filter(actif=True).count()
@@ -131,6 +138,7 @@ def statistiques_tableau_bord(user=None):
         'total_employes': total_employes,
         'permis_a_renouveler': permis_a_renouveler,
         'demandes_materiel_attente': demandes_materiel_attente,
+        'demandes_materiel_reponses_a_voir': demandes_materiel_reponses_a_voir,
         'total_articles_stock': total_articles_stock,
         'articles_stock_faible': articles_stock_faible,
     }

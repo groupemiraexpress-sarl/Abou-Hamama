@@ -1049,6 +1049,13 @@ msgstr "Message"
 msgid "Mettre a jour le rapport"
 msgstr "Update the report"
 
+msgid ""
+"Mis a False des que le magasin traite la demande, pour notifier le "
+"responsable qui l'a creee"
+msgstr ""
+"Set to False as soon as the warehouse processes the request, to notify the "
+"manager who created it"
+
 msgid "Mise a jour auto"
 msgstr "Auto-refresh"
 
@@ -1499,6 +1506,9 @@ msgstr "Reply given to the client, visible in the app"
 msgid "Reponse du magasin"
 msgstr "Warehouse response"
 
+msgid "Reponses du magasin a consulter"
+msgstr "Warehouse responses to review"
+
 msgid "Requis uniquement si un nom d'utilisateur est renseigne ci-dessus."
 msgstr "Required only if a username is provided above."
 
@@ -1903,6 +1913,9 @@ msgstr ""
 msgid ""
 "Vrai si les points de fidelite ont deja ete comptes pour cette reservation"
 msgstr "True if loyalty points have already been counted for this booking"
+
+msgid "Vu par le demandeur"
+msgstr "Seen by requester"
 
 msgid "Vue d'ensemble"
 msgstr "Overview"

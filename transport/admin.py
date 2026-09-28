@@ -1056,7 +1056,12 @@ class DemandeMaterielAdmin(admin.ModelAdmin):
         agence = agence_de(user)
         if agence is None:
             return qs.none()
-        return qs.filter(bus__agence=agence)
+        qs = qs.filter(bus__agence=agence)
+        # Consulter sa liste de demandes vaut accuse de reception des
+        # decisions du magasin (efface la notification sur le tableau de
+        # bord), un peu comme ouvrir une boite de reception.
+        qs.filter(vu_par_demandeur=False).update(vu_par_demandeur=True)
+        return qs
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'bus' and not voit_tout(request.user):
@@ -1099,6 +1104,10 @@ class DemandeMaterielAdmin(admin.ModelAdmin):
             from django.utils import timezone
             obj.traite_par = employe
             obj.date_traitement = timezone.now()
+            # Le magasin vient de prendre une decision : le responsable qui a
+            # fait la demande doit etre notifie (tant qu'il n'a pas consulte
+            # sa liste, un compteur s'affiche sur son tableau de bord).
+            obj.vu_par_demandeur = False
 
         if obj.statut == 'livree' and ancien_statut != 'livree':
             obj.article.quantite_stock = max(0, obj.article.quantite_stock - obj.quantite)
