@@ -23,6 +23,9 @@
         <i class="fa-solid fa-circle-check" style="font-size:2.5rem; color:#16a34a;"></i>
         <h2 style="color:#16a34a; margin-top:8px;">{% trans "Vente reussie" %}</h2>
         <p style="color:#6b7280; font-size:.9rem;">{{ reservations|length }} {% trans "billet(s)" %}</p>
+        {% if compagnie_info.telephones_recus %}
+        <p style="color:#6b7280; font-size:.75rem; margin-top:4px;">{% trans "Tel" %}: {{ compagnie_info.telephones_recus }}</p>
+        {% endif %}
     </div>
 
     {% for reservation in reservations %}
@@ -39,6 +42,8 @@
             {% endif %}
             <tr><td style="padding:4px 0; color:#6b7280;">{% trans "Trajet" %}</td>
                 <td style="padding:4px 0; text-align:right;">{{ reservation.voyage.trajet.ville_depart }} → {{ reservation.voyage.trajet.ville_arrivee }}</td></tr>
+            <tr><td style="padding:4px 0; color:#6b7280;">{% trans "N de Bus" %}</td>
+                <td style="padding:4px 0; text-align:right;">{{ reservation.voyage.bus.immatriculation }}</td></tr>
             <tr><td style="padding:4px 0; color:#6b7280;">{% trans "Date" %}</td>
                 <td style="padding:4px 0; text-align:right;">{{ reservation.voyage.date_depart|date:"d/m/Y" }} {{ reservation.voyage.heure_depart|time:"H:i" }}</td></tr>
             <tr><td style="padding:6px 0 0; color:#1F3864; font-weight:600;">{% trans "Montant" %}</td>
@@ -55,6 +60,13 @@
         <span style="color:#1F3864; font-weight:600;">{% trans "Total" %} : </span>
         <span style="color:#1F3864; font-weight:700; font-size:1.2rem;">{{ montant_total }} FCFA</span>
     </div>
+
+    <p style="font-size:.7rem; color:#9ca3af; text-align:center; margin-top:14px; padding-top:10px; border-top:1px dashed #d1d5db;">
+        {% trans "N.B. : l'agence n'est pas responsable des bagages non payes et non declares." %}
+    </p>
+    <p style="font-size:.8rem; color:#1F3864; font-weight:600; text-align:center; margin-top:8px;">
+        {% trans "La Maison vous remercie de votre fidelite" %}
+    </p>
 </div>
 <div class="no-print" style="display:flex; gap:12px; margin-top:20px;">
     <button onclick="window.print()" class="btn" style="flex:1; background:#16a34a;">

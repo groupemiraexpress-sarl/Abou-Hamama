@@ -943,6 +943,9 @@ msgstr "عدد كيلومترات الحافلة"
 msgid "L'accompagnateur etait-il aimable ?"
 msgstr "هل كان المرافق لطيفا؟"
 
+msgid "La Maison vous remercie de votre fidelite"
+msgstr "الشركة تشكركم على ولائكم"
+
 msgid "La climatisation fonctionnait-elle ?"
 msgstr "هل كان التكييف يعمل؟"
 
@@ -1114,6 +1117,13 @@ msgstr "تغيير كلمة المرور"
 
 msgid "Mot de passe requis pour creer le compte."
 msgstr "كلمة المرور مطلوبة لإنشاء الحساب."
+
+msgid "N de Bus"
+msgstr "رقم الحافلة"
+
+msgid ""
+"N.B. : l'agence n'est pas responsable des bagages non payes et non declares."
+msgstr "ملاحظة: الوكالة غير مسؤولة عن الأمتعة غير المدفوعة وغير المصرح بها."
 
 msgid "Nationalite de l'expediteur"
 msgstr "جنسية المرسل"
@@ -1655,6 +1665,9 @@ msgstr "الموضوع"
 msgid "Tableau de bord PDG"
 msgstr "لوحة تحكم المدير العام"
 
+msgid "Tel"
+msgstr "هاتف"
+
 msgid "Telephone"
 msgstr "الهاتف"
 
@@ -1672,6 +1685,9 @@ msgstr "هاتف المستلم"
 
 msgid "Telephone du voyageur"
 msgstr "هاتف المسافر"
+
+msgid "Telephones affiches sur les billets/recus"
+msgstr "أرقام الهاتف المعروضة على التذاكر/الإيصالات"
 
 msgid "Television OK"
 msgstr "التلفزيون يعمل"
@@ -1792,6 +1808,10 @@ msgstr "نوع وثيقة المستلم"
 
 msgid "Type de piece du voyageur"
 msgstr "نوع وثيقة المسافر"
+
+msgid ""
+"Un ou plusieurs numeros separes par ' / ', ex : 60 10 06 88 / 66 66 27 27"
+msgstr "رقم واحد أو أكثر مفصولة بـ ' / '، مثال: 60 10 06 88 / 66 66 27 27"
 
 msgid "Un seul bus (facultatif)"
 msgstr "حافلة واحدة (اختياري)"

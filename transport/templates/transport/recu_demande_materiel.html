@@ -23,6 +23,9 @@
         <i class="fa-solid fa-boxes-stacked" style="font-size:2.5rem; color:#1F3864;"></i>
         <h2 style="color:#1F3864; margin-top:8px;">{% trans "Demande de materiel" %}</h2>
         <p style="color:#6b7280; font-size:.9rem;">#{{ demande.id }}</p>
+        {% if compagnie_info.telephones_recus %}
+        <p style="color:#6b7280; font-size:.75rem; margin-top:4px;">{% trans "Tel" %}: {{ compagnie_info.telephones_recus }}</p>
+        {% endif %}
     </div>
 
     <div style="border-top:1px solid #e5e7eb; padding-top:14px; margin-top:14px;">
@@ -71,6 +74,9 @@
         </table>
         {% endif %}
     </div>
+    <p style="font-size:.8rem; color:#1F3864; font-weight:600; text-align:center; margin-top:14px; padding-top:10px; border-top:1px dashed #d1d5db;">
+        {% trans "La Maison vous remercie de votre fidelite" %}
+    </p>
 </div>
 <div class="no-print" style="display:flex; gap:12px; margin-top:20px;">
     <button onclick="window.print()" class="btn" style="flex:1; background:#16a34a;">

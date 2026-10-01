@@ -948,6 +948,9 @@ msgstr "Bus mileage"
 msgid "L'accompagnateur etait-il aimable ?"
 msgstr "Was the attendant friendly?"
 
+msgid "La Maison vous remercie de votre fidelite"
+msgstr "The Company thanks you for your loyalty"
+
 msgid "La climatisation fonctionnait-elle ?"
 msgstr "Was the air conditioning working?"
 
@@ -1124,6 +1127,14 @@ msgstr "Password"
 
 msgid "Mot de passe requis pour creer le compte."
 msgstr "Password required to create the account."
+
+msgid "N de Bus"
+msgstr "Bus No."
+
+msgid ""
+"N.B. : l'agence n'est pas responsable des bagages non payes et non declares."
+msgstr ""
+"N.B.: the agency is not responsible for unpaid and undeclared luggage."
 
 msgid "Nationalite de l'expediteur"
 msgstr "Sender's nationality"
@@ -1666,6 +1677,9 @@ msgstr "Subject"
 msgid "Tableau de bord PDG"
 msgstr "CEO Dashboard"
 
+msgid "Tel"
+msgstr "Tel"
+
 msgid "Telephone"
 msgstr "Phone"
 
@@ -1683,6 +1697,9 @@ msgstr "Recipient's phone"
 
 msgid "Telephone du voyageur"
 msgstr "Passenger's phone"
+
+msgid "Telephones affiches sur les billets/recus"
+msgstr "Phone numbers shown on tickets/receipts"
 
 msgid "Television OK"
 msgstr "TV OK"
@@ -1803,6 +1820,11 @@ msgstr "Recipient's document type"
 
 msgid "Type de piece du voyageur"
 msgstr "Passenger's document type"
+
+msgid ""
+"Un ou plusieurs numeros separes par ' / ', ex : 60 10 06 88 / 66 66 27 27"
+msgstr ""
+"One or more numbers separated by ' / ', e.g.: 60 10 06 88 / 66 66 27 27"
 
 msgid "Un seul bus (facultatif)"
 msgstr "A single bus (optional)"

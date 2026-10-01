@@ -7,6 +7,7 @@ class Compagnie(models.Model):
     sigle = models.CharField(_("Sigle"), max_length=20, blank=True)
     siege_social = models.CharField(_("Siege social"), max_length=200)
     telephone = models.CharField(_("Telephone"), max_length=20)
+    telephones_recus = models.CharField(_("Telephones affiches sur les billets/recus"), max_length=200, blank=True, help_text=_("Un ou plusieurs numeros separes par ' / ', ex : 60 10 06 88 / 66 66 27 27"))
     email = models.EmailField(_("Email"), blank=True)
     date_creation = models.DateField(_("Date de creation"), null=True, blank=True)
     actif = models.BooleanField(_("Actif"), default=True)
