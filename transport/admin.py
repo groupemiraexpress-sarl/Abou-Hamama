@@ -364,6 +364,15 @@ class ReservationAdmin(FiltreAgenceMixin, admin.ModelAdmin):
             return ('cree_par', 'modifie_par', 'numero_reservation', 'date_reservation')
         return ('cree_par', 'modifie_par', 'numero_reservation', 'date_reservation', 'montant_total')
 
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name in ('agence', 'voyage') and not voit_tout(request.user):
+            agence = agence_de(request.user)
+            if db_field.name == 'agence':
+                kwargs['queryset'] = Agence.objects.filter(id=agence.id) if agence else Agence.objects.none()
+            else:
+                kwargs['queryset'] = Voyage.objects.filter(bus__agence=agence) if agence else Voyage.objects.none()
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
     def save_model(self, request, obj, form, change):
         employe = getattr(request.user, 'employe', None)
         if employe:
