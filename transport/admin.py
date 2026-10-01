@@ -1106,7 +1106,11 @@ class DemandeMaterielAdmin(admin.ModelAdmin):
         if change:
             ancien_statut = DemandeMateriel.objects.get(pk=obj.pk).statut
 
-        if employe and employe.poste in ('magasinier', 'pdg') and obj.statut != 'en_attente' and ancien_statut != obj.statut:
+        vient_de_valider = (
+            employe is not None and employe.poste in ('magasinier', 'pdg')
+            and obj.statut != 'en_attente' and ancien_statut != obj.statut
+        )
+        if vient_de_valider:
             from django.utils import timezone
             obj.traite_par = employe
             obj.date_traitement = timezone.now()
@@ -1114,12 +1118,25 @@ class DemandeMaterielAdmin(admin.ModelAdmin):
             # fait la demande doit etre notifie (tant qu'il n'a pas consulte
             # sa liste, un compteur s'affiche sur son tableau de bord).
             obj.vu_par_demandeur = False
+        # Stocke sur la requete (et non sur self, partage entre requetes) pour
+        # que response_change sache s'il faut proposer le recu juste apres.
+        request._demande_materiel_vient_d_etre_validee = vient_de_valider
 
         if obj.statut == 'livree' and ancien_statut != 'livree':
             obj.article.quantite_stock = max(0, obj.article.quantite_stock - obj.quantite)
             obj.article.save(update_fields=['quantite_stock'])
 
         super().save_model(request, obj, form, change)
+
+    def response_change(self, request, obj):
+        if (
+            getattr(request, '_demande_materiel_vient_d_etre_validee', False)
+            and '_continue' not in request.POST and '_addanother' not in request.POST
+        ):
+            from django.shortcuts import redirect
+            from django.urls import reverse
+            return redirect(reverse('transport:recu_demande_materiel', args=[obj.id]))
+        return super().response_change(request, obj)
 
 
 @admin.register(Promotion)
