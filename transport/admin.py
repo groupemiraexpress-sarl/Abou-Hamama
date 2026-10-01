@@ -358,11 +358,14 @@ class ReservationAdmin(FiltreAgenceMixin, admin.ModelAdmin):
         )
 
     def get_readonly_fields(self, request, obj=None):
+        # scanne_par est rempli automatiquement par l'agent de securite au
+        # moment du scan du billet (voir api_scanner_billet) : personne ne
+        # doit pouvoir le choisir a l'avance depuis ce formulaire de vente.
         employe = getattr(request.user, 'employe', None)
         poste = employe.poste if employe else None
         if request.user.is_superuser or poste in ('pdg', 'responsable'):
-            return ('cree_par', 'modifie_par', 'numero_reservation', 'date_reservation')
-        return ('cree_par', 'modifie_par', 'numero_reservation', 'date_reservation', 'montant_total')
+            return ('cree_par', 'modifie_par', 'numero_reservation', 'date_reservation', 'scanne_par')
+        return ('cree_par', 'modifie_par', 'numero_reservation', 'date_reservation', 'montant_total', 'scanne_par')
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name in ('agence', 'voyage') and not voit_tout(request.user):
