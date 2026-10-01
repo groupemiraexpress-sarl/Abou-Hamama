@@ -175,6 +175,9 @@ msgstr "Low-stock items"
 msgid "Aucun"
 msgstr "None"
 
+msgid "Aucun article actif."
+msgstr "No active items."
+
 msgid "Aucun billet trouve."
 msgstr "No ticket found."
 
@@ -816,6 +819,9 @@ msgstr "Sending a parcel"
 msgid "Especes"
 msgstr "Cash"
 
+msgid "Etat du stock"
+msgstr "Stock status"
+
 msgid "Ex : Ndjamena - Abeche (axe Est)"
 msgstr "Ex: Ndjamena - Abeche (East route)"
 
@@ -905,6 +911,9 @@ msgstr "Print this report"
 
 msgid "Imprimer cette archive"
 msgstr "Print this archive"
+
+msgid "Imprimer l'etat du stock"
+msgstr "Print stock status"
 
 msgid "Imprimer le manifeste"
 msgstr "Print the manifest"
@@ -1376,6 +1385,9 @@ msgstr "Show this code at the checkpoint"
 msgid "Prix"
 msgstr "Price"
 
+msgid "Prix d'un seul exemplaire de cet article"
+msgstr "Price of a single unit of this item"
+
 msgid "Prix de base"
 msgstr "Base price"
 
@@ -1393,6 +1405,9 @@ msgstr "Price in FCFA from the departure city"
 
 msgid "Prix fixe par l'agence (FCFA)"
 msgstr "Price set by the agency (FCFA)"
+
+msgid "Prix unitaire (FCFA)"
+msgstr "Unit price (FCFA)"
 
 msgid "Prochaine echeance (km)"
 msgstr "Next due (km)"
@@ -1547,6 +1562,9 @@ msgstr "Scheduling manager"
 
 msgid "Retire"
 msgstr "Picked up"
+
+msgid "Retour"
+msgstr "Back"
 
 msgid "Retour a la liste"
 msgstr "Back to the list"
@@ -1805,11 +1823,17 @@ msgstr "User"
 msgid "Utilisee"
 msgstr "Used"
 
+msgid "Valeur"
+msgstr "Value"
+
 msgid "Valeur declaree"
 msgstr "Declared value"
 
 msgid "Valeur declaree en FCFA"
 msgstr "Declared value in FCFA"
+
+msgid "Valeur totale du stock"
+msgstr "Total stock value"
 
 msgid "Validee (colis cree)"
 msgstr "Validated (parcel created)"

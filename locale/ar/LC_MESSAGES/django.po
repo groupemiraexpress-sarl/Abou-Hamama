@@ -176,6 +176,9 @@ msgstr "قطع بمخزون منخفض"
 msgid "Aucun"
 msgstr "لا شيء"
 
+msgid "Aucun article actif."
+msgstr "لا توجد قطعة نشطة."
+
 msgid "Aucun billet trouve."
 msgstr "لم يتم العثور على أي تذكرة."
 
@@ -811,6 +814,9 @@ msgstr "إرسال طرد"
 msgid "Especes"
 msgstr "نقدا"
 
+msgid "Etat du stock"
+msgstr "حالة المخزون"
+
 msgid "Ex : Ndjamena - Abeche (axe Est)"
 msgstr "مثال: نجامينا - أبشة (المحور الشرقي)"
 
@@ -900,6 +906,9 @@ msgstr "طباعة هذا التقرير"
 
 msgid "Imprimer cette archive"
 msgstr "طباعة هذا الأرشيف"
+
+msgid "Imprimer l'etat du stock"
+msgstr "طباعة حالة المخزون"
 
 msgid "Imprimer le manifeste"
 msgstr "طباعة قائمة الركاب"
@@ -1365,6 +1374,9 @@ msgstr "قدّم هذا الرمز عند المراقبة"
 msgid "Prix"
 msgstr "السعر"
 
+msgid "Prix d'un seul exemplaire de cet article"
+msgstr "سعر نسخة واحدة من هذه القطعة"
+
 msgid "Prix de base"
 msgstr "السعر الأساسي"
 
@@ -1382,6 +1394,9 @@ msgstr "السعر بالفرنك من مدينة الانطلاق"
 
 msgid "Prix fixe par l'agence (FCFA)"
 msgstr "السعر المحدد من الوكالة (فرنك)"
+
+msgid "Prix unitaire (FCFA)"
+msgstr "سعر الوحدة (فرنك إفريقي)"
 
 msgid "Prochaine echeance (km)"
 msgstr "الموعد القادم (كم)"
@@ -1536,6 +1551,9 @@ msgstr "مسؤول التخطيط"
 
 msgid "Retire"
 msgstr "مسحوب"
+
+msgid "Retour"
+msgstr "رجوع"
 
 msgid "Retour a la liste"
 msgstr "العودة إلى القائمة"
@@ -1793,11 +1811,17 @@ msgstr "المستخدم"
 msgid "Utilisee"
 msgstr "مستخدَمة"
 
+msgid "Valeur"
+msgstr "القيمة"
+
 msgid "Valeur declaree"
 msgstr "القيمة المصرح بها"
 
 msgid "Valeur declaree en FCFA"
 msgstr "القيمة المصرح بها بالفرنك"
+
+msgid "Valeur totale du stock"
+msgstr "القيمة الإجمالية للمخزون"
 
 msgid "Validee (colis cree)"
 msgstr "مؤكدة (تم إنشاء الطرد)"

@@ -6,7 +6,7 @@ from django.utils.translation import gettext as _
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
-from .models import Voyage, Client, Reservation, Agence, Chauffeur, Employe, Colis, TransfertArgent, Siege, DemandeMateriel
+from .models import Voyage, Client, Reservation, Agence, Chauffeur, Employe, Colis, TransfertArgent, Siege, DemandeMateriel, ArticleStock
 from django.urls import reverse
 from .admin_filtres import agence_de, voit_tout
 
@@ -232,6 +232,18 @@ def recu_demande_materiel(request, demande_id):
     """Affiche un recu imprimable pour une demande de materiel (remise au magasin)."""
     demande = DemandeMateriel.objects.filter(id=demande_id).select_related('bus', 'article', 'demande_par', 'traite_par').first()
     return render(request, 'transport/recu_demande_materiel.html', {'demande': demande})
+
+
+@staff_member_required
+def etat_stock(request):
+    """Affiche un rapport imprimable de l'etat du stock (magasinier/PDG uniquement)."""
+    employe = getattr(request.user, 'employe', None)
+    poste = employe.poste if employe else None
+    if not (request.user.is_superuser or poste in ('pdg', 'magasinier')):
+        return render(request, 'transport/etat_stock.html', {'articles': None})
+    articles = ArticleStock.objects.filter(actif=True).order_by('nom')
+    valeur_totale = sum(a.valeur_stock for a in articles)
+    return render(request, 'transport/etat_stock.html', {'articles': articles, 'valeur_totale': valeur_totale})
 
 
 # Pour chaque poste, quelles sections de transactions sont pertinentes sur

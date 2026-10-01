@@ -554,6 +554,7 @@ class ArticleStock(models.Model):
     nom = models.CharField(_("Nom de l'article"), max_length=150, unique=True)
     reference = models.CharField(_("Reference"), max_length=50, blank=True)
     unite = models.CharField(_("Unite"), max_length=20, default='piece', help_text=_("Ex : piece, litre, kg..."))
+    prix_unitaire = models.PositiveIntegerField(_("Prix unitaire (FCFA)"), default=0, help_text=_("Prix d'un seul exemplaire de cet article"))
     quantite_stock = models.PositiveIntegerField(_("Quantite en stock"), default=0)
     seuil_alerte = models.PositiveIntegerField(_("Seuil d'alerte"), default=5, help_text=_("En dessous de ce niveau, l'article est signale comme stock faible"))
     actif = models.BooleanField(_("Actif"), default=True)
@@ -569,6 +570,10 @@ class ArticleStock(models.Model):
     @property
     def stock_faible(self):
         return self.quantite_stock <= self.seuil_alerte
+
+    @property
+    def valeur_stock(self):
+        return self.prix_unitaire * self.quantite_stock
 
 
 class DemandeMateriel(models.Model):

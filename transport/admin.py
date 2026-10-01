@@ -951,16 +951,17 @@ def _est_magasinier_ou_pdg(request):
 
 @admin.register(ArticleStock)
 class ArticleStockAdmin(admin.ModelAdmin):
-    # Colonnes completes (quantites, seuil...) reservees au magasinier/PDG.
-    list_display = ('nom', 'reference', 'unite', 'quantite_stock', 'seuil_alerte', 'indicateur_stock', 'actif')
+    # Colonnes completes (quantites, prix, seuil...) reservees au magasinier/PDG.
+    list_display = ('nom', 'reference', 'unite', 'prix_unitaire', 'quantite_stock', 'seuil_alerte', 'indicateur_stock', 'actif')
     # Un poste comme responsable maintenance a besoin de retrouver un article
-    # par son nom pour faire sa demande, mais les quantites en stock ne le
-    # regardent pas (c'est une info interne au magasin).
+    # par son nom pour faire sa demande, mais les quantites et prix en stock
+    # ne le regardent pas (c'est une info interne au magasin).
     list_display_restreint = ('nom', 'unite', 'actif')
     list_filter = ('actif',)
     search_fields = ('nom', 'reference')
-    list_editable = ('quantite_stock', 'seuil_alerte', 'actif')
+    list_editable = ('prix_unitaire', 'quantite_stock', 'seuil_alerte', 'actif')
     ordering = ('nom',)
+    change_list_template = 'admin/transport/articlestock/change_list.html'
 
     @admin.display(description=_("Stock"))
     def indicateur_stock(self, obj):
@@ -968,6 +969,11 @@ class ArticleStockAdmin(admin.ModelAdmin):
         if obj.stock_faible:
             return format_html('<span style="color:#b91c1c; font-weight:600;">&#9888; {}</span>', _("Stock faible"))
         return format_html('<span style="color:#059669;">{}</span>', "OK")
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        extra_context['peut_imprimer_stock'] = _est_magasinier_ou_pdg(request)
+        return super().changelist_view(request, extra_context=extra_context)
 
     def get_list_display(self, request):
         if _est_magasinier_ou_pdg(request):
