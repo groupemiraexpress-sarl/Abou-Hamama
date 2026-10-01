@@ -374,6 +374,19 @@ class ReservationAdmin(FiltreAgenceMixin, admin.ModelAdmin):
                 kwargs['queryset'] = Agence.objects.filter(id=agence.id) if agence else Agence.objects.none()
             else:
                 kwargs['queryset'] = Voyage.objects.filter(bus__agence=agence) if agence else Voyage.objects.none()
+        if db_field.name in ('arret_montee', 'arret_descente') and not voit_tout(request.user):
+            # Une ligne dessert plusieurs agences d'une meme zone (Nord ou
+            # Sud) : on filtre par zone et non par la seule agence de
+            # l'employe, sinon il ne pourrait choisir aucun arret en dehors
+            # de sa propre agence sur une ligne multi-villes.
+            employe = getattr(request.user, 'employe', None)
+            poste = employe.poste if employe else None
+            if poste == 'resp_planning':
+                zone = zone_de(request.user)
+            else:
+                agence = agence_de(request.user)
+                zone = agence.zone if agence else None
+            kwargs['queryset'] = ArretLigne.objects.filter(agence__zone=zone) if zone else ArretLigne.objects.none()
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     def save_model(self, request, obj, form, change):
