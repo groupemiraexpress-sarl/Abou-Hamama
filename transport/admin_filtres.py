@@ -346,28 +346,26 @@ PROFILS_TABLEAU_BORD = {
         'voit_demandes_transfert_attente', 'voit_transferts_attente', 'voit_transferts_retires_jour', 'voit_groupe_colis_transferts',
     },
     'manutentionnaire': {
-        'voit_historique_employe', 'voit_colis_transit', 'voit_colis_arrives',
+        'voit_colis_transit', 'voit_colis_arrives',
     },
     'comptable': {
-        'voit_historique_employe',
         'voit_recette_jour', 'voit_reservations_attente', 'voit_transferts_attente', 'voit_transferts_retires_jour',
     },
     'rh': {
-        'voit_historique_employe',
         'voit_total_employes', 'voit_permis_a_renouveler', 'voit_groupe_clients_personnel',
     },
     'resp_maintenance': {
-        'voit_historique_employe', 'voit_bus_service', 'voit_bus_maintenance', 'voit_groupe_maintenance',
+        'voit_bus_service', 'voit_bus_maintenance', 'voit_groupe_maintenance',
         'voit_demandes_materiel_attente', 'voit_demandes_materiel_reponses_a_voir', 'voit_articles_stock_faible',
     },
     'magasinier': {
-        'voit_historique_employe', 'voit_groupe_maintenance',
+        'voit_groupe_maintenance',
         'voit_demandes_materiel_attente', 'voit_total_articles_stock', 'voit_articles_stock_faible',
     },
     'securite': {
-        'voit_historique_employe', 'voit_alertes_non_resolues', 'voit_groupe_securite',
+        'voit_alertes_non_resolues', 'voit_groupe_securite',
     },
-    'autre': {'voit_historique_employe'},
+    'autre': set(),
 }
 
 
