@@ -13,9 +13,16 @@
     }
     .tuile:hover { border-color:#1F3864; }
     .tuile.actif { border-color:#1F3864; background:#1F3864; color:#fff; }
-    .tuile-voyage { flex:1 1 100%; }
-    .tuile-voyage strong { display:block; font-size:1rem; }
-    .tuile-voyage small { opacity:.85; }
+    .tuile-voyage { flex:1 1 100%; border-color:#86efac; background:#f0fdf4; }
+    .tuile-voyage.actif { border-color:#1F3864; background:#1F3864; }
+    .tuile-voyage strong { font-size:1.05rem; }
+    .tuile-voyage small { display:block; margin-top:2px; opacity:.85; }
+    .ligne-voyage { display:flex; justify-content:space-between; align-items:baseline; gap:10px; }
+    .prix-voyage { font-weight:700; color:#2563eb; white-space:nowrap; }
+    .tuile-voyage.actif .prix-voyage { color:#bfdbfe; }
+    .barre-recherche { display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px; align-items:end; margin-bottom:14px; }
+    .barre-recherche select, .barre-recherche input { width:100%; margin-bottom:0; }
+    .message-vide { display:none; text-align:center; color:#6b7280; font-size:.9rem; margin-bottom:14px; }
     .tuile-court { flex:1 1 calc(50% - 8px); text-align:center; font-weight:600; }
     .grille-sieges { display:grid; grid-template-columns:repeat(auto-fill, minmax(54px, 1fr)); gap:6px; margin-bottom:10px; }
     .siege {
@@ -38,16 +45,37 @@
     <form method="post" action="{% url 'transport:vendre_billet' %}" id="form-vente">
         {% csrf_token %}
         <label class="etiquette">{% trans "Voyage" %}</label>
+        <div class="barre-recherche">
+            <div>
+                <span class="etiquette-petite">{% trans "Depart" %}</span>
+                <select id="filtre-depart"><option value="">{% trans "Toutes" %}</option></select>
+            </div>
+            <div>
+                <span class="etiquette-petite">{% trans "Arrivee" %}</span>
+                <select id="filtre-arrivee"><option value="">{% trans "Toutes" %}</option></select>
+            </div>
+            <div>
+                <span class="etiquette-petite">{% trans "Date" %}</span>
+                <input type="date" id="filtre-date">
+            </div>
+            <button type="button" class="tuile" id="filtre-reinit">{% trans "Reinitialiser" %}</button>
+        </div>
         <input type="hidden" name="voyage" id="champ-voyage" value="">
         <div class="groupe-choix" id="choix-voyage">
             {% for voyage in voyages %}
-            <button type="button" class="tuile tuile-voyage" data-valeur="{{ voyage.id }}">
-                <strong>{{ voyage.trajet.ville_depart }} → {{ voyage.trajet.ville_arrivee }}</strong>
+            <button type="button" class="tuile tuile-voyage" data-valeur="{{ voyage.id }}"
+                    data-depart="{{ voyage.trajet.ville_depart }}" data-arrivee="{{ voyage.trajet.ville_arrivee }}"
+                    data-date="{{ voyage.date_depart|date:'Y-m-d' }}">
+                <span class="ligne-voyage">
+                    <strong>{{ voyage.trajet.ville_depart }} → {{ voyage.trajet.ville_arrivee }}</strong>
+                    <span class="prix-voyage">{{ voyage.prix }} FCFA</span>
+                </span>
                 <small>{{ voyage.date_depart|date:"d/m/Y" }} {{ voyage.heure_depart|time:"H:i" }}
-                    · {{ voyage.prix }} FCFA · {{ voyage.places_disponibles }} {% trans "place(s)" %}</small>
+                    · {{ voyage.places_disponibles }} {% trans "place(s)" %}</small>
             </button>
             {% endfor %}
         </div>
+        <p id="aucun-resultat" class="message-vide">{% trans "Aucun voyage ne correspond a la recherche." %}</p>
 
         <label class="etiquette">{% trans "Nom de l'acheteur" %}</label>
         <input type="text" name="client_nom" placeholder="{% trans 'Nom et prenom' %}" required>
@@ -213,6 +241,45 @@ if (groupeVoyage) {
         });
     });
     document.getElementById('nombre_places').addEventListener('input', genererPassagers);
+
+    const cartesVoyage = Array.from(groupeVoyage.querySelectorAll('.tuile'));
+    const filtreDepart = document.getElementById('filtre-depart');
+    const filtreArrivee = document.getElementById('filtre-arrivee');
+    const filtreDate = document.getElementById('filtre-date');
+    function remplirVilles(select, attribut) {
+        Array.from(new Set(cartesVoyage.map(function (c) { return c.dataset[attribut]; }))).sort().forEach(function (ville) {
+            const o = document.createElement('option');
+            o.value = ville; o.textContent = ville;
+            select.appendChild(o);
+        });
+    }
+    remplirVilles(filtreDepart, 'depart');
+    remplirVilles(filtreArrivee, 'arrivee');
+
+    function appliquerFiltres() {
+        let visibles = 0;
+        cartesVoyage.forEach(function (c) {
+            const ok = (!filtreDepart.value || c.dataset.depart === filtreDepart.value)
+                && (!filtreArrivee.value || c.dataset.arrivee === filtreArrivee.value)
+                && (!filtreDate.value || c.dataset.date === filtreDate.value);
+            c.style.display = ok ? '' : 'none';
+            if (ok) visibles++;
+        });
+        document.getElementById('aucun-resultat').style.display = visibles ? 'none' : 'block';
+        const choisi = document.getElementById('champ-voyage');
+        const carteChoisie = cartesVoyage.find(function (c) { return c.dataset.valeur === choisi.value; });
+        if (carteChoisie && carteChoisie.style.display === 'none') {
+            choisi.value = '';
+            carteChoisie.classList.remove('actif');
+            chargerSieges();
+        }
+    }
+    [filtreDepart, filtreArrivee].forEach(function (f) { f.addEventListener('change', appliquerFiltres); });
+    filtreDate.addEventListener('input', appliquerFiltres);
+    document.getElementById('filtre-reinit').addEventListener('click', function () {
+        filtreDepart.value = ''; filtreArrivee.value = ''; filtreDate.value = '';
+        appliquerFiltres();
+    });
 
     document.getElementById('form-vente').addEventListener('submit', function (e) {
         let probleme = '';

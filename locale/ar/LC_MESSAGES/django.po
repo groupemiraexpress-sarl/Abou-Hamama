@@ -155,6 +155,9 @@ msgstr "محطات الخط"
 msgid "Arrive a destination"
 msgstr "وصل إلى الوجهة"
 
+msgid "Arrivee"
+msgstr "الوصول"
+
 msgid "Arrivee estimee"
 msgstr "الوصول المتوقع"
 
@@ -235,6 +238,9 @@ msgstr "لم يتم سحب أي حوالة اليوم."
 
 msgid "Aucun voyage disponible a la vente pour le moment."
 msgstr "لا توجد رحلة متاحة للبيع حاليا."
+
+msgid "Aucun voyage ne correspond a la recherche."
+msgstr "لا توجد رحلة مطابقة للبحث."
 
 msgid "Aucune agence rattachee a ce compte. Choisis-en une pour tester :"
 msgstr "لا توجد وكالة مرتبطة بهذا الحساب. اختر واحدة للتجربة:"
@@ -376,9 +382,6 @@ msgstr "السائقون"
 
 msgid "Chauffeurs et bus"
 msgstr "السائقون والحافلات"
-
-msgid "Choisir"
-msgstr "اختيار"
 
 msgid "Choisir un voyage"
 msgstr "اختيار رحلة"
@@ -690,6 +693,9 @@ msgid ""
 "Demandez ce code au destinataire (ne le lui montrez jamais vous-meme) pour "
 "confirmer la remise."
 msgstr "اطلب هذا الرمز من المستلم (لا تعرضه عليه أبدًا بنفسك) لتأكيد التسليم."
+
+msgid "Depart"
+msgstr "المغادرة"
 
 msgid "Derniere mise a jour"
 msgstr "آخر تحديث"
@@ -1489,6 +1495,9 @@ msgstr "المرجع"
 msgid "Refusee"
 msgstr "مرفوضة"
 
+msgid "Reinitialiser"
+msgstr "إعادة تعيين"
+
 msgid "Rembourse"
 msgstr "مسترد"
 
@@ -1727,6 +1736,9 @@ msgstr "جميع الحافلات"
 
 msgid "Tous les employes"
 msgstr "جميع الموظفين"
+
+msgid "Toutes"
+msgstr "الكل"
 
 msgid "Traite par"
 msgstr "عولج بواسطة"
