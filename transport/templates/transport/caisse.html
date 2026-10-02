@@ -1,0 +1,203 @@
+{% extends "transport/base.html" %}
+{% load i18n %}
+{% block titre %}{% trans "Caisse" %} — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}{% trans "Caisse" %}{% endblock %}
+{% block extra_head %}
+<style>
+    .container { max-width:none; padding:24px 32px; }
+    @media (max-width:600px) { .container { padding:16px; } }
+    .c-carte { background:#fff; border-radius:16px; padding:20px; margin-bottom:16px; box-shadow:0 4px 14px rgba(31,56,100,.08); }
+    .c-carte h3 { margin:0 0 14px; color:#1F3864; font-size:1.1rem; }
+    .c-entete { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+    .c-etat { display:inline-block; padding:5px 14px; border-radius:99px; font-weight:700; font-size:.85rem; }
+    .e-ouverte { background:#dcfce7; color:#166534; } .e-pause { background:#fef3c7; color:#92400e; } .e-cloturee { background:#e5e7eb; color:#374151; }
+    .c-grille { display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); gap:12px; }
+    .c-stat { border-radius:14px; padding:14px 16px; color:#fff; }
+    .c-stat .t { font-size:.72rem; font-weight:700; letter-spacing:.5px; text-transform:uppercase; opacity:.9; }
+    .c-stat .v { font-size:1.45rem; font-weight:800; margin-top:2px; }
+    .v-vert { background:linear-gradient(135deg,#22c55e,#15803d); } .v-bleu { background:linear-gradient(135deg,#3b82f6,#1d4ed8); }
+    .v-rouge { background:linear-gradient(135deg,#ef4444,#b91c1c); } .v-orange { background:linear-gradient(135deg,#f97316,#ea580c); }
+    .v-violet { background:linear-gradient(135deg,#a855f7,#7e22ce); } .v-gris { background:linear-gradient(135deg,#64748b,#334155); }
+    .c-form { display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:12px; align-items:end; }
+    .c-form label { display:block; margin-bottom:4px; font-size:.78rem; color:#4b5563; font-weight:700; text-transform:uppercase; }
+    .c-form input, .c-form select, .c-form textarea { width:100%; margin:0; padding:11px; border:1px solid #d1d5db; border-radius:10px; font-size:.95rem; }
+    .b { border:none; border-radius:10px; padding:11px 20px; font-weight:700; font-size:.92rem; cursor:pointer; color:#fff; }
+    .b-vert { background:#10b981; } .b-orange { background:#f59e0b; } .b-rouge { background:#ef4444; } .b-bleu { background:#3b82f6; } .b-gris { background:#6b7280; }
+    .c-table { width:100%; border-collapse:collapse; font-size:.88rem; }
+    .c-table th { text-align:left; padding:9px 8px; font-size:.72rem; color:#6b7280; text-transform:uppercase; letter-spacing:.5px; border-bottom:2px solid #eef0f3; }
+    .c-table td { padding:9px 8px; border-bottom:1px solid #f1f5f9; }
+    .c-ok { background:#f0fdf4; color:#166534; padding:10px 14px; border-radius:10px; margin-bottom:14px; }
+    .c-ko { background:#fef2f2; color:#b91c1c; padding:10px 14px; border-radius:10px; margin-bottom:14px; }
+    .c-deux { display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:16px; }
+    @media print { .no-print { display:none !important; } }
+</style>
+{% endblock %}
+{% block contenu %}
+{% if sans_agence %}
+<div class="c-carte" style="text-align:center; color:#6b7280;">{% trans "Aucune agence n'est rattachee a votre compte." %}</div>
+{% else %}
+
+{% if message %}<div class="c-ok">{{ message }}</div>{% endif %}
+{% if erreur %}<div class="c-ko">{{ erreur }}</div>{% endif %}
+
+<div class="c-carte">
+    <div class="c-entete">
+        <div>
+            <h3 style="margin:0;">{% trans "Caisse de l'agence" %} {{ agence.nom }}</h3>
+            {% if affichee %}
+            <p style="color:#6b7280; font-size:.88rem; margin-top:4px;">
+                {% trans "Ouverte le" %} {{ affichee.ouverte_le|date:"d/m/Y H:i" }}
+                {% if affichee.cloturee_le %} — {% trans "cloturee le" %} {{ affichee.cloturee_le|date:"d/m/Y H:i" }}{% endif %}
+                {% if affichee.employe %} — {{ affichee.employe.prenom }} {{ affichee.employe.nom }}{% endif %}
+            </p>
+            {% endif %}
+        </div>
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+            {% if agences %}
+            <form method="get" class="no-print">
+                <select name="agence" onchange="this.form.submit()" style="padding:9px; border-radius:10px; border:1px solid #d1d5db;">
+                    {% for a in agences %}<option value="{{ a.id }}" {% if a.id == agence.id %}selected{% endif %}>{{ a.nom }}</option>{% endfor %}
+                </select>
+            </form>
+            {% endif %}
+            {% if affichee %}<span class="c-etat e-{{ affichee.statut }}">{{ affichee.get_statut_display }}</span>{% endif %}
+        </div>
+    </div>
+
+    {% if not session %}
+    <form method="post" class="c-form no-print" style="margin-top:16px;">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="ouvrir">
+        <input type="hidden" name="agence" value="{{ agence.id }}">
+        <div><label>{% trans "Fond de caisse (FCFA)" %}</label><input type="number" name="fond_initial" min="0" value="0"></div>
+        <div><button type="submit" class="b b-vert">{% trans "Ouvrir la caisse" %}</button></div>
+    </form>
+    {% else %}
+    <div class="no-print" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;">
+        {% if session.statut == 'ouverte' %}
+        <form method="post">{% csrf_token %}<input type="hidden" name="action" value="pause"><input type="hidden" name="agence" value="{{ agence.id }}"><button class="b b-orange">{% trans "Mettre en pause" %}</button></form>
+        {% else %}
+        <form method="post">{% csrf_token %}<input type="hidden" name="action" value="reprendre"><input type="hidden" name="agence" value="{{ agence.id }}"><button class="b b-vert">{% trans "Reprendre" %}</button></form>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+{% if resume %}
+<div class="c-grille" style="margin-bottom:16px;">
+    <div class="c-stat v-vert"><div class="t">{% trans "Billets payes" %}</div><div class="v">{{ resume.nb_billets }}</div></div>
+    <div class="c-stat v-bleu"><div class="t">{% trans "Total billets" %}</div><div class="v">{{ resume.total_billets }} FCFA</div></div>
+    <div class="c-stat v-vert"><div class="t">{% trans "Encaissements" %}</div><div class="v">{{ resume.encaissements }} FCFA</div></div>
+    <div class="c-stat v-rouge"><div class="t">{% trans "Decaissements" %}</div><div class="v">{{ resume.decaissements }} FCFA</div></div>
+    <div class="c-stat v-orange"><div class="t">{% trans "Depenses de voyage" %}</div><div class="v">{{ resume.total_depenses }} FCFA</div></div>
+    <div class="c-stat v-violet"><div class="t">{% trans "Commissions a verser" %}</div><div class="v">{{ resume.commissions }} FCFA</div></div>
+    <div class="c-stat v-gris"><div class="t">{% trans "Non paye (dettes)" %}</div><div class="v">{{ resume.nb_non_payes }} · {{ resume.montant_non_paye }} FCFA</div></div>
+    <div class="c-stat v-bleu"><div class="t">{% trans "Net (tous modes)" %}</div><div class="v">{{ resume.net }} FCFA</div></div>
+</div>
+
+<div class="c-deux">
+    <div class="c-carte">
+        <h3>{% trans "Encaissements par mode de paiement" %}</h3>
+        <table class="c-table">
+            {% for libelle, montant in resume.par_mode %}
+            <tr><td>{{ libelle }}</td><td style="text-align:right; font-weight:600;">{{ montant }} FCFA</td></tr>
+            {% endfor %}
+            <tr><td style="color:#6b7280;">{% trans "Fond de caisse" %}</td><td style="text-align:right;">{{ affichee.fond_initial }} FCFA</td></tr>
+            <tr style="background:#f4f6f9;"><td style="font-weight:700; color:#1F3864;">{% trans "Especes attendues en caisse" %}</td><td style="text-align:right; font-weight:800; color:#1F3864;">{{ resume.especes_attendues }} FCFA</td></tr>
+            {% if affichee.montant_compte is not None %}
+            <tr><td>{% trans "Montant compte a la cloture" %}</td><td style="text-align:right;">{{ affichee.montant_compte }} FCFA</td></tr>
+            <tr><td style="font-weight:700;">{% trans "Ecart" %}</td><td style="text-align:right; font-weight:700; color:{% if affichee.ecart < 0 %}#b91c1c{% elif affichee.ecart > 0 %}#b45309{% else %}#166534{% endif %};">{{ affichee.ecart }} FCFA</td></tr>
+            {% endif %}
+        </table>
+    </div>
+    <div class="c-carte">
+        <h3>{% trans "Ventes par vendeur" %}</h3>
+        {% if resume.par_vendeur %}
+        <table class="c-table">
+            <tr><th>{% trans "Vendeur" %}</th><th style="text-align:right;">{% trans "Billets" %}</th><th style="text-align:right;">{% trans "Montant" %}</th></tr>
+            {% for v in resume.par_vendeur %}
+            <tr><td>{{ v.nom }}</td><td style="text-align:right;">{{ v.billets }}</td><td style="text-align:right; font-weight:600;">{{ v.montant }} FCFA</td></tr>
+            {% endfor %}
+        </table>
+        {% else %}<p style="color:#6b7280;">{% trans "Aucune vente sur cette periode." %}</p>{% endif %}
+    </div>
+</div>
+
+{% if session %}
+<div class="c-carte no-print">
+    <h3>{% trans "Encaissement / decaissement" %}</h3>
+    <form method="post" class="c-form">
+        {% csrf_token %}
+        <input type="hidden" name="agence" value="{{ agence.id }}">
+        <div><label>{% trans "Type" %}</label>
+            <select name="action"><option value="encaissement">{% trans "Encaissement" %}</option><option value="decaissement">{% trans "Decaissement" %}</option></select></div>
+        <div><label>{% trans "Montant (FCFA)" %}</label><input type="number" name="montant" min="1" required></div>
+        <div style="grid-column:span 2;"><label>{% trans "Motif" %}</label><input type="text" name="motif" maxlength="150" required></div>
+        <div><button type="submit" class="b b-bleu">{% trans "Enregistrer" %}</button></div>
+    </form>
+</div>
+{% endif %}
+
+<div class="c-deux">
+    <div class="c-carte">
+        <h3>{% trans "Mouvements de caisse" %}</h3>
+        {% if resume.mouvements %}
+        <table class="c-table">
+            {% for m in resume.mouvements %}
+            <tr><td>{{ m.date_creation|date:"H:i" }}</td><td>{{ m.get_type_mouvement_display }}</td><td>{{ m.motif }}</td>
+                <td style="text-align:right; font-weight:600; color:{% if m.type_mouvement == 'encaissement' %}#166534{% else %}#b91c1c{% endif %};">{% if m.type_mouvement == 'decaissement' %}−{% else %}+{% endif %}{{ m.montant }} FCFA</td></tr>
+            {% endfor %}
+        </table>
+        {% else %}<p style="color:#6b7280;">{% trans "Aucun mouvement." %}</p>{% endif %}
+    </div>
+    <div class="c-carte">
+        <h3>{% trans "Depenses de voyage" %}</h3>
+        {% if resume.depenses %}
+        <table class="c-table">
+            {% for d in resume.depenses %}
+            <tr><td>{{ d.date_creation|date:"H:i" }}</td><td>{{ d.voyage.bus.immatriculation }}</td><td>{{ d.libelle }}</td>
+                <td style="text-align:right; font-weight:600; color:#b91c1c;">−{{ d.montant }} FCFA</td></tr>
+            {% endfor %}
+        </table>
+        {% else %}<p style="color:#6b7280;">{% trans "Aucune depense." %}</p>{% endif %}
+    </div>
+</div>
+
+{% if session %}
+<div class="c-carte no-print">
+    <h3>{% trans "Cloturer la caisse" %}</h3>
+    <form method="post" class="c-form" onsubmit="return confirm('{% trans "Cloturer la caisse ? Cette action est definitive." %}');">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="cloturer">
+        <input type="hidden" name="agence" value="{{ agence.id }}">
+        <div><label>{% trans "Especes comptees (FCFA)" %}</label><input type="number" name="montant_compte" min="0" placeholder="{{ resume.especes_attendues }}"></div>
+        <div style="grid-column:span 2;"><label>{% trans "Notes" %}</label><input type="text" name="notes"></div>
+        <div><button type="submit" class="b b-rouge">{% trans "Cloturer la caisse" %}</button></div>
+    </form>
+</div>
+{% endif %}
+{% endif %}
+
+{% if historique %}
+<div class="c-carte">
+    <h3>{% trans "Dernieres caisses cloturees" %}</h3>
+    <div style="overflow-x:auto;">
+    <table class="c-table">
+        <tr><th>{% trans "Ouverture" %}</th><th>{% trans "Cloture" %}</th><th>{% trans "Caissier" %}</th><th style="text-align:right;">{% trans "Compte" %}</th><th style="text-align:right;">{% trans "Ecart" %}</th></tr>
+        {% for h in historique %}
+        <tr><td>{{ h.ouverte_le|date:"d/m/Y H:i" }}</td><td>{{ h.cloturee_le|date:"d/m/Y H:i" }}</td>
+            <td>{% if h.employe %}{{ h.employe.prenom }} {{ h.employe.nom }}{% endif %}</td>
+            <td style="text-align:right;">{% if h.montant_compte is not None %}{{ h.montant_compte }} FCFA{% else %}—{% endif %}</td>
+            <td style="text-align:right;">{% if h.ecart is not None %}{{ h.ecart }} FCFA{% else %}—{% endif %}</td></tr>
+        {% endfor %}
+    </table>
+    </div>
+</div>
+{% endif %}
+{% endif %}
+
+<div class="no-print" style="text-align:center; margin-top:20px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+    <button onclick="window.print()" class="btn" style="background:#16a34a;"><i class="fa-solid fa-print"></i> {% trans "Imprimer" %}</button>
+    <a href="{% url 'admin:index' %}" class="btn" style="background:#6b7280;"><i class="fa-solid fa-arrow-left"></i> {% trans "Retour au tableau de bord" %}</a>
+</div>
+{% endblock %}

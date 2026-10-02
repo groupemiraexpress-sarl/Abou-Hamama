@@ -79,6 +79,16 @@
     @media (max-width:520px) { .grille-passager { grid-template-columns:1fr; } .grille-passager .large { grid-column:auto; } }
     .entete-carte { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid #eef0f3; }
     .entete-carte h3 { margin:0; }
+    .btns-entete { display:flex; gap:8px; flex-wrap:wrap; }
+    .b-ent { border:none; border-radius:10px; padding:9px 14px; font-weight:700; font-size:.85rem; cursor:pointer; color:#fff; text-decoration:none; display:inline-block; }
+    .b-ent[disabled], .b-ent.inactif { opacity:.45; pointer-events:none; }
+    .be-orange { background:#f59e0b; } .be-bleu { background:#3b82f6; } .be-rouge { background:#ef4444; }
+    .fond-modal { display:none; position:fixed; inset:0; background:rgba(15,23,42,.55); z-index:1000; align-items:center; justify-content:center; padding:16px; }
+    .fond-modal.ouvert { display:flex; }
+    .modal-boite { background:#fff; border-radius:16px; padding:22px; width:100%; max-width:520px; max-height:90vh; overflow:auto; }
+    .modal-boite h3 { margin:0 0 14px; color:#1F3864; }
+    .modal-boite input, .modal-boite select { box-sizing:border-box; width:100%; padding:11px; border:1px solid #d1d5db; border-radius:10px; font-size:.95rem; margin-bottom:10px; }
+    .ligne-dep { display:flex; justify-content:space-between; align-items:center; gap:8px; padding:8px 0; border-bottom:1px solid #f1f5f9; font-size:.9rem; }
     .message-formulaire { display:none; background:#fef2f2; color:#b91c1c; padding:10px; border-radius:8px; margin-top:12px; font-size:.9rem; text-align:center; }
 </style>
 {% endblock %}
@@ -99,7 +109,14 @@
         <input type="hidden" name="nombre_places" id="nombre_places" value="1">
 
     <div class="carte-blanche">
-        <div class="entete-carte"><h3>{% trans "Vente de billets" %}</h3></div>
+        <div class="entete-carte">
+            <h3>{% trans "Vente de billets" %}</h3>
+            <div class="btns-entete">
+                <button type="button" class="b-ent be-orange" id="btn-depenses" disabled>{% trans "Depenses" %} (<span id="nb-depenses">0</span>)</button>
+                {% if peut_changer_bus %}<button type="button" class="b-ent be-bleu" id="btn-bus" disabled>{% trans "Modifier plaque bus" %}</button>{% endif %}
+                <a class="b-ent be-rouge inactif" id="lien-feuille" href="#" target="_blank" rel="noopener"><i class="fa-solid fa-file-pdf"></i> {% trans "Feuille chauffeur PDF" %}</a>
+            </div>
+        </div>
         <div class="grille-form">
             <div class="large">
                 <label class="etiquette-petite">{% trans "Trajet" %} *</label>
@@ -126,6 +143,13 @@
             <div>
                 <label class="etiquette-petite">{% trans "Telephone" %} *</label>
                 <input type="text" name="client_telephone" placeholder="66 00 00 00" required>
+            </div>
+            <div>
+                <label class="etiquette-petite">{% trans "Commissionnaire" %}</label>
+                <select name="commissionnaire" id="champ-commissionnaire">
+                    <option value="">{% trans "Aucun" %}</option>
+                    {% for c in commissionnaires %}<option value="{{ c.id }}">{{ c.nom }}</option>{% endfor %}
+                </select>
             </div>
             <div>
                 <label class="etiquette-petite">{% trans "Mode de paiement" %}</label>
@@ -206,6 +230,32 @@
         <p id="registre-vide" class="message-vide">{% trans "Aucun billet vendu pour ce voyage." %}</p>
     </div>
 </form>
+<div class="fond-modal" id="modal-depenses">
+    <div class="modal-boite">
+        <h3>{% trans "Depenses du voyage" %}</h3>
+        <div id="liste-depenses"></div>
+        <p style="font-weight:700; text-align:right; margin:10px 0;">{% trans "Total" %} : <span id="total-depenses">0</span> FCFA</p>
+        <input type="text" id="dep-libelle" maxlength="150" placeholder="{% trans 'Motif (carburant, peage, repas...)' %}">
+        <input type="number" id="dep-montant" min="1" placeholder="{% trans 'Montant (FCFA)' %}">
+        <p id="dep-erreur" style="color:#b91c1c; font-size:.88rem; display:none;"></p>
+        <div style="display:flex; gap:8px; justify-content:flex-end;">
+            <button type="button" class="b-ent" style="background:#6b7280;" id="dep-fermer">{% trans "Fermer" %}</button>
+            <button type="button" class="b-ent be-orange" id="dep-ajouter">{% trans "Ajouter" %}</button>
+        </div>
+    </div>
+</div>
+<div class="fond-modal" id="modal-bus">
+    <div class="modal-boite">
+        <h3>{% trans "Modifier plaque bus" %}</h3>
+        <p style="font-size:.9rem; color:#4b5563; margin-bottom:10px;">{% trans "Bus actuel" %} : <strong id="bus-actuel">—</strong></p>
+        <select id="bus-choix"></select>
+        <p id="bus-erreur" style="color:#b91c1c; font-size:.88rem; display:none;"></p>
+        <div style="display:flex; gap:8px; justify-content:flex-end;">
+            <button type="button" class="b-ent" style="background:#6b7280;" id="bus-fermer">{% trans "Fermer" %}</button>
+            <button type="button" class="b-ent be-bleu" id="bus-valider">{% trans "Valider" %}</button>
+        </div>
+    </div>
+</div>
 {% else %}
 <div class="carte-blanche" style="text-align:center; color:#6b7280;">
     {% trans "Aucun voyage disponible a la vente pour le moment." %}
@@ -232,6 +282,7 @@ const T = {
     choisirPiece: '{% trans "Type de piece" %} *', nomPrenom: '{% trans "Nom et prenom" %}',
     nomPassager: '{% trans "Nom et prenom du passager" %}', tel: '{% trans "Telephone" %}',
     numPiece: '{% trans "Numero de piece" %} *', numero: '{% trans "Numero" %}',
+    aucuneDepense: '{% trans "Aucune depense pour ce voyage." %}', aucunBus: '{% trans "Aucun autre bus disponible." %}',
     planDu: '{% trans "Plan du bus" %}', places: '{% trans "places" %}', registre: '{% trans "Registre des ventes" %}',
 };
 const LONGUEURS_PIECE = {cni: 10, passeport: 7, permis: 10, acte_naissance: 4};
@@ -365,6 +416,8 @@ function chargerPlan() {
         zonePlan.style.display = zoneRegistre.style.display = 'none';
         document.getElementById('champ-bus').value = '';
         document.getElementById('champ-prix').value = '';
+        majDepenses(0);
+        activerOutils('');
         actualiser();
         document.getElementById('bandeau-voyage').textContent = TEXTE_DATE_JOUR;
         return;
@@ -378,11 +431,101 @@ function chargerPlan() {
             zonePlan.style.display = 'grid';
             zoneRegistre.style.display = 'block';
             document.getElementById('champ-prix').value = formater(prixVoyage);
+            majDepenses(data.depenses ? data.depenses.nombre : 0);
+            activerOutils(voyageId);
             dessinerRegistre(data);
             actualiser();
             
         })
         .catch(function () { sieges = []; actualiser(); });
+}
+
+
+const champVoyageEl = document.getElementById('champ-voyage');
+function csrf() { return document.querySelector('[name=csrfmiddlewaretoken]').value; }
+function post(url, donnees) {
+    const corps = new URLSearchParams(donnees);
+    return fetch(url, {method: 'POST', credentials: 'same-origin', headers: {'X-CSRFToken': csrf(), 'Content-Type': 'application/x-www-form-urlencoded'}, body: corps})
+        .then(function (r) { return r.json().then(function (j) { j._ok = r.ok; return j; }); });
+}
+function voyageCourant() { return champVoyageEl.value; }
+function majDepenses(n) { document.getElementById('nb-depenses').textContent = n; }
+function activerOutils(voyageId) {
+    document.getElementById('btn-depenses').disabled = !voyageId;
+    const btnBus = document.getElementById('btn-bus');
+    if (btnBus) btnBus.disabled = !voyageId;
+    const lien = document.getElementById('lien-feuille');
+    lien.classList.toggle('inactif', !voyageId);
+    lien.href = voyageId ? '/espace/voyage/' + voyageId + '/feuille-chauffeur/' : '#';
+}
+function ouvrirModal(id) { document.getElementById(id).classList.add('ouvert'); }
+function fermerModal(id) { document.getElementById(id).classList.remove('ouvert'); }
+
+function dessinerDepenses(j) {
+    const zone = document.getElementById('liste-depenses');
+    zone.innerHTML = '';
+    (j.depenses || []).forEach(function (d) {
+        zone.insertAdjacentHTML('beforeend',
+            '<div class="ligne-dep"><span>' + echapper(d.heure) + ' — ' + echapper(d.libelle) + '</span>' +
+            '<span><strong>' + formater(d.montant) + ' FCFA</strong> <button type="button" class="b-ent be-rouge" style="padding:3px 9px;" data-id="' + d.id + '">&times;</button></span></div>');
+    });
+    if (!(j.depenses || []).length) zone.innerHTML = '<p style="color:#6b7280; font-size:.9rem;">' + T.aucuneDepense + '</p>';
+    document.getElementById('total-depenses').textContent = formater(j.total || 0);
+    majDepenses(j.nombre || 0);
+    zone.querySelectorAll('button[data-id]').forEach(function (b) {
+        b.addEventListener('click', function () {
+            post('/espace/voyage/' + voyageCourant() + '/depenses/', {action: 'supprimer', id: b.dataset.id}).then(dessinerDepenses);
+        });
+    });
+}
+
+document.getElementById('btn-depenses').addEventListener('click', function () {
+    document.getElementById('dep-erreur').style.display = 'none';
+    fetch('/espace/voyage/' + voyageCourant() + '/depenses/', {credentials: 'same-origin'}).then(function (r) { return r.json(); }).then(function (j) {
+        dessinerDepenses(j); ouvrirModal('modal-depenses');
+    });
+});
+document.getElementById('dep-fermer').addEventListener('click', function () { fermerModal('modal-depenses'); });
+document.getElementById('dep-ajouter').addEventListener('click', function () {
+    const err = document.getElementById('dep-erreur');
+    post('/espace/voyage/' + voyageCourant() + '/depenses/', {
+        action: 'ajouter', libelle: document.getElementById('dep-libelle').value, montant: document.getElementById('dep-montant').value,
+    }).then(function (j) {
+        if (!j._ok) { err.textContent = j.erreur || ''; err.style.display = 'block'; return; }
+        err.style.display = 'none';
+        document.getElementById('dep-libelle').value = ''; document.getElementById('dep-montant').value = '';
+        dessinerDepenses(j);
+    });
+});
+
+const btnBus = document.getElementById('btn-bus');
+if (btnBus) {
+    btnBus.addEventListener('click', function () {
+        document.getElementById('bus-erreur').style.display = 'none';
+        fetch('/espace/voyage/' + voyageCourant() + '/changer-bus/', {credentials: 'same-origin'}).then(function (r) { return r.json(); }).then(function (j) {
+            document.getElementById('bus-actuel').textContent = j.bus_actuel;
+            const choix = document.getElementById('bus-choix');
+            choix.innerHTML = '';
+            (j.bus || []).filter(function (b) { return b.immatriculation !== j.bus_actuel; }).forEach(function (b) {
+                const o = document.createElement('option'); o.value = b.id; o.textContent = b.immatriculation + ' (' + b.capacite + ' ' + T.places + ')'; choix.appendChild(o);
+            });
+            ouvrirModal('modal-bus');
+        });
+    });
+    document.getElementById('bus-fermer').addEventListener('click', function () { fermerModal('modal-bus'); });
+    document.getElementById('bus-valider').addEventListener('click', function () {
+        const err = document.getElementById('bus-erreur');
+        const choix = document.getElementById('bus-choix');
+        if (!choix.value) { err.textContent = T.aucunBus; err.style.display = 'block'; return; }
+        post('/espace/voyage/' + voyageCourant() + '/changer-bus/', {bus_id: choix.value}).then(function (j) {
+            if (!j._ok) { err.textContent = j.erreur || ''; err.style.display = 'block'; return; }
+            fermerModal('modal-bus');
+            const o = champVoyageEl.options[champVoyageEl.selectedIndex];
+            o.dataset.bus = j.bus;
+            document.getElementById('champ-bus').value = j.bus;
+            chargerPlan();
+        });
+    });
 }
 
 const champVoyage = document.getElementById('champ-voyage');

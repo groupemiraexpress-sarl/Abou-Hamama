@@ -32,6 +32,9 @@ msgstr "نشط"
 msgid "Action"
 msgstr "إجراء"
 
+msgid "Action impossible dans l'etat actuel de la caisse."
+msgstr "الإجراء غير ممكن في الحالة الحالية للصندوق."
+
 msgid "Action non autorisee pour votre poste."
 msgstr "إجراء غير مسموح به لوظيفتك."
 
@@ -116,6 +119,9 @@ msgstr "ملغاة"
 msgid "Annuler"
 msgstr "إلغاء"
 
+msgid "Annuler ce billet ? La place sera liberee."
+msgstr "هل تريد إلغاء هذه التذكرة؟ سيتم تحرير المقعد."
+
 msgid "App mobile"
 msgstr "تطبيق الجوال"
 
@@ -182,6 +188,12 @@ msgstr "لا شيء"
 msgid "Aucun article actif."
 msgstr "لا توجد قطعة نشطة."
 
+msgid "Aucun autre bus disponible."
+msgstr "لا توجد حافلة أخرى متاحة."
+
+msgid "Aucun billet non paye."
+msgstr "لا توجد تذاكر غير مدفوعة."
+
 msgid "Aucun billet trouve."
 msgstr "لم يتم العثور على أي تذكرة."
 
@@ -227,6 +239,9 @@ msgstr "لا يوجد موظف."
 msgid "Aucun entretien enregistre."
 msgstr "لم يتم تسجيل أي صيانة."
 
+msgid "Aucun mouvement."
+msgstr "لا توجد حركات."
+
 msgid "Aucun signal"
 msgstr "لا توجد إشارة"
 
@@ -239,6 +254,9 @@ msgstr "لم يتم سحب أي حوالة اليوم."
 msgid "Aucun voyage disponible a la vente pour le moment."
 msgstr "لا توجد رحلة متاحة للبيع حاليا."
 
+msgid "Aucune agence n'est rattachee a votre compte."
+msgstr "لا توجد وكالة مرتبطة بحسابك."
+
 msgid "Aucune agence rattachee a ce compte. Choisis-en une pour tester :"
 msgstr "لا توجد وكالة مرتبطة بهذا الحساب. اختر واحدة للتجربة:"
 
@@ -246,11 +264,23 @@ msgid ""
 "Aucune agence rattachee a votre compte. Contactez votre administrateur."
 msgstr "لا توجد وكالة مرتبطة بحسابك. تواصل مع المسؤول."
 
+msgid "Aucune caisse ouverte."
+msgstr "لا يوجد صندوق مفتوح."
+
+msgid "Aucune depense pour ce voyage."
+msgstr "لا توجد مصاريف لهذه الرحلة."
+
+msgid "Aucune depense."
+msgstr "لا توجد مصاريف."
+
 msgid "Aucune fiche employe liee a ce compte."
 msgstr "لا توجد بطاقة موظف مرتبطة بهذا الحساب."
 
 msgid "Aucune vente aujourd'hui."
 msgstr "لا توجد أي عملية بيع اليوم."
+
+msgid "Aucune vente sur cette periode."
+msgstr "لا توجد مبيعات في هذه الفترة."
 
 msgid "Aujourd'hui"
 msgstr "اليوم"
@@ -276,6 +306,15 @@ msgstr "المستفيد"
 msgid "Billet"
 msgstr "تذكرة"
 
+msgid "Billet %(n)s annule."
+msgstr "تم إلغاء التذكرة %(n)s."
+
+msgid "Billet %(n)s encaisse."
+msgstr "تم تحصيل التذكرة %(n)s."
+
+msgid "Billet introuvable."
+msgstr "التذكرة غير موجودة."
+
 msgid "Billets"
 msgstr "التذاكر"
 
@@ -284,6 +323,9 @@ msgstr "تذاكر مؤكدة"
 
 msgid "Billets de votre agence"
 msgstr "تذاكر وكالتك"
+
+msgid "Billets payes"
+msgstr "التذاكر المدفوعة"
 
 msgid "Billets vendus"
 msgstr "التذاكر المباعة"
@@ -296,6 +338,9 @@ msgstr "برونزي"
 
 msgid "Bus"
 msgstr "الحافلة"
+
+msgid "Bus actuel"
+msgstr "الحافلة الحالية"
 
 msgid "Bus de l'agence"
 msgstr "حافلات الوكالة"
@@ -315,8 +360,29 @@ msgstr "الحافلات في الخدمة"
 msgid "Bus en temps reel"
 msgstr "الحافلات في الوقت الفعلي"
 
+msgid "Bus introuvable ou indisponible."
+msgstr "الحافلة غير موجودة أو غير متاحة."
+
 msgid "Bus propre"
 msgstr "الحافلة نظيفة"
+
+msgid "Caisse"
+msgstr "الصندوق"
+
+msgid "Caisse cloturee."
+msgstr "تم إغلاق الصندوق."
+
+msgid "Caisse de l'agence"
+msgstr "صندوق الوكالة"
+
+msgid "Caisse en pause."
+msgstr "الصندوق في وضع الإيقاف المؤقت."
+
+msgid "Caisse ouverte."
+msgstr "تم فتح الصندوق."
+
+msgid "Caisse reprise."
+msgstr "تم استئناف الصندوق."
 
 msgid "Caissier"
 msgstr "أمين الصندوق"
@@ -350,6 +416,12 @@ msgstr "بطاقة الهوية الوطنية"
 
 msgid "Carte professionnelle"
 msgstr "البطاقة المهنية"
+
+msgid "Ce bus est deja affecte a ce voyage."
+msgstr "هذه الحافلة مخصصة بالفعل لهذه الرحلة."
+
+msgid "Ce bus est trop petit : %(n)s billet(s) deja vendu(s)."
+msgstr "هذه الحافلة صغيرة جدا: تم بيع %(n)s تذكرة بالفعل."
 
 msgid "Ce colis a deja ete remis."
 msgstr "تم تسليم هذا الطرد بالفعل."
@@ -412,6 +484,21 @@ msgstr "التكييف"
 
 msgid "Climatisation OK"
 msgstr "التكييف يعمل"
+
+msgid "Cloture"
+msgstr "الإغلاق"
+
+msgid "Cloturee"
+msgstr "مغلق"
+
+msgid "Cloturee le"
+msgstr "أُغلق في"
+
+msgid "Cloturer la caisse"
+msgstr "إغلاق الصندوق"
+
+msgid "Cloturer la caisse ? Cette action est definitive."
+msgstr "هل تريد إغلاق الصندوق؟ هذا الإجراء نهائي."
 
 msgid "Coche automatiquement quand le billet est scanne au controle"
 msgstr "يتم تحديده تلقائيا عند مسح التذكرة في المراقبة"
@@ -493,6 +580,21 @@ msgstr "التعليق"
 
 msgid "Commentaire facultatif du client"
 msgstr "تعليق اختياري من العميل"
+
+msgid "Commission par billet (FCFA)"
+msgstr "العمولة لكل تذكرة (فرنك إفريقي)"
+
+msgid "Commissionnaire"
+msgstr "وسيط"
+
+msgid "Commissionnaires"
+msgstr "الوسطاء"
+
+msgid "Commissions"
+msgstr "العمولات"
+
+msgid "Commissions a verser"
+msgstr "العمولات المستحقة"
 
 msgid "Compagnie"
 msgstr "الشركة"
@@ -639,6 +741,12 @@ msgstr "تاريخ التعبئة"
 msgid "Date visite technique"
 msgstr "تاريخ الفحص الفني"
 
+msgid "Decaissement"
+msgstr "صرف"
+
+msgid "Decaissements"
+msgstr "المصروفات النقدية"
+
 msgid "Decochez pour masquer"
 msgstr "ألغ التحديد للإخفاء"
 
@@ -697,14 +805,40 @@ msgid ""
 "confirmer la remise."
 msgstr "اطلب هذا الرمز من المستلم (لا تعرضه عليه أبدًا بنفسك) لتأكيد التسليم."
 
+msgid "Depart"
+msgstr "المغادرة"
+
+msgid "Depense de voyage"
+msgstr "مصروف رحلة"
+
+msgid "Depense introuvable."
+msgstr "المصروف غير موجود."
+
+msgid "Depenses"
+msgstr "المصاريف"
+
+msgid "Depenses de voyage"
+msgstr "مصاريف الرحلات"
+
+msgid "Depenses du voyage"
+msgstr "مصاريف الرحلة"
+
 msgid "Derniere mise a jour"
 msgstr "آخر تحديث"
 
 msgid "Derniere position"
 msgstr "آخر موقع"
 
+msgid "Dernieres caisses cloturees"
+msgstr "آخر الصناديق المغلقة"
+
 msgid "Derniers entretiens"
 msgstr "آخر عمليات الصيانة"
+
+msgid ""
+"Des billets existent deja sur des places au-dela de %(n)s : impossible de "
+"reduire le bus."
+msgstr "توجد تذاكر على مقاعد بعد %(n)s: لا يمكن تصغير الحافلة."
 
 msgid "Description"
 msgstr "الوصف"
@@ -721,6 +855,9 @@ msgstr "التفاصيل / القطع المغيرة"
 msgid "Details complementaires (facultatif)"
 msgstr "تفاصيل إضافية (اختياري)"
 
+msgid "Dettes (billets non payes)"
+msgstr "الديون (تذاكر غير مدفوعة)"
+
 msgid "Disponible"
 msgstr "متاح"
 
@@ -735,6 +872,15 @@ msgstr "المدة المقدرة (ساعات)"
 
 msgid "Duree estimee en heures"
 msgstr "المدة المقدرة بالساعات"
+
+msgid "Duree totale des pauses (secondes)"
+msgstr "المدة الإجمالية للإيقاف المؤقت (ثوان)"
+
+msgid "Ecart"
+msgstr "الفرق"
+
+msgid "Ecart (FCFA)"
+msgstr "الفرق (فرنك إفريقي)"
 
 msgid "Effectifs par poste"
 msgstr "عدد الموظفين حسب الوظيفة"
@@ -784,6 +930,12 @@ msgstr "قيد الصيانة"
 msgid "En mission"
 msgstr "في مهمة"
 
+msgid "En pause"
+msgstr "متوقف مؤقتا"
+
+msgid "En pause depuis"
+msgstr "متوقف مؤقتا منذ"
+
 msgid "En repos"
 msgstr "في راحة"
 
@@ -793,11 +945,29 @@ msgstr "في الخدمة"
 msgid "En transit"
 msgstr "في الطريق"
 
+msgid "Encaissement"
+msgstr "تحصيل"
+
+msgid "Encaissement / decaissement"
+msgstr "تحصيل / صرف"
+
+msgid "Encaissements"
+msgstr "التحصيلات"
+
+msgid "Encaissements par mode de paiement"
+msgstr "التحصيلات حسب طريقة الدفع"
+
+msgid "Encaisser"
+msgstr "تحصيل"
+
 msgid "Enregistre"
 msgstr "مسجل"
 
 msgid "Enregistre par"
 msgstr "سجله"
+
+msgid "Enregistrer"
+msgstr "حفظ"
 
 msgid "Enregistrer la modification"
 msgstr "حفظ التعديل"
@@ -820,6 +990,12 @@ msgstr "إرسال طرد"
 msgid "Especes"
 msgstr "نقدا"
 
+msgid "Especes attendues en caisse"
+msgstr "النقد المتوقع في الصندوق"
+
+msgid "Especes comptees (FCFA)"
+msgstr "النقد المحسوب (فرنك إفريقي)"
+
 msgid "Etat du stock"
 msgstr "حالة المخزون"
 
@@ -838,6 +1014,15 @@ msgstr "المرسل"
 msgid "Exploitation"
 msgstr "التشغيل"
 
+msgid "Fermer"
+msgstr "إغلاق"
+
+msgid "Feuille chauffeur"
+msgstr "ورقة السائق"
+
+msgid "Feuille chauffeur PDF"
+msgstr "ورقة السائق PDF"
+
 msgid "Fiche bus"
 msgstr "بطاقة الحافلة"
 
@@ -849,6 +1034,15 @@ msgstr "بطاقة فردية"
 
 msgid "Finances du mois"
 msgstr "الشؤون المالية للشهر"
+
+msgid "Fond de caisse"
+msgstr "رصيد الافتتاح"
+
+msgid "Fond de caisse (FCFA)"
+msgstr "رصيد الافتتاح (فرنك إفريقي)"
+
+msgid "Fond de caisse a l'ouverture (FCFA)"
+msgstr "رصيد الافتتاح (فرنك إفريقي)"
 
 msgid "Frais"
 msgstr "الرسوم"
@@ -913,6 +1107,9 @@ msgstr "لا يمكن تأكيد تحويل لم يتم تسجيله بعد."
 msgid "Imprimer"
 msgstr "طباعة"
 
+msgid "Imprimer / Enregistrer en PDF"
+msgstr "طباعة / حفظ بصيغة PDF"
+
 msgid "Imprimer ce rapport"
 msgstr "طباعة هذا التقرير"
 
@@ -927,6 +1124,12 @@ msgstr "طباعة قائمة الركاب"
 
 msgid "Inactif"
 msgstr "غير نشط"
+
+msgid "Indiquez le motif et un montant superieur a 0."
+msgstr "أدخل السبب ومبلغا أكبر من 0."
+
+msgid "Intermediaire qui a apporte ce client (facultatif)"
+msgstr "الوسيط الذي أحضر هذا العميل (اختياري)"
 
 msgid "J'ai verifie la piece d'identite du beneficiaire"
 msgstr "لقد تحققت من وثيقة هوية المستفيد"
@@ -957,6 +1160,9 @@ msgstr "هل كان المرافق لطيفا؟"
 
 msgid "La Maison vous remercie de votre fidelite"
 msgstr "الشركة تشكركم على ولائكم"
+
+msgid "La caisse est en pause : reprenez-la d'abord."
+msgstr "الصندوق متوقف مؤقتا: استأنفه أولا."
 
 msgid "La climatisation fonctionnait-elle ?"
 msgstr "هل كان التكييف يعمل؟"
@@ -1072,6 +1278,9 @@ msgstr "الرسالة"
 msgid "Mettre a jour le rapport"
 msgstr "تحديث التقرير"
 
+msgid "Mettre en pause"
+msgstr "إيقاف مؤقت"
+
 msgid ""
 "Mis a False des que le magasin traite la demande, pour notifier le "
 "responsable qui l'a creee"
@@ -1098,6 +1307,9 @@ msgstr "تعديل"
 msgid "Modifier le mot de passe"
 msgstr "تغيير كلمة المرور"
 
+msgid "Modifier plaque bus"
+msgstr "تغيير لوحة الحافلة"
+
 msgid "Modifier un billet"
 msgstr "تعديل تذكرة"
 
@@ -1122,6 +1334,15 @@ msgstr "المبلغ (فرنك)"
 msgid "Montant a envoyer en FCFA"
 msgstr "المبلغ المراد إرساله بالفرنك"
 
+msgid "Montant compte a la cloture"
+msgstr "المبلغ المحسوب عند الإغلاق"
+
+msgid "Montant compte a la cloture (FCFA)"
+msgstr "المبلغ المحسوب عند الإغلاق (فرنك إفريقي)"
+
+msgid "Montant compte moins montant attendu"
+msgstr "المبلغ المحسوب ناقص المبلغ المتوقع"
+
 msgid "Montant envoye"
 msgstr "المبلغ المرسل"
 
@@ -1131,11 +1352,32 @@ msgstr "المبلغ المرسل بالفرنك"
 msgid "Montant total"
 msgstr "المبلغ الإجمالي"
 
+msgid "Montant verse au commissionnaire pour chaque billet apporte"
+msgstr "المبلغ المدفوع للوسيط عن كل تذكرة"
+
 msgid "Mot de passe"
 msgstr "تغيير كلمة المرور"
 
 msgid "Mot de passe requis pour creer le compte."
 msgstr "كلمة المرور مطلوبة لإنشاء الحساب."
+
+msgid "Motif"
+msgstr "السبب"
+
+msgid "Motif (carburant, peage, repas...)"
+msgstr "السبب (وقود، رسوم طريق، وجبات...)"
+
+msgid "Motif de la depense"
+msgstr "سبب المصروف"
+
+msgid "Mouvement de caisse"
+msgstr "حركة صندوق"
+
+msgid "Mouvement enregistre."
+msgstr "تم تسجيل الحركة."
+
+msgid "Mouvements de caisse"
+msgstr "حركات الصندوق"
 
 msgid "N de Bus"
 msgstr "رقم الحافلة"
@@ -1166,6 +1408,12 @@ msgstr "لا تعطِ رمز السحب إلا للمستفيد، وليس لل�
 msgid ""
 "Ne communiquez le code de retrait qu'au destinataire, jamais a l'expediteur."
 msgstr "لا تعطِ رمز الاستلام إلا للمستلم، وليس للمرسل أبدا."
+
+msgid "Net (tous modes)"
+msgstr "الصافي (كل الطرق)"
+
+msgid "Net du voyage"
+msgstr "صافي الرحلة"
 
 msgid "Niveau de fidelite"
 msgstr "مستوى الولاء"
@@ -1209,6 +1457,9 @@ msgstr "الاسم الكامل"
 msgid "Nom et prenom du passager"
 msgstr "الاسم الكامل للراكب"
 
+msgid "Nom, telephone, n de billet"
+msgstr "الاسم، الهاتف، رقم التذكرة"
+
 msgid "Nombre de places"
 msgstr "عدد المقاعد"
 
@@ -1223,6 +1474,9 @@ msgstr "لم يصعد"
 
 msgid "Non paye"
 msgstr "غير مدفوع"
+
+msgid "Non paye (dettes)"
+msgstr "غير مدفوع (ديون)"
 
 msgid "Nord"
 msgstr "الشمال"
@@ -1298,6 +1552,18 @@ msgstr "ترتيب العرض (الرقم الصغير = في الأعلى)"
 msgid "Origine"
 msgstr "المصدر"
 
+msgid "Ouverte"
+msgstr "مفتوح"
+
+msgid "Ouverte le"
+msgstr "فُتح في"
+
+msgid "Ouverture"
+msgstr "الافتتاح"
+
+msgid "Ouvrir la caisse"
+msgstr "فتح الصندوق"
+
 msgid "PDG / Directeur general"
 msgstr "المدير العام"
 
@@ -1312,6 +1578,9 @@ msgstr "فرد"
 
 msgid "Passager"
 msgstr "الراكب"
+
+msgid "Passagers"
+msgstr "الركاب"
 
 msgid "Passeport"
 msgstr "جواز السفر"
@@ -1511,6 +1780,9 @@ msgstr "إيرادات اليوم (فرنك)"
 msgid "Recette totale du jour"
 msgstr "إجمالي إيرادات اليوم"
 
+msgid "Rechercher"
+msgstr "بحث"
+
 msgid "Recu"
 msgstr "إيصال"
 
@@ -1566,6 +1838,9 @@ msgstr "رد المخزن"
 msgid "Reponses du magasin a consulter"
 msgstr "ردود المخزن للاطلاع عليها"
 
+msgid "Reprendre"
+msgstr "استئناف"
+
 msgid "Requis uniquement si un nom d'utilisateur est renseigne ci-dessus."
 msgstr "مطلوب فقط إذا تم إدخال اسم مستخدم أعلاه."
 
@@ -1620,6 +1895,9 @@ msgstr "العودة إلى قائمة طلبات المواد"
 msgid "Retour a la liste des transferts"
 msgstr "العودة إلى قائمة الحوالات"
 
+msgid "Retour a la vente"
+msgstr "العودة إلى البيع"
+
 msgid "Retour au tableau de bord"
 msgstr "العودة إلى لوحة التحكم"
 
@@ -1656,6 +1934,12 @@ msgstr "اختيار"
 msgid "Service"
 msgstr "الخدمة"
 
+msgid "Session de caisse"
+msgstr "جلسة صندوق"
+
+msgid "Sessions de caisse"
+msgstr "جلسات الصندوق"
+
 msgid "Seuil d'alerte"
 msgstr "عتبة التنبيه"
 
@@ -1682,6 +1966,12 @@ msgstr "المقاعد"
 
 msgid "Sigle"
 msgstr "الاختصار"
+
+msgid "Signature du chauffeur"
+msgstr "توقيع السائق"
+
+msgid "Signature du responsable"
+msgstr "توقيع المسؤول"
 
 msgid "Statut"
 msgstr "الحالة"
@@ -1755,6 +2045,12 @@ msgstr "أفضل 3 وكالات (إيرادات اليوم)"
 
 msgid "Total"
 msgstr "المجموع"
+
+msgid "Total a recouvrer"
+msgstr "المجموع المطلوب تحصيله"
+
+msgid "Total billets"
+msgstr "مجموع التذاكر"
 
 msgid "Total billets vendus"
 msgstr "إجمالي التذاكر المباعة"
@@ -1868,6 +2164,9 @@ msgstr "لا يُسمح إلا بحساب مدير عام واحد في النظ
 msgid "Un seul employe (facultatif)"
 msgstr "موظف واحد (اختياري)"
 
+msgid "Une caisse est deja ouverte pour cette agence."
+msgstr "يوجد صندوق مفتوح بالفعل لهذه الوكالة."
+
 msgid "Unite"
 msgstr "الوحدة"
 
@@ -1898,6 +2197,9 @@ msgstr "مؤكدة (تم إنشاء الطرد)"
 msgid "Validee (transfert cree)"
 msgstr "مؤكدة (تم إنشاء التحويل)"
 
+msgid "Valider"
+msgstr "تأكيد"
+
 msgid "Valides"
 msgstr "مؤكدة"
 
@@ -1915,6 +2217,9 @@ msgstr "بيع التذاكر"
 
 msgid "Vente reussie"
 msgstr "تمت عملية البيع بنجاح"
+
+msgid "Ventes par vendeur"
+msgstr "المبيعات حسب البائع"
 
 msgid "Vers quel service renvoie la promotion"
 msgstr "إلى أي خدمة يوجه العرض"
@@ -2037,14 +2342,23 @@ msgstr "تذكرة (تذاكر)"
 msgid "billet(s) au total"
 msgstr "تذكرة (تذاكر) في المجموع"
 
+msgid "billet(s) non paye(s)"
+msgstr "تذكرة غير مدفوعة"
+
 msgid "billets"
 msgstr "تذاكر"
+
+msgid "cloturee le"
+msgstr "أُغلق في"
 
 msgid "colis"
 msgstr "طرد"
 
 msgid "genere le"
 msgstr "تم إنشاؤه في"
+
+msgid "gratuit(s)"
+msgstr "مجانية"
 
 msgid "il y a"
 msgstr "منذ"

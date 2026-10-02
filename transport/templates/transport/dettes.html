@@ -1,0 +1,68 @@
+{% extends "transport/base.html" %}
+{% load i18n %}
+{% block titre %}{% trans "Dettes (billets non payes)" %} — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}{% trans "Dettes (billets non payes)" %}{% endblock %}
+{% block extra_head %}
+<style>
+    .container { max-width:none; padding:24px 32px; }
+    @media (max-width:600px) { .container { padding:16px; } }
+    .d-carte { background:#fff; border-radius:16px; padding:20px; margin-bottom:16px; box-shadow:0 4px 14px rgba(31,56,100,.08); }
+    .d-table { width:100%; border-collapse:collapse; font-size:.9rem; }
+    .d-table th { text-align:left; padding:10px 8px; font-size:.72rem; color:#6b7280; text-transform:uppercase; letter-spacing:.5px; border-bottom:2px solid #eef0f3; }
+    .d-table td { padding:10px 8px; border-bottom:1px solid #f1f5f9; vertical-align:middle; }
+    .d-act { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+    .d-act select { padding:7px; border:1px solid #d1d5db; border-radius:8px; }
+    .b { border:none; border-radius:8px; padding:8px 14px; font-weight:700; font-size:.85rem; cursor:pointer; color:#fff; }
+    .b-vert { background:#10b981; } .b-rouge { background:#ef4444; }
+    .d-ok { background:#f0fdf4; color:#166534; padding:10px 14px; border-radius:10px; margin-bottom:14px; }
+</style>
+{% endblock %}
+{% block contenu %}
+{% if message %}<div class="d-ok">{{ message }}</div>{% endif %}
+<div class="d-carte">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
+        <div>
+            <h3 style="margin:0; color:#1F3864;">{{ billets|length }} {% trans "billet(s) non paye(s)" %}</h3>
+            <p style="color:#b45309; font-weight:700; margin-top:4px;">{% trans "Total a recouvrer" %} : {{ total }} FCFA</p>
+        </div>
+        <form method="get" style="display:flex; gap:8px;">
+            <input type="text" name="q" value="{{ q }}" placeholder="{% trans 'Nom, telephone, n de billet' %}" style="padding:10px; border:1px solid #d1d5db; border-radius:10px; min-width:220px;">
+            <button class="b" style="background:#3b82f6; padding:10px 18px;">{% trans "Rechercher" %}</button>
+        </form>
+    </div>
+    {% if billets %}
+    <div style="overflow-x:auto;">
+    <table class="d-table">
+        <tr><th>{% trans "Billet" %}</th><th>{% trans "Passager" %}</th><th>{% trans "Telephone" %}</th><th>{% trans "Trajet" %}</th><th>{% trans "Place" %}</th><th style="text-align:right;">{% trans "Montant" %}</th><th>{% trans "Vendeur" %}</th><th></th></tr>
+        {% for b in billets %}
+        <tr>
+            <td>{{ b.numero_reservation }}</td>
+            <td style="font-weight:600;">{{ b.voyageur_prenom }} {{ b.voyageur_nom }}</td>
+            <td>{{ b.voyageur_telephone }}</td>
+            <td>{{ b.voyage.trajet.ville_depart }} → {{ b.voyage.trajet.ville_arrivee }}<br><small style="color:#6b7280;">{{ b.voyage.date_depart|date:"d/m/Y" }} {{ b.voyage.heure_depart|time:"H:i" }} · {{ b.voyage.bus.immatriculation }}</small></td>
+            <td>{{ b.siege.numero|default:"—" }}</td>
+            <td style="text-align:right; font-weight:700; color:#b45309;">{{ b.montant_total }} FCFA</td>
+            <td>{% if b.cree_par %}{{ b.cree_par.nom }}{% endif %}</td>
+            <td>
+                <form method="post" class="d-act">
+                    {% csrf_token %}
+                    <input type="hidden" name="id" value="{{ b.id }}">
+                    <select name="mode_paiement">
+                        {% for valeur, libelle in modes %}<option value="{{ valeur }}">{{ libelle }}</option>{% endfor %}
+                    </select>
+                    <button name="action" value="encaisser" class="b b-vert">{% trans "Encaisser" %}</button>
+                    <button name="action" value="annuler" class="b b-rouge" onclick="return confirm('{% trans "Annuler ce billet ? La place sera liberee." %}');">{% trans "Annuler" %}</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+    {% else %}
+    <p style="text-align:center; color:#6b7280; padding:20px;">{% trans "Aucun billet non paye." %}</p>
+    {% endif %}
+</div>
+<div style="text-align:center; margin-top:20px;">
+    <a href="{% url 'admin:index' %}" class="btn" style="background:#6b7280;"><i class="fa-solid fa-arrow-left"></i> {% trans "Retour au tableau de bord" %}</a>
+</div>
+{% endblock %}

@@ -31,6 +31,9 @@ msgstr "Active"
 msgid "Action"
 msgstr "Action"
 
+msgid "Action impossible dans l'etat actuel de la caisse."
+msgstr "Action not possible in the current state of the cash desk."
+
 msgid "Action non autorisee pour votre poste."
 msgstr "Action not authorized for your position."
 
@@ -115,6 +118,9 @@ msgstr "Cancelled"
 msgid "Annuler"
 msgstr "Cancel"
 
+msgid "Annuler ce billet ? La place sera liberee."
+msgstr "Cancel this ticket? The seat will be released."
+
 msgid "App mobile"
 msgstr "Mobile app"
 
@@ -181,6 +187,12 @@ msgstr "None"
 msgid "Aucun article actif."
 msgstr "No active items."
 
+msgid "Aucun autre bus disponible."
+msgstr "No other bus available."
+
+msgid "Aucun billet non paye."
+msgstr "No unpaid ticket."
+
 msgid "Aucun billet trouve."
 msgstr "No ticket found."
 
@@ -226,6 +238,9 @@ msgstr "No employee."
 msgid "Aucun entretien enregistre."
 msgstr "No maintenance recorded."
 
+msgid "Aucun mouvement."
+msgstr "No movement."
+
 msgid "Aucun signal"
 msgstr "No signal"
 
@@ -238,6 +253,9 @@ msgstr "No transfer withdrawn today."
 msgid "Aucun voyage disponible a la vente pour le moment."
 msgstr "No trip available for sale at the moment."
 
+msgid "Aucune agence n'est rattachee a votre compte."
+msgstr "No agency is linked to your account."
+
 msgid "Aucune agence rattachee a ce compte. Choisis-en une pour tester :"
 msgstr "No agency attached to this account. Choose one to test:"
 
@@ -245,11 +263,23 @@ msgid ""
 "Aucune agence rattachee a votre compte. Contactez votre administrateur."
 msgstr "No agency attached to your account. Contact your administrator."
 
+msgid "Aucune caisse ouverte."
+msgstr "No open cash desk."
+
+msgid "Aucune depense pour ce voyage."
+msgstr "No expense for this trip."
+
+msgid "Aucune depense."
+msgstr "No expense."
+
 msgid "Aucune fiche employe liee a ce compte."
 msgstr "No employee record linked to this account."
 
 msgid "Aucune vente aujourd'hui."
 msgstr "No sales today."
+
+msgid "Aucune vente sur cette periode."
+msgstr "No sales in this period."
 
 msgid "Aujourd'hui"
 msgstr "Today"
@@ -275,6 +305,15 @@ msgstr "Beneficiary"
 msgid "Billet"
 msgstr "Ticket"
 
+msgid "Billet %(n)s annule."
+msgstr "Ticket %(n)s cancelled."
+
+msgid "Billet %(n)s encaisse."
+msgstr "Ticket %(n)s collected."
+
+msgid "Billet introuvable."
+msgstr "Ticket not found."
+
 msgid "Billets"
 msgstr "Tickets"
 
@@ -283,6 +322,9 @@ msgstr "Confirmed tickets"
 
 msgid "Billets de votre agence"
 msgstr "Your agency's tickets"
+
+msgid "Billets payes"
+msgstr "Paid tickets"
 
 msgid "Billets vendus"
 msgstr "Tickets sold"
@@ -295,6 +337,9 @@ msgstr "Bronze"
 
 msgid "Bus"
 msgstr "Bus"
+
+msgid "Bus actuel"
+msgstr "Current bus"
 
 msgid "Bus de l'agence"
 msgstr "Agency's buses"
@@ -314,8 +359,29 @@ msgstr "Buses in service"
 msgid "Bus en temps reel"
 msgstr "Real-time buses"
 
+msgid "Bus introuvable ou indisponible."
+msgstr "Bus not found or unavailable."
+
 msgid "Bus propre"
 msgstr "Clean bus"
+
+msgid "Caisse"
+msgstr "Cash desk"
+
+msgid "Caisse cloturee."
+msgstr "Cash desk closed."
+
+msgid "Caisse de l'agence"
+msgstr "Agency cash desk"
+
+msgid "Caisse en pause."
+msgstr "Cash desk paused."
+
+msgid "Caisse ouverte."
+msgstr "Cash desk opened."
+
+msgid "Caisse reprise."
+msgstr "Cash desk resumed."
 
 msgid "Caissier"
 msgstr "Cashier"
@@ -349,6 +415,12 @@ msgstr "National ID card"
 
 msgid "Carte professionnelle"
 msgstr "Professional card"
+
+msgid "Ce bus est deja affecte a ce voyage."
+msgstr "This bus is already assigned to this trip."
+
+msgid "Ce bus est trop petit : %(n)s billet(s) deja vendu(s)."
+msgstr "This bus is too small: %(n)s ticket(s) already sold."
 
 msgid "Ce colis a deja ete remis."
 msgstr "This parcel has already been delivered."
@@ -413,6 +485,21 @@ msgstr "Air conditioning"
 
 msgid "Climatisation OK"
 msgstr "Air conditioning OK"
+
+msgid "Cloture"
+msgstr "Closing"
+
+msgid "Cloturee"
+msgstr "Closed"
+
+msgid "Cloturee le"
+msgstr "Closed on"
+
+msgid "Cloturer la caisse"
+msgstr "Close the cash desk"
+
+msgid "Cloturer la caisse ? Cette action est definitive."
+msgstr "Close the cash desk? This action is final."
 
 msgid "Coche automatiquement quand le billet est scanne au controle"
 msgstr "Automatically checked when the ticket is scanned at boarding"
@@ -494,6 +581,21 @@ msgstr "Comment"
 
 msgid "Commentaire facultatif du client"
 msgstr "Optional client comment"
+
+msgid "Commission par billet (FCFA)"
+msgstr "Commission per ticket (FCFA)"
+
+msgid "Commissionnaire"
+msgstr "Agent"
+
+msgid "Commissionnaires"
+msgstr "Agents"
+
+msgid "Commissions"
+msgstr "Commissions"
+
+msgid "Commissions a verser"
+msgstr "Commissions to pay"
 
 msgid "Compagnie"
 msgstr "Company"
@@ -640,6 +742,12 @@ msgstr "Refuel date"
 msgid "Date visite technique"
 msgstr "Technical inspection date"
 
+msgid "Decaissement"
+msgstr "Cash out"
+
+msgid "Decaissements"
+msgstr "Cash outs"
+
 msgid "Decochez pour masquer"
 msgstr "Uncheck to hide"
 
@@ -702,14 +810,40 @@ msgstr ""
 "Ask the recipient for this code (never show it to them yourself) to confirm "
 "delivery."
 
+msgid "Depart"
+msgstr "Departure"
+
+msgid "Depense de voyage"
+msgstr "Trip expense"
+
+msgid "Depense introuvable."
+msgstr "Expense not found."
+
+msgid "Depenses"
+msgstr "Expenses"
+
+msgid "Depenses de voyage"
+msgstr "Trip expenses"
+
+msgid "Depenses du voyage"
+msgstr "Trip expenses"
+
 msgid "Derniere mise a jour"
 msgstr "Last update"
 
 msgid "Derniere position"
 msgstr "Last position"
 
+msgid "Dernieres caisses cloturees"
+msgstr "Last closed cash desks"
+
 msgid "Derniers entretiens"
 msgstr "Latest maintenance"
+
+msgid ""
+"Des billets existent deja sur des places au-dela de %(n)s : impossible de "
+"reduire le bus."
+msgstr "Tickets already exist on seats beyond %(n)s: cannot reduce the bus."
 
 msgid "Description"
 msgstr "Description"
@@ -726,6 +860,9 @@ msgstr "Details / parts changed"
 msgid "Details complementaires (facultatif)"
 msgstr "Additional details (optional)"
 
+msgid "Dettes (billets non payes)"
+msgstr "Debts (unpaid tickets)"
+
 msgid "Disponible"
 msgstr "Available"
 
@@ -740,6 +877,15 @@ msgstr "Estimated duration (hours)"
 
 msgid "Duree estimee en heures"
 msgstr "Estimated duration in hours"
+
+msgid "Duree totale des pauses (secondes)"
+msgstr "Total pause duration (seconds)"
+
+msgid "Ecart"
+msgstr "Difference"
+
+msgid "Ecart (FCFA)"
+msgstr "Difference (FCFA)"
 
 msgid "Effectifs par poste"
 msgstr "Staff by position"
@@ -789,6 +935,12 @@ msgstr "Under maintenance"
 msgid "En mission"
 msgstr "On duty"
 
+msgid "En pause"
+msgstr "Paused"
+
+msgid "En pause depuis"
+msgstr "Paused since"
+
 msgid "En repos"
 msgstr "Off duty"
 
@@ -798,11 +950,29 @@ msgstr "In service"
 msgid "En transit"
 msgstr "In transit"
 
+msgid "Encaissement"
+msgstr "Cash in"
+
+msgid "Encaissement / decaissement"
+msgstr "Cash in / cash out"
+
+msgid "Encaissements"
+msgstr "Cash ins"
+
+msgid "Encaissements par mode de paiement"
+msgstr "Cash ins by payment method"
+
+msgid "Encaisser"
+msgstr "Collect"
+
 msgid "Enregistre"
 msgstr "Registered"
 
 msgid "Enregistre par"
 msgstr "Registered by"
+
+msgid "Enregistrer"
+msgstr "Save"
 
 msgid "Enregistrer la modification"
 msgstr "Save the change"
@@ -825,6 +995,12 @@ msgstr "Sending a parcel"
 msgid "Especes"
 msgstr "Cash"
 
+msgid "Especes attendues en caisse"
+msgstr "Expected cash in drawer"
+
+msgid "Especes comptees (FCFA)"
+msgstr "Cash counted (FCFA)"
+
 msgid "Etat du stock"
 msgstr "Stock status"
 
@@ -843,6 +1019,15 @@ msgstr "Sender"
 msgid "Exploitation"
 msgstr "Operations"
 
+msgid "Fermer"
+msgstr "Close"
+
+msgid "Feuille chauffeur"
+msgstr "Driver sheet"
+
+msgid "Feuille chauffeur PDF"
+msgstr "Driver sheet PDF"
+
 msgid "Fiche bus"
 msgstr "Bus record"
 
@@ -854,6 +1039,15 @@ msgstr "Individual record"
 
 msgid "Finances du mois"
 msgstr "This month's finances"
+
+msgid "Fond de caisse"
+msgstr "Opening float"
+
+msgid "Fond de caisse (FCFA)"
+msgstr "Opening float (FCFA)"
+
+msgid "Fond de caisse a l'ouverture (FCFA)"
+msgstr "Opening float (FCFA)"
 
 msgid "Frais"
 msgstr "Fee"
@@ -918,6 +1112,9 @@ msgstr "Cannot confirm a transfer that is not registered yet."
 msgid "Imprimer"
 msgstr "Print"
 
+msgid "Imprimer / Enregistrer en PDF"
+msgstr "Print / Save as PDF"
+
 msgid "Imprimer ce rapport"
 msgstr "Print this report"
 
@@ -932,6 +1129,12 @@ msgstr "Print the manifest"
 
 msgid "Inactif"
 msgstr "Inactive"
+
+msgid "Indiquez le motif et un montant superieur a 0."
+msgstr "Enter the reason and an amount greater than 0."
+
+msgid "Intermediaire qui a apporte ce client (facultatif)"
+msgstr "Agent who brought this customer (optional)"
 
 msgid "J'ai verifie la piece d'identite du beneficiaire"
 msgstr "I have verified the recipient's ID document"
@@ -962,6 +1165,9 @@ msgstr "Was the attendant friendly?"
 
 msgid "La Maison vous remercie de votre fidelite"
 msgstr "The Company thanks you for your loyalty"
+
+msgid "La caisse est en pause : reprenez-la d'abord."
+msgstr "The cash desk is paused: resume it first."
 
 msgid "La climatisation fonctionnait-elle ?"
 msgstr "Was the air conditioning working?"
@@ -1080,6 +1286,9 @@ msgstr "Message"
 msgid "Mettre a jour le rapport"
 msgstr "Update the report"
 
+msgid "Mettre en pause"
+msgstr "Pause"
+
 msgid ""
 "Mis a False des que le magasin traite la demande, pour notifier le "
 "responsable qui l'a creee"
@@ -1108,6 +1317,9 @@ msgstr "Edit"
 msgid "Modifier le mot de passe"
 msgstr "Change password"
 
+msgid "Modifier plaque bus"
+msgstr "Change bus plate"
+
 msgid "Modifier un billet"
 msgstr "Edit a ticket"
 
@@ -1132,6 +1344,15 @@ msgstr "Amount (FCFA)"
 msgid "Montant a envoyer en FCFA"
 msgstr "Amount to send in FCFA"
 
+msgid "Montant compte a la cloture"
+msgstr "Amount counted at closing"
+
+msgid "Montant compte a la cloture (FCFA)"
+msgstr "Amount counted at closing (FCFA)"
+
+msgid "Montant compte moins montant attendu"
+msgstr "Counted amount minus expected amount"
+
 msgid "Montant envoye"
 msgstr "Amount sent"
 
@@ -1141,11 +1362,32 @@ msgstr "Amount sent in FCFA"
 msgid "Montant total"
 msgstr "Total amount"
 
+msgid "Montant verse au commissionnaire pour chaque billet apporte"
+msgstr "Amount paid to the agent for each ticket brought"
+
 msgid "Mot de passe"
 msgstr "Password"
 
 msgid "Mot de passe requis pour creer le compte."
 msgstr "Password required to create the account."
+
+msgid "Motif"
+msgstr "Reason"
+
+msgid "Motif (carburant, peage, repas...)"
+msgstr "Reason (fuel, toll, meals...)"
+
+msgid "Motif de la depense"
+msgstr "Expense reason"
+
+msgid "Mouvement de caisse"
+msgstr "Cash movement"
+
+msgid "Mouvement enregistre."
+msgstr "Movement recorded."
+
+msgid "Mouvements de caisse"
+msgstr "Cash movements"
 
 msgid "N de Bus"
 msgstr "Bus No."
@@ -1178,6 +1420,12 @@ msgstr ""
 msgid ""
 "Ne communiquez le code de retrait qu'au destinataire, jamais a l'expediteur."
 msgstr "Only give the withdrawal code to the recipient, never to the sender."
+
+msgid "Net (tous modes)"
+msgstr "Net (all methods)"
+
+msgid "Net du voyage"
+msgstr "Trip net"
 
 msgid "Niveau de fidelite"
 msgstr "Loyalty tier"
@@ -1221,6 +1469,9 @@ msgstr "Full name"
 msgid "Nom et prenom du passager"
 msgstr "Passenger's full name"
 
+msgid "Nom, telephone, n de billet"
+msgstr "Name, phone, ticket no."
+
 msgid "Nombre de places"
 msgstr "Number of seats"
 
@@ -1235,6 +1486,9 @@ msgstr "Not boarded"
 
 msgid "Non paye"
 msgstr "Unpaid"
+
+msgid "Non paye (dettes)"
+msgstr "Unpaid (debts)"
 
 msgid "Nord"
 msgstr "North"
@@ -1310,6 +1564,18 @@ msgstr "Display order (lower number = higher up)"
 msgid "Origine"
 msgstr "Origin"
 
+msgid "Ouverte"
+msgstr "Open"
+
+msgid "Ouverte le"
+msgstr "Opened on"
+
+msgid "Ouverture"
+msgstr "Opening"
+
+msgid "Ouvrir la caisse"
+msgstr "Open the cash desk"
+
 msgid "PDG / Directeur general"
 msgstr "CEO / General manager"
 
@@ -1324,6 +1590,9 @@ msgstr "Individual"
 
 msgid "Passager"
 msgstr "Passenger"
+
+msgid "Passagers"
+msgstr "Passengers"
 
 msgid "Passeport"
 msgstr "Passport"
@@ -1523,6 +1792,9 @@ msgstr "Today's revenue (FCFA)"
 msgid "Recette totale du jour"
 msgstr "Total revenue today"
 
+msgid "Rechercher"
+msgstr "Search"
+
 msgid "Recu"
 msgstr "Receipt"
 
@@ -1578,6 +1850,9 @@ msgstr "Warehouse response"
 msgid "Reponses du magasin a consulter"
 msgstr "Warehouse responses to review"
 
+msgid "Reprendre"
+msgstr "Resume"
+
 msgid "Requis uniquement si un nom d'utilisateur est renseigne ci-dessus."
 msgstr "Required only if a username is provided above."
 
@@ -1632,6 +1907,9 @@ msgstr "Back to the material request list"
 msgid "Retour a la liste des transferts"
 msgstr "Back to the transfer list"
 
+msgid "Retour a la vente"
+msgstr "Back to sales"
+
 msgid "Retour au tableau de bord"
 msgstr "Back to the dashboard"
 
@@ -1668,6 +1946,12 @@ msgstr "Select"
 msgid "Service"
 msgstr "Service"
 
+msgid "Session de caisse"
+msgstr "Cash desk session"
+
+msgid "Sessions de caisse"
+msgstr "Cash desk sessions"
+
 msgid "Seuil d'alerte"
 msgstr "Alert threshold"
 
@@ -1694,6 +1978,12 @@ msgstr "Seats"
 
 msgid "Sigle"
 msgstr "Acronym"
+
+msgid "Signature du chauffeur"
+msgstr "Driver's signature"
+
+msgid "Signature du responsable"
+msgstr "Manager's signature"
 
 msgid "Statut"
 msgstr "Status"
@@ -1767,6 +2057,12 @@ msgstr "Top 3 agencies (today's revenue)"
 
 msgid "Total"
 msgstr "Total"
+
+msgid "Total a recouvrer"
+msgstr "Total to recover"
+
+msgid "Total billets"
+msgstr "Total tickets"
 
 msgid "Total billets vendus"
 msgstr "Total tickets sold"
@@ -1882,6 +2178,9 @@ msgstr ""
 msgid "Un seul employe (facultatif)"
 msgstr "A single employee (optional)"
 
+msgid "Une caisse est deja ouverte pour cette agence."
+msgstr "A cash desk is already open for this agency."
+
 msgid "Unite"
 msgstr "Unit"
 
@@ -1912,6 +2211,9 @@ msgstr "Validated (parcel created)"
 msgid "Validee (transfert cree)"
 msgstr "Validated (transfer created)"
 
+msgid "Valider"
+msgstr "Confirm"
+
 msgid "Valides"
 msgstr "Validated"
 
@@ -1929,6 +2231,9 @@ msgstr "Ticket sales"
 
 msgid "Vente reussie"
 msgstr "Sale successful"
+
+msgid "Ventes par vendeur"
+msgstr "Sales by seller"
 
 msgid "Vers quel service renvoie la promotion"
 msgstr "Which service the promotion links to"
@@ -2054,14 +2359,23 @@ msgstr "ticket(s)"
 msgid "billet(s) au total"
 msgstr "ticket(s) total"
 
+msgid "billet(s) non paye(s)"
+msgstr "unpaid ticket(s)"
+
 msgid "billets"
 msgstr "tickets"
+
+msgid "cloturee le"
+msgstr "closed on"
 
 msgid "colis"
 msgstr "parcels"
 
 msgid "genere le"
 msgstr "generated on"
+
+msgid "gratuit(s)"
+msgstr "free"
 
 msgid "il y a"
 msgstr "ago"

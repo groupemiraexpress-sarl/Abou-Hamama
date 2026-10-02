@@ -8,7 +8,7 @@ from .models import (
     Client, Reservation, Colis, Employe, TransfertArgent,
     Entretien, PleinCarburant, Promotion, DemandeColis, DemandeTransfert, Ligne, ArretLigne,
     AlerteVoyage, AvisVoyage, QuestionFAQ, PushToken, AppareilConfirme, DemandeConfirmationAppareil, Plainte,
-    ArticleStock, DemandeMateriel,
+    ArticleStock, DemandeMateriel, Commissionnaire, Depense, SessionCaisse, MouvementCaisse,
 )
 from django import forms
 from django.contrib.auth.models import User
@@ -1499,3 +1499,58 @@ class PlainteAdmin(admin.ModelAdmin):
                 f"Vous avez recu une reponse concernant : {obj.sujet}",
                 {"type": "plainte_reponse", "plainte_id": obj.id},
             )
+
+
+@admin.register(Commissionnaire)
+class CommissionnaireAdmin(FiltreAgenceMixin, admin.ModelAdmin):
+    champs_agence = ['agence']
+    champ_createur = None
+    list_display = ('nom', 'telephone', 'agence', 'commission_par_billet', 'actif')
+    list_filter = ('actif',)
+    search_fields = ('nom', 'telephone')
+
+    def get_exclude(self, request, obj=None):
+        # Un agent d'agence ne choisit pas l'agence : c'est la sienne.
+        return None if voit_tout(request.user) else ('agence',)
+
+    def save_model(self, request, obj, form, change):
+        if not voit_tout(request.user) and not obj.agence_id:
+            obj.agence = agence_de(request.user)
+        super().save_model(request, obj, form, change)
+
+
+class _LectureSeule:
+    """Journaux de caisse : consultables, jamais modifiables a la main (audit)."""
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(Depense)
+class DepenseAdmin(_LectureSeule, FiltreAgenceMixin, admin.ModelAdmin):
+    champs_agence = ['voyage__bus__agence']
+    champ_createur = None
+    list_display = ('voyage', 'libelle', 'montant', 'cree_par', 'date_creation')
+    list_filter = ('date_creation',)
+    search_fields = ('libelle', 'voyage__bus__immatriculation')
+
+
+@admin.register(SessionCaisse)
+class SessionCaisseAdmin(_LectureSeule, FiltreAgenceMixin, admin.ModelAdmin):
+    champs_agence = ['agence']
+    champ_createur = None
+    list_display = ('agence', 'employe', 'statut', 'ouverte_le', 'cloturee_le', 'fond_initial', 'montant_compte', 'ecart')
+    list_filter = ('statut', 'ouverte_le')
+
+
+@admin.register(MouvementCaisse)
+class MouvementCaisseAdmin(_LectureSeule, FiltreAgenceMixin, admin.ModelAdmin):
+    champs_agence = ['session__agence']
+    champ_createur = None
+    list_display = ('session', 'type_mouvement', 'montant', 'motif', 'cree_par', 'date_creation')
+    list_filter = ('type_mouvement', 'date_creation')

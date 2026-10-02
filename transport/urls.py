@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from . import api_views
+from . import views_caisse
 from rest_framework_simplejwt.views import TokenRefreshView
 
 app_name = 'transport'
@@ -25,6 +26,11 @@ urlpatterns = [
     path('espace/recu-demande-materiel/<int:demande_id>/', views.recu_demande_materiel, name='recu_demande_materiel'),
     path('espace/etat-stock/', views.etat_stock, name='etat_stock'),
     path('espace/voyage/<int:voyage_id>/plan/', views.plan_voyage, name='plan_voyage'),
+    path('espace/voyage/<int:voyage_id>/depenses/', views_caisse.depenses_voyage, name='depenses_voyage'),
+    path('espace/voyage/<int:voyage_id>/changer-bus/', views_caisse.changer_bus_voyage, name='changer_bus_voyage'),
+    path('espace/voyage/<int:voyage_id>/feuille-chauffeur/', views_caisse.feuille_chauffeur, name='feuille_chauffeur'),
+    path('espace/caisse/', views_caisse.caisse, name='caisse'),
+    path('espace/dettes/', views_caisse.dettes, name='dettes'),
     path('espace/api-stats-tableau-bord/', views.api_stats_tableau_bord, name='api_stats_tableau_bord'),
     path('espace/historique-employe/', views.historique_employe, name='historique_employe'),
 

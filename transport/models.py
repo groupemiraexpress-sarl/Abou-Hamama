@@ -279,6 +279,7 @@ class Reservation(models.Model):
     date_paiement = models.DateTimeField(_("Date de paiement"), null=True, blank=True)
     alerte_expiration_envoyee = models.BooleanField(_("Alerte d'expiration envoyee"), default=False, help_text=_("Vrai si l'avertissement (2h avant l'annulation automatique) a deja ete envoye"))
     notes = models.TextField(_("Notes"), blank=True)
+    commissionnaire = models.ForeignKey('Commissionnaire', on_delete=models.SET_NULL, null=True, blank=True, related_name='reservations', verbose_name=_("Commissionnaire"), help_text=_("Intermediaire qui a apporte ce client (facultatif)"))
 
     @property
     def type_piece_libelle(self):
@@ -983,3 +984,90 @@ class Plainte(models.Model):
         verbose_name = _("Plainte")
         verbose_name_plural = _("Plaintes")
         ordering = ['-date_creation']
+
+
+class Commissionnaire(models.Model):
+    agence = models.ForeignKey(Agence, on_delete=models.CASCADE, related_name='commissionnaires', null=True, blank=True, verbose_name=_("Agence"))
+    nom = models.CharField(_("Nom"), max_length=100)
+    telephone = models.CharField(_("Telephone"), max_length=20, blank=True)
+    commission_par_billet = models.PositiveIntegerField(_("Commission par billet (FCFA)"), default=0, help_text=_("Montant verse au commissionnaire pour chaque billet apporte"))
+    actif = models.BooleanField(_("Actif"), default=True)
+
+    class Meta:
+        verbose_name = _("Commissionnaire")
+        verbose_name_plural = _("Commissionnaires")
+        ordering = ['nom']
+
+    def __str__(self):
+        return self.nom
+
+
+class Depense(models.Model):
+    voyage = models.ForeignKey(Voyage, on_delete=models.CASCADE, related_name='depenses', verbose_name=_("Voyage"))
+    libelle = models.CharField(_("Motif de la depense"), max_length=150)
+    montant = models.PositiveIntegerField(_("Montant (FCFA)"))
+    cree_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='depenses_creees', verbose_name=_("Enregistre par"))
+    date_creation = models.DateTimeField(_("Date"), auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("Depense de voyage")
+        verbose_name_plural = _("Depenses de voyage")
+        ordering = ['-date_creation']
+
+    def __str__(self):
+        return f"{self.libelle} - {self.montant} FCFA"
+
+
+class SessionCaisse(models.Model):
+    STATUT_CHOICES = [
+        ('ouverte', _('Ouverte')),
+        ('pause', _('En pause')),
+        ('cloturee', _('Cloturee')),
+    ]
+
+    agence = models.ForeignKey(Agence, on_delete=models.PROTECT, related_name='sessions_caisse', verbose_name=_("Agence"))
+    employe = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='sessions_caisse', verbose_name=_("Caissier"))
+    statut = models.CharField(_("Statut"), max_length=10, choices=STATUT_CHOICES, default='ouverte')
+    ouverte_le = models.DateTimeField(_("Ouverte le"), auto_now_add=True)
+    cloturee_le = models.DateTimeField(_("Cloturee le"), null=True, blank=True)
+    fond_initial = models.PositiveIntegerField(_("Fond de caisse a l'ouverture (FCFA)"), default=0)
+    pause_depuis = models.DateTimeField(_("En pause depuis"), null=True, blank=True)
+    secondes_pause = models.PositiveIntegerField(_("Duree totale des pauses (secondes)"), default=0)
+    montant_compte = models.IntegerField(_("Montant compte a la cloture (FCFA)"), null=True, blank=True)
+    ecart = models.IntegerField(_("Ecart (FCFA)"), null=True, blank=True, help_text=_("Montant compte moins montant attendu"))
+    notes = models.TextField(_("Notes"), blank=True)
+
+    class Meta:
+        verbose_name = _("Session de caisse")
+        verbose_name_plural = _("Sessions de caisse")
+        ordering = ['-ouverte_le']
+
+    def __str__(self):
+        return f"Caisse {self.agence} - {self.ouverte_le:%d/%m/%Y %H:%M}"
+
+    @property
+    def fin(self):
+        from django.utils import timezone
+        return self.cloturee_le or timezone.now()
+
+
+class MouvementCaisse(models.Model):
+    TYPE_CHOICES = [
+        ('encaissement', _('Encaissement')),
+        ('decaissement', _('Decaissement')),
+    ]
+
+    session = models.ForeignKey(SessionCaisse, on_delete=models.CASCADE, related_name='mouvements', verbose_name=_("Session de caisse"))
+    type_mouvement = models.CharField(_("Type"), max_length=15, choices=TYPE_CHOICES)
+    montant = models.PositiveIntegerField(_("Montant (FCFA)"))
+    motif = models.CharField(_("Motif"), max_length=150)
+    cree_par = models.ForeignKey('Employe', on_delete=models.SET_NULL, null=True, blank=True, related_name='mouvements_caisse', verbose_name=_("Enregistre par"))
+    date_creation = models.DateTimeField(_("Date"), auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("Mouvement de caisse")
+        verbose_name_plural = _("Mouvements de caisse")
+        ordering = ['-date_creation']
+
+    def __str__(self):
+        return f"{self.get_type_mouvement_display()} {self.montant} FCFA - {self.motif}"

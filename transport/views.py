@@ -6,7 +6,7 @@ from django.utils.translation import gettext as _
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
-from .models import Voyage, Client, Reservation, Agence, Chauffeur, Employe, Colis, TransfertArgent, Siege, DemandeMateriel, ArticleStock
+from .models import Voyage, Client, Reservation, Agence, Chauffeur, Employe, Colis, TransfertArgent, Siege, DemandeMateriel, ArticleStock, Commissionnaire
 from django.urls import reverse
 from .admin_filtres import agence_de, voit_tout
 
@@ -80,7 +80,13 @@ def vendre_billet(request):
 
     voyages = voyages.order_by('date_depart', 'heure_depart')
 
-    contexte = {'voyages': voyages, 'employe': employe}
+    commissionnaires = Commissionnaire.objects.filter(actif=True)
+    if not voit_tout(request.user):
+        agence_c = agence_de(request.user)
+        commissionnaires = commissionnaires.filter(agence=agence_c) if agence_c else commissionnaires.none()
+
+    contexte = {'voyages': voyages, 'employe': employe, 'commissionnaires': commissionnaires.order_by('nom'),
+                'peut_changer_bus': request.user.is_superuser or poste in ('pdg', 'responsable', 'secretaire')}
 
     # Piece d'identite : meme regle de longueur que l'app mobile
     # (api_reserver_siege), pour rester coherent entre guichet et app.
@@ -95,6 +101,8 @@ def vendre_billet(request):
         statut_paiement = request.POST.get('statut_paiement', 'paye')
         if statut_paiement not in ('paye', 'non_paye', 'gratuit'):
             statut_paiement = 'paye'
+
+        commissionnaire = commissionnaires.filter(id=request.POST.get('commissionnaire') or 0).first()
 
         if not voyage_id or not client_nom or not client_telephone:
             contexte['erreur'] = _("Veuillez remplir tous les champs obligatoires.")
@@ -182,6 +190,8 @@ def vendre_billet(request):
                     statut='en_attente' if statut_paiement == 'non_paye' else 'payee',
                     mode_paiement='' if statut_paiement == 'non_paye' else mode_paiement,
                     cree_par=employe,
+                    commissionnaire=commissionnaire,
+                    date_paiement=None if statut_paiement == 'non_paye' else timezone.now(),
                 )
                 if statut_paiement == 'gratuit':
                     # Billet offert : comptabilise a 0 FCFA (apres creation,
@@ -249,6 +259,7 @@ def plan_voyage(request, voyage_id):
         'total': sum(r.montant_total for r in payees),
         'capacite': len(sieges),
     }
+    depenses = list(voyage.depenses.values_list('montant', flat=True))
     registre = [{
         'id': r.id,
         'place': r.siege.numero if r.siege_id else None,
@@ -262,7 +273,11 @@ def plan_voyage(request, voyage_id):
         'vendeur': r.cree_par.nom if r.cree_par_id else '',
         'heure': timezone.localtime(r.date_reservation).strftime('%H:%M'),
     } for r in reservations]
-    return JsonResponse({'sieges': sieges, 'stats': stats, 'registre': registre, 'prix': voyage.prix})
+    return JsonResponse({
+        'sieges': sieges, 'stats': stats, 'registre': registre, 'prix': voyage.prix,
+        'depenses': {'nombre': len(depenses), 'total': sum(depenses)},
+        'bus': voyage.bus.immatriculation,
+    })
 
 
 @staff_member_required
