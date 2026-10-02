@@ -24,6 +24,7 @@ urlpatterns = [
     path('espace/recu-transfert/<int:transfert_id>/', views.recu_transfert, name='recu_transfert'),
     path('espace/recu-demande-materiel/<int:demande_id>/', views.recu_demande_materiel, name='recu_demande_materiel'),
     path('espace/etat-stock/', views.etat_stock, name='etat_stock'),
+    path('espace/voyage/<int:voyage_id>/plan/', views.plan_voyage, name='plan_voyage'),
     path('espace/api-stats-tableau-bord/', views.api_stats_tableau_bord, name='api_stats_tableau_bord'),
     path('espace/historique-employe/', views.historique_employe, name='historique_employe'),
 

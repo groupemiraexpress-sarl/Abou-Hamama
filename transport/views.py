@@ -92,6 +92,9 @@ def vendre_billet(request):
         client_telephone = request.POST.get('client_telephone', '').strip()
         nombre_places = request.POST.get('nombre_places', '1').strip()
         mode_paiement = request.POST.get('mode_paiement', 'especes')
+        statut_paiement = request.POST.get('statut_paiement', 'paye')
+        if statut_paiement not in ('paye', 'non_paye', 'gratuit'):
+            statut_paiement = 'paye'
 
         if not voyage_id or not client_nom or not client_telephone:
             contexte['erreur'] = _("Veuillez remplir tous les champs obligatoires.")
@@ -176,10 +179,15 @@ def vendre_billet(request):
                     voyageur_telephone=p['telephone'],
                     voyageur_type_piece=p['type_piece'],
                     voyageur_numero_piece=p['numero_piece'],
-                    statut='payee',
-                    mode_paiement=mode_paiement,
+                    statut='en_attente' if statut_paiement == 'non_paye' else 'payee',
+                    mode_paiement='' if statut_paiement == 'non_paye' else mode_paiement,
                     cree_par=employe,
                 )
+                if statut_paiement == 'gratuit':
+                    # Billet offert : comptabilise a 0 FCFA (apres creation,
+                    # car save() recalcule le montant depuis le prix du voyage).
+                    Reservation.objects.filter(pk=reservation.pk).update(montant_total=0, notes='Gratuit')
+                    reservation.montant_total = 0
                 reservations_creees.append(reservation)
         except ValueError as e:
             contexte['erreur'] = str(e)
@@ -189,6 +197,72 @@ def vendre_billet(request):
         return redirect(f"{reverse('transport:billets_confirmes')}?ids={ids}")
 
     return render(request, 'transport/vendre_billet.html', contexte)
+
+
+@staff_member_required
+def plan_voyage(request, voyage_id):
+    """Plan des sieges + registre des ventes d'un voyage (JSON, pour la page de vente)."""
+    employe = getattr(request.user, 'employe', None)
+    poste = employe.poste if employe else None
+    if not (request.user.is_superuser or poste in ('pdg', 'responsable', 'secretaire', 'guichetier', 'caissier')):
+        return JsonResponse({'erreur': 'interdit'}, status=403)
+    voyage = Voyage.objects.filter(id=voyage_id).select_related('bus__agence').first()
+    if not voyage:
+        return JsonResponse({'erreur': 'introuvable'}, status=404)
+    if not voit_tout(request.user):
+        agence = agence_de(request.user)
+        if not agence or voyage.bus.agence_id != agence.id:
+            return JsonResponse({'erreur': 'interdit'}, status=403)
+
+    reservations = list(
+        Reservation.objects.filter(voyage=voyage)
+        .select_related('siege', 'cree_par')
+        .order_by('siege__numero', 'date_reservation')
+    )
+    etat_par_siege = {}
+    for r in reservations:
+        if not r.siege_id:
+            continue
+        if r.statut in ('annulee', 'remboursee'):
+            etat_par_siege.setdefault(r.siege.numero, 'annule')
+            continue
+        if r.embarque:
+            etat = 'embarque'
+        elif r.statut == 'payee':
+            etat = 'valide'
+        else:
+            etat = 'vendu'
+        etat_par_siege[r.siege.numero] = etat
+    sieges = [
+        {'numero': sg.numero, 'etat': etat_par_siege.get(sg.numero, 'libre')}
+        for sg in Siege.objects.filter(voyage=voyage).order_by('numero')
+    ]
+
+    actives = [r for r in reservations if r.statut not in ('annulee', 'remboursee')]
+    payees = [r for r in actives if r.statut == 'payee']
+    stats = {
+        'billets': len(actives),
+        'valides': len(payees),
+        'embarques': sum(1 for r in actives if r.embarque),
+        'en_attente': sum(1 for r in actives if r.statut == 'en_attente'),
+        'gratuits': sum(1 for r in payees if r.montant_total == 0),
+        'total': sum(r.montant_total for r in payees),
+        'capacite': len(sieges),
+    }
+    registre = [{
+        'id': r.id,
+        'place': r.siege.numero if r.siege_id else None,
+        'nom': f"{r.voyageur_prenom} {r.voyageur_nom}".strip(),
+        'telephone': r.voyageur_telephone,
+        'prix': r.montant_total,
+        'paiement': r.get_mode_paiement_display() if r.mode_paiement else '',
+        'statut': r.statut,
+        'statut_libelle': r.get_statut_display(),
+        'embarque': r.embarque,
+        'vendeur': r.cree_par.nom if r.cree_par_id else '',
+        'heure': timezone.localtime(r.date_reservation).strftime('%H:%M'),
+    } for r in reservations]
+    return JsonResponse({'sieges': sieges, 'stats': stats, 'registre': registre, 'prix': voyage.prix})
 
 
 @staff_member_required

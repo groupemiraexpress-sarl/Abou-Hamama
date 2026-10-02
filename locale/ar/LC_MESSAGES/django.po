@@ -23,6 +23,9 @@ msgstr "للمعالجة"
 msgid "Accompagnateur aimable"
 msgstr "المرافق لطيف"
 
+msgid "Acheteur et paiement"
+msgstr "المشتري والدفع"
+
 msgid "Acte de naissance"
 msgstr "شهادة الميلاد"
 
@@ -382,6 +385,9 @@ msgstr "السائقون"
 
 msgid "Chauffeurs et bus"
 msgstr "السائقون والحافلات"
+
+msgid "Choisir un siege"
+msgstr "اختيار مقعد"
 
 msgid "Choisir un voyage"
 msgstr "اختيار رحلة"
@@ -862,6 +868,12 @@ msgstr "الرسوم المحددة من الوكالة"
 msgid "Freins"
 msgstr "الفرامل"
 
+msgid "Gratuit"
+msgstr "مجاني"
+
+msgid "Gratuits"
+msgstr "مجانية"
+
 msgid "Guichetier / billettiste"
 msgstr "موظف شباك التذاكر"
 
@@ -1007,6 +1019,13 @@ msgstr ""
 
 msgid "Le siege %(s)s a ete choisi pour plusieurs passagers."
 msgstr "تم اختيار المقعد %(s)s لعدة ركاب."
+
+msgid ""
+"Les places annulees peuvent etre reaffectees. Cliquez pour les revendre."
+msgstr "يمكن إعادة تخصيص المقاعد الملغاة. انقر لبيعها من جديد."
+
+msgid "Libre"
+msgstr "شاغر"
 
 msgid "Ligne"
 msgstr "الخط"
@@ -1160,6 +1179,9 @@ msgstr "مستوى الولاء"
 msgid "Nom"
 msgstr "الاسم"
 
+msgid "Nom complet"
+msgstr "الاسم الكامل"
+
 msgid "Nom d'utilisateur (connexion)"
 msgstr "اسم المستخدم (تسجيل الدخول)"
 
@@ -1204,6 +1226,9 @@ msgstr "العدد الإجمالي للرحلات المنجزة"
 
 msgid "Non embarque"
 msgstr "لم يصعد"
+
+msgid "Non paye"
+msgstr "غير مدفوع"
 
 msgid "Nord"
 msgstr "الشمال"
@@ -1282,6 +1307,9 @@ msgstr "المصدر"
 msgid "PDG / Directeur general"
 msgstr "المدير العام"
 
+msgid "Paiement"
+msgstr "الدفع"
+
 msgid "Parraine par"
 msgstr "أحاله"
 
@@ -1293,6 +1321,9 @@ msgstr "الراكب"
 
 msgid "Passeport"
 msgstr "جواز السفر"
+
+msgid "Paye"
+msgstr "مدفوع"
 
 msgid "Payee"
 msgstr "مدفوعة"
@@ -1315,17 +1346,26 @@ msgstr "الوثيقة"
 msgid "Piece d'identite obligatoire pour le passager %(i)s."
 msgstr "وثيقة الهوية إلزامية للراكب %(i)s."
 
+msgid "Place"
+msgstr "المقعد"
+
 msgid "Places dispo (reel)"
 msgstr "الأماكن المتاحة (فعلي)"
 
 msgid "Places disponibles"
 msgstr "المقاعد المتاحة"
 
+msgid "Places selectionnees"
+msgstr "المقاعد المختارة"
+
 msgid "Plainte"
 msgstr "شكوى"
 
 msgid "Plaintes"
 msgstr "الشكاوى"
+
+msgid "Plan du bus"
+msgstr "مخطط الحافلة"
 
 msgid "Plein de carburant"
 msgstr "تعبئة الوقود"
@@ -1495,6 +1535,9 @@ msgstr "المرجع"
 msgid "Refusee"
 msgstr "مرفوضة"
 
+msgid "Registre des ventes"
+msgstr "سجل المبيعات"
+
 msgid "Reinitialiser"
 msgstr "إعادة تعيين"
 
@@ -1613,6 +1656,9 @@ msgstr "الأقسام المراد تضمينها"
 msgid "Securite"
 msgstr "الأمن"
 
+msgid "Selectionne"
+msgstr "محدد"
+
 msgid "Selectionner"
 msgstr "اختيار"
 
@@ -1673,6 +1719,9 @@ msgstr "الموضوع"
 
 msgid "Tableau de bord PDG"
 msgstr "لوحة تحكم المدير العام"
+
+msgid "Taux d'occupation"
+msgstr "نسبة الإشغال"
 
 msgid "Tel"
 msgstr "هاتف"
@@ -1855,17 +1904,29 @@ msgstr "القيمة المصرح بها بالفرنك"
 msgid "Valeur totale du stock"
 msgstr "القيمة الإجمالية للمخزون"
 
+msgid "Valide"
+msgstr "مؤكد"
+
 msgid "Validee (colis cree)"
 msgstr "مؤكدة (تم إنشاء الطرد)"
 
 msgid "Validee (transfert cree)"
 msgstr "مؤكدة (تم إنشاء التحويل)"
 
-msgid "Valider la vente"
-msgstr "تأكيد البيع"
+msgid "Valides"
+msgstr "مؤكدة"
+
+msgid "Vendeur"
+msgstr "البائع"
 
 msgid "Vendre un billet"
 msgstr "بيع تذكرة"
+
+msgid "Vendu"
+msgstr "مباع"
+
+msgid "Vente de billets"
+msgstr "بيع التذاكر"
 
 msgid "Vente reussie"
 msgstr "تمت عملية البيع بنجاح"
@@ -2017,6 +2078,9 @@ msgstr "المستلم"
 
 msgid "place(s)"
 msgstr "مقعد (مقاعد)"
+
+msgid "places"
+msgstr "مقعدا"
 
 msgid "transfert(s)"
 msgstr "حوالة (حوالات)"

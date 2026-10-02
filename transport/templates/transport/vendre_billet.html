@@ -4,13 +4,15 @@
 {% block entete %}{% trans "Vendre un billet" %}{% endblock %}
 {% block extra_head %}
 <style>
-    .etiquette { display:block; margin-bottom:6px; font-size:.9rem; color:#374151; font-weight:600; }
-    .etiquette-petite { display:block; margin-bottom:4px; font-size:.85rem; color:#374151; }
+    .bandeau { background:linear-gradient(135deg,#6674dd,#7a5cb8); color:#fff; border-radius:16px; padding:20px 24px; margin-bottom:16px; }
+    .bandeau h2 { margin:0 0 4px; font-size:1.5rem; }
+    .bandeau p { margin:0; opacity:.85; font-size:.9rem; }
+    .carte-blanche { background:#fff; border-radius:16px; padding:20px; margin-bottom:16px; box-shadow:0 4px 14px rgba(31,56,100,.08); }
+    .carte-blanche h3 { margin:0 0 14px; color:#1F3864; font-size:1.15rem; }
+    .etiquette { display:block; margin-bottom:6px; font-size:.78rem; color:#4b5563; font-weight:700; letter-spacing:.4px; text-transform:uppercase; }
+    .etiquette-petite { display:block; margin-bottom:4px; font-size:.78rem; color:#4b5563; font-weight:700; letter-spacing:.3px; text-transform:uppercase; }
     .groupe-choix { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
-    .tuile {
-        border:2px solid #d1d5db; border-radius:10px; background:#fff; color:#374151;
-        padding:10px 14px; font-size:.95rem; cursor:pointer; text-align:left; line-height:1.3;
-    }
+    .tuile { border:2px solid #d1d5db; border-radius:10px; background:#fff; color:#374151; padding:10px 14px; font-size:.95rem; cursor:pointer; text-align:left; line-height:1.3; }
     .tuile:hover { border-color:#1F3864; }
     .tuile.actif { border-color:#1F3864; background:#1F3864; color:#fff; }
     .tuile-voyage { flex:1 1 100%; border-color:#86efac; background:#f0fdf4; }
@@ -20,31 +22,71 @@
     .ligne-voyage { display:flex; justify-content:space-between; align-items:baseline; gap:10px; }
     .prix-voyage { font-weight:700; color:#2563eb; white-space:nowrap; }
     .tuile-voyage.actif .prix-voyage { color:#bfdbfe; }
+    .tuile-court { flex:1 1 calc(50% - 8px); text-align:center; font-weight:600; }
     .barre-recherche { display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px; align-items:end; margin-bottom:14px; }
     .barre-recherche select, .barre-recherche input { width:100%; margin-bottom:0; }
     .message-vide { display:none; text-align:center; color:#6b7280; font-size:.9rem; margin-bottom:14px; }
-    .tuile-court { flex:1 1 calc(50% - 8px); text-align:center; font-weight:600; }
-    .grille-sieges { display:grid; grid-template-columns:repeat(auto-fill, minmax(54px, 1fr)); gap:6px; margin-bottom:10px; }
-    .siege {
-        border:2px solid #16a34a; border-radius:8px; background:#f0fdf4; color:#166534;
-        padding:10px 0; font-weight:700; cursor:pointer; text-align:center;
-    }
-    .siege.actif { background:#16a34a; color:#fff; }
-    .siege:disabled { border-color:#e5e7eb; background:#f3f4f6; color:#9ca3af; cursor:not-allowed; text-decoration:line-through; }
-    .message-formulaire { display:none; background:#fef2f2; color:#b91c1c; padding:10px; border-radius:8px; margin-top:10px; font-size:.9rem; text-align:center; }
+    .disposition-plan { display:grid; grid-template-columns:minmax(0,1fr) 260px; gap:16px; }
+    @media (max-width:820px) { .disposition-plan { grid-template-columns:1fr; } }
+    .legende { display:flex; flex-wrap:wrap; gap:14px; font-size:.82rem; color:#4b5563; margin-bottom:12px; }
+    .legende i { display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:5px; vertical-align:-1px; }
+    .grille-sieges { display:grid; grid-template-columns:repeat(auto-fill, minmax(52px, 1fr)); gap:8px; background:#f9fafb; border:1px solid #eef0f3; border-radius:12px; padding:14px; }
+    .siege { border:2px solid #e5e7eb; border-radius:8px; background:#fff; color:#374151; padding:11px 0; font-weight:700; cursor:pointer; text-align:center; }
+    .siege.libre:hover { border-color:#3b82f6; }
+    .siege.selectionne { background:#3b82f6; border-color:#3b82f6; color:#fff; }
+    .siege.vendu { background:#fef3c7; border-color:#f59e0b; color:#92400e; cursor:not-allowed; }
+    .siege.valide { background:#dcfce7; border-color:#16a34a; color:#166534; cursor:not-allowed; }
+    .siege.embarque { background:#e0e7ff; border-color:#6366f1; color:#3730a3; cursor:not-allowed; }
+    .siege.annule { background:#fee2e2; border-color:#ef4444; color:#991b1b; }
+    .puce-libre { background:#fff; border:1px solid #cbd5e1; } .puce-sel { background:#3b82f6; } .puce-vendu { background:#f59e0b; }
+    .puce-valide { background:#16a34a; } .puce-embarque { background:#6366f1; } .puce-annule { background:#ef4444; }
+    .info-plan { background:#fffbeb; border:1px solid #fde68a; color:#92400e; border-radius:10px; padding:10px 12px; font-size:.85rem; margin-top:12px; }
+    .colonne-resume .mini { background:#fff; border-radius:14px; padding:14px 16px; margin-bottom:12px; box-shadow:0 4px 14px rgba(31,56,100,.08); }
+    .mini .titre { font-size:.72rem; font-weight:700; color:#6b7280; letter-spacing:.5px; text-transform:uppercase; }
+    .mini .valeur { font-size:1.7rem; font-weight:800; color:#1F3864; }
+    .mini .valeur.vert { color:#059669; }
+    .mini .sous { font-size:.8rem; color:#6b7280; }
+    .barre-occupation { height:8px; background:#e5e7eb; border-radius:99px; overflow:hidden; margin-top:8px; }
+    .barre-occupation div { height:100%; background:#3b82f6; width:0; transition:width .3s; }
+    .actions-paiement { display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; margin-top:16px; padding-top:16px; border-top:1px solid #eef0f3; }
+    .btn-paye, .btn-nonpaye, .btn-gratuit { border:none; border-radius:10px; padding:12px 20px; font-weight:700; font-size:.95rem; cursor:pointer; color:#fff; }
+    .btn-paye { background:#10b981; } .btn-nonpaye { background:#f59e0b; } .btn-gratuit { background:#3b82f6; }
+    .btn-paye:hover { background:#059669; } .btn-nonpaye:hover { background:#d97706; } .btn-gratuit:hover { background:#2563eb; }
+    .stats-registre { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:12px; margin-bottom:16px; }
+    .stat { border-radius:14px; padding:14px 16px; color:#fff; }
+    .stat .titre { font-size:.72rem; font-weight:700; letter-spacing:.5px; text-transform:uppercase; opacity:.9; }
+    .stat .valeur { font-size:1.5rem; font-weight:800; }
+    .s-orange { background:linear-gradient(135deg,#f97316,#ea580c); } .s-vert { background:linear-gradient(135deg,#22c55e,#15803d); }
+    .s-cyan { background:linear-gradient(135deg,#06b6d4,#0e7490); } .s-ambre { background:linear-gradient(135deg,#f59e0b,#b45309); }
+    .s-bleu { background:linear-gradient(135deg,#3b82f6,#1d4ed8); } .s-violet { background:linear-gradient(135deg,#a855f7,#7e22ce); }
+    .s-turquoise { background:linear-gradient(135deg,#14b8a6,#0f766e); }
+    .table-registre { width:100%; border-collapse:collapse; font-size:.88rem; }
+    .table-registre th { text-align:left; padding:10px 8px; font-size:.72rem; color:#6b7280; letter-spacing:.5px; text-transform:uppercase; border-bottom:2px solid #eef0f3; }
+    .table-registre td { padding:10px 8px; border-bottom:1px solid #f1f5f9; }
+    .pastille { display:inline-block; padding:3px 10px; border-radius:99px; font-size:.75rem; font-weight:700; }
+    .p-payee { background:#dcfce7; color:#166534; } .p-en_attente { background:#fef3c7; color:#92400e; } .p-embarque { background:#e0e7ff; color:#3730a3; }
+    .message-formulaire { display:none; background:#fef2f2; color:#b91c1c; padding:10px; border-radius:8px; margin-top:12px; font-size:.9rem; text-align:center; }
 </style>
 {% endblock %}
 {% block contenu %}
+<div class="bandeau">
+    <h2>{% trans "Vente de billets" %}</h2>
+    <p id="bandeau-voyage">{% now "l j F Y" %}</p>
+</div>
+
 {% if erreur %}
 <div style="background:#fef2f2; color:#b91c1c; padding:12px; border-radius:8px; margin-bottom:16px; font-size:.9rem; text-align:center;">
     <i class="fa-solid fa-circle-exclamation"></i> {{ erreur }}
 </div>
 {% endif %}
 {% if voyages %}
-<div class="card">
-    <form method="post" action="{% url 'transport:vendre_billet' %}" id="form-vente">
-        {% csrf_token %}
-        <label class="etiquette">{% trans "Voyage" %}</label>
+<form method="post" action="{% url 'transport:vendre_billet' %}" id="form-vente">
+    {% csrf_token %}
+    <input type="hidden" name="voyage" id="champ-voyage" value="">
+    <input type="hidden" name="nombre_places" id="nombre_places" value="1">
+
+    <div class="carte-blanche">
+        <h3>{% trans "Choisir un voyage" %}</h3>
         <div class="barre-recherche">
             <div>
                 <span class="etiquette-petite">{% trans "Depart" %}</span>
@@ -60,12 +102,11 @@
             </div>
             <button type="button" class="tuile" id="filtre-reinit">{% trans "Reinitialiser" %}</button>
         </div>
-        <input type="hidden" name="voyage" id="champ-voyage" value="">
         <div class="groupe-choix" id="choix-voyage">
             {% for voyage in voyages %}
             <button type="button" class="tuile tuile-voyage" data-valeur="{{ voyage.id }}"
                     data-depart="{{ voyage.trajet.ville_depart }}" data-arrivee="{{ voyage.trajet.ville_arrivee }}"
-                    data-date="{{ voyage.date_depart|date:'Y-m-d' }}">
+                    data-date="{{ voyage.date_depart|date:'Y-m-d' }}" data-prix="{{ voyage.prix }}">
                 <span class="ligne-voyage">
                     <strong>{{ voyage.trajet.ville_depart }} → {{ voyage.trajet.ville_arrivee }}</strong>
                     <span class="prix-voyage">{{ voyage.prix }} FCFA</span>
@@ -76,16 +117,47 @@
             {% endfor %}
         </div>
         <p id="aucun-resultat" class="message-vide">{% trans "Aucun voyage ne correspond a la recherche." %}</p>
+    </div>
 
+    <div class="disposition-plan" id="zone-plan" style="display:none;">
+        <div class="carte-blanche">
+            <h3 id="titre-plan">{% trans "Plan du bus" %}</h3>
+            <div class="legende">
+                <span><i class="puce-libre"></i>{% trans "Libre" %}</span>
+                <span><i class="puce-sel"></i>{% trans "Selectionne" %}</span>
+                <span><i class="puce-vendu"></i>{% trans "Vendu" %}</span>
+                <span><i class="puce-valide"></i>{% trans "Valide" %}</span>
+                <span><i class="puce-embarque"></i>{% trans "Embarque" %}</span>
+                <span><i class="puce-annule"></i>{% trans "Annule" %}</span>
+            </div>
+            <div class="grille-sieges" id="grille-sieges"></div>
+            <div class="info-plan">{% trans "Les places annulees peuvent etre reaffectees. Cliquez pour les revendre." %}</div>
+        </div>
+        <div class="colonne-resume">
+            <div class="mini">
+                <div class="titre">{% trans "Places selectionnees" %}</div>
+                <div class="valeur" id="resume-nombre">0</div>
+                <div class="sous"><span id="resume-places">—</span></div>
+            </div>
+            <div class="mini">
+                <div class="titre">{% trans "Montant" %}</div>
+                <div class="valeur vert"><span id="resume-montant">0</span> FCFA</div>
+            </div>
+            <div class="mini">
+                <div class="titre">{% trans "Taux d'occupation" %}</div>
+                <div class="sous"><strong id="resume-occ-texte">0 / 0</strong> <span id="resume-occ-pct" style="float:right;">0%</span></div>
+                <div class="barre-occupation"><div id="resume-occ-barre"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="carte-blanche" id="zone-saisie" style="display:none;">
+        <h3>{% trans "Acheteur et paiement" %}</h3>
         <label class="etiquette">{% trans "Nom de l'acheteur" %}</label>
         <input type="text" name="client_nom" placeholder="{% trans 'Nom et prenom' %}" required>
 
         <label class="etiquette">{% trans "Telephone de l'acheteur" %}</label>
         <input type="text" name="client_telephone" placeholder="66 00 00 00" required>
-
-        <label class="etiquette">{% trans "Nombre de places" %}</label>
-        <input type="number" name="nombre_places" id="nombre_places" value="1" min="1"
-               style="width:100%; padding:14px; font-size:1rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:14px;">
 
         <label class="etiquette">{% trans "Mode de paiement" %}</label>
         <input type="hidden" name="mode_paiement" id="champ-paiement" value="especes">
@@ -96,17 +168,42 @@
             <button type="button" class="tuile tuile-court" data-valeur="carte">{% trans "Carte bancaire" %}</button>
         </div>
 
-        <div id="zone-passagers" style="margin-top:18px;"></div>
+        <div id="zone-passagers"></div>
 
         <div class="message-formulaire" id="message-formulaire"></div>
 
-        <button type="submit" class="btn" style="width:100%; margin-top:8px;">
-            <i class="fa-solid fa-ticket"></i> {% trans "Valider la vente" %}
-        </button>
-    </form>
-</div>
+        <div class="actions-paiement">
+            <button type="submit" name="statut_paiement" value="paye" class="btn-paye">{% trans "Paye" %} (<span class="nb-btn">0</span>) — <span class="mt-btn">0</span> FCFA</button>
+            <button type="submit" name="statut_paiement" value="non_paye" class="btn-nonpaye">{% trans "Non paye" %} (<span class="nb-btn">0</span>) — <span class="mt-btn">0</span> FCFA</button>
+            <button type="submit" name="statut_paiement" value="gratuit" class="btn-gratuit">{% trans "Gratuit" %} (<span class="nb-btn">0</span>) — 0 FCFA</button>
+        </div>
+    </div>
+
+    <div class="carte-blanche" id="zone-registre" style="display:none;">
+        <h3 id="titre-registre">{% trans "Registre des ventes" %}</h3>
+        <div class="stats-registre">
+            <div class="stat s-orange"><div class="titre">{% trans "Billets" %}</div><div class="valeur" id="st-billets">0</div></div>
+            <div class="stat s-vert"><div class="titre">{% trans "Valides" %}</div><div class="valeur" id="st-valides">0</div></div>
+            <div class="stat s-cyan"><div class="titre">{% trans "Embarques" %}</div><div class="valeur" id="st-embarques">0</div></div>
+            <div class="stat s-ambre"><div class="titre">{% trans "En attente de paiement" %}</div><div class="valeur" id="st-attente">0</div></div>
+            <div class="stat s-bleu"><div class="titre">{% trans "Total" %}</div><div class="valeur"><span id="st-total">0</span> FCFA</div></div>
+            <div class="stat s-violet"><div class="titre">{% trans "Gratuits" %}</div><div class="valeur" id="st-gratuits">0</div></div>
+        </div>
+        <div style="overflow-x:auto;">
+            <table class="table-registre">
+                <thead><tr>
+                    <th>{% trans "Place" %}</th><th>{% trans "Nom complet" %}</th><th>{% trans "Telephone" %}</th>
+                    <th>{% trans "Prix" %}</th><th>{% trans "Paiement" %}</th><th>{% trans "Statut" %}</th>
+                    <th>{% trans "Vendeur" %}</th><th>{% trans "Heure" %}</th>
+                </tr></thead>
+                <tbody id="corps-registre"></tbody>
+            </table>
+        </div>
+        <p id="registre-vide" class="message-vide">{% trans "Aucun billet vendu pour ce voyage." %}</p>
+    </div>
+</form>
 {% else %}
-<div class="card" style="text-align:center; color:#6b7280;">
+<div class="carte-blanche" style="text-align:center; color:#6b7280;">
     {% trans "Aucun voyage disponible a la vente pour le moment." %}
 </div>
 {% endif %}
@@ -125,112 +222,177 @@ const TYPES_PIECE = [
     ['permis', '{% trans "Permis de conduire" %}'],
     ['autre', '{% trans "Autre piece" %}'],
 ];
-const TEXTE_SIEGE = '{% trans "Siege" %}';
-const TEXTE_CHOISIR_VOYAGE = '{% trans "Choisir un voyage" %}';
-const TEXTE_CHOISIR_SIEGE = '{% trans "Siege" %} *';
-const TEXTE_CHOISIR_PIECE = '{% trans "Type de piece" %} *';
+const T = {
+    siege: '{% trans "Siege" %}', billet: '{% trans "Billet" %}', passager: '{% trans "Passager" %}',
+    choisirVoyage: '{% trans "Choisir un voyage" %}', choisirSiege: '{% trans "Choisir un siege" %}',
+    choisirPiece: '{% trans "Type de piece" %} *', nomPrenom: '{% trans "Nom et prenom" %}',
+    nomPassager: '{% trans "Nom et prenom du passager" %}', tel: '{% trans "Telephone" %}',
+    numPiece: '{% trans "Numero de piece" %} *', numero: '{% trans "Numero" %}',
+    planDu: '{% trans "Plan du bus" %}', places: '{% trans "places" %}', registre: '{% trans "Registre des ventes" %}',
+};
+const ETIQUETTE_STATUT = {payee: '{% trans "Valide" %}', en_attente: '{% trans "Non paye" %}', annulee: '{% trans "Annule" %}', remboursee: '{% trans "Annule" %}'};
 
-let tousSieges = [];
+const TEXTE_DATE_JOUR = document.getElementById('bandeau-voyage').textContent;
+let sieges = [];        // [{numero, etat}]
+let selection = [];     // numeros choisis (ordre de clic)
+let prixVoyage = 0;
 
 function activerTuile(groupe, bouton) {
     groupe.querySelectorAll('.tuile').forEach(function (b) { b.classList.remove('actif'); });
     bouton.classList.add('actif');
 }
+function echapper(t) { const d = document.createElement('div'); d.textContent = t == null ? '' : t; return d.innerHTML; }
+function formater(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
 
-function siegesChoisisAilleurs(indexCourant) {
-    return Array.from(document.querySelectorAll('.valeur-siege'))
-        .filter(function (inp) { return inp.dataset.index !== String(indexCourant) && inp.value; })
-        .map(function (inp) { return inp.value; });
-}
-
-function dessinerGrille(index) {
-    const grille = document.getElementById('grille-siege-' + index);
-    const champ = document.getElementById('valeur-siege-' + index);
-    const ailleurs = siegesChoisisAilleurs(index);
+function dessinerGrille() {
+    const grille = document.getElementById('grille-sieges');
     grille.innerHTML = '';
-    tousSieges.forEach(function (s) {
-        const numero = String(s.numero);
+    sieges.forEach(function (s) {
         const b = document.createElement('button');
         b.type = 'button';
-        b.className = 'siege' + (champ.value === numero ? ' actif' : '');
-        b.textContent = numero;
-        b.disabled = !!s.occupe || ailleurs.includes(numero);
+        const choisi = selection.includes(s.numero);
+        b.className = 'siege ' + (choisi ? 'selectionne' : (s.etat === 'libre' ? 'libre' : s.etat));
+        b.textContent = s.numero;
+        const reutilisable = s.etat === 'libre' || s.etat === 'annule';
+        b.disabled = !reutilisable && !choisi;
         b.addEventListener('click', function () {
-            champ.value = champ.value === numero ? '' : numero;
-            document.querySelectorAll('.valeur-siege').forEach(function (inp) { dessinerGrille(inp.dataset.index); });
+            const i = selection.indexOf(s.numero);
+            if (i >= 0) selection.splice(i, 1); else selection.push(s.numero);
+            actualiser();
         });
         grille.appendChild(b);
     });
 }
 
+function actualiserResume() {
+    const n = selection.length;
+    document.getElementById('resume-nombre').textContent = n;
+    document.getElementById('resume-places').textContent = n ? selection.slice().sort(function (a, b) { return a - b; }).join(', ') : '—';
+    const montant = n * prixVoyage;
+    document.getElementById('resume-montant').textContent = formater(montant);
+    document.getElementById('nombre_places').value = n || 1;
+    document.querySelectorAll('.nb-btn').forEach(function (e) { e.textContent = n; });
+    document.querySelectorAll('.mt-btn').forEach(function (e) { e.textContent = formater(montant); });
+    const occupes = sieges.filter(function (s) { return s.etat !== 'libre' && s.etat !== 'annule'; }).length;
+    const total = sieges.length;
+    const pct = total ? Math.round(occupes * 100 / total) : 0;
+    document.getElementById('resume-occ-texte').textContent = occupes + ' / ' + total;
+    document.getElementById('resume-occ-pct').textContent = pct + '%';
+    document.getElementById('resume-occ-barre').style.width = pct + '%';
+}
+
 function genererPassagers() {
-    const n = parseInt(document.getElementById('nombre_places').value, 10) || 1;
     const zone = document.getElementById('zone-passagers');
+    const n = selection.length;
+    // On conserve ce qui est deja saisi pour les sieges toujours selectionnes.
+    const anciens = {};
+    zone.querySelectorAll('.bloc-passager').forEach(function (bloc) {
+        const siege = bloc.dataset.siege;
+        anciens[siege] = {};
+        bloc.querySelectorAll('input[type=text]').forEach(function (inp) { anciens[siege][inp.dataset.champ] = inp.value; });
+        const piece = bloc.querySelector('.valeur-piece');
+        anciens[siege].piece = piece ? piece.value : '';
+    });
     zone.innerHTML = '';
-    for (let i = 1; i <= n; i++) {
+    selection.forEach(function (numero, idx) {
+        const i = idx + 1;
+        const a = anciens[numero] || {};
         const bloc = document.createElement('div');
-        bloc.style.cssText = 'border:1px solid #e5e7eb; border-radius:10px; padding:14px; margin-bottom:12px; background:#f9fafb;';
-        // Avec une seule place, le passager est forcement l'acheteur : pas
-        // besoin de redemander son nom/telephone deja saisis au-dessus.
+        bloc.className = 'bloc-passager';
+        bloc.dataset.siege = numero;
+        bloc.style.cssText = 'border:1px solid #e5e7eb; border-radius:12px; padding:14px; margin-bottom:12px; background:#f9fafb;';
         const champsIdentite = n === 1 ? '' :
-            '<label class="etiquette-petite">{% trans "Nom et prenom" %}</label>' +
-            '<input type="text" name="passager_nom_complet_' + i + '" placeholder="{% trans "Nom et prenom du passager" %}" style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">' +
-            '<label class="etiquette-petite">{% trans "Telephone" %}</label>' +
-            '<input type="text" name="passager_telephone_' + i + '" placeholder="66 00 00 00" style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">';
+            '<label class="etiquette-petite">' + T.nomPrenom + '</label>' +
+            '<input type="text" data-champ="nom" name="passager_nom_complet_' + i + '" placeholder="' + T.nomPassager + '" value="' + echapper(a.nom || '') + '" style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">' +
+            '<label class="etiquette-petite">' + T.tel + '</label>' +
+            '<input type="text" data-champ="tel" name="passager_telephone_' + i + '" placeholder="66 00 00 00" value="' + echapper(a.tel || '') + '" style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">';
         let tuilesPiece = '';
         TYPES_PIECE.forEach(function (t) {
-            tuilesPiece += '<button type="button" class="tuile tuile-court" data-valeur="' + t[0] + '">' + t[1] + '</button>';
+            tuilesPiece += '<button type="button" class="tuile tuile-court' + (a.piece === t[0] ? ' actif' : '') + '" data-valeur="' + t[0] + '">' + t[1] + '</button>';
         });
         bloc.innerHTML =
-            '<p style="font-weight:600; color:#1F3864; margin-bottom:10px;">' + (n === 1 ? '{% trans "Billet" %}' : '{% trans "Passager" %} ' + i) + '</p>' +
-            '<label class="etiquette-petite">' + TEXTE_CHOISIR_SIEGE + '</label>' +
-            '<input type="hidden" class="valeur-siege" id="valeur-siege-' + i + '" data-index="' + i + '" name="passager_siege_' + i + '" value="">' +
-            '<div class="grille-sieges" id="grille-siege-' + i + '"></div>' +
+            '<p style="font-weight:700; color:#1F3864; margin:0 0 10px;">' + (n === 1 ? T.billet : T.passager + ' ' + i) + ' — ' + T.siege + ' ' + numero + '</p>' +
+            '<input type="hidden" class="valeur-siege" name="passager_siege_' + i + '" value="' + numero + '">' +
             champsIdentite +
-            '<label class="etiquette-petite">' + TEXTE_CHOISIR_PIECE + '</label>' +
-            '<input type="hidden" class="valeur-piece" name="passager_type_piece_' + i + '" value="">' +
+            '<label class="etiquette-petite">' + T.choisirPiece + '</label>' +
+            '<input type="hidden" class="valeur-piece" name="passager_type_piece_' + i + '" value="' + (a.piece || '') + '">' +
             '<div class="groupe-choix choix-piece">' + tuilesPiece + '</div>' +
-            '<label class="etiquette-petite">{% trans "Numero de piece" %} *</label>' +
-            '<input type="text" name="passager_numero_piece_' + i + '" placeholder="{% trans "Numero" %}" required style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px;">';
+            '<label class="etiquette-petite">' + T.numPiece + '</label>' +
+            '<input type="text" data-champ="num" name="passager_numero_piece_' + i + '" placeholder="' + T.numero + '" required value="' + echapper(a.num || '') + '" style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px;">';
         zone.appendChild(bloc);
-        dessinerGrille(i);
         const hiddenPiece = bloc.querySelector('.valeur-piece');
         const groupePiece = bloc.querySelector('.choix-piece');
         groupePiece.querySelectorAll('.tuile').forEach(function (b) {
-            b.addEventListener('click', function () {
-                hiddenPiece.value = b.dataset.valeur;
-                activerTuile(groupePiece, b);
-            });
+            b.addEventListener('click', function () { hiddenPiece.value = b.dataset.valeur; activerTuile(groupePiece, b); });
         });
-    }
+    });
 }
 
-function chargerSieges() {
+function actualiser() {
+    dessinerGrille();
+    actualiserResume();
+    genererPassagers();
+}
+
+function dessinerRegistre(donnees) {
+    const st = donnees.stats;
+    document.getElementById('st-billets').textContent = st.billets;
+    document.getElementById('st-valides').textContent = st.valides;
+    document.getElementById('st-embarques').textContent = st.embarques;
+    document.getElementById('st-attente').textContent = st.en_attente;
+    document.getElementById('st-total').textContent = formater(st.total);
+    document.getElementById('st-gratuits').textContent = st.gratuits;
+    const corps = document.getElementById('corps-registre');
+    corps.innerHTML = '';
+    const lignes = donnees.registre.filter(function (r) { return r.statut !== 'annulee' && r.statut !== 'remboursee'; });
+    lignes.forEach(function (r) {
+        const classe = r.embarque ? 'p-embarque' : 'p-' + r.statut;
+        const libelle = r.embarque ? '{% trans "Embarque" %}' : (ETIQUETTE_STATUT[r.statut] || r.statut_libelle);
+        corps.insertAdjacentHTML('beforeend',
+            '<tr><td><strong>' + echapper(r.place) + '</strong></td><td>' + echapper(r.nom) + '</td><td>' + echapper(r.telephone) + '</td>' +
+            '<td>' + formater(r.prix) + ' FCFA</td><td>' + echapper(r.paiement) + '</td>' +
+            '<td><span class="pastille ' + classe + '">' + echapper(libelle) + '</span></td>' +
+            '<td>' + echapper(r.vendeur) + '</td><td>' + echapper(r.heure) + '</td></tr>');
+    });
+    document.getElementById('registre-vide').style.display = lignes.length ? 'none' : 'block';
+}
+
+function chargerPlan() {
     const voyageId = document.getElementById('champ-voyage').value;
+    const zonePlan = document.getElementById('zone-plan');
+    const zoneSaisie = document.getElementById('zone-saisie');
+    const zoneRegistre = document.getElementById('zone-registre');
+    selection = [];
     if (!voyageId) {
-        tousSieges = [];
-        genererPassagers();
+        sieges = [];
+        zonePlan.style.display = zoneSaisie.style.display = zoneRegistre.style.display = 'none';
+        document.getElementById('bandeau-voyage').textContent = TEXTE_DATE_JOUR;
         return;
     }
-    fetch('/api/voyage/' + voyageId + '/sieges/')
+    fetch('/espace/voyage/' + voyageId + '/plan/', {credentials: 'same-origin'})
         .then(function (r) { return r.json(); })
         .then(function (data) {
-            tousSieges = Array.isArray(data) ? data : [];
-            genererPassagers();
+            sieges = data.sieges || [];
+            prixVoyage = data.prix || 0;
+            document.getElementById('titre-plan').textContent = T.planDu + ' — ' + sieges.length + ' ' + T.places;
+            zonePlan.style.display = 'grid';
+            zoneSaisie.style.display = zoneRegistre.style.display = 'block';
+            dessinerRegistre(data);
+            actualiser();
+            zonePlan.scrollIntoView({behavior: 'smooth', block: 'start'});
         })
-        .catch(function () {
-            tousSieges = [];
-            genererPassagers();
-        });
+        .catch(function () { sieges = []; actualiser(); });
 }
 
 const groupeVoyage = document.getElementById('choix-voyage');
 if (groupeVoyage) {
-    groupeVoyage.querySelectorAll('.tuile').forEach(function (b) {
+    const cartesVoyage = Array.from(groupeVoyage.querySelectorAll('.tuile'));
+    cartesVoyage.forEach(function (b) {
         b.addEventListener('click', function () {
             document.getElementById('champ-voyage').value = b.dataset.valeur;
             activerTuile(groupeVoyage, b);
-            chargerSieges();
+            document.getElementById('bandeau-voyage').textContent = b.querySelector('strong').textContent + ' · ' + b.dataset.date;
+            chargerPlan();
         });
     });
     const groupePaiement = document.getElementById('choix-paiement');
@@ -240,9 +402,7 @@ if (groupeVoyage) {
             activerTuile(groupePaiement, b);
         });
     });
-    document.getElementById('nombre_places').addEventListener('input', genererPassagers);
 
-    const cartesVoyage = Array.from(groupeVoyage.querySelectorAll('.tuile'));
     const filtreDepart = document.getElementById('filtre-depart');
     const filtreArrivee = document.getElementById('filtre-arrivee');
     const filtreDate = document.getElementById('filtre-date');
@@ -271,7 +431,7 @@ if (groupeVoyage) {
         if (carteChoisie && carteChoisie.style.display === 'none') {
             choisi.value = '';
             carteChoisie.classList.remove('actif');
-            chargerSieges();
+            chargerPlan();
         }
     }
     [filtreDepart, filtreArrivee].forEach(function (f) { f.addEventListener('change', appliquerFiltres); });
@@ -284,22 +444,20 @@ if (groupeVoyage) {
     document.getElementById('form-vente').addEventListener('submit', function (e) {
         let probleme = '';
         if (!document.getElementById('champ-voyage').value) {
-            probleme = TEXTE_CHOISIR_VOYAGE;
-        } else if (Array.from(document.querySelectorAll('.valeur-siege')).some(function (i) { return !i.value; })) {
-            probleme = TEXTE_CHOISIR_SIEGE;
+            probleme = T.choisirVoyage;
+        } else if (!selection.length) {
+            probleme = T.choisirSiege;
         } else if (Array.from(document.querySelectorAll('.valeur-piece')).some(function (i) { return !i.value; })) {
-            probleme = TEXTE_CHOISIR_PIECE;
+            probleme = T.choisirPiece;
         }
         if (probleme) {
             e.preventDefault();
-            e.stopImmediatePropagation();
             const msg = document.getElementById('message-formulaire');
             msg.textContent = probleme;
             msg.style.display = 'block';
             msg.scrollIntoView({behavior: 'smooth', block: 'center'});
         }
     });
-    document.addEventListener('DOMContentLoaded', genererPassagers);
 }
 </script>
 {% endblock %}

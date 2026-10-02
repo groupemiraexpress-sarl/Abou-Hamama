@@ -22,6 +22,9 @@ msgstr "To process"
 msgid "Accompagnateur aimable"
 msgstr "Friendly attendant"
 
+msgid "Acheteur et paiement"
+msgstr "Buyer and payment"
+
 msgid "Acte de naissance"
 msgstr "Birth certificate"
 
@@ -383,6 +386,9 @@ msgstr "Drivers"
 
 msgid "Chauffeurs et bus"
 msgstr "Drivers and buses"
+
+msgid "Choisir un siege"
+msgstr "Choose a seat"
 
 msgid "Choisir un voyage"
 msgstr "Choose a trip"
@@ -867,6 +873,12 @@ msgstr "Fee set by the agency"
 msgid "Freins"
 msgstr "Brakes"
 
+msgid "Gratuit"
+msgstr "Free"
+
+msgid "Gratuits"
+msgstr "Free"
+
 msgid "Guichetier / billettiste"
 msgstr "Ticket clerk"
 
@@ -1015,6 +1027,13 @@ msgstr ""
 
 msgid "Le siege %(s)s a ete choisi pour plusieurs passagers."
 msgstr "Seat %(s)s was selected for multiple passengers."
+
+msgid ""
+"Les places annulees peuvent etre reaffectees. Cliquez pour les revendre."
+msgstr "Cancelled seats can be reassigned. Click to sell them again."
+
+msgid "Libre"
+msgstr "Free"
 
 msgid "Ligne"
 msgstr "Route"
@@ -1172,6 +1191,9 @@ msgstr "Loyalty tier"
 msgid "Nom"
 msgstr "Last name"
 
+msgid "Nom complet"
+msgstr "Full name"
+
 msgid "Nom d'utilisateur (connexion)"
 msgstr "Username (login)"
 
@@ -1216,6 +1238,9 @@ msgstr "Total number of trips taken"
 
 msgid "Non embarque"
 msgstr "Not boarded"
+
+msgid "Non paye"
+msgstr "Unpaid"
 
 msgid "Nord"
 msgstr "North"
@@ -1294,6 +1319,9 @@ msgstr "Origin"
 msgid "PDG / Directeur general"
 msgstr "CEO / General manager"
 
+msgid "Paiement"
+msgstr "Payment"
+
 msgid "Parraine par"
 msgstr "Referred by"
 
@@ -1305,6 +1333,9 @@ msgstr "Passenger"
 
 msgid "Passeport"
 msgstr "Passport"
+
+msgid "Paye"
+msgstr "Paid"
 
 msgid "Payee"
 msgstr "Paid"
@@ -1327,17 +1358,26 @@ msgstr "ID"
 msgid "Piece d'identite obligatoire pour le passager %(i)s."
 msgstr "ID document required for passenger %(i)s."
 
+msgid "Place"
+msgstr "Seat"
+
 msgid "Places dispo (reel)"
 msgstr "Available seats (actual)"
 
 msgid "Places disponibles"
 msgstr "Available seats"
 
+msgid "Places selectionnees"
+msgstr "Selected seats"
+
 msgid "Plainte"
 msgstr "Complaint"
 
 msgid "Plaintes"
 msgstr "Complaints"
+
+msgid "Plan du bus"
+msgstr "Bus plan"
 
 msgid "Plein de carburant"
 msgstr "Refueling"
@@ -1507,6 +1547,9 @@ msgstr "Reference"
 msgid "Refusee"
 msgstr "Refused"
 
+msgid "Registre des ventes"
+msgstr "Sales register"
+
 msgid "Reinitialiser"
 msgstr "Reset"
 
@@ -1625,6 +1668,9 @@ msgstr "Sections to include"
 msgid "Securite"
 msgstr "Security"
 
+msgid "Selectionne"
+msgstr "Selected"
+
 msgid "Selectionner"
 msgstr "Select"
 
@@ -1685,6 +1731,9 @@ msgstr "Subject"
 
 msgid "Tableau de bord PDG"
 msgstr "CEO Dashboard"
+
+msgid "Taux d'occupation"
+msgstr "Occupancy rate"
 
 msgid "Tel"
 msgstr "Tel"
@@ -1869,17 +1918,29 @@ msgstr "Declared value in FCFA"
 msgid "Valeur totale du stock"
 msgstr "Total stock value"
 
+msgid "Valide"
+msgstr "Validated"
+
 msgid "Validee (colis cree)"
 msgstr "Validated (parcel created)"
 
 msgid "Validee (transfert cree)"
 msgstr "Validated (transfer created)"
 
-msgid "Valider la vente"
-msgstr "Confirm the sale"
+msgid "Valides"
+msgstr "Validated"
+
+msgid "Vendeur"
+msgstr "Seller"
 
 msgid "Vendre un billet"
 msgstr "Sell a ticket"
+
+msgid "Vendu"
+msgstr "Sold"
+
+msgid "Vente de billets"
+msgstr "Ticket sales"
 
 msgid "Vente reussie"
 msgstr "Sale successful"
@@ -2034,6 +2095,9 @@ msgstr "the recipient"
 
 msgid "place(s)"
 msgstr "seat(s)"
+
+msgid "places"
+msgstr "seats"
 
 msgid "transfert(s)"
 msgstr "transfer(s)"
