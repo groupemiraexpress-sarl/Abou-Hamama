@@ -357,6 +357,23 @@ class ReservationAdmin(FiltreAgenceMixin, admin.ModelAdmin):
             _("App mobile")
         )
 
+    # Formulaire presente en cartes thematiques (le style est dans
+    # admin/transport/reservation/change_form.html).
+    def get_fieldsets(self, request, obj=None):
+        return [
+            (_("Voyage et place"), {'fields': (
+                'client', 'voyage', 'agence', 'siege', 'arret_montee', 'arret_descente', 'nombre_places')}),
+            (_("Voyageur"), {'fields': (
+                'voyageur_nom', 'voyageur_prenom', 'voyageur_telephone',
+                'voyageur_type_piece', 'voyageur_numero_piece', 'voyageur_nationalite',
+                'voyageur_date_emission', 'voyageur_date_expiration')}),
+            (_("Paiement"), {'fields': (
+                'statut', 'mode_paiement', 'montant_total', 'date_paiement', 'commissionnaire', 'notes')}),
+            (_("Suivi technique"), {'classes': ('collapse',), 'fields': (
+                'numero_reservation', 'date_reservation', 'cree_par', 'modifie_par',
+                'embarque', 'date_embarquement', 'scanne_par', 'points_attribues', 'alerte_expiration_envoyee')}),
+        ]
+
     def get_readonly_fields(self, request, obj=None):
         # scanne_par est rempli automatiquement par l'agent de securite au
         # moment du scan du billet (voir api_scanner_billet) : personne ne

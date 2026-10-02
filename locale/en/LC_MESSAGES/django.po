@@ -2007,6 +2007,9 @@ msgstr ""
 msgid "Sud"
 msgstr "South"
 
+msgid "Suivi technique"
+msgstr "Technical tracking"
+
 msgid "Sujet"
 msgstr "Subject"
 
@@ -2288,6 +2291,9 @@ msgstr "You must confirm you have verified the recipient's ID document."
 msgid "Voyage"
 msgstr "Trip"
 
+msgid "Voyage et place"
+msgstr "Trip and seat"
+
 msgid "Voyage introuvable (ou ne fait pas partie de votre agence)."
 msgstr "Trip not found (or does not belong to your agency)."
 
@@ -2302,6 +2308,9 @@ msgstr "Upcoming trips"
 
 msgid "Voyages du jour"
 msgstr "Today's trips"
+
+msgid "Voyageur"
+msgstr "Traveler"
 
 msgid ""
 "Vrai si l'avertissement (2h avant l'annulation automatique) a deja ete "

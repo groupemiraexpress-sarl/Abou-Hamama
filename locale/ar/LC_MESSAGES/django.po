@@ -1995,6 +1995,9 @@ msgstr ""
 msgid "Sud"
 msgstr "الجنوب"
 
+msgid "Suivi technique"
+msgstr "المتابعة التقنية"
+
 msgid "Sujet"
 msgstr "الموضوع"
 
@@ -2274,6 +2277,9 @@ msgstr "يجب عليك تأكيد أنك تحققت من وثيقة هوية ا
 msgid "Voyage"
 msgstr "الرحلة"
 
+msgid "Voyage et place"
+msgstr "الرحلة والمقعد"
+
 msgid "Voyage introuvable (ou ne fait pas partie de votre agence)."
 msgstr "الرحلة غير موجودة (أو لا تنتمي إلى وكالتك)."
 
@@ -2288,6 +2294,9 @@ msgstr "الرحلات القادمة"
 
 msgid "Voyages du jour"
 msgstr "رحلات اليوم"
+
+msgid "Voyageur"
+msgstr "المسافر"
 
 msgid ""
 "Vrai si l'avertissement (2h avant l'annulation automatique) a deja ete "

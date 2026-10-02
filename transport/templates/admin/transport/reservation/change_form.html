@@ -1,0 +1,56 @@
+{% extends "admin/change_form.html" %}
+{% block extrastyle %}{{ block.super }}
+<style>
+    /* Formulaire de reservation : cartes thematiques, champs en grille, libelles au-dessus
+       (meme esprit que la page "Vendre un billet"). */
+    #content { max-width:none; }
+    #content-main form > div > fieldset.module,
+    #content-main form fieldset.module.aligned {
+        background:#fff; color:#1f2937; color-scheme:light; border:none; border-radius:16px; padding:20px 22px 12px; margin:0 0 16px;
+        box-shadow:0 4px 14px rgba(31,56,100,.08);
+        display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:14px 20px; align-items:start;
+    }
+    fieldset.module.aligned > h2 {
+        grid-column:1 / -1; margin:0 0 4px; padding:0 0 12px; background:none; color:#1F3864;
+        font-size:1.1rem; font-weight:700; text-transform:none; letter-spacing:0; border:0; border-bottom:1px solid #eef0f3; border-radius:0; box-shadow:none;
+    }
+    fieldset.module.aligned .form-row { border:none; padding:0; margin:0; overflow:visible; }
+    fieldset.module.aligned .form-row > div,
+    fieldset.module.aligned .form-row .flex-container { display:block; }
+    fieldset.module.aligned label {
+        float:none; display:block; width:auto; padding:0; margin:0 0 5px;
+        font-size:.76rem; font-weight:700; letter-spacing:.3px; text-transform:uppercase; color:#4b5563;
+    }
+    fieldset.module.aligned .checkbox-row label, fieldset.module.aligned label.vCheckboxLabel { display:inline; text-transform:none; font-size:.9rem; }
+    fieldset.module.aligned input[type=text], fieldset.module.aligned input[type=number],
+    fieldset.module.aligned input[type=tel], fieldset.module.aligned input[type=email],
+    fieldset.module.aligned select, fieldset.module.aligned textarea,
+    fieldset.module.aligned .vTextField, fieldset.module.aligned .vLargeTextField {
+        box-sizing:border-box; width:100%; max-width:100%; padding:11px 12px; font-size:.95rem;
+        border:1px solid #d1d5db; border-radius:10px; background:#fff; color:#111827;
+    }
+    fieldset.module.aligned input[type=text]:focus, fieldset.module.aligned select:focus, fieldset.module.aligned textarea:focus {
+        outline:none; border-color:#1F3864; box-shadow:0 0 0 3px rgba(31,56,100,.12);
+    }
+    fieldset.module.aligned .readonly { display:block; padding:11px 12px; background:#f3f4f6; border-radius:10px; color:#374151; min-height:1.2em; }
+    fieldset.module.aligned .help, fieldset.module.aligned div.help { margin:5px 0 0; padding:0; font-size:.78rem; color:#6b7280; }
+    fieldset.module.aligned .related-widget-wrapper { display:flex; align-items:center; gap:8px; width:100%; }
+    fieldset.module.aligned .related-widget-wrapper select { flex:1; }
+    fieldset.module.aligned .datetime input, fieldset.module.aligned .vDateField, fieldset.module.aligned .vTimeField { width:auto; display:inline-block; }
+    fieldset.module.aligned .errorlist { margin:0 0 6px; }
+    fieldset.module.aligned fieldset { border:0; padding:0; margin:0; background:none; box-shadow:none; display:block; }
+    fieldset.module.aligned legend, fieldset.module.aligned .form-row > div > legend {
+        float:none; display:block; width:auto; padding:0; margin:0 0 5px;
+        font-size:.76rem; font-weight:700; letter-spacing:.3px; text-transform:uppercase; color:#4b5563;
+    }
+    fieldset.module.aligned p.datetime, fieldset.module.aligned .datetime { display:flex; flex-wrap:wrap; align-items:center; gap:6px 14px; margin:0 0 4px; font-size:.85rem; color:#4b5563; }
+    fieldset.module.aligned .datetime label { display:inline; margin:0 4px 0 0; text-transform:none; font-weight:600; font-size:.85rem; }
+    fieldset.module.aligned .datetime input { padding:9px 10px; }
+    #plan-sieges-admin { grid-column:1 / -1; background:#f9fafb; border:1px solid #eef0f3; border-radius:12px; padding:12px 14px; }
+    fieldset.module.aligned.collapse { padding-bottom:16px; }
+    fieldset.module.aligned.collapse > h2 { cursor:pointer; }
+    .submit-row { border:none; border-radius:16px; background:#fff; box-shadow:0 4px 14px rgba(31,56,100,.08); padding:14px 20px; }
+    .submit-row input[type=submit] { border-radius:10px; padding:11px 20px; font-weight:700; }
+    @media (max-width:600px) { fieldset.module.aligned { grid-template-columns:1fr !important; } }
+</style>
+{% endblock %}
