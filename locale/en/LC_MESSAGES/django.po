@@ -22,9 +22,6 @@ msgstr "To process"
 msgid "Accompagnateur aimable"
 msgstr "Friendly attendant"
 
-msgid "Acheteur et paiement"
-msgstr "Buyer and payment"
-
 msgid "Acte de naissance"
 msgstr "Birth certificate"
 
@@ -115,6 +112,9 @@ msgstr "Cancelled"
 msgid "Annulee"
 msgstr "Cancelled"
 
+msgid "Annuler"
+msgstr "Cancel"
+
 msgid "App mobile"
 msgstr "Mobile app"
 
@@ -156,9 +156,6 @@ msgstr "Route stops"
 
 msgid "Arrive a destination"
 msgstr "Arrived at destination"
-
-msgid "Arrivee"
-msgstr "Arrival"
 
 msgid "Arrivee estimee"
 msgstr "Estimated arrival"
@@ -240,9 +237,6 @@ msgstr "No transfer withdrawn today."
 
 msgid "Aucun voyage disponible a la vente pour le moment."
 msgstr "No trip available for sale at the moment."
-
-msgid "Aucun voyage ne correspond a la recherche."
-msgstr "No trip matches your search."
 
 msgid "Aucune agence rattachee a ce compte. Choisis-en une pour tester :"
 msgstr "No agency attached to this account. Choose one to test:"
@@ -395,6 +389,9 @@ msgstr "Choose a trip"
 
 msgid "Choisir une agence"
 msgstr "Choose an agency"
+
+msgid "Choisissez le ou les sieges sur le plan du bus ci-dessous."
+msgstr "Choose the seat(s) on the bus plan below."
 
 msgid "Client"
 msgstr "Client"
@@ -704,9 +701,6 @@ msgid ""
 msgstr ""
 "Ask the recipient for this code (never show it to them yourself) to confirm "
 "delivery."
-
-msgid "Depart"
-msgstr "Departure"
 
 msgid "Derniere mise a jour"
 msgstr "Last update"
@@ -1550,9 +1544,6 @@ msgstr "Refused"
 msgid "Registre des ventes"
 msgstr "Sales register"
 
-msgid "Reinitialiser"
-msgstr "Reset"
-
 msgid "Rembourse"
 msgstr "Refunded"
 
@@ -1741,9 +1732,6 @@ msgstr "Tel"
 msgid "Telephone"
 msgstr "Phone"
 
-msgid "Telephone de l'acheteur"
-msgstr "Buyer's phone number"
-
 msgid "Telephone de l'expediteur"
 msgstr "Sender's phone"
 
@@ -1797,9 +1785,6 @@ msgstr "All buses"
 
 msgid "Tous les employes"
 msgstr "All employees"
-
-msgid "Toutes"
-msgstr "All"
 
 msgid "Traite par"
 msgstr "Handled by"

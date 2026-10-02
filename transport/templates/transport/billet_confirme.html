@@ -38,7 +38,7 @@
                 <td style="padding:4px 0; text-align:right;">{{ reservation.voyageur_telephone }}</td></tr>
             {% if reservation.voyageur_numero_piece %}
             <tr><td style="padding:4px 0; color:#6b7280;">{% trans "Piece" %}</td>
-                <td style="padding:4px 0; text-align:right;">{{ reservation.get_voyageur_type_piece_display }} — {{ reservation.voyageur_numero_piece }}</td></tr>
+                <td style="padding:4px 0; text-align:right;">{{ reservation.type_piece_libelle }} — {{ reservation.voyageur_numero_piece }}</td></tr>
             {% endif %}
             <tr><td style="padding:4px 0; color:#6b7280;">{% trans "Trajet" %}</td>
                 <td style="padding:4px 0; text-align:right;">{{ reservation.voyage.trajet.ville_depart }} → {{ reservation.voyage.trajet.ville_arrivee }}</td></tr>

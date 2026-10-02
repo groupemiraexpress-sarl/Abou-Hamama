@@ -17,7 +17,9 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('form').forEach(function (formulaire) {
-            formulaire.addEventListener('submit', function () {
+            formulaire.addEventListener('submit', function (evenement) {
+                // Envoi annule par une validation de la page : on ne bloque pas les boutons.
+                if (evenement.defaultPrevented) return;
                 // Le disabled est applique apres un delai (setTimeout 0) : si on
                 // desactive le bouton pendant l'evenement submit lui-meme, le
                 // navigateur exclut sa paire nom/valeur de l'envoi (cas des

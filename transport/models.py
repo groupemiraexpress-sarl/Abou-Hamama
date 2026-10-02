@@ -280,6 +280,11 @@ class Reservation(models.Model):
     alerte_expiration_envoyee = models.BooleanField(_("Alerte d'expiration envoyee"), default=False, help_text=_("Vrai si l'avertissement (2h avant l'annulation automatique) a deja ete envoye"))
     notes = models.TextField(_("Notes"), blank=True)
 
+    @property
+    def type_piece_libelle(self):
+        """Libelle lisible du type de piece (le champ n'a pas de liste de choix)."""
+        return dict(Client.TYPE_PIECE_CHOICES).get(self.voyageur_type_piece, self.voyageur_type_piece)
+
     def __str__(self):
         return f"Reservation {self.numero_reservation} - {self.client.nom}"
 

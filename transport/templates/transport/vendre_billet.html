@@ -50,6 +50,7 @@
     .barre-occupation div { height:100%; background:#3b82f6; width:0; transition:width .3s; }
     .actions-paiement { display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; margin-top:16px; padding-top:16px; border-top:1px solid #eef0f3; }
     .btn-paye, .btn-nonpaye, .btn-gratuit { border:none; border-radius:10px; padding:12px 20px; font-weight:700; font-size:.95rem; cursor:pointer; color:#fff; }
+    .btn-annuler { background:#f3f4f6; color:#374151; border:none; border-radius:10px; padding:12px 20px; font-weight:700; cursor:pointer; }
     .btn-paye { background:#10b981; } .btn-nonpaye { background:#f59e0b; } .btn-gratuit { background:#3b82f6; }
     .btn-paye:hover { background:#059669; } .btn-nonpaye:hover { background:#d97706; } .btn-gratuit:hover { background:#2563eb; }
     .stats-registre { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:12px; margin-bottom:16px; }
@@ -65,6 +66,17 @@
     .table-registre td { padding:10px 8px; border-bottom:1px solid #f1f5f9; }
     .pastille { display:inline-block; padding:3px 10px; border-radius:99px; font-size:.75rem; font-weight:700; }
     .p-payee { background:#dcfce7; color:#166534; } .p-en_attente { background:#fef3c7; color:#92400e; } .p-embarque { background:#e0e7ff; color:#3730a3; }
+    .grille-form { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:14px 16px; margin-bottom:6px; }
+    .grille-form .large, .grille-passager .large { grid-column:span 2; }
+    @media (max-width:900px) { .grille-form { grid-template-columns:repeat(2, minmax(0,1fr)); } }
+    @media (max-width:520px) { .grille-form { grid-template-columns:1fr; } .grille-form .large { grid-column:auto; } }
+    .grille-form input, .grille-form select, .grille-passager input, .grille-passager select { width:100%; margin:0; padding:12px; font-size:.95rem; border:1px solid #d1d5db; border-radius:10px; background:#fff; }
+    .grille-form input[readonly] { background:#f3f4f6; color:#4b5563; }
+    .grille-passager { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:12px 16px; }
+    @media (max-width:900px) { .grille-passager { grid-template-columns:repeat(2, minmax(0,1fr)); } }
+    @media (max-width:520px) { .grille-passager { grid-template-columns:1fr; } .grille-passager .large { grid-column:auto; } }
+    .entete-carte { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid #eef0f3; }
+    .entete-carte h3 { margin:0; }
     .message-formulaire { display:none; background:#fef2f2; color:#b91c1c; padding:10px; border-radius:8px; margin-top:12px; font-size:.9rem; text-align:center; }
 </style>
 {% endblock %}
@@ -82,41 +94,59 @@
 {% if voyages %}
 <form method="post" action="{% url 'transport:vendre_billet' %}" id="form-vente">
     {% csrf_token %}
-    <input type="hidden" name="voyage" id="champ-voyage" value="">
-    <input type="hidden" name="nombre_places" id="nombre_places" value="1">
+        <input type="hidden" name="nombre_places" id="nombre_places" value="1">
 
     <div class="carte-blanche">
-        <h3>{% trans "Choisir un voyage" %}</h3>
-        <div class="barre-recherche">
-            <div>
-                <span class="etiquette-petite">{% trans "Depart" %}</span>
-                <select id="filtre-depart"><option value="">{% trans "Toutes" %}</option></select>
+        <div class="entete-carte"><h3>{% trans "Vente de billets" %}</h3></div>
+        <div class="grille-form">
+            <div class="large">
+                <label class="etiquette-petite">{% trans "Trajet" %} *</label>
+                <select name="voyage" id="champ-voyage" required>
+                    <option value="">-- {% trans "Choisir un voyage" %} --</option>
+                    {% for voyage in voyages %}
+                    <option value="{{ voyage.id }}" data-prix="{{ voyage.prix }}" data-bus="{{ voyage.bus.immatriculation }}"
+                            data-date="{{ voyage.date_depart|date:'Y-m-d' }}">{{ voyage.trajet.ville_depart }} → {{ voyage.trajet.ville_arrivee }} · {{ voyage.date_depart|date:"d/m/Y" }} {{ voyage.heure_depart|time:"H:i" }} · {{ voyage.prix }} FCFA · {{ voyage.places_disponibles }} {% trans "place(s)" %}</option>
+                    {% endfor %}
+                </select>
             </div>
             <div>
-                <span class="etiquette-petite">{% trans "Arrivee" %}</span>
-                <select id="filtre-arrivee"><option value="">{% trans "Toutes" %}</option></select>
+                <label class="etiquette-petite">{% trans "N de Bus" %}</label>
+                <input type="text" id="champ-bus" readonly placeholder="—">
             </div>
             <div>
-                <span class="etiquette-petite">{% trans "Date" %}</span>
-                <input type="date" id="filtre-date">
+                <label class="etiquette-petite">{% trans "Prix" %} (FCFA)</label>
+                <input type="text" id="champ-prix" readonly placeholder="—">
             </div>
-            <button type="button" class="tuile" id="filtre-reinit">{% trans "Reinitialiser" %}</button>
+            <div class="large">
+                <label class="etiquette-petite">{% trans "Nom de l'acheteur" %} *</label>
+                <input type="text" name="client_nom" placeholder="{% trans 'Nom et prenom' %}" required>
+            </div>
+            <div>
+                <label class="etiquette-petite">{% trans "Telephone" %} *</label>
+                <input type="text" name="client_telephone" placeholder="66 00 00 00" required>
+            </div>
+            <div>
+                <label class="etiquette-petite">{% trans "Mode de paiement" %}</label>
+                <select name="mode_paiement" id="champ-paiement">
+                    <option value="especes">{% trans "Especes" %}</option>
+                    <option value="mobile_money">Mobile Money</option>
+                    <option value="virement">{% trans "Virement bancaire" %}</option>
+                    <option value="carte">{% trans "Carte bancaire" %}</option>
+                </select>
+            </div>
         </div>
-        <div class="groupe-choix" id="choix-voyage">
-            {% for voyage in voyages %}
-            <button type="button" class="tuile tuile-voyage" data-valeur="{{ voyage.id }}"
-                    data-depart="{{ voyage.trajet.ville_depart }}" data-arrivee="{{ voyage.trajet.ville_arrivee }}"
-                    data-date="{{ voyage.date_depart|date:'Y-m-d' }}" data-prix="{{ voyage.prix }}">
-                <span class="ligne-voyage">
-                    <strong>{{ voyage.trajet.ville_depart }} → {{ voyage.trajet.ville_arrivee }}</strong>
-                    <span class="prix-voyage">{{ voyage.prix }} FCFA</span>
-                </span>
-                <small>{{ voyage.date_depart|date:"d/m/Y" }} {{ voyage.heure_depart|time:"H:i" }}
-                    · {{ voyage.places_disponibles }} {% trans "place(s)" %}</small>
-            </button>
-            {% endfor %}
+
+        <p id="indice-siege" style="display:none; margin:14px 0 0; padding:10px 12px; background:#eff6ff; color:#1e40af; border-radius:10px; font-size:.88rem;"><i class="fa-solid fa-hand-pointer"></i> {% trans "Choisissez le ou les sieges sur le plan du bus ci-dessous." %}</p>
+        <div id="zone-passagers" style="margin-top:16px;"></div>
+
+        <div class="message-formulaire" id="message-formulaire"></div>
+
+        <div class="actions-paiement">
+            <button type="reset" class="btn-annuler" id="btn-annuler">{% trans "Annuler" %}</button>
+            <button type="submit" name="statut_paiement" value="paye" class="btn-paye">{% trans "Paye" %} (<span class="nb-btn">0</span>) — <span class="mt-btn">0</span> FCFA</button>
+            <button type="submit" name="statut_paiement" value="non_paye" class="btn-nonpaye">{% trans "Non paye" %} (<span class="nb-btn">0</span>) — <span class="mt-btn">0</span> FCFA</button>
+            <button type="submit" name="statut_paiement" value="gratuit" class="btn-gratuit">{% trans "Gratuit" %} (<span class="nb-btn">0</span>) — 0 FCFA</button>
         </div>
-        <p id="aucun-resultat" class="message-vide">{% trans "Aucun voyage ne correspond a la recherche." %}</p>
     </div>
 
     <div class="disposition-plan" id="zone-plan" style="display:none;">
@@ -148,34 +178,6 @@
                 <div class="sous"><strong id="resume-occ-texte">0 / 0</strong> <span id="resume-occ-pct" style="float:right;">0%</span></div>
                 <div class="barre-occupation"><div id="resume-occ-barre"></div></div>
             </div>
-        </div>
-    </div>
-
-    <div class="carte-blanche" id="zone-saisie" style="display:none;">
-        <h3>{% trans "Acheteur et paiement" %}</h3>
-        <label class="etiquette">{% trans "Nom de l'acheteur" %}</label>
-        <input type="text" name="client_nom" placeholder="{% trans 'Nom et prenom' %}" required>
-
-        <label class="etiquette">{% trans "Telephone de l'acheteur" %}</label>
-        <input type="text" name="client_telephone" placeholder="66 00 00 00" required>
-
-        <label class="etiquette">{% trans "Mode de paiement" %}</label>
-        <input type="hidden" name="mode_paiement" id="champ-paiement" value="especes">
-        <div class="groupe-choix" id="choix-paiement">
-            <button type="button" class="tuile tuile-court actif" data-valeur="especes">{% trans "Especes" %}</button>
-            <button type="button" class="tuile tuile-court" data-valeur="mobile_money">Mobile Money</button>
-            <button type="button" class="tuile tuile-court" data-valeur="virement">{% trans "Virement bancaire" %}</button>
-            <button type="button" class="tuile tuile-court" data-valeur="carte">{% trans "Carte bancaire" %}</button>
-        </div>
-
-        <div id="zone-passagers"></div>
-
-        <div class="message-formulaire" id="message-formulaire"></div>
-
-        <div class="actions-paiement">
-            <button type="submit" name="statut_paiement" value="paye" class="btn-paye">{% trans "Paye" %} (<span class="nb-btn">0</span>) — <span class="mt-btn">0</span> FCFA</button>
-            <button type="submit" name="statut_paiement" value="non_paye" class="btn-nonpaye">{% trans "Non paye" %} (<span class="nb-btn">0</span>) — <span class="mt-btn">0</span> FCFA</button>
-            <button type="submit" name="statut_paiement" value="gratuit" class="btn-gratuit">{% trans "Gratuit" %} (<span class="nb-btn">0</span>) — 0 FCFA</button>
         </div>
     </div>
 
@@ -230,6 +232,8 @@ const T = {
     numPiece: '{% trans "Numero de piece" %} *', numero: '{% trans "Numero" %}',
     planDu: '{% trans "Plan du bus" %}', places: '{% trans "places" %}', registre: '{% trans "Registre des ventes" %}',
 };
+const LONGUEURS_PIECE = {cni: 10, passeport: 7, permis: 10, acte_naissance: 4};
+const MSG_PIECE_INVALIDE = "{% trans 'Numero de piece invalide pour le passager %(i)s (doit contenir %(n)s chiffres).' %}";
 const ETIQUETTE_STATUT = {payee: '{% trans "Valide" %}', en_attente: '{% trans "Non paye" %}', annulee: '{% trans "Annule" %}', remboursee: '{% trans "Annule" %}'};
 
 const TEXTE_DATE_JOUR = document.getElementById('bandeau-voyage').textContent;
@@ -237,10 +241,6 @@ let sieges = [];        // [{numero, etat}]
 let selection = [];     // numeros choisis (ordre de clic)
 let prixVoyage = 0;
 
-function activerTuile(groupe, bouton) {
-    groupe.querySelectorAll('.tuile').forEach(function (b) { b.classList.remove('actif'); });
-    bouton.classList.add('actif');
-}
 function echapper(t) { const d = document.createElement('div'); d.textContent = t == null ? '' : t; return d.innerHTML; }
 function formater(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
 
@@ -301,34 +301,30 @@ function genererPassagers() {
         bloc.className = 'bloc-passager';
         bloc.dataset.siege = numero;
         bloc.style.cssText = 'border:1px solid #e5e7eb; border-radius:12px; padding:14px; margin-bottom:12px; background:#f9fafb;';
-        const champsIdentite = n === 1 ? '' :
-            '<label class="etiquette-petite">' + T.nomPrenom + '</label>' +
-            '<input type="text" data-champ="nom" name="passager_nom_complet_' + i + '" placeholder="' + T.nomPassager + '" value="' + echapper(a.nom || '') + '" style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">' +
-            '<label class="etiquette-petite">' + T.tel + '</label>' +
-            '<input type="text" data-champ="tel" name="passager_telephone_' + i + '" placeholder="66 00 00 00" value="' + echapper(a.tel || '') + '" style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px; margin-bottom:10px;">';
-        let tuilesPiece = '';
+        let optionsPiece = '<option value="">' + T.choisirPiece + '</option>';
         TYPES_PIECE.forEach(function (t) {
-            tuilesPiece += '<button type="button" class="tuile tuile-court' + (a.piece === t[0] ? ' actif' : '') + '" data-valeur="' + t[0] + '">' + t[1] + '</button>';
+            optionsPiece += '<option value="' + t[0] + '"' + (a.piece === t[0] ? ' selected' : '') + '>' + t[1] + '</option>';
         });
+        const champsIdentite = n === 1 ? '' :
+            '<div class="large"><label class="etiquette-petite">' + T.nomPrenom + ' *</label>' +
+            '<input type="text" data-champ="nom" name="passager_nom_complet_' + i + '" placeholder="' + T.nomPassager + '" value="' + echapper(a.nom || '') + '"></div>' +
+            '<div><label class="etiquette-petite">' + T.tel + '</label>' +
+            '<input type="text" data-champ="tel" name="passager_telephone_' + i + '" placeholder="66 00 00 00" value="' + echapper(a.tel || '') + '"></div>';
         bloc.innerHTML =
             '<p style="font-weight:700; color:#1F3864; margin:0 0 10px;">' + (n === 1 ? T.billet : T.passager + ' ' + i) + ' — ' + T.siege + ' ' + numero + '</p>' +
-            '<input type="hidden" class="valeur-siege" name="passager_siege_' + i + '" value="' + numero + '">' +
-            champsIdentite +
-            '<label class="etiquette-petite">' + T.choisirPiece + '</label>' +
-            '<input type="hidden" class="valeur-piece" name="passager_type_piece_' + i + '" value="' + (a.piece || '') + '">' +
-            '<div class="groupe-choix choix-piece">' + tuilesPiece + '</div>' +
-            '<label class="etiquette-petite">' + T.numPiece + '</label>' +
-            '<input type="text" data-champ="num" name="passager_numero_piece_' + i + '" placeholder="' + T.numero + '" required value="' + echapper(a.num || '') + '" style="width:100%; padding:10px; font-size:.95rem; border:1px solid #d1d5db; border-radius:8px;">';
+            '<input type="hidden" name="passager_siege_' + i + '" value="' + numero + '">' +
+            '<div class="grille-passager">' + champsIdentite +
+            '<div><label class="etiquette-petite">' + T.choisirPiece + '</label>' +
+            '<select class="valeur-piece" name="passager_type_piece_' + i + '">' + optionsPiece + '</select></div>' +
+            '<div><label class="etiquette-petite">' + T.numPiece + '</label>' +
+            '<input type="text" data-champ="num" name="passager_numero_piece_' + i + '" placeholder="' + T.numero + '" required value="' + echapper(a.num || '') + '"></div>' +
+            '</div>';
         zone.appendChild(bloc);
-        const hiddenPiece = bloc.querySelector('.valeur-piece');
-        const groupePiece = bloc.querySelector('.choix-piece');
-        groupePiece.querySelectorAll('.tuile').forEach(function (b) {
-            b.addEventListener('click', function () { hiddenPiece.value = b.dataset.valeur; activerTuile(groupePiece, b); });
-        });
     });
 }
 
 function actualiser() {
+    document.getElementById('indice-siege').style.display = (sieges.length && !selection.length) ? 'block' : 'none';
     dessinerGrille();
     actualiserResume();
     genererPassagers();
@@ -360,12 +356,14 @@ function dessinerRegistre(donnees) {
 function chargerPlan() {
     const voyageId = document.getElementById('champ-voyage').value;
     const zonePlan = document.getElementById('zone-plan');
-    const zoneSaisie = document.getElementById('zone-saisie');
     const zoneRegistre = document.getElementById('zone-registre');
     selection = [];
     if (!voyageId) {
         sieges = [];
-        zonePlan.style.display = zoneSaisie.style.display = zoneRegistre.style.display = 'none';
+        zonePlan.style.display = zoneRegistre.style.display = 'none';
+        document.getElementById('champ-bus').value = '';
+        document.getElementById('champ-prix').value = '';
+        actualiser();
         document.getElementById('bandeau-voyage').textContent = TEXTE_DATE_JOUR;
         return;
     }
@@ -376,69 +374,25 @@ function chargerPlan() {
             prixVoyage = data.prix || 0;
             document.getElementById('titre-plan').textContent = T.planDu + ' — ' + sieges.length + ' ' + T.places;
             zonePlan.style.display = 'grid';
-            zoneSaisie.style.display = zoneRegistre.style.display = 'block';
+            zoneRegistre.style.display = 'block';
+            document.getElementById('champ-prix').value = formater(prixVoyage);
             dessinerRegistre(data);
             actualiser();
-            zonePlan.scrollIntoView({behavior: 'smooth', block: 'start'});
+            
         })
         .catch(function () { sieges = []; actualiser(); });
 }
 
-const groupeVoyage = document.getElementById('choix-voyage');
-if (groupeVoyage) {
-    const cartesVoyage = Array.from(groupeVoyage.querySelectorAll('.tuile'));
-    cartesVoyage.forEach(function (b) {
-        b.addEventListener('click', function () {
-            document.getElementById('champ-voyage').value = b.dataset.valeur;
-            activerTuile(groupeVoyage, b);
-            document.getElementById('bandeau-voyage').textContent = b.querySelector('strong').textContent + ' · ' + b.dataset.date;
-            chargerPlan();
-        });
+const champVoyage = document.getElementById('champ-voyage');
+if (champVoyage) {
+    champVoyage.addEventListener('change', function () {
+        const o = champVoyage.options[champVoyage.selectedIndex];
+        document.getElementById('champ-bus').value = o && o.value ? o.dataset.bus : '';
+        document.getElementById('bandeau-voyage').textContent = o && o.value ? o.textContent : TEXTE_DATE_JOUR;
+        chargerPlan();
     });
-    const groupePaiement = document.getElementById('choix-paiement');
-    groupePaiement.querySelectorAll('.tuile').forEach(function (b) {
-        b.addEventListener('click', function () {
-            document.getElementById('champ-paiement').value = b.dataset.valeur;
-            activerTuile(groupePaiement, b);
-        });
-    });
-
-    const filtreDepart = document.getElementById('filtre-depart');
-    const filtreArrivee = document.getElementById('filtre-arrivee');
-    const filtreDate = document.getElementById('filtre-date');
-    function remplirVilles(select, attribut) {
-        Array.from(new Set(cartesVoyage.map(function (c) { return c.dataset[attribut]; }))).sort().forEach(function (ville) {
-            const o = document.createElement('option');
-            o.value = ville; o.textContent = ville;
-            select.appendChild(o);
-        });
-    }
-    remplirVilles(filtreDepart, 'depart');
-    remplirVilles(filtreArrivee, 'arrivee');
-
-    function appliquerFiltres() {
-        let visibles = 0;
-        cartesVoyage.forEach(function (c) {
-            const ok = (!filtreDepart.value || c.dataset.depart === filtreDepart.value)
-                && (!filtreArrivee.value || c.dataset.arrivee === filtreArrivee.value)
-                && (!filtreDate.value || c.dataset.date === filtreDate.value);
-            c.style.display = ok ? '' : 'none';
-            if (ok) visibles++;
-        });
-        document.getElementById('aucun-resultat').style.display = visibles ? 'none' : 'block';
-        const choisi = document.getElementById('champ-voyage');
-        const carteChoisie = cartesVoyage.find(function (c) { return c.dataset.valeur === choisi.value; });
-        if (carteChoisie && carteChoisie.style.display === 'none') {
-            choisi.value = '';
-            carteChoisie.classList.remove('actif');
-            chargerPlan();
-        }
-    }
-    [filtreDepart, filtreArrivee].forEach(function (f) { f.addEventListener('change', appliquerFiltres); });
-    filtreDate.addEventListener('input', appliquerFiltres);
-    document.getElementById('filtre-reinit').addEventListener('click', function () {
-        filtreDepart.value = ''; filtreArrivee.value = ''; filtreDate.value = '';
-        appliquerFiltres();
+    document.getElementById('form-vente').addEventListener('reset', function () {
+        setTimeout(function () { chargerPlan(); document.getElementById('message-formulaire').style.display = 'none'; }, 0);
     });
 
     document.getElementById('form-vente').addEventListener('submit', function (e) {
@@ -449,6 +403,15 @@ if (groupeVoyage) {
             probleme = T.choisirSiege;
         } else if (Array.from(document.querySelectorAll('.valeur-piece')).some(function (i) { return !i.value; })) {
             probleme = T.choisirPiece;
+        } else {
+            document.querySelectorAll('.bloc-passager').forEach(function (bloc, idx) {
+                const type = bloc.querySelector('.valeur-piece').value;
+                const numero = bloc.querySelector('[data-champ=num]').value.trim();
+                const attendu = LONGUEURS_PIECE[type];
+                if (!probleme && attendu && (!/^\d+$/.test(numero) || numero.length !== attendu)) {
+                    probleme = MSG_PIECE_INVALIDE.replace('%(i)s', idx + 1).replace('%(n)s', attendu);
+                }
+            });
         }
         if (probleme) {
             e.preventDefault();

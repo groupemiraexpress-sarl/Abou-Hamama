@@ -23,9 +23,6 @@ msgstr "للمعالجة"
 msgid "Accompagnateur aimable"
 msgstr "المرافق لطيف"
 
-msgid "Acheteur et paiement"
-msgstr "المشتري والدفع"
-
 msgid "Acte de naissance"
 msgstr "شهادة الميلاد"
 
@@ -116,6 +113,9 @@ msgstr "ملغاة"
 msgid "Annulee"
 msgstr "ملغاة"
 
+msgid "Annuler"
+msgstr "إلغاء"
+
 msgid "App mobile"
 msgstr "تطبيق الجوال"
 
@@ -157,9 +157,6 @@ msgstr "محطات الخط"
 
 msgid "Arrive a destination"
 msgstr "وصل إلى الوجهة"
-
-msgid "Arrivee"
-msgstr "الوصول"
 
 msgid "Arrivee estimee"
 msgstr "الوصول المتوقع"
@@ -241,9 +238,6 @@ msgstr "لم يتم سحب أي حوالة اليوم."
 
 msgid "Aucun voyage disponible a la vente pour le moment."
 msgstr "لا توجد رحلة متاحة للبيع حاليا."
-
-msgid "Aucun voyage ne correspond a la recherche."
-msgstr "لا توجد رحلة مطابقة للبحث."
 
 msgid "Aucune agence rattachee a ce compte. Choisis-en une pour tester :"
 msgstr "لا توجد وكالة مرتبطة بهذا الحساب. اختر واحدة للتجربة:"
@@ -394,6 +388,9 @@ msgstr "اختيار رحلة"
 
 msgid "Choisir une agence"
 msgstr "اختيار وكالة"
+
+msgid "Choisissez le ou les sieges sur le plan du bus ci-dessous."
+msgstr "اختر المقعد أو المقاعد على مخطط الحافلة أدناه."
 
 msgid "Client"
 msgstr "العميل"
@@ -699,9 +696,6 @@ msgid ""
 "Demandez ce code au destinataire (ne le lui montrez jamais vous-meme) pour "
 "confirmer la remise."
 msgstr "اطلب هذا الرمز من المستلم (لا تعرضه عليه أبدًا بنفسك) لتأكيد التسليم."
-
-msgid "Depart"
-msgstr "المغادرة"
 
 msgid "Derniere mise a jour"
 msgstr "آخر تحديث"
@@ -1538,9 +1532,6 @@ msgstr "مرفوضة"
 msgid "Registre des ventes"
 msgstr "سجل المبيعات"
 
-msgid "Reinitialiser"
-msgstr "إعادة تعيين"
-
 msgid "Rembourse"
 msgstr "مسترد"
 
@@ -1729,9 +1720,6 @@ msgstr "هاتف"
 msgid "Telephone"
 msgstr "الهاتف"
 
-msgid "Telephone de l'acheteur"
-msgstr "هاتف المشتري"
-
 msgid "Telephone de l'expediteur"
 msgstr "هاتف المرسل"
 
@@ -1785,9 +1773,6 @@ msgstr "جميع الحافلات"
 
 msgid "Tous les employes"
 msgstr "جميع الموظفين"
-
-msgid "Toutes"
-msgstr "الكل"
 
 msgid "Traite par"
 msgstr "عولج بواسطة"
