@@ -12,7 +12,8 @@
 </div>
 {% endif %}
 
-<div class="card" style="margin-bottom:20px;">
+<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:16px; align-items:start;">
+<div class="card">
     <h3 style="font-size:1rem; color:#1F3864; margin-bottom:12px;">{{ reservation.numero_reservation }}</h3>
     <table style="width:100%; border-collapse:collapse;">
         <tr><td style="padding:6px 0; color:#6b7280;">{% trans "Client" %}</td>
@@ -47,6 +48,7 @@
             <i class="fa-solid fa-floppy-disk"></i> {% trans "Enregistrer la modification" %}
         </button>
     </form>
+</div>
 </div>
 
 <div style="text-align:center; margin-top:20px;">
