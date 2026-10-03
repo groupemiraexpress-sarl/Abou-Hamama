@@ -1120,12 +1120,14 @@ class DemandeMaterielAdmin(admin.ModelAdmin):
     def get_readonly_fields(self, request, obj=None):
         employe = getattr(request.user, 'employe', None)
         poste = employe.poste if employe else None
+        # "Traite par", "Demande par" et les dates sont remplis automatiquement
+        # (voir save_model) : personne ne les choisit a la main dans une liste.
         if request.user.is_superuser or poste == 'pdg':
-            return ()
+            return ('demande_par', 'date_demande', 'traite_par', 'date_traitement')
         if poste == 'magasinier':
             # Le magasin traite la demande (statut + reponse) mais ne modifie
             # jamais ce que le responsable maintenance a demande.
-            return ('bus', 'article', 'quantite', 'description', 'demande_par', 'date_demande')
+            return ('bus', 'article', 'quantite', 'description', 'demande_par', 'date_demande', 'traite_par', 'date_traitement')
         # Le responsable maintenance (ou tout autre poste) peut ajuster sa
         # propre demande, mais jamais la decision du magasin.
         return ('statut', 'reponse_magasin', 'traite_par', 'date_traitement', 'demande_par', 'date_demande')
