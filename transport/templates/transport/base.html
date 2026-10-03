@@ -29,6 +29,8 @@
         header h1 { font-size: 1.4rem; letter-spacing: .5px; }
         header p { font-size: .85rem; opacity: .85; margin-top: 2px; }
         .container { max-width: 640px; margin: 0 auto; padding: 24px 16px; }
+        .container.large { max-width: none; padding: 24px 32px; }
+        @media (max-width: 600px) { .container.large { padding: 16px; } }
         footer {
             text-align: center;
             padding: 20px;
@@ -50,16 +52,16 @@
         .btn:hover { background: var(--couleur-hover); }
         .card {
             background: #fff;
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 24px;
-            box-shadow: 0 1px 4px rgba(0,0,0,.06);
+            box-shadow: 0 4px 14px rgba(31,56,100,.08);
         }
         input[type="text"], input[type="date"], select {
             width: 100%;
             padding: 14px;
             font-size: 1rem;
             border: 1px solid #d1d5db;
-            border-radius: 8px;
+            border-radius: 10px;
             margin-bottom: 14px;
         }
         input:focus, select:focus { outline: 2px solid var(--couleur-principale); border-color: transparent; }
@@ -111,7 +113,7 @@
         <h1>{% block entete %}{{ branding.nom_entreprise }}{% endblock %}</h1>
         <p>{{ branding.slogan }}</p>
     </header>
-    <div class="container">
+    <div class="container {% block classe_container %}{% endblock %}">
         {% block contenu %}{% endblock %}
     </div>
     <footer>

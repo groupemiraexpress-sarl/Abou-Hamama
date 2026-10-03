@@ -1,0 +1,102 @@
+<style>
+    /* Style "cartes" commun a toutes les pages de l'admin (meme esprit que la page Vendre un billet).
+       Les cartes redefinissent les variables de couleur de Django en version claire :
+       elles restent lisibles meme quand le navigateur est en theme sombre. */
+    .carte-ah, #content-main form fieldset.module.aligned, #changelist-filter, #changelist .results, #toolbar,
+    .inline-group, .submit-row, #content-main > .module, #changelist .paginator, .delete-confirmation #content-main form > div, form .actions {
+        --body-fg:#1f2937; --body-bg:#fff; --body-quiet-color:#6b7280; --body-loud-color:#111827;
+        --link-fg:#1F3864; --link-hover-color:#2563eb; --link-selected-fg:#1F3864;
+        --hairline-color:#eef0f3; --border-color:#e5e7eb; --darkened-bg:#f4f6f9; --selected-bg:#eff6ff; --selected-row:#eff6ff;
+        --error-fg:#b91c1c; --message-success-bg:#dcfce7; --message-warning-bg:#fef3c7; --message-error-bg:#fee2e2;
+        color:#1f2937; color-scheme:light;
+    }
+
+    #content { max-width:none; padding:22px 28px; }
+
+    /* ---------- Formulaires : une carte par bloc, champs en grille, libelle au-dessus ---------- */
+    #content-main form fieldset.module.aligned {
+        background:#fff; border:none; border-radius:16px; padding:20px 22px 12px; margin:0 0 16px;
+        box-shadow:0 4px 14px rgba(31,56,100,.08);
+        display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:14px 20px; align-items:start;
+    }
+    fieldset.module.aligned > h2 {
+        grid-column:1 / -1; margin:0 0 4px; padding:0 0 12px; background:none; color:#1F3864;
+        font-size:1.1rem; font-weight:700; text-transform:none; letter-spacing:0; border:0; border-bottom:1px solid #eef0f3; border-radius:0; box-shadow:none;
+    }
+    fieldset.module.aligned > .description, fieldset.module.aligned > .errornote { grid-column:1 / -1; }
+    fieldset.module.aligned .form-row { border:none; padding:0; margin:0; overflow:visible; }
+    fieldset.module.aligned .form-row.field-notes, fieldset.module.aligned .form-row:has(textarea) { grid-column:span 2; }
+    fieldset.module.aligned .form-row > div, fieldset.module.aligned .form-row .flex-container { display:block; }
+    fieldset.module.aligned label {
+        float:none; display:block; width:auto; padding:0; margin:0 0 5px;
+        font-size:.76rem; font-weight:700; letter-spacing:.3px; text-transform:uppercase; color:#4b5563;
+    }
+    fieldset.module.aligned .checkbox-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    fieldset.module.aligned .checkbox-row label, fieldset.module.aligned label.vCheckboxLabel { display:inline; margin:0; text-transform:none; font-size:.9rem; }
+    fieldset.module.aligned input[type=text], fieldset.module.aligned input[type=number], fieldset.module.aligned input[type=tel],
+    fieldset.module.aligned input[type=email], fieldset.module.aligned input[type=password], fieldset.module.aligned input[type=url],
+    fieldset.module.aligned input[type=date], fieldset.module.aligned input[type=time],
+    fieldset.module.aligned select:not([multiple]), fieldset.module.aligned textarea,
+    fieldset.module.aligned .vTextField, fieldset.module.aligned .vLargeTextField {
+        box-sizing:border-box; width:100%; max-width:100%; padding:11px 12px; font-size:.95rem;
+        border:1px solid #d1d5db; border-radius:10px; background:#fff; color:#111827;
+    }
+    fieldset.module.aligned input:focus, fieldset.module.aligned select:focus, fieldset.module.aligned textarea:focus {
+        outline:none; border-color:#1F3864; box-shadow:0 0 0 3px rgba(31,56,100,.12);
+    }
+    fieldset.module.aligned .readonly { display:block; padding:11px 12px; background:#f3f4f6; border-radius:10px; color:#374151; min-height:1.2em; }
+    fieldset.module.aligned .help, fieldset.module.aligned div.help { margin:5px 0 0; padding:0; font-size:.78rem; color:#6b7280; }
+    fieldset.module.aligned .related-widget-wrapper { display:flex; align-items:center; gap:8px; width:100%; }
+    fieldset.module.aligned .related-widget-wrapper select { flex:1; }
+    fieldset.module.aligned fieldset { border:0; padding:0; margin:0; background:none; box-shadow:none; display:block; }
+    fieldset.module.aligned legend, fieldset.module.aligned .form-row > div > legend {
+        float:none; display:block; width:auto; padding:0; margin:0 0 5px;
+        font-size:.76rem; font-weight:700; letter-spacing:.3px; text-transform:uppercase; color:#4b5563;
+    }
+    fieldset.module.aligned p.datetime, fieldset.module.aligned .datetime { display:flex; flex-wrap:wrap; align-items:center; gap:6px 14px; margin:0 0 4px; font-size:.85rem; color:#4b5563; }
+    fieldset.module.aligned .datetime label { display:inline; margin:0 4px 0 0; text-transform:none; font-weight:600; font-size:.85rem; }
+    fieldset.module.aligned .datetime input { width:auto; padding:9px 10px; }
+    fieldset.module.aligned .errorlist { margin:0 0 6px; }
+    fieldset.module.aligned .selector { width:100%; }          /* listes a double colonne (groupes, permissions) */
+    fieldset.module.aligned .form-row:has(.selector), fieldset.module.aligned .form-row:has(.aligned.collapse) { grid-column:1 / -1; }
+    fieldset.module.aligned.collapse { padding-bottom:16px; }
+    fieldset.module.aligned.collapse > h2 { cursor:pointer; }
+    #plan-sieges-admin { grid-column:1 / -1; background:#f9fafb; border:1px solid #eef0f3; border-radius:12px; padding:12px 14px; }
+
+    /* Blocs en ligne (inlines), barre d'enregistrement */
+    .inline-group { background:#fff; border-radius:16px; padding:16px 18px; margin:0 0 16px; box-shadow:0 4px 14px rgba(31,56,100,.08); border:none; overflow-x:auto; }
+    .inline-group h2 { background:none; color:#1F3864; font-size:1.05rem; text-transform:none; border:0; padding:0 0 8px; }
+    .submit-row { border:none; border-radius:16px; background:#fff; box-shadow:0 4px 14px rgba(31,56,100,.08); padding:14px 20px; }
+    .submit-row input[type=submit], .submit-row .button { border-radius:10px; padding:11px 20px; font-weight:700; }
+
+    /* ---------- Listes : recherche, filtres, tableau en cartes ---------- */
+    #toolbar { background:#fff; border:none; border-radius:16px; padding:12px 16px; margin:0 0 14px; box-shadow:0 4px 14px rgba(31,56,100,.08); }
+    #toolbar input[type=text] { border:1px solid #d1d5db; border-radius:10px; padding:9px 12px; background:#fff; color:#111827; }
+    #changelist .actions { background:#fff; border:none; border-radius:12px; margin:0 0 12px; padding:10px 14px; box-shadow:0 4px 14px rgba(31,56,100,.06); }
+    #changelist .actions select { border:1px solid #d1d5db; border-radius:8px; padding:7px; background:#fff; color:#111827; }
+    #changelist .results { background:#fff; border-radius:16px; box-shadow:0 4px 14px rgba(31,56,100,.08); overflow-x:auto; padding:6px 10px 10px; }
+    #changelist table { border:none; }
+    #changelist thead th { background:#f4f6f9; color:#4b5563; font-size:.74rem; text-transform:uppercase; letter-spacing:.4px; border:none; padding:11px 10px; }
+    #changelist thead th a, #changelist thead th .text a { color:#4b5563; }
+    #changelist tbody td, #changelist tbody th { border-bottom:1px solid #f1f5f9; padding:11px 10px; color:#1f2937; background:transparent; }
+    #changelist tbody tr:hover td, #changelist tbody tr:hover th { background:#f8fafc; }
+    #changelist tbody tr.selected td, #changelist tbody tr.selected th { background:#eff6ff; }
+    #changelist .paginator { background:#fff; border:none; border-radius:12px; margin-top:12px; padding:10px 14px; box-shadow:0 4px 14px rgba(31,56,100,.06); }
+    #changelist-filter { background:#fff; border:none; border-radius:16px; box-shadow:0 4px 14px rgba(31,56,100,.08); overflow:hidden; }
+    #changelist-filter h2 { background:#1F3864; color:#fff; text-transform:uppercase; font-size:.78rem; letter-spacing:.5px; padding:12px 16px; border:0; }
+    #changelist-filter h3 { color:#374151; font-size:.82rem; margin:12px 16px 4px; }
+    #changelist-filter ul { padding:0 16px 8px; }
+    #changelist-filter li a { color:#1F3864; }
+    #changelist-filter li.selected a { color:#2563eb; font-weight:700; }
+    ul.object-tools a, ul.object-tools a:link, ul.object-tools a:visited { border-radius:10px; padding:9px 16px; font-weight:700; }
+
+    /* Messages, pages de confirmation */
+    ul.messagelist li { border-radius:12px; }
+    .delete-confirmation #content-main form > div { background:#fff; border-radius:16px; padding:18px 20px; box-shadow:0 4px 14px rgba(31,56,100,.08); }
+
+    @media (max-width:600px) {
+        #content { padding:16px 12px; }
+        fieldset.module.aligned { grid-template-columns:1fr !important; }
+        fieldset.module.aligned .form-row.field-notes, fieldset.module.aligned .form-row:has(textarea) { grid-column:auto; }
+    }
+</style>
