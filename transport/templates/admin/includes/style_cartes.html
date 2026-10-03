@@ -25,6 +25,7 @@
     }
     fieldset.module.aligned > .description, fieldset.module.aligned > .errornote { grid-column:1 / -1; }
     fieldset.module.aligned .form-row { border:none; padding:0; margin:0; overflow:visible; }
+    fieldset.module.aligned .form-row.field-voyage { grid-column:span 2; }
     fieldset.module.aligned .form-row.field-notes, fieldset.module.aligned .form-row:has(textarea) { grid-column:span 2; }
     fieldset.module.aligned .form-row > div, fieldset.module.aligned .form-row .flex-container { display:block; }
     fieldset.module.aligned label {
@@ -38,7 +39,8 @@
     fieldset.module.aligned input[type=date], fieldset.module.aligned input[type=time],
     fieldset.module.aligned select:not([multiple]), fieldset.module.aligned textarea,
     fieldset.module.aligned .vTextField, fieldset.module.aligned .vLargeTextField {
-        box-sizing:border-box; width:100%; max-width:100%; padding:11px 12px; font-size:.95rem;
+        box-sizing:border-box; width:100%; max-width:100%; padding:10px 12px; font-size:.95rem;
+        height:auto; min-height:44px; line-height:1.35;
         border:1px solid #d1d5db; border-radius:10px; background:#fff; color:#111827;
     }
     fieldset.module.aligned input:focus, fieldset.module.aligned select:focus, fieldset.module.aligned textarea:focus {
@@ -55,7 +57,7 @@
     }
     fieldset.module.aligned p.datetime, fieldset.module.aligned .datetime { display:flex; flex-wrap:wrap; align-items:center; gap:6px 14px; margin:0 0 4px; font-size:.85rem; color:#4b5563; }
     fieldset.module.aligned .datetime label { display:inline; margin:0 4px 0 0; text-transform:none; font-weight:600; font-size:.85rem; }
-    fieldset.module.aligned .datetime input { width:auto; padding:9px 10px; }
+    fieldset.module.aligned .datetime input { width:auto; padding:8px 10px; min-height:38px; }
     fieldset.module.aligned .errorlist { margin:0 0 6px; }
     fieldset.module.aligned .selector { width:100%; }          /* listes a double colonne (groupes, permissions) */
     fieldset.module.aligned .form-row:has(.selector), fieldset.module.aligned .form-row:has(.aligned.collapse) { grid-column:1 / -1; }
@@ -71,9 +73,9 @@
 
     /* ---------- Listes : recherche, filtres, tableau en cartes ---------- */
     #toolbar { background:#fff; border:none; border-radius:16px; padding:12px 16px; margin:0 0 14px; box-shadow:0 4px 14px rgba(31,56,100,.08); }
-    #toolbar input[type=text] { border:1px solid #d1d5db; border-radius:10px; padding:9px 12px; background:#fff; color:#111827; }
+    #toolbar input[type=text] { border:1px solid #d1d5db; border-radius:10px; padding:8px 12px; height:auto; min-height:38px; background:#fff; color:#111827; }
     #changelist .actions { background:#fff; border:none; border-radius:12px; margin:0 0 12px; padding:10px 14px; box-shadow:0 4px 14px rgba(31,56,100,.06); }
-    #changelist .actions select { border:1px solid #d1d5db; border-radius:8px; padding:7px; background:#fff; color:#111827; }
+    #changelist .actions select { border:1px solid #d1d5db; border-radius:8px; padding:6px 8px; height:auto; min-height:34px; background:#fff; color:#111827; }
     #changelist .results { background:#fff; border-radius:16px; box-shadow:0 4px 14px rgba(31,56,100,.08); overflow-x:auto; padding:6px 10px 10px; }
     #changelist table { border:none; }
     #changelist thead th { background:#f4f6f9; color:#4b5563; font-size:.74rem; text-transform:uppercase; letter-spacing:.4px; border:none; padding:11px 10px; }
