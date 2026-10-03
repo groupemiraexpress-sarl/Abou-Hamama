@@ -33,7 +33,7 @@
         </select>
 
         <input type="hidden" name="agence" value="{{ agence_choisie.id }}">
-        <button type="submit" class="btn" style="width:100%;">{% trans "Mettre a jour le rapport" %}</button>
+        <button type="submit" class="btn btn-vert" style="width:100%;">{% trans "Mettre a jour le rapport" %}</button>
         {% endif %}
     </form>
 </div>
@@ -115,7 +115,7 @@
 </div>
 
 <div class="no-print" style="display:flex; gap:12px; margin-top:20px;">
-    <button onclick="window.print()" class="btn" style="flex:1; background:#16a34a;">
+    <button onclick="window.print()" class="btn" style="flex:1; background:#10b981;">
         <i class="fa-solid fa-print"></i> {% trans "Imprimer ce rapport" %}
     </button>
 </div>
