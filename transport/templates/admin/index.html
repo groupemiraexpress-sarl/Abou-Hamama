@@ -37,7 +37,7 @@
     .stat-carte.alerte .stat-valeur { color: #b45309; }
     .stat-carte.succes .stat-valeur { color: #059669; }
     .stat-label {
-      font-size: 12px;
+      font-size: 14px;
       color: #6b7280;
       margin-top: 4px;
       text-transform: uppercase;
@@ -48,7 +48,7 @@
       background: #1F3864;
       color: #ffffff;
       padding: 10px 14px;
-      font-size: 13px;
+      font-size: 15px;
       font-weight: bold;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -71,7 +71,7 @@
     }
     .groupe-ligne:last-child { border-bottom: none; }
     .groupe-ligne a.nom { font-weight: 600; text-decoration: none; }
-    .groupe-actions a { font-size: 12px; margin-left: 12px; text-decoration: none; }
+    .groupe-actions a { font-size: 14px; margin-left: 12px; text-decoration: none; }
     .raccourci-vente {
       display: flex;
       gap: 12px;
@@ -83,10 +83,12 @@
       padding: 14px 22px;
       border-radius: 8px;
       font-weight: bold;
-      font-size: 14px;
+      font-size: 16px;
       text-decoration: none;
       display: inline-block;
     }
+    .btn-vente:link, .btn-vente:visited { color: #ffffff; }
+    .btn-vente-secondaire:link, .btn-vente-secondaire:visited { color: #1F3864; }
     .btn-vente:hover {
       background: #2a4a7f;
       color: #ffffff;
@@ -98,7 +100,7 @@
       padding: 14px 22px;
       border-radius: 8px;
       font-weight: bold;
-      font-size: 14px;
+      font-size: 16px;
       text-decoration: none;
       display: inline-block;
     }
@@ -287,7 +289,7 @@
     </div>
     {% endif %}
 
-    <p id="maj-auto-info" style="font-size:11px; color:#9aa1ab; margin-top:-10px;">
+    <p id="maj-auto-info" style="font-size:13px; color:#9aa1ab; margin-top:-10px;">
       <span id="maj-auto-point" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#059669; margin-right:5px;"></span>
       {% trans "Mise a jour auto" %} — <span id="maj-auto-heure">--:--:--</span>
     </p>

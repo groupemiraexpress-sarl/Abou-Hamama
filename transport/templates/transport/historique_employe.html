@@ -51,27 +51,27 @@
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:10px; margin-bottom:24px;">
         {% if voit_billets %}
         <div style="background:#f4f6f9; border-radius:10px; padding:12px; text-align:center;">
-            <p style="font-size:.75rem; color:#6b7280;">{% trans "Billets vendus" %}</p>
+            <p style="font-size:.8rem; color:#6b7280;">{% trans "Billets vendus" %}</p>
             <p style="font-size:1.3rem; font-weight:700; color:#1F3864;">{{ reservations|length }}</p>
         </div>
         {% endif %}
         {% if voit_colis %}
         <div style="background:#f4f6f9; border-radius:10px; padding:12px; text-align:center;">
-            <p style="font-size:.75rem; color:#6b7280;">{% trans "Colis enregistres" %}</p>
+            <p style="font-size:.8rem; color:#6b7280;">{% trans "Colis enregistres" %}</p>
             <p style="font-size:1.3rem; font-weight:700; color:#1F3864;">{{ colis_enregistres|length }}</p>
         </div>
         <div style="background:#f4f6f9; border-radius:10px; padding:12px; text-align:center;">
-            <p style="font-size:.75rem; color:#6b7280;">{% trans "Colis remis" %}</p>
+            <p style="font-size:.8rem; color:#6b7280;">{% trans "Colis remis" %}</p>
             <p style="font-size:1.3rem; font-weight:700; color:#1F3864;">{{ colis_remis|length }}</p>
         </div>
         {% endif %}
         {% if voit_transferts %}
         <div style="background:#f4f6f9; border-radius:10px; padding:12px; text-align:center;">
-            <p style="font-size:.75rem; color:#6b7280;">{% trans "Transferts enregistres" %}</p>
+            <p style="font-size:.8rem; color:#6b7280;">{% trans "Transferts enregistres" %}</p>
             <p style="font-size:1.3rem; font-weight:700; color:#1F3864;">{{ transferts_enregistres|length }}</p>
         </div>
         <div style="background:#f4f6f9; border-radius:10px; padding:12px; text-align:center;">
-            <p style="font-size:.75rem; color:#6b7280;">{% trans "Transferts retires" %}</p>
+            <p style="font-size:.8rem; color:#6b7280;">{% trans "Transferts retires" %}</p>
             <p style="font-size:1.3rem; font-weight:700; color:#1F3864;">{{ transferts_retires|length }}</p>
         </div>
         {% endif %}
