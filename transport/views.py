@@ -86,7 +86,8 @@ def vendre_billet(request):
         commissionnaires = commissionnaires.filter(agence=agence_c) if agence_c else commissionnaires.none()
 
     contexte = {'voyages': voyages, 'employe': employe, 'commissionnaires': commissionnaires.order_by('nom'),
-                'peut_changer_bus': request.user.is_superuser or poste in ('pdg', 'responsable', 'secretaire')}
+                'peut_changer_bus': request.user.is_superuser or poste in ('pdg', 'responsable', 'secretaire'),
+                'peut_ajouter_commissionnaire': request.user.has_perm('transport.add_commissionnaire')}
 
     # Piece d'identite : meme regle de longueur que l'app mobile
     # (api_reserver_siege), pour rester coherent entre guichet et app.

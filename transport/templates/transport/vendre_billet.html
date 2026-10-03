@@ -150,6 +150,8 @@
                     <option value="">{% trans "Aucun" %}</option>
                     {% for c in commissionnaires %}<option value="{{ c.id }}">{{ c.nom }}</option>{% endfor %}
                 </select>
+                {% if not commissionnaires %}<small style="color:#6b7280; display:block; margin-top:4px;">{% trans "Aucun commissionnaire enregistre." %}</small>{% endif %}
+                {% if peut_ajouter_commissionnaire %}<a href="{% url 'admin:transport_commissionnaire_add' %}" target="_blank" rel="noopener" style="font-size:.8rem; color:#2563eb; display:inline-block; margin-top:4px;">+ {% trans "Ajouter un commissionnaire" %}</a>{% endif %}
             </div>
             <div>
                 <label class="etiquette-petite">{% trans "Mode de paiement" %}</label>

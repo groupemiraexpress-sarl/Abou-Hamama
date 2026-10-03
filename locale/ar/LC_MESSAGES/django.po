@@ -86,6 +86,9 @@ msgstr "موظف تحويل الأموال"
 msgid "Ajouter"
 msgstr "إضافة"
 
+msgid "Ajouter un commissionnaire"
+msgstr "إضافة وسيط"
+
 msgid "Alerte d'expiration envoyee"
 msgstr "تم إرسال تنبيه انتهاء الصلاحية"
 
@@ -223,6 +226,9 @@ msgstr "لم يتم تسجيل أي طرد اليوم."
 
 msgid "Aucun colis remis ce jour."
 msgstr "لم يتم تسليم أي طرد اليوم."
+
+msgid "Aucun commissionnaire enregistre."
+msgstr "لا يوجد وسيط مسجل."
 
 msgid "Aucun employe actif dans cette agence."
 msgstr "لا يوجد موظف نشط في هذه الوكالة."

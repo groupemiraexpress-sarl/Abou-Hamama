@@ -85,6 +85,9 @@ msgstr "Money transfer agent"
 msgid "Ajouter"
 msgstr "Add"
 
+msgid "Ajouter un commissionnaire"
+msgstr "Add an agent"
+
 msgid "Alerte d'expiration envoyee"
 msgstr "Expiration alert sent"
 
@@ -222,6 +225,9 @@ msgstr "No parcel registered today."
 
 msgid "Aucun colis remis ce jour."
 msgstr "No parcel delivered today."
+
+msgid "Aucun commissionnaire enregistre."
+msgstr "No agent registered."
 
 msgid "Aucun employe actif dans cette agence."
 msgstr "No active employee in this agency."
