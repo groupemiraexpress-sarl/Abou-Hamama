@@ -1,6 +1,7 @@
 {% extends "transport/base.html" %}
 {% load static %}
 {% load i18n %}
+{% load transport_extras %}
 {% block titre %}{% trans "Recu transfert" %} {{ transfert.code_transfert }} — {{ branding.nom_entreprise }}{% endblock %}
 {% block entete %}{% trans "Recu transfert" %}{% endblock %}
 {% block extra_head %}
@@ -38,7 +39,7 @@
                 <td style="padding:4px 0; text-align:right;">{{ transfert.expediteur_telephone }}</td></tr>
             {% if transfert.expediteur_numero_piece %}
             <tr><td style="padding:4px 0; color:#6b7280;">{% trans "Piece" %}</td>
-                <td style="padding:4px 0; text-align:right;">{{ transfert.expediteur_type_piece }} — {{ transfert.expediteur_numero_piece }}</td></tr>
+                <td style="padding:4px 0; text-align:right;">{{ transfert.expediteur_type_piece|libelle_piece }} — {{ transfert.expediteur_numero_piece }}</td></tr>
             {% endif %}
         </table>
 
@@ -50,7 +51,7 @@
                 <td style="padding:4px 0; text-align:right;">{{ transfert.beneficiaire_telephone }}</td></tr>
             {% if transfert.beneficiaire_numero_piece %}
             <tr><td style="padding:4px 0; color:#6b7280;">{% trans "Piece" %}</td>
-                <td style="padding:4px 0; text-align:right;">{{ transfert.beneficiaire_type_piece }} — {{ transfert.beneficiaire_numero_piece }}</td></tr>
+                <td style="padding:4px 0; text-align:right;">{{ transfert.beneficiaire_type_piece|libelle_piece }} — {{ transfert.beneficiaire_numero_piece }}</td></tr>
             {% endif %}
         </table>
 
