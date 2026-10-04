@@ -30,7 +30,8 @@
     </div>
 
     {% for reservation in reservations %}
-    <div style="border-top:1px solid #e5e7eb; padding-top:14px; margin-top:14px;">
+    <div class="bloc-billet" style="border-top:1px solid #e5e7eb; padding-top:14px; margin-top:14px;">
+        <img src="{% static 'transport/logo_abou_hamama.png' %}" alt="" class="filigrane">
         <p style="font-weight:600; color:#1F3864;">{% trans "Reservation" %} {{ reservation.numero_reservation }}</p>
         <table style="width:100%; border-collapse:collapse; font-size:.9rem;">
             <tr><td style="padding:4px 0; color:#6b7280;">{% trans "Passager" %}</td>

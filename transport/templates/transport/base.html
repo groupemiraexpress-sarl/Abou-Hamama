@@ -38,6 +38,10 @@
             font-size: .8rem;
             color: #6b7280;
         }
+        /* Logo transparent derriere les billets et recus (c'est une image, donc il s'imprime meme sans l'option "arriere-plans") */
+        .bloc-billet, .carte-filigrane { position: relative; overflow: hidden; }
+        .bloc-billet > *:not(.filigrane), .carte-filigrane > *:not(.filigrane) { position: relative; z-index: 1; }
+        .filigrane { position: absolute !important; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70%; max-width: 55mm; opacity: .12; z-index: 0 !important; pointer-events: none; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         .btn {
             display: inline-block;
             background: #3b82f6;
