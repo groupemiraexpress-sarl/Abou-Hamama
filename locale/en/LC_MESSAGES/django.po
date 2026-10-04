@@ -474,6 +474,12 @@ msgstr "Choose an agency"
 msgid "Choisissez le ou les sieges sur le plan du bus ci-dessous."
 msgstr "Choose the seat(s) on the bus plan below."
 
+msgid ""
+"Choisissez un client, ou laissez le champ vide apres avoir corrige les "
+"autres erreurs."
+msgstr ""
+"Choose a customer, or leave the field empty after fixing the other errors."
+
 msgid "Client"
 msgstr "Client"
 
@@ -1223,6 +1229,14 @@ msgid ""
 msgstr ""
 "Leave empty for a CEO or a Storekeeper (single warehouse for the whole "
 "company)"
+
+msgid ""
+"Laissez vide si le client n'est pas encore enregistre : sa fiche sera creee "
+"automatiquement avec le nom et le telephone du voyageur (aucun compte "
+"necessaire)."
+msgstr ""
+"Leave empty if the customer is not registered yet: a record will be created "
+"automatically with the traveler's name and phone (no account needed)."
 
 msgid "Latitude"
 msgstr "Latitude"

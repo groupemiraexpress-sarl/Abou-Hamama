@@ -473,6 +473,11 @@ msgstr "اختيار وكالة"
 msgid "Choisissez le ou les sieges sur le plan du bus ci-dessous."
 msgstr "اختر المقعد أو المقاعد على مخطط الحافلة أدناه."
 
+msgid ""
+"Choisissez un client, ou laissez le champ vide apres avoir corrige les "
+"autres erreurs."
+msgstr "اختر عميلا، أو اترك الحقل فارغا بعد تصحيح الأخطاء الأخرى."
+
 msgid "Client"
 msgstr "العميل"
 
@@ -1215,6 +1220,14 @@ msgid ""
 "Laisser vide pour un PDG ou un Magasinier (magasin unique pour toute la "
 "compagnie)"
 msgstr "اتركه فارغا للمدير العام أو أمين المخزن (مخزن واحد لكل الشركة)"
+
+msgid ""
+"Laissez vide si le client n'est pas encore enregistre : sa fiche sera creee "
+"automatiquement avec le nom et le telephone du voyageur (aucun compte "
+"necessaire)."
+msgstr ""
+"اتركه فارغا إذا لم يكن العميل مسجلا بعد: سيتم إنشاء بطاقته تلقائيا باسم "
+"المسافر ورقم هاتفه (دون الحاجة إلى حساب)."
 
 msgid "Latitude"
 msgstr "خط العرض"

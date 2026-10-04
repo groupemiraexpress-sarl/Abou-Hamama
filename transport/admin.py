@@ -365,6 +365,15 @@ class ReservationAdminForm(forms.ModelForm):
         model = Reservation
         fields = '__all__'
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Le client n'a pas besoin d'avoir un compte : on peut laisser ce champ
+        # vide, la fiche client est alors creee (ou retrouvee) a partir du
+        # telephone du voyageur (voir clean ci-dessous).
+        if 'client' in self.fields:
+            self.fields['client'].required = False
+            self.fields['client'].help_text = _("Laissez vide si le client n'est pas encore enregistre : sa fiche sera creee automatiquement avec le nom et le telephone du voyageur (aucun compte necessaire).")
+
     def clean(self):
         cleaned = super().clean()
         if not cleaned.get('voyageur_nom') or not cleaned.get('voyageur_telephone'):
@@ -383,6 +392,16 @@ class ReservationAdminForm(forms.ModelForm):
                     _("Le siege %(numero)s est deja reserve sur ce trajet par une autre reservation active. Verifiez la liste des reservations avant d'en creer une nouvelle.")
                     % {'numero': siege.numero}
                 )
+        # Aucune erreur plus haut : on peut maintenant creer/retrouver le client.
+        if not cleaned.get('client') and not self.errors:
+            telephone = cleaned['voyageur_telephone'].strip()
+            client = Client.objects.filter(telephone=telephone).first()
+            if client is None:
+                nom_complet = f"{cleaned.get('voyageur_prenom', '').strip()} {cleaned['voyageur_nom'].strip()}".strip()
+                client = Client.objects.create(nom=nom_complet, telephone=telephone)
+            cleaned['client'] = client
+        elif not cleaned.get('client'):
+            raise forms.ValidationError(_("Choisissez un client, ou laissez le champ vide apres avoir corrige les autres erreurs."))
         return cleaned
 
 
