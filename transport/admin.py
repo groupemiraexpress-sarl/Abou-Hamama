@@ -210,6 +210,30 @@ class VoyageAdmin(FiltreAgenceMixin, admin.ModelAdmin):
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
+class AgenceDepartLimiteeMixin:
+    """
+    L'agence de depart d'un colis / transfert / demande est TOUJOURS celle de
+    l'employe qui l'enregistre : la liste ne propose que son agence, deja
+    selectionnee. Le PDG et le superutilisateur choisissent librement.
+    (Un poste sans agence, comme le responsable planning, n'est pas limite.)
+    """
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'agence_depart' and not voit_tout(request.user):
+            agence = agence_de(request.user)
+            if agence:
+                kwargs['queryset'] = Agence.objects.filter(id=agence.id)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def get_changeform_initial_data(self, request):
+        initial = super().get_changeform_initial_data(request)
+        if not voit_tout(request.user):
+            agence = agence_de(request.user)
+            if agence:
+                initial.setdefault('agence_depart', agence.pk)
+        return initial
+
+
 class GroupesChampsMixin:
     """
     Range les champs d'un formulaire en cartes thematiques (Expediteur,
@@ -505,7 +529,7 @@ class ColisConfirmationForm(forms.ModelForm):
 
 
 @admin.register(Colis)
-class ColisAdmin(GroupesChampsMixin, FiltreAgenceMixin, admin.ModelAdmin):
+class ColisAdmin(AgenceDepartLimiteeMixin, GroupesChampsMixin, FiltreAgenceMixin, admin.ModelAdmin):
     groupes_champs = [
         (_("Expediteur"), ['expediteur_nom', 'expediteur_telephone', 'expediteur_nationalite', 'expediteur_type_piece', 'expediteur_numero_piece']),
         (_("Destinataire"), ['destinataire_nom', 'destinataire_telephone', 'destinataire_nationalite', 'destinataire_type_piece', 'destinataire_numero_piece']),
@@ -890,7 +914,7 @@ class TransfertConfirmationForm(forms.ModelForm):
 
 
 @admin.register(TransfertArgent)
-class TransfertArgentAdmin(GroupesChampsMixin, FiltreAgenceMixin, admin.ModelAdmin):
+class TransfertArgentAdmin(AgenceDepartLimiteeMixin, GroupesChampsMixin, FiltreAgenceMixin, admin.ModelAdmin):
     groupes_champs = [
         (_("Expediteur"), ['expediteur_nom', 'expediteur_telephone', 'expediteur_nationalite', 'expediteur_type_piece', 'expediteur_numero_piece']),
         (_("Beneficiaire"), ['beneficiaire_nom', 'beneficiaire_telephone', 'beneficiaire_nationalite', 'beneficiaire_type_piece', 'beneficiaire_numero_piece']),
@@ -1256,7 +1280,7 @@ class PromotionAdmin(admin.ModelAdmin):
 
 
 @admin.register(DemandeColis)
-class DemandeColisAdmin(GroupesChampsMixin, FiltreAgenceMixin, admin.ModelAdmin):
+class DemandeColisAdmin(AgenceDepartLimiteeMixin, GroupesChampsMixin, FiltreAgenceMixin, admin.ModelAdmin):
     groupes_champs = [
         (_("Expediteur"), ['expediteur_nom', 'expediteur_telephone', 'expediteur_nationalite', 'expediteur_type_piece', 'expediteur_numero_piece']),
         (_("Destinataire"), ['destinataire_nom', 'destinataire_telephone', 'destinataire_nationalite', 'destinataire_type_piece', 'destinataire_numero_piece']),
@@ -1328,7 +1352,7 @@ class DemandeColisAdmin(GroupesChampsMixin, FiltreAgenceMixin, admin.ModelAdmin)
 
 
 @admin.register(DemandeTransfert)
-class DemandeTransfertAdmin(GroupesChampsMixin, FiltreAgenceMixin, admin.ModelAdmin):
+class DemandeTransfertAdmin(AgenceDepartLimiteeMixin, GroupesChampsMixin, FiltreAgenceMixin, admin.ModelAdmin):
     groupes_champs = [
         (_("Expediteur"), ['expediteur_nom', 'expediteur_telephone', 'expediteur_nationalite', 'expediteur_type_piece', 'expediteur_numero_piece']),
         (_("Beneficiaire"), ['beneficiaire_nom', 'beneficiaire_telephone', 'beneficiaire_nationalite', 'beneficiaire_type_piece', 'beneficiaire_numero_piece']),
