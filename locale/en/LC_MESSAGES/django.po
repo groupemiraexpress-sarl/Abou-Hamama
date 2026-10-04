@@ -296,6 +296,9 @@ msgstr "Other"
 msgid "Autre piece"
 msgstr "Other document"
 
+msgid "Autres informations"
+msgstr "Other information"
+
 msgid "Avis voyage"
 msgstr "Trip review"
 
@@ -615,6 +618,9 @@ msgstr "Accountant"
 msgid "Compte"
 msgstr "Account"
 
+msgid "Compte application"
+msgstr "App account"
+
 msgid ""
 "Compte cree : identifiant \"%(identifiant)s\" / mot de passe temporaire "
 "\"%(motdepasse)s\"."
@@ -636,6 +642,9 @@ msgstr "Login account linked to this client record (mobile app)"
 
 msgid "Configuration"
 msgstr "Settings"
+
+msgid "Confirmation de la remise"
+msgstr "Handover confirmation"
 
 msgid "Confirmee (materiel disponible)"
 msgstr "Confirmed (material available)"
@@ -1043,6 +1052,9 @@ msgstr "Employee record"
 msgid "Fiche individuelle"
 msgstr "Individual record"
 
+msgid "Fidelite"
+msgstr "Loyalty"
+
 msgid "Finances du mois"
 msgstr "This month's finances"
 
@@ -1099,6 +1111,9 @@ msgstr "Out of service"
 
 msgid "Identifiant de l'appareil"
 msgstr "Device identifier"
+
+msgid "Identite"
+msgstr "Identity"
 
 msgid "Image"
 msgstr "Image"
@@ -1624,6 +1639,9 @@ msgstr "Profile photo"
 msgid "Piece"
 msgstr "ID"
 
+msgid "Piece d'identite"
+msgstr "ID document"
+
 msgid "Piece d'identite obligatoire pour le passager %(i)s."
 msgstr "ID document required for passenger %(i)s."
 
@@ -1695,6 +1713,9 @@ msgstr "Bus positions"
 
 msgid "Poste"
 msgstr "Role"
+
+msgid "Poste et agence"
+msgstr "Position and agency"
 
 msgid "Precisions"
 msgstr "Details"
@@ -2012,6 +2033,9 @@ msgstr ""
 
 msgid "Sud"
 msgstr "South"
+
+msgid "Suivi"
+msgstr "Tracking"
 
 msgid "Suivi technique"
 msgstr "Technical tracking"

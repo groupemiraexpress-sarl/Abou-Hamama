@@ -210,6 +210,37 @@ class VoyageAdmin(FiltreAgenceMixin, admin.ModelAdmin):
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
+class GroupesChampsMixin:
+    """
+    Range les champs d'un formulaire en cartes thematiques (Expediteur,
+    Beneficiaire, Transfert...). `groupes_champs` = [(titre, [champs...]), ...].
+    Un champ absent du formulaire (selon le poste) est simplement ignore, et
+    tout champ non liste est ajoute a la fin dans "Autres informations" :
+    aucun champ ne peut donc disparaitre du formulaire.
+    """
+    groupes_champs = []
+
+    def get_fieldsets(self, request, obj=None):
+        base = super().get_fieldsets(request, obj)
+        presents = []
+        for _titre, options in base:
+            for champ in options['fields']:
+                for nom in (champ if isinstance(champ, (list, tuple)) else (champ,)):
+                    if nom not in presents:
+                        presents.append(nom)
+        utilises = set()
+        resultat = []
+        for titre, champs in self.groupes_champs:
+            retenus = [c for c in champs if c in presents and c not in utilises]
+            if retenus:
+                resultat.append((titre, {'fields': retenus}))
+                utilises.update(retenus)
+        reste = [c for c in presents if c not in utilises]
+        if reste:
+            resultat.append((_("Autres informations"), {'fields': reste}))
+        return resultat
+
+
 class ClientAdminForm(forms.ModelForm):
     nom_utilisateur = forms.CharField(
         label=_("Nom d'utilisateur app (optionnel)"), max_length=150, required=False,
@@ -237,7 +268,13 @@ class ClientAdminForm(forms.ModelForm):
 
 
 @admin.register(Client)
-class ClientAdmin(admin.ModelAdmin):
+class ClientAdmin(GroupesChampsMixin, admin.ModelAdmin):
+    groupes_champs = [
+        (_("Identite"), ['nom', 'prenom', 'telephone', 'email', 'type_client', 'photo']),
+        (_("Piece d'identite"), ['type_piece', 'cni', 'ville_residence']),
+        (_("Fidelite"), ['niveau_fidelite', 'points_fidelite', 'nombre_voyages', 'code_parrainage', 'parraine_par', 'bonus_parrainage_attribue']),
+        (_("Compte application"), ['nom_utilisateur', 'mot_de_passe', 'actif']),
+    ]
     form = ClientAdminForm
     list_display = ('nom', 'prenom', 'telephone', 'email', 'type_client', 'niveau_badge', 'points_fidelite', 'nombre_voyages', 'code_parrainage', 'parraine_par', 'bonus_statut', 'nb_filleuls', 'actif')
     list_filter = ('type_client', 'niveau_fidelite', 'ville_residence', 'actif', ('parraine_par', admin.EmptyFieldListFilter))
@@ -468,7 +505,14 @@ class ColisConfirmationForm(forms.ModelForm):
 
 
 @admin.register(Colis)
-class ColisAdmin(FiltreAgenceMixin, admin.ModelAdmin):
+class ColisAdmin(GroupesChampsMixin, FiltreAgenceMixin, admin.ModelAdmin):
+    groupes_champs = [
+        (_("Expediteur"), ['expediteur_nom', 'expediteur_telephone', 'expediteur_nationalite', 'expediteur_type_piece', 'expediteur_numero_piece']),
+        (_("Destinataire"), ['destinataire_nom', 'destinataire_telephone', 'destinataire_nationalite', 'destinataire_type_piece', 'destinataire_numero_piece']),
+        (_("Colis"), ['compagnie', 'agence_depart', 'agence_arrivee', 'description', 'poids_kg', 'prix', 'voyage', 'statut']),
+        (_("Confirmation de la remise"), ['code_retrait_saisi', 'piece_identite_verifiee']),
+        (_("Suivi"), ['code_suivi', 'code_retrait', 'date_enregistrement', 'date_arrivee', 'date_livraison', 'alerte_retrait_envoyee', 'cree_par', 'modifie_par', 'notes']),
+    ]
     champs_agence = ['agence_depart', 'agence_arrivee']
     # Un colis doit rester visible par l'agence d'arrivee (pour confirmer la
     # remise) meme si c'est l'agence de depart qui l'a enregistre : on ne
@@ -657,7 +701,12 @@ class EmployeAdminForm(forms.ModelForm):
 
 
 @admin.register(Employe)
-class EmployeAdmin(FiltreAgenceMixin, admin.ModelAdmin):
+class EmployeAdmin(GroupesChampsMixin, FiltreAgenceMixin, admin.ModelAdmin):
+    groupes_champs = [
+        (_("Identite"), ['nom', 'prenom', 'telephone', 'cni', 'photo']),
+        (_("Poste et agence"), ['compagnie', 'agence', 'zone', 'poste', 'date_embauche', 'salaire', 'actif']),
+        (_("Compte de connexion"), ['nom_utilisateur', 'mot_de_passe']),
+    ]
     form = EmployeAdminForm
     champs_agence = ['agence']
     champ_createur = None  # pas de notion de "createur" pour un employe
@@ -841,7 +890,13 @@ class TransfertConfirmationForm(forms.ModelForm):
 
 
 @admin.register(TransfertArgent)
-class TransfertArgentAdmin(FiltreAgenceMixin, admin.ModelAdmin):
+class TransfertArgentAdmin(GroupesChampsMixin, FiltreAgenceMixin, admin.ModelAdmin):
+    groupes_champs = [
+        (_("Expediteur"), ['expediteur_nom', 'expediteur_telephone', 'expediteur_nationalite', 'expediteur_type_piece', 'expediteur_numero_piece']),
+        (_("Beneficiaire"), ['beneficiaire_nom', 'beneficiaire_telephone', 'beneficiaire_nationalite', 'beneficiaire_type_piece', 'beneficiaire_numero_piece']),
+        (_("Transfert"), ['compagnie', 'agence_depart', 'agence_retrait', 'montant', 'frais', 'statut']),
+        (_("Suivi"), ['code_transfert', 'code_retrait', 'date_envoi', 'date_retrait', 'alerte_retrait_envoyee', 'cree_par', 'modifie_par', 'notes']),
+    ]
     champs_agence = ['agence_depart', 'agence_retrait']
     # Meme raisonnement que pour ColisAdmin : l'agence de retrait doit voir
     # le transfert enregistre par l'agence de depart pour pouvoir le payer.
@@ -1201,7 +1256,13 @@ class PromotionAdmin(admin.ModelAdmin):
 
 
 @admin.register(DemandeColis)
-class DemandeColisAdmin(FiltreAgenceMixin, admin.ModelAdmin):
+class DemandeColisAdmin(GroupesChampsMixin, FiltreAgenceMixin, admin.ModelAdmin):
+    groupes_champs = [
+        (_("Expediteur"), ['expediteur_nom', 'expediteur_telephone', 'expediteur_nationalite', 'expediteur_type_piece', 'expediteur_numero_piece']),
+        (_("Destinataire"), ['destinataire_nom', 'destinataire_telephone', 'destinataire_nationalite', 'destinataire_type_piece', 'destinataire_numero_piece']),
+        (_("Colis"), ['agence_depart', 'agence_arrivee', 'description', 'poids_estime', 'valeur_declaree', 'poids_reel', 'prix']),
+        (_("Suivi"), ['numero_demande', 'client', 'statut', 'colis', 'date_demande', 'alerte_expiration_envoyee', 'notes']),
+    ]
     # Seule l'agence de depart traite la demande (elle recoit physiquement le
     # colis et fixe poids/prix). L'agence d'arrivee ne doit pas voir la
     # demande avant validation : elle ne verra le colis qu'une fois cree.
@@ -1267,7 +1328,13 @@ class DemandeColisAdmin(FiltreAgenceMixin, admin.ModelAdmin):
 
 
 @admin.register(DemandeTransfert)
-class DemandeTransfertAdmin(FiltreAgenceMixin, admin.ModelAdmin):
+class DemandeTransfertAdmin(GroupesChampsMixin, FiltreAgenceMixin, admin.ModelAdmin):
+    groupes_champs = [
+        (_("Expediteur"), ['expediteur_nom', 'expediteur_telephone', 'expediteur_nationalite', 'expediteur_type_piece', 'expediteur_numero_piece']),
+        (_("Beneficiaire"), ['beneficiaire_nom', 'beneficiaire_telephone', 'beneficiaire_nationalite', 'beneficiaire_type_piece', 'beneficiaire_numero_piece']),
+        (_("Transfert"), ['agence_depart', 'agence_retrait', 'montant', 'frais']),
+        (_("Suivi"), ['numero_demande', 'client', 'statut', 'transfert', 'date_demande', 'alerte_expiration_envoyee', 'notes']),
+    ]
     # Seule l'agence de depart traite la demande (elle recoit l'argent et
     # fixe les frais). L'agence de retrait ne doit pas voir la demande avant
     # validation : elle ne verra le transfert qu'une fois cree.

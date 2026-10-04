@@ -297,6 +297,9 @@ msgstr "آخر"
 msgid "Autre piece"
 msgstr "وثيقة أخرى"
 
+msgid "Autres informations"
+msgstr "معلومات أخرى"
+
 msgid "Avis voyage"
 msgstr "تقييم رحلة"
 
@@ -614,6 +617,9 @@ msgstr "المحاسب"
 msgid "Compte"
 msgstr "الحساب"
 
+msgid "Compte application"
+msgstr "حساب التطبيق"
+
 msgid ""
 "Compte cree : identifiant \"%(identifiant)s\" / mot de passe temporaire "
 "\"%(motdepasse)s\"."
@@ -635,6 +641,9 @@ msgstr "حساب الدخول المرتبط ببطاقة العميل (تطبي
 
 msgid "Configuration"
 msgstr "الإعدادات"
+
+msgid "Confirmation de la remise"
+msgstr "تأكيد التسليم"
 
 msgid "Confirmee (materiel disponible)"
 msgstr "مؤكدة (المواد متوفرة)"
@@ -1038,6 +1047,9 @@ msgstr "بطاقة الموظف"
 msgid "Fiche individuelle"
 msgstr "بطاقة فردية"
 
+msgid "Fidelite"
+msgstr "الولاء"
+
 msgid "Finances du mois"
 msgstr "الشؤون المالية للشهر"
 
@@ -1094,6 +1106,9 @@ msgstr "خارج الخدمة"
 
 msgid "Identifiant de l'appareil"
 msgstr "معرّف الجهاز"
+
+msgid "Identite"
+msgstr "الهوية"
 
 msgid "Image"
 msgstr "الصورة"
@@ -1612,6 +1627,9 @@ msgstr "صورة الملف الشخصي"
 msgid "Piece"
 msgstr "الوثيقة"
 
+msgid "Piece d'identite"
+msgstr "وثيقة الهوية"
+
 msgid "Piece d'identite obligatoire pour le passager %(i)s."
 msgstr "وثيقة الهوية إلزامية للراكب %(i)s."
 
@@ -1683,6 +1701,9 @@ msgstr "مواقع الحافلات"
 
 msgid "Poste"
 msgstr "المنصب"
+
+msgid "Poste et agence"
+msgstr "الوظيفة والوكالة"
 
 msgid "Precisions"
 msgstr "توضيحات"
@@ -2000,6 +2021,9 @@ msgstr ""
 
 msgid "Sud"
 msgstr "الجنوب"
+
+msgid "Suivi"
+msgstr "المتابعة"
 
 msgid "Suivi technique"
 msgstr "المتابعة التقنية"
