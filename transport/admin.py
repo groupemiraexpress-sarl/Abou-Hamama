@@ -1198,9 +1198,14 @@ class DemandeMaterielForm(forms.ModelForm):
     def clean(self):
         cleaned = super().clean()
         statut = cleaned.get('statut')
-        article = cleaned.get('article')
-        quantite = cleaned.get('quantite')
-        if statut in ('confirmee', 'livree') and article and quantite and article.quantite_stock < quantite:
+        # Pour le magasinier, l'article et la quantite sont en lecture seule :
+        # ils ne sont donc pas dans le formulaire, on les prend sur la demande.
+        article = cleaned.get('article') or (self.instance.article if self.instance.article_id else None)
+        quantite = cleaned.get('quantite') or self.instance.quantite
+        # Le stock ne se verifie qu'au moment ou la demande passe a "confirmee" ou "livree"
+        # (pas quand on reenregistre une demande deja livree : son stock est deja deduit).
+        statut_change = (not self.instance.pk) or self.instance.statut != statut
+        if statut_change and statut in ('confirmee', 'livree') and article and quantite and article.quantite_stock < quantite:
             raise forms.ValidationError(
                 _("Stock insuffisant pour '%(article)s' : %(dispo)s %(unite)s disponible(s), %(demande)s demande(s).") % {
                     'article': article.nom, 'dispo': article.quantite_stock, 'unite': article.unite, 'demande': quantite,

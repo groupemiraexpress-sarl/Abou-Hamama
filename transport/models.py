@@ -611,6 +611,11 @@ class DemandeMateriel(models.Model):
         verbose_name_plural = _("Demandes de materiel")
         ordering = ['-date_demande']
 
+    @property
+    def montant_total(self):
+        """Valeur de la demande : quantite x prix unitaire de l'article (0 si le prix n'est pas renseigne)."""
+        return self.quantite * (self.article.prix_unitaire or 0)
+
     def __str__(self):
         return f"Demande #{self.pk} - {self.bus} ({self.get_statut_display()})"
 
