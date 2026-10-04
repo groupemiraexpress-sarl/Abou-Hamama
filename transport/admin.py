@@ -41,6 +41,47 @@ admin.site.site_title = "Gestion Abou Hamama"
 admin.site.index_title = "Tableau de bord"
 
 
+class BoutonImprimerMixin:
+    """
+    Ajoute un bouton "Imprimer le recu" sur la page de la fiche (en haut et au-dessus
+    de la barre d'enregistrement) et une colonne "Recu" dans la liste.
+    Chaque admin indique son recu avec url_impression(obj).
+    """
+    change_form_template = 'admin/transport/change_form_imprimer.html'
+
+    def url_impression(self, obj):
+        return None
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        from django.contrib.admin.utils import unquote
+        extra_context = dict(extra_context or {})
+        obj = self.get_object(request, unquote(object_id))
+        if obj is not None:
+            extra_context['url_recu'] = self.url_impression(obj)
+        return super().change_view(request, object_id, form_url, extra_context=extra_context)
+
+    def response_add(self, request, obj, post_url_continue=None):
+        # Juste apres une creation : message de reussite avec le lien d'impression du recu.
+        from django.contrib import messages
+        from django.utils.html import format_html
+        url = self.url_impression(obj)
+        if url:
+            self.message_user(
+                request,
+                format_html('{} <a href="{}" target="_blank"><strong>🖨️ {}</strong></a>', _("Enregistre avec succes."), url, _("Imprimer le recu")),
+                messages.SUCCESS,
+            )
+        return super().response_add(request, obj, post_url_continue)
+
+    @admin.display(description=_("Recu"))
+    def lien_recu(self, obj):
+        from django.utils.html import format_html
+        url = self.url_impression(obj)
+        if not url:
+            return ''
+        return format_html('<a href="{}" target="_blank" class="button">🖨️ {}</a>', url, _("Imprimer"))
+
+
 class TypePieceListeMixin:
     """
     Les champs "type de piece" (voyageur, expediteur, destinataire, beneficiaire)
@@ -445,7 +486,7 @@ class ReservationAdminForm(forms.ModelForm):
 
 
 @admin.register(Reservation)
-class ReservationAdmin(TypePieceListeMixin, FiltreAgenceMixin, admin.ModelAdmin):
+class ReservationAdmin(BoutonImprimerMixin, TypePieceListeMixin, FiltreAgenceMixin, admin.ModelAdmin):
     form = ReservationAdminForm
 
     class Media:
@@ -457,11 +498,15 @@ class ReservationAdmin(TypePieceListeMixin, FiltreAgenceMixin, admin.ModelAdmin)
     # les autres postes "personnel") la rendrait invisible pour TOUS les
     # guichetiers de l'agence, meme celle qui devrait la traiter au comptoir.
     champ_createur = None
-    list_display = ('numero_reservation', 'client', 'voyage', 'nombre_places', 'montant_total', 'statut', 'origine', 'mode_paiement', 'modifie_par', 'date_reservation')
+    list_display = ('numero_reservation', 'client', 'voyage', 'nombre_places', 'montant_total', 'statut', 'origine', 'mode_paiement', 'modifie_par', 'date_reservation', 'lien_recu')
     list_filter = ('statut', 'mode_paiement', 'voyage__date_depart', FiltreAgenceListFilter)
     search_fields = ('numero_reservation', 'client__nom', 'client__telephone')
     ordering = ('-date_reservation',)
     date_hierarchy = 'date_reservation'
+
+    def url_impression(self, obj):
+        from django.urls import reverse
+        return f"{reverse('transport:billets_confirmes')}?ids={obj.pk}"
 
     @admin.display(description=_("Origine"))
     def origine(self, obj):
@@ -587,7 +632,7 @@ class ColisConfirmationForm(forms.ModelForm):
 
 
 @admin.register(Colis)
-class ColisAdmin(TypePieceListeMixin, AgenceDepartLimiteeMixin, GroupesChampsMixin, FiltreAgenceMixin, admin.ModelAdmin):
+class ColisAdmin(BoutonImprimerMixin, TypePieceListeMixin, AgenceDepartLimiteeMixin, GroupesChampsMixin, FiltreAgenceMixin, admin.ModelAdmin):
     groupes_champs = [
         (_("Expediteur"), ['expediteur_nom', 'expediteur_telephone', 'expediteur_nationalite', 'expediteur_type_piece', 'expediteur_numero_piece']),
         (_("Destinataire"), ['destinataire_nom', 'destinataire_telephone', 'destinataire_nationalite', 'destinataire_type_piece', 'destinataire_numero_piece']),
@@ -606,6 +651,10 @@ class ColisAdmin(TypePieceListeMixin, AgenceDepartLimiteeMixin, GroupesChampsMix
     search_fields = ('code_suivi', 'expediteur_nom', 'expediteur_telephone', 'destinataire_nom', 'destinataire_telephone')
     ordering = ('-date_enregistrement',)
     date_hierarchy = 'date_enregistrement'
+
+    def url_impression(self, obj):
+        from django.urls import reverse
+        return reverse('transport:recu_colis', args=[obj.pk])
 
     @admin.display(description="Recu")
     def lien_recu(self, obj):
@@ -972,7 +1021,7 @@ class TransfertConfirmationForm(forms.ModelForm):
 
 
 @admin.register(TransfertArgent)
-class TransfertArgentAdmin(TypePieceListeMixin, AgenceDepartLimiteeMixin, GroupesChampsMixin, FiltreAgenceMixin, admin.ModelAdmin):
+class TransfertArgentAdmin(BoutonImprimerMixin, TypePieceListeMixin, AgenceDepartLimiteeMixin, GroupesChampsMixin, FiltreAgenceMixin, admin.ModelAdmin):
     groupes_champs = [
         (_("Expediteur"), ['expediteur_nom', 'expediteur_telephone', 'expediteur_nationalite', 'expediteur_type_piece', 'expediteur_numero_piece']),
         (_("Beneficiaire"), ['beneficiaire_nom', 'beneficiaire_telephone', 'beneficiaire_nationalite', 'beneficiaire_type_piece', 'beneficiaire_numero_piece']),
@@ -989,6 +1038,10 @@ class TransfertArgentAdmin(TypePieceListeMixin, AgenceDepartLimiteeMixin, Groupe
     search_fields = ('code_transfert', 'expediteur_nom', 'expediteur_telephone', 'beneficiaire_nom', 'beneficiaire_telephone', 'code_retrait')
     ordering = ('-date_envoi',)
     date_hierarchy = 'date_envoi'
+
+    def url_impression(self, obj):
+        from django.urls import reverse
+        return reverse('transport:recu_transfert', args=[obj.pk])
 
     @admin.display(description="Recu")
     def lien_recu(self, obj):
@@ -1215,13 +1268,17 @@ class DemandeMaterielForm(forms.ModelForm):
 
 
 @admin.register(DemandeMateriel)
-class DemandeMaterielAdmin(admin.ModelAdmin):
+class DemandeMaterielAdmin(BoutonImprimerMixin, admin.ModelAdmin):
     form = DemandeMaterielForm
     list_display = ('bus', 'article', 'quantite', 'statut', 'demande_par', 'traite_par', 'date_demande', 'lien_recu')
     list_filter = ('statut', 'article')
     search_fields = ('bus__immatriculation', 'article__nom')
     ordering = ('-date_demande',)
     autocomplete_fields = ('bus', 'article')
+
+    def url_impression(self, obj):
+        from django.urls import reverse
+        return reverse('transport:recu_demande_materiel', args=[obj.pk])
 
     @admin.display(description=_("Recu"))
     def lien_recu(self, obj):

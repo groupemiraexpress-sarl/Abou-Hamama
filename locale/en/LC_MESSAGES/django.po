@@ -1003,6 +1003,9 @@ msgstr "Collect"
 msgid "Enregistre"
 msgstr "Registered"
 
+msgid "Enregistre avec succes."
+msgstr "Saved successfully."
+
 msgid "Enregistre par"
 msgstr "Registered by"
 
@@ -1011,6 +1014,9 @@ msgstr "Save"
 
 msgid "Enregistrer la modification"
 msgstr "Save the change"
+
+msgid "Enregistrez d'abord vos modifications, puis imprimez le recu."
+msgstr "Save your changes first, then print the receipt."
 
 msgid "Entreprise"
 msgstr "Business"
@@ -1167,6 +1173,9 @@ msgstr "Print stock status"
 
 msgid "Imprimer le manifeste"
 msgstr "Print the manifest"
+
+msgid "Imprimer le recu"
+msgstr "Print the receipt"
 
 msgid "Inactif"
 msgstr "Inactive"

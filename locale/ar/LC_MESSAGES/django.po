@@ -996,6 +996,9 @@ msgstr "تحصيل"
 msgid "Enregistre"
 msgstr "مسجل"
 
+msgid "Enregistre avec succes."
+msgstr "تم الحفظ بنجاح."
+
 msgid "Enregistre par"
 msgstr "سجله"
 
@@ -1004,6 +1007,9 @@ msgstr "حفظ"
 
 msgid "Enregistrer la modification"
 msgstr "حفظ التعديل"
+
+msgid "Enregistrez d'abord vos modifications, puis imprimez le recu."
+msgstr "احفظ تعديلاتك أولا، ثم اطبع الإيصال."
 
 msgid "Entreprise"
 msgstr "شركة"
@@ -1160,6 +1166,9 @@ msgstr "طباعة حالة المخزون"
 
 msgid "Imprimer le manifeste"
 msgstr "طباعة قائمة الركاب"
+
+msgid "Imprimer le recu"
+msgstr "طباعة الإيصال"
 
 msgid "Inactif"
 msgstr "غير نشط"

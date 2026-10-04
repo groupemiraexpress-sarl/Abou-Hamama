@@ -1,0 +1,29 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{% block object-tools-items %}
+  {% if url_recu %}
+  <li><a href="{{ url_recu }}" target="_blank" class="btn-imprimer-recu">🖨️ {% trans "Imprimer le recu" %}</a></li>
+  {% endif %}
+  {{ block.super }}
+{% endblock %}
+
+{% block submit_buttons_bottom %}
+  {% if url_recu %}
+  <div class="barre-imprimer">
+    <a href="{{ url_recu }}" target="_blank" class="btn-imprimer-recu">🖨️ {% trans "Imprimer le recu" %}</a>
+    <span>{% trans "Enregistrez d'abord vos modifications, puis imprimez le recu." %}</span>
+  </div>
+  {% endif %}
+  {{ block.super }}
+{% endblock %}
+
+{% block extrastyle %}{{ block.super }}
+<style>
+  ul.object-tools a.btn-imprimer-recu, a.btn-imprimer-recu {
+    background:#10b981 !important; color:#fff !important; border-radius:10px; font-weight:700; padding:11px 20px; text-decoration:none; display:inline-block;
+  }
+  a.btn-imprimer-recu:hover { background:#059669 !important; }
+  .barre-imprimer { display:flex; align-items:center; gap:14px; flex-wrap:wrap; background:#fff; color:#4b5563; border-radius:16px; box-shadow:0 4px 14px rgba(31,56,100,.08); padding:14px 20px; margin:0 0 14px; }
+</style>
+{% endblock %}
