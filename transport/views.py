@@ -299,8 +299,12 @@ def billets_confirmes(request):
 @staff_member_required
 def billet_confirme(request, reservation_id):
     """Affiche le recu apres la vente d'un billet (ancienne route, gardee par securite)."""
-    reservation = Reservation.objects.filter(id=reservation_id).first()
-    return render(request, 'transport/billet_confirme.html', {'reservation': reservation})
+    reservation = Reservation.objects.filter(id=reservation_id).select_related('voyage__bus', 'voyage__trajet', 'client').first()
+    reservations = [reservation] if reservation else []
+    return render(request, 'transport/billet_confirme.html', {
+        'reservation': reservation, 'reservations': reservations,
+        'montant_total': sum(r.montant_total for r in reservations),
+    })
 
 
 @staff_member_required

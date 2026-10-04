@@ -63,6 +63,9 @@ class Bus(models.Model):
     statut = models.CharField(_("Statut"), max_length=20, choices=STATUT_CHOICES, default='en_service')
     date_visite_technique = models.DateField(_("Date visite technique"), null=True, blank=True)
     date_assurance = models.DateField(_("Date assurance"), null=True, blank=True)
+    wifi_nom = models.CharField(_("Nom du Wi-Fi"), max_length=60, blank=True, help_text=_("Nom du reseau Wi-Fi du bus (imprime sur le billet)"))
+    wifi_code = models.CharField(_("Code du Wi-Fi"), max_length=60, blank=True, help_text=_("Mot de passe du Wi-Fi du bus (imprime sur le billet)"))
+    infos_passagers = models.CharField(_("Infos pour les passagers"), max_length=200, blank=True, help_text=_("Autres informations imprimees sur le billet (ex : climatisation, prises USB)"))
 
     def __str__(self):
         return f"{self.immatriculation} - {self.marque}"

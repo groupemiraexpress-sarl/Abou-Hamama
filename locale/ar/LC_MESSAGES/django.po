@@ -300,6 +300,10 @@ msgstr "وثيقة أخرى"
 msgid "Autres informations"
 msgstr "معلومات أخرى"
 
+msgid ""
+"Autres informations imprimees sur le billet (ex : climatisation, prises USB)"
+msgstr "معلومات أخرى تُطبع على التذكرة (مثل: تكييف، مقابس USB)"
+
 msgid "Avis voyage"
 msgstr "تقييم رحلة"
 
@@ -523,6 +527,9 @@ msgstr "حدد بعد التحقق من قبل مسؤول"
 msgid "Code"
 msgstr "الرمز"
 
+msgid "Code Wi-Fi"
+msgstr "رمز الواي فاي"
+
 msgid "Code de parrainage"
 msgstr "رمز الإحالة"
 
@@ -549,6 +556,9 @@ msgstr "رمز التحويل"
 
 msgid "Code de transfert (a donner a l'expediteur)"
 msgstr "رمز الحوالة (يُعطى للمرسل)"
+
+msgid "Code du Wi-Fi"
+msgstr "رمز الواي فاي"
 
 msgid "Code secret remis au beneficiaire"
 msgstr "الرمز السري المسلم للمستفيد"
@@ -887,6 +897,9 @@ msgstr "المسافة (كم)"
 msgid "Distance en kilometres"
 msgstr "المسافة بالكيلومترات"
 
+msgid "Documents"
+msgstr "الوثائق"
+
 msgid "Duree estimee (heures)"
 msgstr "المدة المقدرة (ساعات)"
 
@@ -1154,6 +1167,12 @@ msgstr "غير نشط"
 msgid "Indiquez le motif et un montant superieur a 0."
 msgstr "أدخل السبب ومبلغا أكبر من 0."
 
+msgid "Informations pour les passagers (imprimees sur le billet)"
+msgstr "معلومات للركاب (تُطبع على التذكرة)"
+
+msgid "Infos pour les passagers"
+msgstr "معلومات للركاب"
+
 msgid "Intermediaire qui a apporte ce client (facultatif)"
 msgstr "الوسيط الذي أحضر هذا العميل (اختياري)"
 
@@ -1392,6 +1411,9 @@ msgstr "المبلغ المدفوع للوسيط عن كل تذكرة"
 msgid "Mot de passe"
 msgstr "تغيير كلمة المرور"
 
+msgid "Mot de passe du Wi-Fi du bus (imprime sur le billet)"
+msgstr "كلمة مرور الواي فاي في الحافلة (تُطبع على التذكرة)"
+
 msgid "Mot de passe requis pour creer le compte."
 msgstr "كلمة المرور مطلوبة لإنشاء الحساب."
 
@@ -1473,11 +1495,17 @@ msgstr "اسم القطعة"
 msgid "Nom de l'expediteur"
 msgstr "اسم المرسل"
 
+msgid "Nom du Wi-Fi"
+msgstr "اسم الواي فاي"
+
 msgid "Nom du beneficiaire"
 msgstr "اسم المستفيد"
 
 msgid "Nom du destinataire"
 msgstr "اسم المستلم"
+
+msgid "Nom du reseau Wi-Fi du bus (imprime sur le billet)"
+msgstr "اسم شبكة الواي فاي في الحافلة (يُطبع على التذكرة)"
 
 msgid "Nom du voyageur"
 msgstr "اسم المسافر"
@@ -2366,6 +2394,9 @@ msgstr "نظرة عامة"
 
 msgid "Vue d'ensemble PDG"
 msgstr "نظرة عامة للمدير العام"
+
+msgid "Wi-Fi"
+msgstr "واي فاي"
 
 msgid "Zone"
 msgstr "المنطقة"

@@ -41,6 +41,95 @@ admin.site.site_title = "Gestion Abou Hamama"
 admin.site.index_title = "Tableau de bord"
 
 
+class TypePieceListeMixin:
+    """
+    Les champs "type de piece" (voyageur, expediteur, destinataire, beneficiaire)
+    sont des champs texte dans la base : on les presente comme une liste
+    deroulante (memes types de piece que partout ailleurs), pour eviter les
+    fautes de frappe ("passport" / "passeport"). Une ancienne valeur deja
+    enregistree hors liste reste proposee tant qu'on ne la change pas.
+    """
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        if db_field.name.endswith('_type_piece') and not db_field.choices:
+            return forms.ChoiceField(
+                label=db_field.verbose_name, required=not db_field.blank, help_text=db_field.help_text,
+                choices=[('', '---------')] + list(Client.TYPE_PIECE_CHOICES),
+            )
+        return super().formfield_for_dbfield(db_field, request, **kwargs)
+
+    def get_form(self, request, obj=None, **kwargs):
+        Form = super().get_form(request, obj, **kwargs)
+        if obj is None:
+            return Form
+
+        class FormAvecAnciennesPieces(Form):
+            def __init__(self, *args, **inner_kwargs):
+                super().__init__(*args, **inner_kwargs)
+                for nom, champ in self.fields.items():
+                    if nom.endswith('_type_piece') and isinstance(champ, forms.ChoiceField):
+                        ancienne = getattr(obj, nom, '')
+                        if ancienne and ancienne not in dict(champ.choices):
+                            champ.choices = list(champ.choices) + [(ancienne, ancienne)]
+
+        return FormAvecAnciennesPieces
+
+
+class AgenceDepartLimiteeMixin:
+    """
+    L'agence de depart d'un colis / transfert / demande est TOUJOURS celle de
+    l'employe qui l'enregistre : la liste ne propose que son agence, deja
+    selectionnee. Le PDG et le superutilisateur choisissent librement.
+    (Un poste sans agence, comme le responsable planning, n'est pas limite.)
+    """
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'agence_depart' and not voit_tout(request.user):
+            agence = agence_de(request.user)
+            if agence:
+                kwargs['queryset'] = Agence.objects.filter(id=agence.id)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def get_changeform_initial_data(self, request):
+        initial = super().get_changeform_initial_data(request)
+        if not voit_tout(request.user):
+            agence = agence_de(request.user)
+            if agence:
+                initial.setdefault('agence_depart', agence.pk)
+        return initial
+
+
+class GroupesChampsMixin:
+    """
+    Range les champs d'un formulaire en cartes thematiques (Expediteur,
+    Beneficiaire, Transfert...). `groupes_champs` = [(titre, [champs...]), ...].
+    Un champ absent du formulaire (selon le poste) est simplement ignore, et
+    tout champ non liste est ajoute a la fin dans "Autres informations" :
+    aucun champ ne peut donc disparaitre du formulaire.
+    """
+    groupes_champs = []
+
+    def get_fieldsets(self, request, obj=None):
+        base = super().get_fieldsets(request, obj)
+        presents = []
+        for _titre, options in base:
+            for champ in options['fields']:
+                for nom in (champ if isinstance(champ, (list, tuple)) else (champ,)):
+                    if nom not in presents:
+                        presents.append(nom)
+        utilises = set()
+        resultat = []
+        for titre, champs in self.groupes_champs:
+            retenus = [c for c in champs if c in presents and c not in utilises]
+            if retenus:
+                resultat.append((titre, {'fields': retenus}))
+                utilises.update(retenus)
+        reste = [c for c in presents if c not in utilises]
+        if reste:
+            resultat.append((_("Autres informations"), {'fields': reste}))
+        return resultat
+
+
 @admin.register(Compagnie)
 class CompagnieAdmin(admin.ModelAdmin):
     list_display = ('nom', 'sigle', 'siege_social', 'telephone', 'actif')
@@ -78,7 +167,12 @@ class AgenceAdmin(admin.ModelAdmin):
 
 
 @admin.register(Bus)
-class BusAdmin(FiltreAgenceMixin, admin.ModelAdmin):
+class BusAdmin(GroupesChampsMixin, FiltreAgenceMixin, admin.ModelAdmin):
+    groupes_champs = [
+        (_("Bus"), ['compagnie', 'agence', 'immatriculation', 'marque', 'modele', 'annee', 'capacite', 'kilometrage', 'statut']),
+        (_("Documents"), ['date_visite_technique', 'date_assurance']),
+        (_("Informations pour les passagers (imprimees sur le billet)"), ['wifi_nom', 'wifi_code', 'infos_passagers']),
+    ]
     champs_agence = ['agence']
     champ_createur = None
     list_display = ('immatriculation', 'agence', 'marque', 'modele', 'capacite', 'statut', 'kilometrage')
@@ -208,95 +302,6 @@ class VoyageAdmin(FiltreAgenceMixin, admin.ModelAdmin):
                         db_field.related_model.objects.filter(agence=agence) if agence else db_field.related_model.objects.none()
                     )
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
-
-
-class TypePieceListeMixin:
-    """
-    Les champs "type de piece" (voyageur, expediteur, destinataire, beneficiaire)
-    sont des champs texte dans la base : on les presente comme une liste
-    deroulante (memes types de piece que partout ailleurs), pour eviter les
-    fautes de frappe ("passport" / "passeport"). Une ancienne valeur deja
-    enregistree hors liste reste proposee tant qu'on ne la change pas.
-    """
-
-    def formfield_for_dbfield(self, db_field, request, **kwargs):
-        if db_field.name.endswith('_type_piece') and not db_field.choices:
-            return forms.ChoiceField(
-                label=db_field.verbose_name, required=not db_field.blank, help_text=db_field.help_text,
-                choices=[('', '---------')] + list(Client.TYPE_PIECE_CHOICES),
-            )
-        return super().formfield_for_dbfield(db_field, request, **kwargs)
-
-    def get_form(self, request, obj=None, **kwargs):
-        Form = super().get_form(request, obj, **kwargs)
-        if obj is None:
-            return Form
-
-        class FormAvecAnciennesPieces(Form):
-            def __init__(self, *args, **inner_kwargs):
-                super().__init__(*args, **inner_kwargs)
-                for nom, champ in self.fields.items():
-                    if nom.endswith('_type_piece') and isinstance(champ, forms.ChoiceField):
-                        ancienne = getattr(obj, nom, '')
-                        if ancienne and ancienne not in dict(champ.choices):
-                            champ.choices = list(champ.choices) + [(ancienne, ancienne)]
-
-        return FormAvecAnciennesPieces
-
-
-class AgenceDepartLimiteeMixin:
-    """
-    L'agence de depart d'un colis / transfert / demande est TOUJOURS celle de
-    l'employe qui l'enregistre : la liste ne propose que son agence, deja
-    selectionnee. Le PDG et le superutilisateur choisissent librement.
-    (Un poste sans agence, comme le responsable planning, n'est pas limite.)
-    """
-
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == 'agence_depart' and not voit_tout(request.user):
-            agence = agence_de(request.user)
-            if agence:
-                kwargs['queryset'] = Agence.objects.filter(id=agence.id)
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
-
-    def get_changeform_initial_data(self, request):
-        initial = super().get_changeform_initial_data(request)
-        if not voit_tout(request.user):
-            agence = agence_de(request.user)
-            if agence:
-                initial.setdefault('agence_depart', agence.pk)
-        return initial
-
-
-class GroupesChampsMixin:
-    """
-    Range les champs d'un formulaire en cartes thematiques (Expediteur,
-    Beneficiaire, Transfert...). `groupes_champs` = [(titre, [champs...]), ...].
-    Un champ absent du formulaire (selon le poste) est simplement ignore, et
-    tout champ non liste est ajoute a la fin dans "Autres informations" :
-    aucun champ ne peut donc disparaitre du formulaire.
-    """
-    groupes_champs = []
-
-    def get_fieldsets(self, request, obj=None):
-        base = super().get_fieldsets(request, obj)
-        presents = []
-        for _titre, options in base:
-            for champ in options['fields']:
-                for nom in (champ if isinstance(champ, (list, tuple)) else (champ,)):
-                    if nom not in presents:
-                        presents.append(nom)
-        utilises = set()
-        resultat = []
-        for titre, champs in self.groupes_champs:
-            retenus = [c for c in champs if c in presents and c not in utilises]
-            if retenus:
-                resultat.append((titre, {'fields': retenus}))
-                utilises.update(retenus)
-        reste = [c for c in presents if c not in utilises]
-        if reste:
-            resultat.append((_("Autres informations"), {'fields': reste}))
-        return resultat
 
 
 class ClientAdminForm(forms.ModelForm):

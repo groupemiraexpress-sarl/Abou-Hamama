@@ -45,6 +45,17 @@
                 <td style="padding:4px 0; text-align:right;">{{ reservation.voyage.trajet.ville_depart }} → {{ reservation.voyage.trajet.ville_arrivee }}</td></tr>
             <tr><td style="padding:4px 0; color:#6b7280;">{% trans "N de Bus" %}</td>
                 <td style="padding:4px 0; text-align:right;">{{ reservation.voyage.bus.immatriculation }}</td></tr>
+            {% if reservation.voyage.bus.wifi_nom %}
+            <tr><td style="padding:4px 0; color:#6b7280;">{% trans "Wi-Fi" %}</td>
+                <td style="padding:4px 0; text-align:right; font-weight:600;">{{ reservation.voyage.bus.wifi_nom }}</td></tr>
+            {% if reservation.voyage.bus.wifi_code %}
+            <tr><td style="padding:4px 0; color:#6b7280;">{% trans "Code Wi-Fi" %}</td>
+                <td style="padding:4px 0; text-align:right; font-weight:600;">{{ reservation.voyage.bus.wifi_code }}</td></tr>
+            {% endif %}
+            {% endif %}
+            {% if reservation.voyage.bus.infos_passagers %}
+            <tr><td colspan="2" style="padding:4px 0; text-align:center; color:#374151; font-size:.85em;">{{ reservation.voyage.bus.infos_passagers }}</td></tr>
+            {% endif %}
             <tr><td style="padding:4px 0; color:#6b7280;">{% trans "Date" %}</td>
                 <td style="padding:4px 0; text-align:right;">{{ reservation.voyage.date_depart|date:"d/m/Y" }} {{ reservation.voyage.heure_depart|time:"H:i" }}</td></tr>
             <tr><td style="padding:6px 0 0; color:#1F3864; font-weight:600;">{% trans "Montant" %}</td>

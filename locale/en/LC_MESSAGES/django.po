@@ -299,6 +299,11 @@ msgstr "Other document"
 msgid "Autres informations"
 msgstr "Other information"
 
+msgid ""
+"Autres informations imprimees sur le billet (ex : climatisation, prises USB)"
+msgstr ""
+"Other information printed on the ticket (e.g. air conditioning, USB sockets)"
+
 msgid "Avis voyage"
 msgstr "Trip review"
 
@@ -525,6 +530,9 @@ msgstr "Check once verified by a manager"
 msgid "Code"
 msgstr "Code"
 
+msgid "Code Wi-Fi"
+msgstr "Wi-Fi code"
+
 msgid "Code de parrainage"
 msgstr "Referral code"
 
@@ -551,6 +559,9 @@ msgstr "Transfer code"
 
 msgid "Code de transfert (a donner a l'expediteur)"
 msgstr "Transfer code (to give to the sender)"
+
+msgid "Code du Wi-Fi"
+msgstr "Wi-Fi code"
 
 msgid "Code secret remis au beneficiaire"
 msgstr "Secret code given to the recipient"
@@ -893,6 +904,9 @@ msgstr "Distance (km)"
 msgid "Distance en kilometres"
 msgstr "Distance in kilometers"
 
+msgid "Documents"
+msgstr "Documents"
+
 msgid "Duree estimee (heures)"
 msgstr "Estimated duration (hours)"
 
@@ -1160,6 +1174,12 @@ msgstr "Inactive"
 msgid "Indiquez le motif et un montant superieur a 0."
 msgstr "Enter the reason and an amount greater than 0."
 
+msgid "Informations pour les passagers (imprimees sur le billet)"
+msgstr "Passenger information (printed on the ticket)"
+
+msgid "Infos pour les passagers"
+msgstr "Passenger info"
+
 msgid "Intermediaire qui a apporte ce client (facultatif)"
 msgstr "Agent who brought this customer (optional)"
 
@@ -1403,6 +1423,9 @@ msgstr "Amount paid to the agent for each ticket brought"
 msgid "Mot de passe"
 msgstr "Password"
 
+msgid "Mot de passe du Wi-Fi du bus (imprime sur le billet)"
+msgstr "Bus Wi-Fi password (printed on the ticket)"
+
 msgid "Mot de passe requis pour creer le compte."
 msgstr "Password required to create the account."
 
@@ -1486,11 +1509,17 @@ msgstr "Item name"
 msgid "Nom de l'expediteur"
 msgstr "Sender's name"
 
+msgid "Nom du Wi-Fi"
+msgstr "Wi-Fi name"
+
 msgid "Nom du beneficiaire"
 msgstr "Recipient's name"
 
 msgid "Nom du destinataire"
 msgstr "Recipient's name"
+
+msgid "Nom du reseau Wi-Fi du bus (imprime sur le billet)"
+msgstr "Bus Wi-Fi network name (printed on the ticket)"
 
 msgid "Nom du voyageur"
 msgstr "Passenger's name"
@@ -2384,6 +2413,9 @@ msgstr "Overview"
 
 msgid "Vue d'ensemble PDG"
 msgstr "CEO overview"
+
+msgid "Wi-Fi"
+msgstr "Wi-Fi"
 
 msgid "Zone"
 msgstr "Zone"
