@@ -74,6 +74,8 @@
     .groupe-actions a { font-size: 14px; margin-left: 12px; text-decoration: none; }
     .raccourci-vente {
       display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
       gap: 12px;
       margin-bottom: 28px;
     }
@@ -87,8 +89,8 @@
       text-decoration: none;
       display: inline-block;
     }
-    .btn-vente:link, .btn-vente:visited { color: #ffffff; }
-    .btn-vente-secondaire:link, .btn-vente-secondaire:visited { color: #1F3864; }
+    .btn-vente:link, .btn-vente:visited, .btn-vente:hover { color: #ffffff; text-decoration: none; }
+    .btn-vente-secondaire:link, .btn-vente-secondaire:visited, .btn-vente-secondaire:hover { color: #1F3864; text-decoration: none; }
     .btn-vente:hover {
       background: #2a4a7f;
       color: #ffffff;
@@ -107,39 +109,35 @@
     .btn-vente-secondaire:hover {
       background: #f4f6f9;
     }
+    #content-main .raccourci-vente a, #content-main .raccourci-vente a:hover { text-decoration: none !important; }
+    .raccourci-vente .btn-vente, .raccourci-vente .btn-vente-secondaire { padding: 14px 18px; white-space: nowrap; }
   </style>
 {% endblock %}
 
 {% block content %}
 <div id="content-main">
 
-  {% if stats_profil.voit_raccourci_vente %}
+  {% if stats_profil.voit_raccourci_vente or stats_profil.voit_raccourci_caisse or stats_profil.voit_raccourci_dettes or stats_profil.voit_historique_employe %}
   <div class="raccourci-vente">
+    {% if stats_profil.voit_raccourci_vente %}
     <a href="{% url 'transport:vendre_billet' %}" class="btn-vente">
       🎫 {% trans "Vendre un billet" %}
     </a>
     <a href="{% url 'transport:liste_billets' %}" class="btn-vente-secondaire">
       {% trans "Voir les billets vendus" %}
     </a>
-  </div>
-  {% endif %}
-
-  {% if stats_profil.voit_raccourci_caisse or stats_profil.voit_raccourci_dettes %}
-  <div class="raccourci-vente" style="margin-top:-6px;">
+    {% endif %}
     {% if stats_profil.voit_raccourci_caisse %}
     <a href="{% url 'transport:caisse' %}" class="btn-vente-secondaire">💰 {% trans "Caisse" %}</a>
     {% endif %}
     {% if stats_profil.voit_raccourci_dettes %}
     <a href="{% url 'transport:dettes' %}" class="btn-vente-secondaire">🧾 {% trans "Dettes (billets non payes)" %}</a>
     {% endif %}
-  </div>
-  {% endif %}
-
-  {% if stats_profil.voit_historique_employe %}
-  <div style="margin-bottom:16px;">
-    <a href="{% url 'transport:historique_employe' %}" class="btn-vente-secondaire" style="display:inline-block;">
+    {% if stats_profil.voit_historique_employe %}
+    <a href="{% url 'transport:historique_employe' %}" class="btn-vente-secondaire">
       {% trans "Mon activite / Historique par employe" %}
     </a>
+    {% endif %}
   </div>
   {% endif %}
 
