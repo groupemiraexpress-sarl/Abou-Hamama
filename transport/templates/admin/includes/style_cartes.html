@@ -112,6 +112,10 @@
     .submit-row input[type=submit], .submit-row a.button, .submit-row .deletelink, #changelist .actions button, #toolbar input[type=submit] {
         color:#fff !important; border:none !important; border-radius:10px !important; font-weight:700 !important; cursor:pointer;
     }
+    /* Tous les boutons de la barre sur une seule ligne ; Supprimer pousse a droite */
+    .submit-row { display:flex; flex-wrap:wrap; align-items:center; gap:10px; }
+    .submit-row input[type=submit], .submit-row a.button, .submit-row a.btn-imprimer-recu { float:none !important; margin:0 !important; }
+    .submit-row .deletelink-box, .submit-row p.deletelink-box { float:none !important; margin:0 0 0 auto !important; padding:0 !important; }
     .submit-row input[name=_save] { background:#10b981 !important; }
     .submit-row input[name=_save]:hover { background:#059669 !important; }
     .submit-row input[name=_addanother] { background:#3b82f6 !important; }
@@ -132,6 +136,12 @@
     ul.messagelist li { border-radius:12px; }
     .delete-confirmation #content-main form > div { background:#fff; border-radius:16px; padding:18px 20px; box-shadow:0 4px 14px rgba(31,56,100,.08); }
 
+    /* Ecran moyen ou etroit : plus de champ sur deux colonnes (evite le debordement horizontal) */
+    @media (max-width:1100px) {
+        fieldset.module.aligned .form-row.field-voyage,
+        fieldset.module.aligned .form-row.field-notes,
+        fieldset.module.aligned .form-row:has(textarea) { grid-column:auto; }
+    }
     @media (max-width:600px) {
         #content { padding:16px 12px; }
         fieldset.module.aligned { grid-template-columns:1fr !important; }

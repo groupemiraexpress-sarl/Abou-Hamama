@@ -16,6 +16,15 @@
   </div>
   {% endif %}
   {{ block.super }}
+  {% if url_recu %}
+  <script>
+    /* Le bouton Imprimer rejoint la rangee des boutons d'enregistrement (une seule ligne) */
+    (function () {
+      var barre = document.querySelector('.barre-imprimer'), rangee = document.querySelector('.submit-row');
+      if (barre && rangee) { rangee.insertBefore(barre.querySelector('a'), rangee.firstChild); barre.remove(); }
+    })();
+  </script>
+  {% endif %}
 {% endblock %}
 
 {% block extrastyle %}{{ block.super }}

@@ -69,12 +69,10 @@
     </div>
 </div>
 
-<div class="no-print" style="display:flex; gap:12px; margin-top:20px;">
-    <button onclick="window.print()" class="btn" style="flex:1; background:#10b981;">
+<div class="no-print barre-actions">
+        <button onclick="window.print()" class="btn" style="background:#10b981;">
         <i class="fa-solid fa-file-pdf"></i> {% trans "Imprimer / Enregistrer en PDF" %}
-    </button>
-</div>
-<div class="no-print" style="text-align:center; margin-top:16px;">
-    <a href="{% url 'transport:vendre_billet' %}" style="color:#6b7280; text-decoration:none; font-size:.9rem;"><i class="fa-solid fa-arrow-left"></i> {% trans "Retour a la vente" %}</a>
+        </button>
+        <a href="{% url 'transport:vendre_billet' %}" class="btn btn-gris"><i class="fa-solid fa-arrow-left"></i> {% trans "Retour a la vente" %}</a>
 </div>
 {% endblock %}

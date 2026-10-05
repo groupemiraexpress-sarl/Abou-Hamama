@@ -114,17 +114,15 @@
     {% endif %}
 </div>
 
-<div class="no-print" style="display:flex; gap:12px; margin-top:20px;">
-    <button onclick="window.print()" class="btn" style="flex:1; background:#10b981;">
-        <i class="fa-solid fa-print"></i> {% trans "Imprimer ce rapport" %}
-    </button>
-</div>
 {% endif %}
 
-<div class="no-print" style="text-align:center; margin-top:20px;">
-    <a href="{% url 'admin:index' %}" class="btn" style="background:#6b7280;">
-        <i class="fa-solid fa-arrow-left"></i> {% trans "Retour au tableau de bord" %}
-    </a>
+<div class="no-print barre-actions">
+        {% if agence_choisie %}
+        <button onclick="window.print()" class="btn" style="background:#10b981;">
+        <i class="fa-solid fa-print"></i> {% trans "Imprimer ce rapport" %}
+        </button>
+        {% endif %}
+        <a href="{% url 'admin:index' %}" class="btn btn-gris"><i class="fa-solid fa-arrow-left"></i> {% trans "Retour au tableau de bord" %}</a>
 </div>
 
 <style>
