@@ -47,6 +47,19 @@ msgstr "المدير"
 msgid "Adresse"
 msgstr "العنوان"
 
+msgid "Adresse web"
+msgstr "العنوان الإلكتروني"
+
+msgid "Adresse web propre"
+msgstr "العنوان الإلكتروني الخاص"
+
+msgid ""
+"Adresse web propre a cette compagnie, sans https (ex : "
+"gestion.abouhamama.td). Facultatif."
+msgstr ""
+"العنوان الإلكتروني الخاص بهذه الشركة، بدون https (مثال: "
+"gestion.abouhamama.td). اختياري."
+
 msgid "Afficher"
 msgstr "عرض"
 
@@ -530,6 +543,13 @@ msgstr "الرمز"
 msgid "Code Wi-Fi"
 msgstr "رمز الواي فاي"
 
+msgid ""
+"Code court en minuscules (ex : ah). Sert de prefixe aux identifiants des "
+"employes et d'adresse web."
+msgstr ""
+"رمز قصير بأحرف صغيرة (مثال: ah). يُستخدم كبادئة لمعرّفات الموظفين وكعنوان "
+"إلكتروني."
+
 msgid "Code de parrainage"
 msgstr "رمز الإحالة"
 
@@ -671,6 +691,15 @@ msgstr "عرض فقط"
 
 msgid "Contenu du colis"
 msgstr "محتوى الطرد"
+
+msgid "Couleur au format #RRGGBB"
+msgstr "اللون بصيغة #RRGGBB"
+
+msgid "Couleur de l'en-tete et des boutons, au format #RRGGBB"
+msgstr "لون الترويسة والأزرار بصيغة #RRGGBB"
+
+msgid "Couleur principale"
+msgstr "اللون الرئيسي"
 
 msgid "Courroie"
 msgstr "الحزام"
@@ -1316,6 +1345,9 @@ msgstr "مسلم"
 msgid "Livree"
 msgstr "تم التسليم"
 
+msgid "Logo"
+msgstr "الشعار"
+
 msgid "Longitude"
 msgstr "خط الطول"
 
@@ -1333,6 +1365,9 @@ msgstr "عامل الأمتعة"
 
 msgid "Marque"
 msgstr "الماركة"
+
+msgid "Marque (affichee sur le site, les billets et l'application)"
+msgstr "العلامة (تظهر على الموقع والتذاكر والتطبيق)"
 
 msgid "Message"
 msgstr "الرسالة"
@@ -1489,6 +1524,9 @@ msgstr "الاسم"
 msgid "Nom complet"
 msgstr "الاسم الكامل"
 
+msgid "Nom complet affiche"
+msgstr "الاسم الكامل المعروض"
+
 msgid "Nom d'utilisateur (connexion)"
 msgstr "اسم المستخدم (تسجيل الدخول)"
 
@@ -1521,6 +1559,13 @@ msgstr "اسم المسافر"
 
 msgid "Nom du voyageur de ce billet"
 msgstr "اسم المسافر لهذه التذكرة"
+
+msgid ""
+"Nom en grand dans l'en-tete (ex : Express Abou Hamama). Laisser vide pour "
+"utiliser le nom."
+msgstr ""
+"الاسم الكبير في الترويسة (مثال: Express Abou Hamama). اتركه فارغا لاستخدام "
+"الاسم."
 
 msgid "Nom et prenom"
 msgstr "الاسم الكامل"
@@ -2050,6 +2095,9 @@ msgstr "توقيع السائق"
 msgid "Signature du responsable"
 msgstr "توقيع المسؤول"
 
+msgid "Slogan"
+msgstr "الشعار اللفظي"
+
 msgid "Statut"
 msgstr "الحالة"
 
@@ -2116,6 +2164,9 @@ msgstr "منتهية"
 
 msgid "Texte"
 msgstr "النص"
+
+msgid "Texte du pied de page"
+msgstr "نص أسفل الصفحة"
 
 msgid "Titre"
 msgstr "العنوان"
@@ -2241,8 +2292,8 @@ msgstr "رقم واحد أو أكثر مفصولة بـ ' / '، مثال: 60 10 
 msgid "Un seul bus (facultatif)"
 msgstr "حافلة واحدة (اختياري)"
 
-msgid "Un seul compte PDG est autorise dans le logiciel. Un PDG existe deja."
-msgstr "لا يُسمح إلا بحساب مدير عام واحد في النظام. يوجد مدير عام بالفعل."
+msgid "Un seul compte PDG est autorise par compagnie. Un PDG existe deja."
+msgstr "يُسمح بحساب مدير عام واحد فقط لكل شركة. يوجد مدير عام بالفعل."
 
 msgid "Un seul employe (facultatif)"
 msgstr "موظف واحد (اختياري)"

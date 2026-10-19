@@ -46,6 +46,19 @@ msgstr "Administrator"
 msgid "Adresse"
 msgstr "Address"
 
+msgid "Adresse web"
+msgstr "Web address"
+
+msgid "Adresse web propre"
+msgstr "Own web address"
+
+msgid ""
+"Adresse web propre a cette compagnie, sans https (ex : "
+"gestion.abouhamama.td). Facultatif."
+msgstr ""
+"This company's own web address, without https (e.g. manage.abouhamama.td). "
+"Optional."
+
 msgid "Afficher"
 msgstr "Show"
 
@@ -533,6 +546,13 @@ msgstr "Code"
 msgid "Code Wi-Fi"
 msgstr "Wi-Fi code"
 
+msgid ""
+"Code court en minuscules (ex : ah). Sert de prefixe aux identifiants des "
+"employes et d'adresse web."
+msgstr ""
+"Short lowercase code (e.g. ah). Used as a prefix for employee logins and as "
+"web address."
+
 msgid "Code de parrainage"
 msgstr "Referral code"
 
@@ -674,6 +694,15 @@ msgstr "View only"
 
 msgid "Contenu du colis"
 msgstr "Parcel contents"
+
+msgid "Couleur au format #RRGGBB"
+msgstr "Color in #RRGGBB format"
+
+msgid "Couleur de l'en-tete et des boutons, au format #RRGGBB"
+msgstr "Header and button color, in #RRGGBB format"
+
+msgid "Couleur principale"
+msgstr "Main color"
 
 msgid "Courroie"
 msgstr "Belt"
@@ -1326,6 +1355,9 @@ msgstr "Delivered"
 msgid "Livree"
 msgstr "Delivered"
 
+msgid "Logo"
+msgstr "Logo"
+
 msgid "Longitude"
 msgstr "Longitude"
 
@@ -1343,6 +1375,9 @@ msgstr "Handler / baggage clerk"
 
 msgid "Marque"
 msgstr "Brand"
+
+msgid "Marque (affichee sur le site, les billets et l'application)"
+msgstr "Brand (shown on the site, tickets and app)"
 
 msgid "Message"
 msgstr "Message"
@@ -1503,6 +1538,9 @@ msgstr "Last name"
 msgid "Nom complet"
 msgstr "Full name"
 
+msgid "Nom complet affiche"
+msgstr "Full display name"
+
 msgid "Nom d'utilisateur (connexion)"
 msgstr "Username (login)"
 
@@ -1535,6 +1573,13 @@ msgstr "Passenger's name"
 
 msgid "Nom du voyageur de ce billet"
 msgstr "Name of this ticket's passenger"
+
+msgid ""
+"Nom en grand dans l'en-tete (ex : Express Abou Hamama). Laisser vide pour "
+"utiliser le nom."
+msgstr ""
+"Large name in the header (e.g. Express Abou Hamama). Leave empty to use the "
+"name."
 
 msgid "Nom et prenom"
 msgstr "Full name"
@@ -2064,6 +2109,9 @@ msgstr "Driver's signature"
 msgid "Signature du responsable"
 msgstr "Manager's signature"
 
+msgid "Slogan"
+msgstr "Slogan"
+
 msgid "Statut"
 msgstr "Status"
 
@@ -2130,6 +2178,9 @@ msgstr "Completed"
 
 msgid "Texte"
 msgstr "Text"
+
+msgid "Texte du pied de page"
+msgstr "Footer text"
 
 msgid "Titre"
 msgstr "Title"
@@ -2256,9 +2307,8 @@ msgstr ""
 msgid "Un seul bus (facultatif)"
 msgstr "A single bus (optional)"
 
-msgid "Un seul compte PDG est autorise dans le logiciel. Un PDG existe deja."
-msgstr ""
-"Only one CEO account is allowed in the software. A CEO already exists."
+msgid "Un seul compte PDG est autorise par compagnie. Un PDG existe deja."
+msgstr "Only one CEO account is allowed per company. A CEO already exists."
 
 msgid "Un seul employe (facultatif)"
 msgstr "A single employee (optional)"
