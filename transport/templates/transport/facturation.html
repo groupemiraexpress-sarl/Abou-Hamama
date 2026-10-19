@@ -1,0 +1,101 @@
+{% extends "transport/base.html" %}
+{% load i18n %}
+{% block titre %}{% trans "Facturation" %} — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}{% trans "Facturation des abonnements" %}{% endblock %}
+{% block classe_container %}large{% endblock %}
+{% block extra_head %}
+<style>
+    .tuiles { display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); gap:14px; margin-bottom:18px; }
+    .tuile { background:#fff; border-radius:12px; padding:14px 16px; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+    .tuile .v { font-size:1.5rem; font-weight:800; color:var(--couleur-principale); }
+    .tuile .l { font-size:.8rem; color:#6b7280; text-transform:uppercase; font-weight:700; }
+    .tuile.rouge .v { color:#b91c1c; }
+    .tableau-fact { width:100%; border-collapse:collapse; font-size:.92rem; }
+    .tableau-fact th { text-align:left; font-size:.75rem; text-transform:uppercase; color:#6b7280; padding:8px 6px; border-bottom:2px solid #e5e7eb; }
+    .tableau-fact td { padding:10px 6px; border-bottom:1px solid #eef0f3; vertical-align:middle; }
+    .pastille { padding:3px 12px; border-radius:99px; font-size:.78rem; font-weight:700; white-space:nowrap; }
+    .p-payee { background:#dcfce7; color:#166534; } .p-retard { background:#fee2e2; color:#b91c1c; }
+    .p-partielle { background:#fef3c7; color:#92400e; } .p-a_payer { background:#e0e7ff; color:#3730a3; }
+    .formulaire-paiement { display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+    .formulaire-paiement input, .formulaire-paiement select { margin:0; min-height:38px; padding:6px 8px; width:auto; }
+    .filtres a { margin-right:8px; }
+</style>
+{% endblock %}
+{% block contenu %}
+{% if messages %}
+{% for m in messages %}
+<div style="padding:12px 16px; border-radius:10px; margin-bottom:12px; {% if m.tags == 'error' %}background:#fef2f2; color:#b91c1c;{% else %}background:#f0fdf4; color:#166534;{% endif %}">{{ m }}</div>
+{% endfor %}
+{% endif %}
+
+<div class="tuiles">
+    <div class="tuile"><div class="v">{{ resume.a_encaisser }} FCFA</div><div class="l">{% trans "A encaisser" %} ({{ resume.nb_impayees }})</div></div>
+    <div class="tuile rouge"><div class="v">{{ resume.en_retard }} FCFA</div><div class="l">{% trans "En retard" %} ({{ resume.nb_en_retard }})</div></div>
+    <div class="tuile"><div class="v">{{ resume.encaisse_mois }} FCFA</div><div class="l">{% trans "Encaisse ce mois" %}</div></div>
+</div>
+
+<div class="barre-actions" style="justify-content:space-between; margin-bottom:14px;">
+    <div class="filtres">
+        <a href="?statut=" class="btn {% if not filtre %}btn-vert{% else %}btn-gris{% endif %}">{% trans "Toutes" %}</a>
+        <a href="?statut=impayees" class="btn {% if filtre == 'impayees' %}btn-vert{% else %}btn-gris{% endif %}">{% trans "A payer" %}</a>
+        <a href="?statut=retard" class="btn {% if filtre == 'retard' %}btn-vert{% else %}btn-gris{% endif %}">{% trans "En retard" %}</a>
+        <a href="?statut=payees" class="btn {% if filtre == 'payees' %}btn-vert{% else %}btn-gris{% endif %}">{% trans "Payees" %}</a>
+    </div>
+    <form method="post" action="{% url 'transport:generer_factures' %}" onsubmit="return confirm('{% trans "Creer les factures du mois pour toutes les entreprises actives ayant un abonnement ?" %}');">
+        {% csrf_token %}<button type="submit" class="btn btn-vert"><i class="fa-solid fa-file-invoice"></i> {% trans "Generer les factures du mois" %}</button>
+    </form>
+</div>
+
+<div class="card" style="overflow-x:auto;">
+    <table class="tableau-fact">
+        <thead><tr>
+            <th>{% trans "Facture" %}</th><th>{% trans "Entreprise" %}</th><th>{% trans "Mois" %}</th><th>{% trans "Montant" %}</th>
+            <th>{% trans "Reste" %}</th><th>{% trans "Echeance" %}</th><th>{% trans "Etat" %}</th><th>{% trans "Encaisser un paiement" %}</th>
+        </tr></thead>
+        <tbody>
+        {% for f in factures %}
+        <tr>
+            <td><a href="{% url 'transport:facture_imprimer' f.pk %}" target="_blank"><strong>{{ f.numero }}</strong></a></td>
+            <td>{{ f.compagnie.nom_affiche|default:f.compagnie.nom }}</td>
+            <td>{{ f.periode|date:"m/Y" }}</td>
+            <td>{{ f.montant }} FCFA</td>
+            <td><strong>{{ f.reste }} FCFA</strong></td>
+            <td>{{ f.date_echeance|date:"d/m/Y" }}</td>
+            <td><span class="pastille p-{{ f.statut }}">{% if f.statut == 'payee' %}{% trans "Payee" %}{% elif f.statut == 'retard' %}{% trans "En retard" %}{% elif f.statut == 'partielle' %}{% trans "Payee en partie" %}{% else %}{% trans "A payer" %}{% endif %}</span></td>
+            <td>
+                {% if f.reste > 0 %}
+                <form method="post" action="{% url 'transport:paiement_facture' f.pk %}" class="formulaire-paiement">
+                    {% csrf_token %}
+                    <input type="number" name="montant" value="{{ f.reste }}" min="1" max="{{ f.reste }}" required style="width:110px;">
+                    <select name="mode">{% for code, libelle in modes %}<option value="{{ code }}">{{ libelle }}</option>{% endfor %}</select>
+                    <input type="text" name="reference" placeholder="{% trans 'Reference' %}" style="width:110px;">
+                    <button type="submit" class="btn btn-vert">{% trans "Valider" %}</button>
+                </form>
+                {% if f.statut == 'retard' %}
+                <form method="post" action="{% url 'transport:rappel_entreprise' f.compagnie.pk %}" style="margin-top:6px;">
+                    {% csrf_token %}<button type="submit" class="btn btn-orange">{% trans "Envoyer un rappel par e-mail" %}</button>
+                </form>
+                {% endif %}
+                {% else %}
+                {% for p in f.paiements.all|slice:":1" %}<span style="color:#6b7280; font-size:.85rem;">{% trans "Paye le" %} {{ p.date_paiement|date:"d/m/Y" }} · {{ p.get_mode_display }}</span>{% endfor %}
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8" style="text-align:center; color:#6b7280; padding:24px;">{% trans "Aucune facture. Fixez le prix de l'abonnement de chaque entreprise (Modifier), puis cliquez sur « Generer les factures du mois »." %}</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if sans_abonnement %}
+<div class="card" style="margin-top:16px; background:#fffbeb;">
+    <strong>{% trans "Entreprises sans abonnement (jamais facturees) :" %}</strong>
+    {% for c in sans_abonnement %}<a href="{% url 'admin:transport_compagnie_change' c.pk %}">{{ c.nom }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+</div>
+{% endif %}
+
+<div class="barre-actions no-print">
+    <a href="{% url 'transport:plateforme' %}" class="btn btn-gris"><i class="fa-solid fa-arrow-left"></i> {% trans "Retour a la plateforme" %}</a>
+</div>
+{% endblock %}

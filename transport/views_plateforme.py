@@ -42,13 +42,20 @@ def nouvelle_compagnie(request):
     if request.method == 'POST':
         valeurs = {k: request.POST.get(k, '').strip() for k in (
             'nom', 'code', 'siege', 'telephone', 'nom_affiche', 'couleur', 'domaine',
-            'pdg_nom', 'pdg_prenom', 'pdg_telephone')}
+            'pdg_nom', 'pdg_prenom', 'pdg_telephone', 'abonnement')}
+        try:
+            abonnement = int(valeurs['abonnement'] or 0)
+            if abonnement < 0:
+                raise ValueError
+        except ValueError:
+            erreurs = {'abonnement': _("Montant invalide.")}
+            return render(request, 'transport/plateforme_nouvelle.html', {'valeurs': valeurs, 'erreurs': erreurs})
         try:
             compagnie, identifiant, mot_de_passe = creer_compagnie_avec_pdg(
                 nom=valeurs['nom'], code=valeurs['code'], siege=valeurs['siege'], telephone=valeurs['telephone'],
                 pdg_nom=valeurs['pdg_nom'], pdg_prenom=valeurs['pdg_prenom'], pdg_telephone=valeurs['pdg_telephone'],
                 nom_affiche=valeurs['nom_affiche'], couleur=valeurs['couleur'] or '#261F64', domaine=valeurs['domaine'],
-                logo=request.FILES.get('logo'),
+                logo=request.FILES.get('logo'), abonnement=abonnement,
             )
         except ValidationError as e:
             erreurs = {k: ' '.join(v) for k, v in e.message_dict.items()} if hasattr(e, 'error_dict') else {'': ' '.join(e.messages)}

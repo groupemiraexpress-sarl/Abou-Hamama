@@ -46,6 +46,8 @@ CHEMINS_COMPAGNIE = {
     'transport.depense': ['voyage__bus__compagnie'],
     'transport.sessioncaisse': ['agence__compagnie'],
     'transport.mouvementcaisse': ['session__agence__compagnie'],
+    'transport.factureabonnement': ['compagnie'],
+    'transport.paiementabonnement': ['facture__compagnie'],
     # Comptes de connexion : rattaches a une compagnie par leur fiche employe ou client
     'auth.user': ['employe__compagnie', 'fiches_client__compagnie'],
     'transport.pushtoken': ['user__employe__compagnie', 'user__fiches_client__compagnie'],

@@ -33,6 +33,14 @@
     </div>
 
     <div class="card" style="margin-bottom:16px;">
+        <h3 style="color:var(--couleur-principale); margin-bottom:14px;">{% trans "Abonnement" %}</h3>
+        <div class="grille-champs">
+            <div><label>{% trans "Prix par mois (FCFA)" %}</label><input type="number" name="abonnement" value="{{ valeurs.abonnement|default:'0' }}" min="0">
+                <div class="aide">{% trans "0 = pas de facturation. Vous pourrez le changer plus tard." %}</div>{% if erreurs.abonnement %}<div class="erreur-champ">{{ erreurs.abonnement }}</div>{% endif %}</div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px;">
         <h3 style="color:var(--couleur-principale); margin-bottom:14px;">{% trans "Le PDG (premier compte)" %}</h3>
         <div class="grille-champs">
             <div><label>{% trans "Nom" %} *</label><input type="text" name="pdg_nom" value="{{ valeurs.pdg_nom }}" required>{% if erreurs.pdg_nom %}<div class="erreur-champ">{{ erreurs.pdg_nom }}</div>{% endif %}</div>

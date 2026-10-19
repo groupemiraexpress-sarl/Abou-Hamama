@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from . import api_views
 from . import views_caisse
+from . import views_facturation
 from . import views_plateforme
 from rest_framework_simplejwt.views import TokenRefreshView
 
@@ -35,6 +36,12 @@ urlpatterns = [
     path('espace/plateforme/nouvelle/', views_plateforme.nouvelle_compagnie, name='nouvelle_compagnie'),
     path('espace/plateforme/<int:pk>/reinitialiser-pdg/', views_plateforme.reinitialiser_pdg, name='reinitialiser_pdg'),
     path('espace/plateforme/<int:pk>/basculer/', views_plateforme.basculer, name='basculer_compagnie'),
+    path('espace/plateforme/facturation/', views_facturation.facturation, name='facturation'),
+    path('espace/plateforme/facturation/generer/', views_facturation.generer_factures, name='generer_factures'),
+    path('espace/plateforme/facturation/<int:pk>/paiement/', views_facturation.paiement_facture, name='paiement_facture'),
+    path('espace/plateforme/<int:pk>/rappel/', views_facturation.rappel_entreprise, name='rappel_entreprise'),
+    path('espace/abonnement/', views_facturation.mon_abonnement, name='mon_abonnement'),
+    path('espace/abonnement/facture/<int:pk>/', views_facturation.facture_imprimer, name='facture_imprimer'),
     path('espace/caisse/', views_caisse.caisse, name='caisse'),
     path('espace/dettes/', views_caisse.dettes, name='dettes'),
     path('espace/api-stats-tableau-bord/', views.api_stats_tableau_bord, name='api_stats_tableau_bord'),

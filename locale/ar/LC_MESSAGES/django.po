@@ -11,11 +11,24 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
 
+msgid "%(n)s facture(s) creee(s) pour ce mois."
+msgstr "تم إنشاء %(n)s فاتورة لهذا الشهر."
+
 msgid "%(nom)s est reactivee."
 msgstr "تمت إعادة تفعيل %(nom)s."
 
 msgid "%(nom)s est suspendue : ses employes ne peuvent plus se connecter."
 msgstr "تم تعليق %(nom)s: لم يعد موظفوها قادرين على تسجيل الدخول."
+
+msgid ""
+"%(nom)s n'a pas d'adresse e-mail : ajoutez-la dans la fiche de l'entreprise."
+msgstr "لا يوجد عنوان بريد إلكتروني لـ %(nom)s: أضفه في بطاقة الشركة."
+
+msgid "- %(numero)s : %(reste)s FCFA a payer avant le %(date)s"
+msgstr "- %(numero)s: %(reste)s فرنك للدفع قبل %(date)s"
+
+msgid "0 = pas de facturation. Vous pourrez le changer plus tard."
+msgstr "0 = بدون فوترة. يمكنك تغييره لاحقًا."
 
 msgid "1 = ville de depart, puis 2, 3, 4..."
 msgstr "1 = مدينة الانطلاق، ثم 2، 3، 4..."
@@ -23,8 +36,32 @@ msgstr "1 = مدينة الانطلاق، ثم 2، 3، 4..."
 msgid "1 point par 100 FCFA depense"
 msgstr "نقطة واحدة لكل 100 فرنك"
 
+msgid "A encaisser"
+msgstr "للتحصيل"
+
+msgid "A encaisser (FCFA)"
+msgstr "للتحصيل (فرنك)"
+
+msgid "A payer"
+msgstr "للدفع"
+
+msgid "A payer avant le"
+msgstr "يُدفع قبل"
+
 msgid "A traiter"
 msgstr "للمعالجة"
+
+msgid "Abonnement"
+msgstr "الاشتراك"
+
+msgid "Abonnement a la plateforme"
+msgstr "الاشتراك في المنصة"
+
+msgid "Abonnement mensuel"
+msgstr "الاشتراك الشهري"
+
+msgid "Abonnement mensuel (FCFA)"
+msgstr "الاشتراك الشهري (فرنك)"
 
 msgid "Accompagnateur aimable"
 msgstr "المرافق لطيف"
@@ -270,6 +307,9 @@ msgstr "لم يتم تسجيل أي صيانة."
 msgid "Aucun mouvement."
 msgstr "لا توجد حركات."
 
+msgid "Aucun rappel envoye : pas de facture a payer, ou l'envoi a echoue."
+msgstr "لم يُرسل أي تذكير: لا توجد فاتورة للدفع، أو فشل الإرسال."
+
 msgid "Aucun signal"
 msgstr "لا توجد إشارة"
 
@@ -303,6 +343,16 @@ msgstr "لا توجد مصاريف."
 
 msgid "Aucune entreprise."
 msgstr "لا توجد شركة."
+
+msgid "Aucune facture pour le moment."
+msgstr "لا توجد فواتير حاليًا."
+
+msgid ""
+"Aucune facture. Fixez le prix de l'abonnement de chaque entreprise "
+"(Modifier), puis cliquez sur « Generer les factures du mois »."
+msgstr ""
+"لا توجد فواتير. حدّد سعر اشتراك كل شركة (تعديل)، ثم انقر على «إنشاء فواتير "
+"الشهر»."
 
 msgid "Aucune fiche employe liee a ce compte."
 msgstr "لا توجد بطاقة موظف مرتبطة بهذا الحساب."
@@ -367,6 +417,9 @@ msgstr "التذاكر المدفوعة"
 
 msgid "Billets vendus"
 msgstr "التذاكر المباعة"
+
+msgid "Bonjour,"
+msgstr "مرحبًا،"
 
 msgid "Bonus parrainage attribue"
 msgstr "مكافأة الإحالة ممنوحة"
@@ -463,6 +516,9 @@ msgstr "هذه الحافلة صغيرة جدا: تم بيع %(n)s تذكرة ب
 
 msgid "Ce colis a deja ete remis."
 msgstr "تم تسليم هذا الطرد بالفعل."
+
+msgid "Ce montant depasse ce qu'il reste a payer (%(reste)s FCFA)."
+msgstr "هذا المبلغ يتجاوز المتبقي للدفع (%(reste)s فرنك)."
 
 msgid "Ce nom d'utilisateur est deja pris par un autre compte."
 msgstr "اسم المستخدم هذا مستخدم بالفعل من قبل حساب آخر."
@@ -742,6 +798,11 @@ msgstr "أنشأه"
 msgid "Creer l'entreprise"
 msgstr "إنشاء الشركة"
 
+msgid ""
+"Creer les factures du mois pour toutes les entreprises actives ayant un "
+"abonnement ?"
+msgstr "إنشاء فواتير الشهر لكل الشركات النشطة التي لديها اشتراك؟"
+
 msgid "Creer une entreprise"
 msgstr "إنشاء شركة"
 
@@ -759,6 +820,9 @@ msgstr "تاريخ الصعود"
 
 msgid "Date d'embauche"
 msgstr "تاريخ التوظيف"
+
+msgid "Date d'emission"
+msgstr "تاريخ الإصدار"
 
 msgid "Date d'emission de la piece"
 msgstr "تاريخ نهاية الصلاحية"
@@ -825,6 +889,9 @@ msgstr "تاريخ السحب"
 
 msgid "Date de traitement"
 msgstr "تاريخ المعالجة"
+
+msgid "Date du paiement"
+msgstr "تاريخ الدفع"
 
 msgid "Date du plein"
 msgstr "تاريخ التعبئة"
@@ -940,6 +1007,9 @@ msgstr "الوصف"
 msgid "Description de la promotion"
 msgstr "وصف العرض"
 
+msgid "Designation"
+msgstr "البيان"
+
 msgid "Destinataire"
 msgstr "المستلم"
 
@@ -979,6 +1049,9 @@ msgstr "الفرق"
 msgid "Ecart (FCFA)"
 msgstr "الفرق (فرنك إفريقي)"
 
+msgid "Echeance"
+msgstr "تاريخ الاستحقاق"
+
 msgid "Effectifs par poste"
 msgstr "عدد الموظفين حسب الوظيفة"
 
@@ -990,6 +1063,9 @@ msgstr "صعد"
 
 msgid "Embarques"
 msgstr "صعدوا"
+
+msgid "Emise le"
+msgstr "صدرت في"
 
 msgid "Employe"
 msgstr "الموظف"
@@ -1039,11 +1115,17 @@ msgstr "متوقف مؤقتا منذ"
 msgid "En repos"
 msgstr "في راحة"
 
+msgid "En retard"
+msgstr "متأخرة"
+
 msgid "En service"
 msgstr "في الخدمة"
 
 msgid "En transit"
 msgstr "في الطريق"
+
+msgid "Encaisse ce mois"
+msgstr "المحصّل هذا الشهر"
 
 msgid "Encaissement"
 msgstr "تحصيل"
@@ -1059,6 +1141,9 @@ msgstr "التحصيلات حسب طريقة الدفع"
 
 msgid "Encaisser"
 msgstr "تحصيل"
+
+msgid "Encaisser un paiement"
+msgstr "تسجيل دفعة"
 
 msgid "Enregistre"
 msgstr "مسجل"
@@ -1090,6 +1175,9 @@ msgstr "الشركات"
 msgid "Entreprises actives"
 msgstr "الشركات النشطة"
 
+msgid "Entreprises sans abonnement (jamais facturees) :"
+msgstr "شركات بدون اشتراك (لم تُفوتر أبدًا):"
+
 msgid "Entreprises suspendues"
 msgstr "الشركات المعلقة"
 
@@ -1105,6 +1193,9 @@ msgstr "حوالي"
 msgid "Envoi de colis"
 msgstr "إرسال طرد"
 
+msgid "Envoyer un rappel par e-mail"
+msgstr "إرسال تذكير بالبريد الإلكتروني"
+
 msgid "Especes"
 msgstr "نقدا"
 
@@ -1113,6 +1204,9 @@ msgstr "النقد المتوقع في الصندوق"
 
 msgid "Especes comptees (FCFA)"
 msgstr "النقد المحسوب (فرنك إفريقي)"
+
+msgid "Etat"
+msgstr "الحالة"
 
 msgid "Etat du stock"
 msgstr "حالة المخزون"
@@ -1131,6 +1225,30 @@ msgstr "المرسل"
 
 msgid "Exploitation"
 msgstr "التشغيل"
+
+msgid "FACTURE"
+msgstr "فاتورة"
+
+msgid "Facturation"
+msgstr "الفوترة"
+
+msgid "Facturation des abonnements"
+msgstr "فوترة الاشتراكات"
+
+msgid "Facture"
+msgstr "فاتورة"
+
+msgid "Facture a"
+msgstr "الفاتورة إلى"
+
+msgid "Facture d'abonnement"
+msgstr "فاتورة اشتراك"
+
+msgid "Factures d'abonnement"
+msgstr "فواتير الاشتراك"
+
+msgid "Factures en retard"
+msgstr "الفواتير المتأخرة"
 
 msgid "Facultatif : vous pourrez l'ajouter plus tard."
 msgstr "اختياري: يمكنك إضافته لاحقا."
@@ -1185,6 +1303,9 @@ msgstr "الرسوم المحددة من الوكالة"
 
 msgid "Freins"
 msgstr "الفرامل"
+
+msgid "Generer les factures du mois"
+msgstr "إنشاء فواتير الشهر"
 
 msgid "Generer un nouveau mot de passe pour le PDG de cette entreprise ?"
 msgstr "إنشاء كلمة مرور جديدة للمدير العام لهذه الشركة؟"
@@ -1375,6 +1496,9 @@ msgstr "هل كانت الحافلة نظيفة؟"
 msgid "Le chauffeur etait-il poli ?"
 msgstr "هل كان السائق مهذبا؟"
 
+msgid "Le montant doit etre superieur a zero."
+msgstr "يجب أن يكون المبلغ أكبر من صفر."
+
 msgid "Le mot de passe doit contenir au moins 6 caracteres."
 msgstr "يجب أن تحتوي كلمة المرور على 6 أحرف على الأقل."
 
@@ -1458,6 +1582,11 @@ msgstr "الماركة"
 msgid "Marque (affichee sur le site, les billets et l'application)"
 msgstr "العلامة (تظهر على الموقع والتذاكر والتطبيق)"
 
+msgid ""
+"Merci de regulariser votre situation pour continuer a utiliser la "
+"plateforme."
+msgstr "يرجى تسوية وضعكم لمواصلة استخدام المنصة."
+
 msgid "Message"
 msgstr "الرسالة"
 
@@ -1478,8 +1607,14 @@ msgstr "تحديث تلقائي"
 msgid "Mobile Money"
 msgstr "موبايل موني"
 
+msgid "Mobile money"
+msgstr "المحفظة الإلكترونية"
+
 msgid "Mode de paiement"
 msgstr "طريقة الدفع"
+
+msgid "Mode de paiement invalide."
+msgstr "طريقة دفع غير صالحة."
 
 msgid "Modele"
 msgstr "الطراز"
@@ -1499,8 +1634,17 @@ msgstr "تغيير لوحة الحافلة"
 msgid "Modifier un billet"
 msgstr "تعديل تذكرة"
 
+msgid "Mois"
+msgstr "الشهر"
+
 msgid "Mois en cours"
 msgstr "الشهر الحالي"
+
+msgid "Mois facture"
+msgstr "الشهر المفوتر"
+
+msgid "Mon abonnement"
+msgstr "اشتراكي"
 
 msgid "Mon activite / Historique"
 msgstr "نشاطي / السجل"
@@ -1534,6 +1678,9 @@ msgstr "المبلغ المرسل"
 
 msgid "Montant envoye en FCFA"
 msgstr "المبلغ المرسل بالفرنك"
+
+msgid "Montant invalide."
+msgstr "مبلغ غير صالح."
 
 msgid "Montant total"
 msgstr "المبلغ الإجمالي"
@@ -1754,6 +1901,9 @@ msgstr "رقم الوثيقة غير صالح للراكب %(i)s (يجب أن ي
 msgid "Numero de reservation"
 msgstr "رقم الحجز"
 
+msgid "Numero de transaction, de recu, etc."
+msgstr "رقم المعاملة أو الإيصال، إلخ."
+
 msgid "Numero du siege"
 msgstr "رقم المقعد"
 
@@ -1781,6 +1931,9 @@ msgstr "الافتتاح"
 msgid "Ouvrir la caisse"
 msgstr "فتح الصندوق"
 
+msgid "PAYEE"
+msgstr "مدفوعة"
+
 msgid "PDG"
 msgstr "المدير العام"
 
@@ -1789,6 +1942,21 @@ msgstr "المدير العام"
 
 msgid "Paiement"
 msgstr "الدفع"
+
+msgid "Paiement d'abonnement"
+msgstr "دفعة اشتراك"
+
+msgid "Paiement du"
+msgstr "دفعة بتاريخ"
+
+msgid "Paiement en retard"
+msgstr "دفع متأخر"
+
+msgid "Paiement enregistre pour %(numero)s."
+msgstr "تم تسجيل الدفعة للفاتورة %(numero)s."
+
+msgid "Paiements d'abonnement"
+msgstr "دفعات الاشتراك"
 
 msgid "Parraine par"
 msgstr "أحاله"
@@ -1808,8 +1976,17 @@ msgstr "جواز السفر"
 msgid "Paye"
 msgstr "مدفوع"
 
+msgid "Paye le"
+msgstr "دُفعت في"
+
 msgid "Payee"
 msgstr "مدفوعة"
+
+msgid "Payee en partie"
+msgstr "مدفوعة جزئيًا"
+
+msgid "Payees"
+msgstr "المدفوعة"
 
 msgid "Permis"
 msgstr "رخصة القيادة"
@@ -1916,6 +2093,9 @@ msgstr "الوظيفة والوكالة"
 msgid "Precisions"
 msgstr "توضيحات"
 
+msgid "Premier jour du mois facture"
+msgstr "اليوم الأول من الشهر المفوتر"
+
 msgid "Prenom"
 msgstr "الاسم الأول"
 
@@ -1946,8 +2126,17 @@ msgstr "السعر بالفرنك"
 msgid "Prix en FCFA depuis la ville de depart"
 msgstr "السعر بالفرنك من مدينة الانطلاق"
 
+msgid ""
+"Prix facture chaque mois a cette entreprise pour l'utilisation de la "
+"plateforme. 0 = pas de facturation."
+msgstr ""
+"السعر الذي يُفوتر شهريًا لهذه الشركة مقابل استخدام المنصة. 0 = بدون فوترة."
+
 msgid "Prix fixe par l'agence (FCFA)"
 msgstr "السعر المحدد من الوكالة (فرنك)"
+
+msgid "Prix par mois (FCFA)"
+msgstr "السعر شهريًا (فرنك)"
 
 msgid "Prix unitaire (FCFA)"
 msgstr "سعر الوحدة (فرنك إفريقي)"
@@ -1978,6 +2167,12 @@ msgstr "سؤال شائع"
 
 msgid "Questions FAQ"
 msgstr "الأسئلة الشائعة"
+
+msgid "Rappel : facture d'abonnement a payer"
+msgstr "تذكير: فاتورة اشتراك مستحقة الدفع"
+
+msgid "Rappel envoye a %(email)s."
+msgstr "تم إرسال التذكير إلى %(email)s."
 
 msgid "Rapport"
 msgstr "تقرير"
@@ -2132,6 +2327,12 @@ msgstr "مسؤول الصيانة"
 msgid "Responsable planning"
 msgstr "مسؤول التخطيط"
 
+msgid "Reste"
+msgstr "المتبقي"
+
+msgid "Reste a payer"
+msgstr "المتبقي للدفع"
+
 msgid "Retire"
 msgstr "مسحوب"
 
@@ -2164,6 +2365,13 @@ msgstr "مرتجع"
 
 msgid "Revision generale"
 msgstr "مراجعة عامة"
+
+msgid ""
+"Rien a creer : toutes les factures de ce mois existent deja (ou aucune "
+"entreprise n'a d'abonnement)."
+msgstr ""
+"لا شيء لإنشائه: فواتير هذا الشهر موجودة مسبقًا (أو لا توجد شركة لديها "
+"اشتراك)."
 
 msgid "Salaire"
 msgstr "الراتب"
@@ -2329,6 +2537,9 @@ msgstr "أفضل 3 وكالات (إيرادات اليوم)"
 msgid "Total"
 msgstr "المجموع"
 
+msgid "Total : %(total)s FCFA."
+msgstr "المجموع: %(total)s فرنك."
+
 msgid "Total a recouvrer"
 msgstr "المجموع المطلوب تحصيله"
 
@@ -2352,6 +2563,9 @@ msgstr "جميع الحافلات"
 
 msgid "Tous les employes"
 msgstr "جميع الموظفين"
+
+msgid "Toutes"
+msgstr "الكل"
 
 msgid "Traite par"
 msgstr "عولج بواسطة"
@@ -2450,6 +2664,9 @@ msgstr "موظف واحد (اختياري)"
 msgid "Une caisse est deja ouverte pour cette agence."
 msgstr "يوجد صندوق مفتوح بالفعل لهذه الوكالة."
 
+msgid "Une facture d'abonnement est a payer."
+msgstr "توجد فاتورة اشتراك مستحقة الدفع."
+
 msgid "Unite"
 msgstr "الوحدة"
 
@@ -2540,11 +2757,20 @@ msgstr "السرعة (كم/س)"
 msgid "Vitesse en km/h si disponible"
 msgstr "السرعة بالكم/س إن وجدت"
 
+msgid "Voici les factures d'abonnement de %(nom)s qui restent a payer :"
+msgstr "فيما يلي فواتير اشتراك %(nom)s التي لم تُدفع بعد:"
+
 msgid "Voir"
 msgstr "عرض"
 
 msgid "Voir les billets vendus"
 msgstr "عرض التذاكر المباعة"
+
+msgid "Voir mes factures"
+msgstr "عرض فواتيري"
+
+msgid "Votre abonnement a la plateforme est en retard de paiement."
+msgstr "دفع اشتراككم في المنصة متأخر."
 
 msgid ""
 "Vous devez confirmer avoir verifie la piece d'identite du beneficiaire."
@@ -2694,3 +2920,6 @@ msgstr "حوالة (حوالات)"
 
 msgid "vente(s)"
 msgstr "عملية بيع (عمليات بيع)"
+
+msgid "voir les factures"
+msgstr "عرض الفواتير"

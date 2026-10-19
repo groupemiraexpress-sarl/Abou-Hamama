@@ -11,7 +11,10 @@
 {% endif %}
 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
     <p style="color:#4b5563;">{% trans "Vous voyez ici toutes les entreprises. Chacune ne voit que ses propres donnees." %}</p>
-    <a href="{% url 'transport:nouvelle_compagnie' %}" class="btn btn-vert"><i class="fa-solid fa-plus"></i> {% trans "Creer une entreprise" %}</a>
+    <div class="barre-actions" style="margin:0;">
+        <a href="{% url 'transport:facturation' %}" class="btn btn-orange"><i class="fa-solid fa-file-invoice-dollar"></i> {% trans "Facturation" %}{% if totaux.nb_en_retard %} ({{ totaux.nb_en_retard }}){% endif %}</a>
+        <a href="{% url 'transport:nouvelle_compagnie' %}" class="btn btn-vert"><i class="fa-solid fa-plus"></i> {% trans "Creer une entreprise" %}</a>
+    </div>
 </div>
 <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(380px, 1fr)); gap:16px;">
 {% for l in lignes %}
@@ -23,11 +26,13 @@
             </div>
             <span style="padding:4px 12px; border-radius:99px; font-size:.8rem; font-weight:700; {% if l.c.actif %}background:#dcfce7; color:#166534;{% else %}background:#fef3c7; color:#92400e;{% endif %}">{% if l.c.actif %}{% trans "Active" %}{% else %}{% trans "Suspendue" %}{% endif %}</span>
         </div>
+        {% if l.en_retard %}<div style="margin-top:8px; padding:8px 12px; border-radius:8px; background:#fee2e2; color:#b91c1c; font-weight:700; font-size:.85rem;">{% trans "Paiement en retard" %} — <a href="{% url 'transport:facturation' %}?statut=retard" style="color:#b91c1c;">{% trans "voir les factures" %}</a></div>{% endif %}
         <table style="width:100%; font-size:.9rem; margin:12px 0; border-collapse:collapse;">
             <tr><td style="color:#6b7280; padding:3px 0;">{% trans "PDG" %}</td><td style="text-align:right; font-weight:600;">{% if l.pdg %}{{ l.pdg.prenom }} {{ l.pdg.nom }} ({{ l.pdg.user.username|default:"—" }}){% else %}—{% endif %}</td></tr>
             <tr><td style="color:#6b7280; padding:3px 0;">{% trans "Agences" %} / {% trans "Employes" %} / {% trans "Bus" %}</td><td style="text-align:right;">{{ l.agences }} / {{ l.employes }} / {{ l.bus }}</td></tr>
             <tr><td style="color:#6b7280; padding:3px 0;">{% trans "Voyages a venir" %}</td><td style="text-align:right;">{{ l.voyages_a_venir }}</td></tr>
             <tr><td style="color:#6b7280; padding:3px 0;">{% trans "Reservations (30 jours)" %}</td><td style="text-align:right;">{{ l.reservations_30j }}</td></tr>
+            <tr><td style="color:#6b7280; padding:3px 0;">{% trans "Abonnement mensuel" %}</td><td style="text-align:right;">{% if l.c.abonnement_montant %}{{ l.c.abonnement_montant }} FCFA{% else %}—{% endif %}</td></tr>
             <tr><td style="color:#6b7280; padding:3px 0;">{% trans "Derniere connexion" %}</td><td style="text-align:right;">{% if l.derniere_connexion %}{{ l.derniere_connexion|date:"d/m/Y H:i" }}{% else %}{% trans "Jamais" %}{% endif %}</td></tr>
         </table>
         <div class="barre-actions" style="margin-top:8px; justify-content:flex-start;">

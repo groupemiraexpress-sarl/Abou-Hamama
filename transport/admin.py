@@ -8,7 +8,7 @@ from .models import (
     Client, Reservation, Colis, Employe, TransfertArgent,
     Entretien, PleinCarburant, Promotion, DemandeColis, DemandeTransfert, Ligne, ArretLigne,
     AlerteVoyage, AvisVoyage, QuestionFAQ, PushToken, AppareilConfirme, DemandeConfirmationAppareil, Plainte,
-    ArticleStock, DemandeMateriel, Commissionnaire, Depense, SessionCaisse, MouvementCaisse,
+    ArticleStock, DemandeMateriel, Commissionnaire, Depense, SessionCaisse, MouvementCaisse, FactureAbonnement, PaiementAbonnement,
 )
 from django import forms
 from .tenant import compagnie_de, limiter_a_compagnie, identifiant_employe
@@ -179,8 +179,9 @@ class CompagnieAdmin(GroupesChampsMixin, admin.ModelAdmin):
         (_("Identite"), ['nom', 'nom_affiche', 'sigle', 'code', 'siege_social', 'telephone', 'email', 'date_creation', 'actif']),
         (_("Marque (affichee sur le site, les billets et l'application)"), ['logo', 'couleur_principale', 'slogan', 'pied_de_page', 'telephones_recus']),
         (_("Adresse web"), ['domaine']),
+        (_("Abonnement a la plateforme"), ['abonnement_montant']),
     ]
-    list_display = ('nom', 'code', 'domaine', 'siege_social', 'telephone', 'actif')
+    list_display = ('nom', 'code', 'domaine', 'siege_social', 'telephone', 'abonnement_montant', 'actif')
     list_filter = ('actif',)
     search_fields = ('nom', 'sigle', 'code', 'siege_social')
     ordering = ('nom',)
@@ -199,7 +200,26 @@ class CompagnieAdmin(GroupesChampsMixin, admin.ModelAdmin):
         return request.user.is_superuser or self._est_pdg(request)
 
     def get_readonly_fields(self, request, obj=None):
-        return () if request.user.is_superuser else ('code', 'domaine', 'actif')
+        return () if request.user.is_superuser else ('code', 'domaine', 'actif', 'abonnement_montant')
+
+
+class PaiementAbonnementInline(admin.TabularInline):
+    model = PaiementAbonnement
+    extra = 0
+
+
+@admin.register(FactureAbonnement)
+class FactureAbonnementAdmin(admin.ModelAdmin):
+    """Corrections de facturation : reserve a l'administrateur de la plateforme (l'usage courant se fait par l'ecran Facturation)."""
+    list_display = ('numero', 'compagnie', 'periode', 'montant', 'date_echeance')
+    list_filter = ('compagnie',)
+    inlines = [PaiementAbonnementInline]
+
+    def has_module_permission(self, request):
+        return request.user.is_superuser
+
+    has_view_permission = has_add_permission = has_change_permission = has_delete_permission = (
+        lambda self, request, obj=None: request.user.is_superuser)
 
 
 @admin.register(Agence)
@@ -1578,6 +1598,15 @@ def _index_avec_stats(self, request, extra_context=None):
     else:
         extra_context['stats'] = statistiques_tableau_bord(request.user)
     extra_context['stats_profil'] = profil_tableau_bord(request.user)
+    employe = getattr(request.user, 'employe', None)
+    if not request.user.is_superuser and employe is not None and employe.poste == 'pdg':
+        from .services_facturation import factures_impayees
+        impayees = factures_impayees(employe.compagnie)
+        if impayees:
+            extra_context['abonnement_pdg'] = {
+                'reste': sum(f.reste for f in impayees),
+                'en_retard': any(f.statut == 'retard' for f in impayees),
+            }
     return _ancien_index(self, request, extra_context)
 
 AdminSite.index = _index_avec_stats

@@ -10,11 +10,24 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "%(n)s facture(s) creee(s) pour ce mois."
+msgstr "%(n)s invoice(s) created for this month."
+
 msgid "%(nom)s est reactivee."
 msgstr "%(nom)s has been reactivated."
 
 msgid "%(nom)s est suspendue : ses employes ne peuvent plus se connecter."
 msgstr "%(nom)s is suspended: its employees can no longer sign in."
+
+msgid ""
+"%(nom)s n'a pas d'adresse e-mail : ajoutez-la dans la fiche de l'entreprise."
+msgstr "%(nom)s has no e-mail address: add it in the company record."
+
+msgid "- %(numero)s : %(reste)s FCFA a payer avant le %(date)s"
+msgstr "- %(numero)s: %(reste)s FCFA to pay before %(date)s"
+
+msgid "0 = pas de facturation. Vous pourrez le changer plus tard."
+msgstr "0 = no billing. You can change it later."
 
 msgid "1 = ville de depart, puis 2, 3, 4..."
 msgstr "1 = departure city, then 2, 3, 4..."
@@ -22,8 +35,32 @@ msgstr "1 = departure city, then 2, 3, 4..."
 msgid "1 point par 100 FCFA depense"
 msgstr "1 point per 100 FCFA spent"
 
+msgid "A encaisser"
+msgstr "To collect"
+
+msgid "A encaisser (FCFA)"
+msgstr "To collect (FCFA)"
+
+msgid "A payer"
+msgstr "To pay"
+
+msgid "A payer avant le"
+msgstr "To be paid before"
+
 msgid "A traiter"
 msgstr "To process"
+
+msgid "Abonnement"
+msgstr "Subscription"
+
+msgid "Abonnement a la plateforme"
+msgstr "Platform subscription"
+
+msgid "Abonnement mensuel"
+msgstr "Monthly subscription"
+
+msgid "Abonnement mensuel (FCFA)"
+msgstr "Monthly subscription (FCFA)"
 
 msgid "Accompagnateur aimable"
 msgstr "Friendly attendant"
@@ -269,6 +306,9 @@ msgstr "No maintenance recorded."
 msgid "Aucun mouvement."
 msgstr "No movement."
 
+msgid "Aucun rappel envoye : pas de facture a payer, ou l'envoi a echoue."
+msgstr "No reminder sent: no invoice to pay, or sending failed."
+
 msgid "Aucun signal"
 msgstr "No signal"
 
@@ -302,6 +342,16 @@ msgstr "No expense."
 
 msgid "Aucune entreprise."
 msgstr "No company."
+
+msgid "Aucune facture pour le moment."
+msgstr "No invoice yet."
+
+msgid ""
+"Aucune facture. Fixez le prix de l'abonnement de chaque entreprise "
+"(Modifier), puis cliquez sur « Generer les factures du mois »."
+msgstr ""
+"No invoice. Set each company's subscription price (Edit), then click "
+"“Generate this month's invoices”."
 
 msgid "Aucune fiche employe liee a ce compte."
 msgstr "No employee record linked to this account."
@@ -367,6 +417,9 @@ msgstr "Paid tickets"
 
 msgid "Billets vendus"
 msgstr "Tickets sold"
+
+msgid "Bonjour,"
+msgstr "Hello,"
 
 msgid "Bonus parrainage attribue"
 msgstr "Referral bonus granted"
@@ -463,6 +516,9 @@ msgstr "This bus is too small: %(n)s ticket(s) already sold."
 
 msgid "Ce colis a deja ete remis."
 msgstr "This parcel has already been delivered."
+
+msgid "Ce montant depasse ce qu'il reste a payer (%(reste)s FCFA)."
+msgstr "This amount exceeds what is left to pay (%(reste)s FCFA)."
 
 msgid "Ce nom d'utilisateur est deja pris par un autre compte."
 msgstr "This username is already taken by another account."
@@ -747,6 +803,12 @@ msgstr "Created by"
 msgid "Creer l'entreprise"
 msgstr "Create the company"
 
+msgid ""
+"Creer les factures du mois pour toutes les entreprises actives ayant un "
+"abonnement ?"
+msgstr ""
+"Create this month's invoices for all active companies with a subscription?"
+
 msgid "Creer une entreprise"
 msgstr "Create a company"
 
@@ -764,6 +826,9 @@ msgstr "Boarding date"
 
 msgid "Date d'embauche"
 msgstr "Hiring date"
+
+msgid "Date d'emission"
+msgstr "Issue date"
 
 msgid "Date d'emission de la piece"
 msgstr "Document issue date"
@@ -830,6 +895,9 @@ msgstr "Pickup date"
 
 msgid "Date de traitement"
 msgstr "Processing date"
+
+msgid "Date du paiement"
+msgstr "Payment date"
 
 msgid "Date du plein"
 msgstr "Refuel date"
@@ -949,6 +1017,9 @@ msgstr "Description"
 msgid "Description de la promotion"
 msgstr "Promotion description"
 
+msgid "Designation"
+msgstr "Description"
+
 msgid "Destinataire"
 msgstr "Recipient"
 
@@ -988,6 +1059,9 @@ msgstr "Difference"
 msgid "Ecart (FCFA)"
 msgstr "Difference (FCFA)"
 
+msgid "Echeance"
+msgstr "Due date"
+
 msgid "Effectifs par poste"
 msgstr "Staff by position"
 
@@ -999,6 +1073,9 @@ msgstr "Boarded"
 
 msgid "Embarques"
 msgstr "Boarded"
+
+msgid "Emise le"
+msgstr "Issued on"
 
 msgid "Employe"
 msgstr "Employee"
@@ -1048,11 +1125,17 @@ msgstr "Paused since"
 msgid "En repos"
 msgstr "Off duty"
 
+msgid "En retard"
+msgstr "Overdue"
+
 msgid "En service"
 msgstr "In service"
 
 msgid "En transit"
 msgstr "In transit"
+
+msgid "Encaisse ce mois"
+msgstr "Collected this month"
 
 msgid "Encaissement"
 msgstr "Cash in"
@@ -1068,6 +1151,9 @@ msgstr "Cash ins by payment method"
 
 msgid "Encaisser"
 msgstr "Collect"
+
+msgid "Encaisser un paiement"
+msgstr "Record a payment"
 
 msgid "Enregistre"
 msgstr "Registered"
@@ -1099,6 +1185,9 @@ msgstr "Companies"
 msgid "Entreprises actives"
 msgstr "Active companies"
 
+msgid "Entreprises sans abonnement (jamais facturees) :"
+msgstr "Companies without a subscription (never billed):"
+
 msgid "Entreprises suspendues"
 msgstr "Suspended companies"
 
@@ -1114,6 +1203,9 @@ msgstr "About"
 msgid "Envoi de colis"
 msgstr "Sending a parcel"
 
+msgid "Envoyer un rappel par e-mail"
+msgstr "Send a reminder by e-mail"
+
 msgid "Especes"
 msgstr "Cash"
 
@@ -1122,6 +1214,9 @@ msgstr "Expected cash in drawer"
 
 msgid "Especes comptees (FCFA)"
 msgstr "Cash counted (FCFA)"
+
+msgid "Etat"
+msgstr "Status"
 
 msgid "Etat du stock"
 msgstr "Stock status"
@@ -1140,6 +1235,30 @@ msgstr "Sender"
 
 msgid "Exploitation"
 msgstr "Operations"
+
+msgid "FACTURE"
+msgstr "INVOICE"
+
+msgid "Facturation"
+msgstr "Billing"
+
+msgid "Facturation des abonnements"
+msgstr "Subscription billing"
+
+msgid "Facture"
+msgstr "Invoice"
+
+msgid "Facture a"
+msgstr "Billed to"
+
+msgid "Facture d'abonnement"
+msgstr "Subscription invoice"
+
+msgid "Factures d'abonnement"
+msgstr "Subscription invoices"
+
+msgid "Factures en retard"
+msgstr "Overdue invoices"
 
 msgid "Facultatif : vous pourrez l'ajouter plus tard."
 msgstr "Optional: you can add it later."
@@ -1194,6 +1313,9 @@ msgstr "Fee set by the agency"
 
 msgid "Freins"
 msgstr "Brakes"
+
+msgid "Generer les factures du mois"
+msgstr "Generate this month's invoices"
 
 msgid "Generer un nouveau mot de passe pour le PDG de cette entreprise ?"
 msgstr "Generate a new password for this company's CEO?"
@@ -1387,6 +1509,9 @@ msgstr "Was the bus clean?"
 msgid "Le chauffeur etait-il poli ?"
 msgstr "Was the driver polite?"
 
+msgid "Le montant doit etre superieur a zero."
+msgstr "The amount must be greater than zero."
+
 msgid "Le mot de passe doit contenir au moins 6 caracteres."
 msgstr "The password must contain at least 6 characters."
 
@@ -1470,6 +1595,11 @@ msgstr "Brand"
 msgid "Marque (affichee sur le site, les billets et l'application)"
 msgstr "Brand (shown on the site, tickets and app)"
 
+msgid ""
+"Merci de regulariser votre situation pour continuer a utiliser la "
+"plateforme."
+msgstr "Please settle your account to keep using the platform."
+
 msgid "Message"
 msgstr "Message"
 
@@ -1492,8 +1622,14 @@ msgstr "Auto-refresh"
 msgid "Mobile Money"
 msgstr "Mobile Money"
 
+msgid "Mobile money"
+msgstr "Mobile money"
+
 msgid "Mode de paiement"
 msgstr "Payment method"
+
+msgid "Mode de paiement invalide."
+msgstr "Invalid payment method."
 
 msgid "Modele"
 msgstr "Model"
@@ -1513,8 +1649,17 @@ msgstr "Change bus plate"
 msgid "Modifier un billet"
 msgstr "Edit a ticket"
 
+msgid "Mois"
+msgstr "Month"
+
 msgid "Mois en cours"
 msgstr "Current month"
+
+msgid "Mois facture"
+msgstr "Billed month"
+
+msgid "Mon abonnement"
+msgstr "My subscription"
 
 msgid "Mon activite / Historique"
 msgstr "My activity / History"
@@ -1548,6 +1693,9 @@ msgstr "Amount sent"
 
 msgid "Montant envoye en FCFA"
 msgstr "Amount sent in FCFA"
+
+msgid "Montant invalide."
+msgstr "Invalid amount."
 
 msgid "Montant total"
 msgstr "Total amount"
@@ -1770,6 +1918,9 @@ msgstr "Invalid ID number for passenger %(i)s (must contain %(n)s digits)."
 msgid "Numero de reservation"
 msgstr "Booking number"
 
+msgid "Numero de transaction, de recu, etc."
+msgstr "Transaction number, receipt number, etc."
+
 msgid "Numero du siege"
 msgstr "Seat number"
 
@@ -1797,6 +1948,9 @@ msgstr "Opening"
 msgid "Ouvrir la caisse"
 msgstr "Open the cash desk"
 
+msgid "PAYEE"
+msgstr "PAID"
+
 msgid "PDG"
 msgstr "CEO"
 
@@ -1805,6 +1959,21 @@ msgstr "CEO / General manager"
 
 msgid "Paiement"
 msgstr "Payment"
+
+msgid "Paiement d'abonnement"
+msgstr "Subscription payment"
+
+msgid "Paiement du"
+msgstr "Payment of"
+
+msgid "Paiement en retard"
+msgstr "Payment overdue"
+
+msgid "Paiement enregistre pour %(numero)s."
+msgstr "Payment recorded for %(numero)s."
+
+msgid "Paiements d'abonnement"
+msgstr "Subscription payments"
 
 msgid "Parraine par"
 msgstr "Referred by"
@@ -1824,7 +1993,16 @@ msgstr "Passport"
 msgid "Paye"
 msgstr "Paid"
 
+msgid "Paye le"
+msgstr "Paid on"
+
 msgid "Payee"
+msgstr "Paid"
+
+msgid "Payee en partie"
+msgstr "Partly paid"
+
+msgid "Payees"
 msgstr "Paid"
 
 msgid "Permis"
@@ -1932,6 +2110,9 @@ msgstr "Position and agency"
 msgid "Precisions"
 msgstr "Details"
 
+msgid "Premier jour du mois facture"
+msgstr "First day of the billed month"
+
 msgid "Prenom"
 msgstr "First name"
 
@@ -1962,8 +2143,18 @@ msgstr "Price in FCFA"
 msgid "Prix en FCFA depuis la ville de depart"
 msgstr "Price in FCFA from the departure city"
 
+msgid ""
+"Prix facture chaque mois a cette entreprise pour l'utilisation de la "
+"plateforme. 0 = pas de facturation."
+msgstr ""
+"Price billed every month to this company for using the platform. 0 = no "
+"billing."
+
 msgid "Prix fixe par l'agence (FCFA)"
 msgstr "Price set by the agency (FCFA)"
+
+msgid "Prix par mois (FCFA)"
+msgstr "Price per month (FCFA)"
 
 msgid "Prix unitaire (FCFA)"
 msgstr "Unit price (FCFA)"
@@ -1994,6 +2185,12 @@ msgstr "FAQ question"
 
 msgid "Questions FAQ"
 msgstr "FAQ questions"
+
+msgid "Rappel : facture d'abonnement a payer"
+msgstr "Reminder: subscription invoice to pay"
+
+msgid "Rappel envoye a %(email)s."
+msgstr "Reminder sent to %(email)s."
 
 msgid "Rapport"
 msgstr "Report"
@@ -2150,6 +2347,12 @@ msgstr "Maintenance manager"
 msgid "Responsable planning"
 msgstr "Scheduling manager"
 
+msgid "Reste"
+msgstr "Remaining"
+
+msgid "Reste a payer"
+msgstr "Remaining to pay"
+
 msgid "Retire"
 msgstr "Picked up"
 
@@ -2182,6 +2385,13 @@ msgstr "Returned"
 
 msgid "Revision generale"
 msgstr "General overhaul"
+
+msgid ""
+"Rien a creer : toutes les factures de ce mois existent deja (ou aucune "
+"entreprise n'a d'abonnement)."
+msgstr ""
+"Nothing to create: this month's invoices already exist (or no company has a "
+"subscription)."
 
 msgid "Salaire"
 msgstr "Salary"
@@ -2348,6 +2558,9 @@ msgstr "Top 3 agencies (today's revenue)"
 msgid "Total"
 msgstr "Total"
 
+msgid "Total : %(total)s FCFA."
+msgstr "Total: %(total)s FCFA."
+
 msgid "Total a recouvrer"
 msgstr "Total to recover"
 
@@ -2371,6 +2584,9 @@ msgstr "All buses"
 
 msgid "Tous les employes"
 msgstr "All employees"
+
+msgid "Toutes"
+msgstr "All"
 
 msgid "Traite par"
 msgstr "Handled by"
@@ -2470,6 +2686,9 @@ msgstr "A single employee (optional)"
 msgid "Une caisse est deja ouverte pour cette agence."
 msgstr "A cash desk is already open for this agency."
 
+msgid "Une facture d'abonnement est a payer."
+msgstr "A subscription invoice is due."
+
 msgid "Unite"
 msgstr "Unit"
 
@@ -2560,11 +2779,20 @@ msgstr "Speed (km/h)"
 msgid "Vitesse en km/h si disponible"
 msgstr "Speed in km/h if available"
 
+msgid "Voici les factures d'abonnement de %(nom)s qui restent a payer :"
+msgstr "Here are the subscription invoices of %(nom)s that remain to be paid:"
+
 msgid "Voir"
 msgstr "View"
 
 msgid "Voir les billets vendus"
 msgstr "View sold tickets"
+
+msgid "Voir mes factures"
+msgstr "See my invoices"
+
+msgid "Votre abonnement a la plateforme est en retard de paiement."
+msgstr "Your platform subscription payment is overdue."
 
 msgid ""
 "Vous devez confirmer avoir verifie la piece d'identite du beneficiaire."
@@ -2717,3 +2945,6 @@ msgstr "transfer(s)"
 
 msgid "vente(s)"
 msgstr "sale(s)"
+
+msgid "voir les factures"
+msgstr "see the invoices"

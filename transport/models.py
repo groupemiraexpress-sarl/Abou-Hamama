@@ -1,3 +1,5 @@
+import datetime
+
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -25,6 +27,7 @@ class Compagnie(models.Model):
     email = models.EmailField(_("Email"), blank=True)
     date_creation = models.DateField(_("Date de creation"), null=True, blank=True)
     actif = models.BooleanField(_("Actif"), default=True)
+    abonnement_montant = models.PositiveIntegerField(_("Abonnement mensuel (FCFA)"), default=0, help_text=_("Prix facture chaque mois a cette entreprise pour l'utilisation de la plateforme. 0 = pas de facturation."))
 
     def save(self, *args, **kwargs):
         self.domaine = (self.domaine or '').strip().lower() or None
@@ -1105,3 +1108,72 @@ class MouvementCaisse(models.Model):
 
     def __str__(self):
         return f"{self.get_type_mouvement_display()} {self.montant} FCFA - {self.motif}"
+
+
+class FactureAbonnement(models.Model):
+    """Facture mensuelle de la plateforme a une entreprise (visible du superutilisateur et du PDG de l'entreprise concernee)."""
+    compagnie = models.ForeignKey(Compagnie, on_delete=models.CASCADE, related_name='factures_abonnement', verbose_name=_("Entreprise"))
+    numero = models.CharField(_("Numero"), max_length=40, unique=True, blank=True, editable=False)
+    periode = models.DateField(_("Mois facture"), help_text=_("Premier jour du mois facture"))
+    montant = models.PositiveIntegerField(_("Montant (FCFA)"))
+    date_emission = models.DateField(_("Date d'emission"), default=datetime.date.today)
+    date_echeance = models.DateField(_("A payer avant le"))
+    note = models.CharField(_("Note"), max_length=200, blank=True)
+
+    class Meta:
+        verbose_name = _("Facture d'abonnement")
+        verbose_name_plural = _("Factures d'abonnement")
+        ordering = ['-periode', 'compagnie__nom']
+        constraints = [models.UniqueConstraint(fields=['compagnie', 'periode'], name='une_facture_par_mois_et_entreprise')]
+
+    def save(self, *args, **kwargs):
+        if not self.numero:
+            prefixe = _prefixe_numero('FAC', self.compagnie, self.periode.year)
+            n = FactureAbonnement.objects.filter(numero__startswith=prefixe).count() + 1
+            while FactureAbonnement.objects.filter(numero=f"{prefixe}{n:04d}").exists():
+                n += 1
+            self.numero = f"{prefixe}{n:04d}"
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.numero} - {self.compagnie}"
+
+    @property
+    def paye(self):
+        return sum(p.montant for p in self.paiements.all())
+
+    @property
+    def reste(self):
+        return max(self.montant - self.paye, 0)
+
+    @property
+    def statut(self):
+        """payee, partielle (payee en partie), retard (echeance depassee) ou a_payer."""
+        if self.reste == 0:
+            return 'payee'
+        if self.date_echeance < datetime.date.today():
+            return 'retard'
+        return 'partielle' if self.paye else 'a_payer'
+
+
+class PaiementAbonnement(models.Model):
+    MODE_CHOICES = [
+        ('especes', _('Especes')),
+        ('mobile_money', _('Mobile money')),
+        ('virement', _('Virement bancaire')),
+        ('autre', _('Autre')),
+    ]
+
+    facture = models.ForeignKey(FactureAbonnement, on_delete=models.CASCADE, related_name='paiements', verbose_name=_("Facture"))
+    montant = models.PositiveIntegerField(_("Montant (FCFA)"))
+    date_paiement = models.DateField(_("Date du paiement"), default=datetime.date.today)
+    mode = models.CharField(_("Mode de paiement"), max_length=15, choices=MODE_CHOICES, default='especes')
+    reference = models.CharField(_("Reference"), max_length=100, blank=True, help_text=_("Numero de transaction, de recu, etc."))
+
+    class Meta:
+        verbose_name = _("Paiement d'abonnement")
+        verbose_name_plural = _("Paiements d'abonnement")
+        ordering = ['-date_paiement', '-id']
+
+    def __str__(self):
+        return f"{self.montant} FCFA - {self.facture.numero}"

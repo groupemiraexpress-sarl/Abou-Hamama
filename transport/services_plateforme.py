@@ -27,7 +27,7 @@ def mot_de_passe_temporaire(longueur=10):
 
 @transaction.atomic
 def creer_compagnie_avec_pdg(*, nom, code, siege, telephone, pdg_nom, pdg_prenom, pdg_telephone,
-                             nom_affiche='', couleur='#261F64', domaine='', logo=None):
+                             nom_affiche='', couleur='#261F64', domaine='', logo=None, abonnement=0):
     """Cree la compagnie et son PDG. Renvoie (compagnie, identifiant, mot_de_passe_temporaire). Leve ValidationError."""
     erreurs = {}
     for champ, valeur in (('nom', nom), ('code', code), ('siege', siege), ('telephone', telephone),
@@ -40,7 +40,7 @@ def creer_compagnie_avec_pdg(*, nom, code, siege, telephone, pdg_nom, pdg_prenom
     compagnie = Compagnie(
         nom=nom.strip(), code=code.strip().lower(), nom_affiche=nom_affiche.strip(), siege_social=siege.strip(),
         telephone=telephone.strip(), couleur_principale=couleur or '#261F64', domaine=domaine,
-        pied_de_page=f"Agence {nom.strip()}",
+        pied_de_page=f"Agence {nom.strip()}", abonnement_montant=abonnement,
     )
     if logo:
         compagnie.logo = logo
@@ -84,10 +84,13 @@ def resume_entreprises():
     """Une ligne par entreprise (activite des 30 derniers jours, derniere connexion...) et des totaux pour toute la plateforme."""
     aujourd_hui = timezone.now().date()
     il_y_a_30_jours = timezone.now() - timedelta(days=30)
+    from .services_facturation import resume_facturation
+    facturation = resume_facturation()
     lignes = []
     for c in Compagnie.objects.order_by('nom'):
         lignes.append({
             'c': c,
+            'en_retard': c.pk in facturation['compagnies_en_retard'],
             'pdg': Employe.objects.filter(compagnie=c, poste='pdg').select_related('user').first(),
             'agences': Agence.objects.filter(compagnie=c).count(),
             'employes': Employe.objects.filter(compagnie=c, actif=True).count(),
@@ -102,5 +105,8 @@ def resume_entreprises():
         'employes': sum(l['employes'] for l in lignes),
         'voyages_a_venir': sum(l['voyages_a_venir'] for l in lignes),
         'reservations_30j': sum(l['reservations_30j'] for l in lignes),
+        'a_encaisser': facturation['a_encaisser'],
+        'en_retard': facturation['en_retard'],
+        'nb_en_retard': facturation['nb_en_retard'],
     }
     return lignes, totaux

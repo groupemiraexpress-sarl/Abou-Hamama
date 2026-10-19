@@ -1,0 +1,51 @@
+{% extends "transport/base.html" %}
+{% load i18n %}
+{% block titre %}{% trans "Facture" %} {{ facture.numero }}{% endblock %}
+{% block entete %}{% trans "Facture d'abonnement" %}{% endblock %}
+{% block extra_head %}
+<style>
+    @media print {
+        @page { size: A4; margin: 14mm; }
+        body { background: #fff; }
+        header, footer, .no-print { display: none !important; }
+        .container { max-width: 100%; padding: 0; margin: 0; }
+        .card { box-shadow: none; }
+    }
+</style>
+{% endblock %}
+{% block contenu %}
+<div class="card">
+    <div style="display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:20px;">
+        <div>
+            <img src="{{ branding.logo_url }}" alt="" style="height:56px; margin-bottom:8px;"><br>
+            <strong style="font-size:1.1rem;">{{ branding.nom_complet }}</strong>
+        </div>
+        <div style="text-align:right;">
+            <h2 style="color:var(--couleur-principale); margin:0;">{% trans "FACTURE" %}</h2>
+            <p style="margin:2px 0;"><strong>{{ facture.numero }}</strong></p>
+            <p style="color:#6b7280; margin:2px 0;">{% trans "Emise le" %} {{ facture.date_emission|date:"d/m/Y" }}</p>
+        </div>
+    </div>
+    <div style="margin-bottom:18px;">
+        <p style="color:#6b7280; font-size:.8rem; text-transform:uppercase; font-weight:700;">{% trans "Facture a" %}</p>
+        <p><strong>{{ facture.compagnie.nom_affiche|default:facture.compagnie.nom }}</strong><br>{{ facture.compagnie.siege_social }}<br>{{ facture.compagnie.telephone }}</p>
+    </div>
+    <table style="width:100%; border-collapse:collapse; margin-bottom:16px;">
+        <tr style="background:#f3f4f6; text-align:left;"><th style="padding:10px;">{% trans "Designation" %}</th><th style="padding:10px; text-align:right;">{% trans "Montant" %}</th></tr>
+        <tr><td style="padding:10px; border-bottom:1px solid #e5e7eb;">{% trans "Abonnement a la plateforme" %} — {{ facture.periode|date:"m/Y" }}</td><td style="padding:10px; text-align:right; border-bottom:1px solid #e5e7eb;">{{ facture.montant }} FCFA</td></tr>
+        {% for p in facture.paiements.all %}
+        <tr><td style="padding:8px 10px; color:#166534;">{% trans "Paiement du" %} {{ p.date_paiement|date:"d/m/Y" }} ({{ p.get_mode_display }}{% if p.reference %} · {{ p.reference }}{% endif %})</td><td style="padding:8px 10px; text-align:right; color:#166534;">− {{ p.montant }} FCFA</td></tr>
+        {% endfor %}
+        <tr><td style="padding:12px 10px; font-weight:800; font-size:1.05rem;">{% trans "Reste a payer" %}</td><td style="padding:12px 10px; text-align:right; font-weight:800; font-size:1.05rem;">{{ facture.reste }} FCFA</td></tr>
+    </table>
+    {% if facture.reste == 0 %}
+    <p style="text-align:center; font-weight:800; color:#166534; font-size:1.2rem; border:3px solid #166534; display:inline-block; padding:6px 22px; border-radius:8px;">{% trans "PAYEE" %}</p>
+    {% else %}
+    <p style="color:#4b5563;">{% trans "A payer avant le" %} <strong>{{ facture.date_echeance|date:"d/m/Y" }}</strong>.</p>
+    {% endif %}
+</div>
+<div class="barre-actions no-print">
+    <button type="button" class="btn btn-vert" onclick="window.print()"><i class="fa-solid fa-print"></i> {% trans "Imprimer" %}</button>
+    <a href="javascript:window.close()" class="btn btn-gris">{% trans "Fermer" %}</a>
+</div>
+{% endblock %}

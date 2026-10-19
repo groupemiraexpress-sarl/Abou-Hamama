@@ -117,10 +117,19 @@
 {% block content %}
 <div id="content-main">
 
+  {% if abonnement_pdg %}
+  <div style="padding:12px 16px; border-radius:10px; margin-bottom:14px; font-weight:600; {% if abonnement_pdg.en_retard %}background:#fee2e2; color:#b91c1c;{% else %}background:#fef3c7; color:#92400e;{% endif %}">
+    {% if abonnement_pdg.en_retard %}⚠️ {% trans "Votre abonnement a la plateforme est en retard de paiement." %}{% else %}🧾 {% trans "Une facture d'abonnement est a payer." %}{% endif %}
+    {% trans "Reste a payer" %} : {{ abonnement_pdg.reste }} FCFA —
+    <a href="{% url 'transport:mon_abonnement' %}" style="color:inherit; text-decoration:underline;">{% trans "Voir mes factures" %}</a>
+  </div>
+  {% endif %}
+
   {% if stats_profil.voit_raccourci_vente or stats_profil.voit_raccourci_caisse or stats_profil.voit_raccourci_dettes or stats_profil.voit_historique_employe or request.user.is_superuser %}
   <div class="raccourci-vente">
     {% if request.user.is_superuser %}
     <a href="{% url 'transport:plateforme' %}" class="btn-vente">🏢 {% trans "Plateforme (entreprises)" %}</a>
+    <a href="{% url 'transport:facturation' %}" class="btn-vente-secondaire">💳 {% trans "Facturation" %}</a>
     <a href="{% url 'transport:nouvelle_compagnie' %}" class="btn-vente-secondaire">➕ {% trans "Creer une entreprise" %}</a>
     {% else %}
     {% if stats_profil.voit_raccourci_vente %}
@@ -142,6 +151,9 @@
       {% trans "Mon activite / Historique par employe" %}
     </a>
     {% endif %}
+    {% if request.user.employe.poste == 'pdg' %}
+    <a href="{% url 'transport:mon_abonnement' %}" class="btn-vente-secondaire">🧾 {% trans "Mon abonnement" %}</a>
+    {% endif %}
     {% endif %}
   </div>
   {% endif %}
@@ -155,6 +167,8 @@
       <div class="stat-carte"><div class="stat-valeur">{{ vue_plateforme.totaux.employes }}</div><div class="stat-label">{% trans "Employes (toutes entreprises)" %}</div></div>
       <div class="stat-carte"><div class="stat-valeur">{{ vue_plateforme.totaux.voyages_a_venir }}</div><div class="stat-label">{% trans "Voyages a venir" %}</div></div>
       <div class="stat-carte"><div class="stat-valeur">{{ vue_plateforme.totaux.reservations_30j }}</div><div class="stat-label">{% trans "Reservations (30 jours)" %}</div></div>
+      <div class="stat-carte"><div class="stat-valeur">{{ vue_plateforme.totaux.a_encaisser }}</div><div class="stat-label">{% trans "A encaisser (FCFA)" %}</div></div>
+      <div class="stat-carte"><div class="stat-valeur">{{ vue_plateforme.totaux.nb_en_retard }}</div><div class="stat-label">{% trans "Factures en retard" %}</div></div>
     </div>
     <h2 class="stats-titre">{% trans "Entreprises" %}</h2>
     <div style="background:#fff; border-radius:12px; padding:6px 16px; margin-bottom:24px; color:#1f2937;">
@@ -163,6 +177,7 @@
         <div><strong>{{ l.c.nom_affiche|default:l.c.nom }}</strong> <span style="color:#6b7280;">({{ l.c.code }})</span></div>
         <div style="color:#6b7280; font-size:.9em;">{{ l.reservations_30j }} {% trans "reservations" %} · {% trans "Derniere connexion" %} : {% if l.derniere_connexion %}{{ l.derniere_connexion|date:"d/m/Y H:i" }}{% else %}{% trans "Jamais" %}{% endif %}</div>
         <span style="padding:3px 12px; border-radius:99px; font-size:.8em; font-weight:700; {% if l.c.actif %}background:#dcfce7; color:#166534;{% else %}background:#fef3c7; color:#92400e;{% endif %}">{% if l.c.actif %}{% trans "Active" %}{% else %}{% trans "Suspendue" %}{% endif %}</span>
+        {% if l.en_retard %}<span style="padding:3px 12px; border-radius:99px; font-size:.8em; font-weight:700; background:#fee2e2; color:#b91c1c;">{% trans "Paiement en retard" %}</span>{% endif %}
       </div>
       {% endfor %}
     </div>
