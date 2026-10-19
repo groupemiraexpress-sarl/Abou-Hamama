@@ -13,6 +13,7 @@ from django.utils.encoding import force_bytes, force_str
 from .models import Voyage, Colis, TransfertArgent, Client, Reservation, Siege, Promotion, DemandeColis, Agence, DemandeTransfert, Chauffeur, PositionBus, Employe, PushToken, AppareilConfirme, DemandeConfirmationAppareil
 from .serializers import VoyageSerializer, ColisSerializer, TransfertArgentSerializer, ReservationSerializer, SiegeSerializer, PromotionSerializer, DemandeColisSerializer, AgenceSerializer, DemandeTransfertSerializer
 import re
+from .api_tenant import compagnie_requete, reponse_compagnie_inconnue, fiche_client, fiche_client_ou_creer, compagnies_du_compte
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError as DjangoValidationError
 
@@ -48,15 +49,18 @@ def valider_email_strict(email):
 @api_view(['GET'])
 def api_voyages(request):
     aujourd_hui = timezone.now().date()
+    compagnie = compagnie_requete(request)
+    if compagnie is None:
+        return reponse_compagnie_inconnue()
     voyages = Voyage.objects.select_related('trajet', 'bus').filter(
-        date_depart__gte=aujourd_hui
+        bus__compagnie=compagnie, date_depart__gte=aujourd_hui
     ).order_by('date_depart')
     return Response(VoyageSerializer(voyages, many=True).data)
 
 
 @api_view(['GET'])
 def api_suivi_colis(request, code_suivi):
-    colis = Colis.objects.filter(code_suivi=code_suivi).first()
+    colis = Colis.objects.filter(code_suivi=code_suivi, compagnie=compagnie_requete(request)).first()
     if not colis:
         return Response({'erreur': 'Colis introuvable'}, status=404)
     return Response(ColisSerializer(colis).data)
@@ -64,7 +68,7 @@ def api_suivi_colis(request, code_suivi):
 
 @api_view(['GET'])
 def api_suivi_transfert(request, code_transfert):
-    transfert = TransfertArgent.objects.filter(code_transfert=code_transfert).first()
+    transfert = TransfertArgent.objects.filter(code_transfert=code_transfert, compagnie=compagnie_requete(request)).first()
     if not transfert:
         return Response({'erreur': 'Transfert introuvable'}, status=404)
     return Response(TransfertArgentSerializer(transfert).data)
@@ -93,6 +97,8 @@ def api_connexion_client(request):
     if statut == 'en_attente':
         return Response({'erreur': resultat, 'nouvel_appareil': True}, status=403)
 
+    if isinstance(resultat, dict):
+        resultat = {**resultat, 'compagnies': compagnies_du_compte(user)}
     return Response(resultat)
 
 
@@ -122,6 +128,10 @@ def api_inscription(request):
     password = request.data.get('password', '')
     code_parrain = request.data.get('code_parrainage', '').strip().upper()
 
+    compagnie = compagnie_requete(request)
+    if compagnie is None:
+        return reponse_compagnie_inconnue()
+
     if not username or not password:
         return Response({'erreur': 'Nom et mot de passe obligatoires.'}, status=400)
     if not email:
@@ -143,12 +153,12 @@ def api_inscription(request):
         return Response({'erreur': 'Ce nom d\'utilisateur est deja pris.'}, status=400)
     if User.objects.filter(email__iexact=email).exists():
         return Response({'erreur': 'Un compte existe deja avec cet email.'}, status=400)
-    if Client.objects.filter(telephone=telephone).exists():
+    if Client.objects.filter(telephone=telephone, compagnie=compagnie).exists():
         return Response({'erreur': 'Un compte existe deja avec ce numero de telephone.'}, status=400)
 
     parrain = None
     if code_parrain:
-        parrain = Client.objects.filter(code_parrainage=code_parrain).first()
+        parrain = Client.objects.filter(code_parrainage=code_parrain, compagnie=compagnie).first()
         if not parrain:
             return Response({'erreur': 'Code de parrainage invalide.'}, status=400)
 
@@ -156,9 +166,7 @@ def api_inscription(request):
     user.is_active = False
     user.save()
 
-    client = Client.objects.create(nom=username, telephone=telephone, email=email, parraine_par=parrain)
-    client.user = user
-    client.save()
+    Client.objects.create(compagnie=compagnie, user=user, nom=username, telephone=telephone, email=email, parraine_par=parrain)
 
     uid = urlsafe_base64_encode(force_bytes(user.pk))
     token = default_token_generator.make_token(user)
@@ -166,7 +174,7 @@ def api_inscription(request):
     from .email_brevo import envoyer_email
     envoyer_email(
         email,
-        'Validez votre compte Express Abou Hamama',
+        'Validez votre compte ' + compagnie.nom,
         'Bienvenue ' + username + ' ! Cliquez sur ce lien pour valider votre compte : ' + lien,
     )
     return Response({'message': 'Compte cree. Email de validation envoye.'}, status=201)
@@ -176,7 +184,7 @@ def api_inscription(request):
 @permission_classes([IsAuthenticated])
 def api_mon_profil(request):
     user = request.user
-    client = Client.objects.filter(user=user).first()
+    client = fiche_client(request)
     return Response({
         'username': user.username,
         'email': user.email,
@@ -205,7 +213,7 @@ def api_modifier_photo_profil(request):
     import base64
     from django.core.files.base import ContentFile
 
-    client = Client.objects.filter(user=request.user).first()
+    client = fiche_client(request)
     if not client:
         return Response({'erreur': 'Compte client introuvable.'}, status=404)
 
@@ -236,10 +244,9 @@ def api_modifier_profil(request):
     telephone = request.data.get('telephone', '').strip()
     email = request.data.get('email', '').strip().lower()
 
-    client = Client.objects.filter(user=user).first()
-    if not client:
-        client = Client.objects.create(nom=nom or user.username, telephone="compte-" + str(user.id), email=user.email)
-        client.user = user
+    client = fiche_client_ou_creer(request, nom=nom)
+    if client is None:
+        return reponse_compagnie_inconnue()
 
     if nom:
         client.nom = nom
@@ -249,7 +256,7 @@ def api_modifier_profil(request):
         erreur_tel = valider_telephone_tchad(telephone)
         if erreur_tel:
             return Response({'erreur': erreur_tel}, status=400)
-        autre = Client.objects.filter(telephone=telephone).exclude(pk=client.pk).first()
+        autre = Client.objects.filter(telephone=telephone, compagnie=client.compagnie).exclude(pk=client.pk).first()
         if autre:
             return Response({'erreur': 'Ce numero est deja utilise par un autre compte.'}, status=400)
         client.telephone = telephone
@@ -307,7 +314,7 @@ def api_valider_email(request, uidb64, token):
 
 @api_view(['GET'])
 def api_sieges_voyage(request, voyage_id):
-    voyage = Voyage.objects.filter(id=voyage_id).first()
+    voyage = Voyage.objects.filter(id=voyage_id, bus__compagnie=compagnie_requete(request)).first()
     if not voyage:
         return Response({'erreur': 'Voyage introuvable.'}, status=404)
 
@@ -341,17 +348,9 @@ def api_sieges_voyage(request, voyage_id):
     return Response(resultat)
 
 
-def _get_ou_cree_client_du_compte(user):
-    client = Client.objects.filter(user=user).first()
-    if not client:
-        client = Client.objects.create(
-            nom=user.username,
-            telephone="compte-" + str(user.id),
-            email=user.email,
-        )
-        client.user = user
-        client.save()
-    return client
+def _get_ou_cree_client_du_compte(request):
+    """Fiche du compte dans la compagnie de l'appel (creee a la premiere reservation)."""
+    return fiche_client_ou_creer(request)
 
 
 @api_view(['POST'])
@@ -370,12 +369,12 @@ def api_reserver(request):
         return Response({'erreur': 'nombre_places doit etre un nombre.'}, status=400)
     if nombre_places < 1:
         return Response({'erreur': 'Au moins 1 place.'}, status=400)
-    voyage = Voyage.objects.filter(id=voyage_id).first()
+    voyage = Voyage.objects.filter(id=voyage_id, bus__compagnie=compagnie_requete(request)).first()
     if not voyage:
         return Response({'erreur': 'Voyage introuvable.'}, status=404)
     if nombre_places > voyage.places_disponibles:
         return Response({'erreur': 'Pas assez de places disponibles.'}, status=400)
-    client = _get_ou_cree_client_du_compte(user)
+    client = _get_ou_cree_client_du_compte(request)
     try:
         reservation = Reservation.objects.create(
             client=client,
@@ -441,7 +440,7 @@ def api_reserver_siege(request):
     except (ValueError, TypeError):
         return Response({'erreur': 'numero_siege doit etre un nombre.'}, status=400)
 
-    voyage = Voyage.objects.filter(id=voyage_id).first()
+    voyage = Voyage.objects.filter(id=voyage_id, bus__compagnie=compagnie_requete(request)).first()
     if not voyage:
         return Response({'erreur': 'Voyage introuvable.'}, status=404)
     siege = Siege.objects.filter(voyage=voyage, numero=numero_siege).first()
@@ -465,7 +464,7 @@ def api_reserver_siege(request):
         if siege.reservations.exclude(statut__in=['annulee', 'remboursee']).exists():
             return Response({'erreur': 'Ce siege est deja occupe.'}, status=400)
 
-    client = _get_ou_cree_client_du_compte(user)
+    client = _get_ou_cree_client_du_compte(request)
     try:
         reservation = Reservation.objects.create(
             client=client,
@@ -502,7 +501,7 @@ def api_reserver_siege(request):
 @permission_classes([IsAuthenticated])
 def api_mes_billets(request):
     user = request.user
-    client = Client.objects.filter(user=user).first()
+    client = fiche_client(request)
     if not client:
         return Response([])
     reservations = Reservation.objects.filter(client=client).select_related(
@@ -515,6 +514,7 @@ def api_mes_billets(request):
 def api_promotions(request):
     aujourd_hui = timezone.now().date()
     promotions = Promotion.objects.filter(
+        compagnie=compagnie_requete(request),
         actif=True,
         date_debut__lte=aujourd_hui,
         date_fin__gte=aujourd_hui,
@@ -524,7 +524,7 @@ def api_promotions(request):
 
 @api_view(['GET'])
 def api_agences(request):
-    agences = Agence.objects.filter(actif=True).order_by('ville', 'nom')
+    agences = Agence.objects.filter(compagnie=compagnie_requete(request), actif=True).order_by('ville', 'nom')
     return Response(AgenceSerializer(agences, many=True).data)
 
 
@@ -559,14 +559,14 @@ def api_creer_demande_colis(request):
     if not description or not poids_estime:
         return Response({'erreur': 'Description et poids obligatoires.'}, status=400)
 
-    agence_depart = Agence.objects.filter(id=agence_depart_id).first()
-    agence_arrivee = Agence.objects.filter(id=agence_arrivee_id).first()
+    agence_depart = Agence.objects.filter(id=agence_depart_id, compagnie=compagnie_requete(request)).first()
+    agence_arrivee = Agence.objects.filter(id=agence_arrivee_id, compagnie=compagnie_requete(request)).first()
     if not agence_depart or not agence_arrivee:
         return Response({'erreur': 'Agence introuvable.'}, status=404)
     if agence_depart.zone and agence_arrivee.zone and agence_depart.zone != agence_arrivee.zone:
         return Response({'erreur': "Ces deux agences ne sont pas sur le meme trajet (zones differentes)."}, status=400)
 
-    client = Client.objects.filter(user=user).first()
+    client = fiche_client(request)
 
     demande = DemandeColis.objects.create(
         client=client,
@@ -595,7 +595,7 @@ def api_creer_demande_colis(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def api_mes_demandes_colis(request):
-    client = Client.objects.filter(user=request.user).first()
+    client = fiche_client(request)
     if not client:
         return Response([])
     demandes = DemandeColis.objects.filter(client=client).order_by('-date_demande')
@@ -638,14 +638,14 @@ def api_creer_demande_transfert(request):
     if montant < 1:
         return Response({'erreur': 'Montant invalide.'}, status=400)
 
-    agence_depart = Agence.objects.filter(id=agence_depart_id).first()
-    agence_retrait = Agence.objects.filter(id=agence_retrait_id).first()
+    agence_depart = Agence.objects.filter(id=agence_depart_id, compagnie=compagnie_requete(request)).first()
+    agence_retrait = Agence.objects.filter(id=agence_retrait_id, compagnie=compagnie_requete(request)).first()
     if not agence_depart or not agence_retrait:
         return Response({'erreur': 'Agence introuvable.'}, status=404)
     if agence_depart.zone and agence_retrait.zone and agence_depart.zone != agence_retrait.zone:
         return Response({'erreur': "Ces deux agences ne sont pas sur le meme trajet (zones differentes)."}, status=400)
 
-    client = Client.objects.filter(user=user).first()
+    client = fiche_client(request)
 
     demande = DemandeTransfert.objects.create(
         client=client,
@@ -672,7 +672,7 @@ def api_creer_demande_transfert(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def api_mes_demandes_transfert(request):
-    client = Client.objects.filter(user=request.user).first()
+    client = fiche_client(request)
     if not client:
         return Response([])
     demandes = DemandeTransfert.objects.filter(client=client).order_by('-date_demande')
@@ -693,7 +693,7 @@ def api_payer_reservation(request):
     if not operateur or not telephone:
         return Response({'erreur': 'Operateur et numero obligatoires.'}, status=400)
 
-    client = Client.objects.filter(user=user).first()
+    client = fiche_client(request)
     if not client:
         return Response({'erreur': 'Client introuvable.'}, status=404)
 
@@ -731,7 +731,7 @@ def api_annuler_demande_colis(request):
     numero = request.data.get('numero_demande', '').strip()
     if not numero:
         return Response({'erreur': 'Numero de demande obligatoire.'}, status=400)
-    client = Client.objects.filter(user=request.user).first()
+    client = fiche_client(request)
     if not client:
         return Response({'erreur': 'Client introuvable.'}, status=404)
     demande = DemandeColis.objects.filter(numero_demande=numero, client=client).first()
@@ -750,7 +750,7 @@ def api_annuler_demande_transfert(request):
     numero = request.data.get('numero_demande', '').strip()
     if not numero:
         return Response({'erreur': 'Numero de demande obligatoire.'}, status=400)
-    client = Client.objects.filter(user=request.user).first()
+    client = fiche_client(request)
     if not client:
         return Response({'erreur': 'Client introuvable.'}, status=404)
     demande = DemandeTransfert.objects.filter(numero_demande=numero, client=client).first()
@@ -896,7 +896,7 @@ def api_enregistrer_position(request):
 
     ville_cible = normaliser(voyage.trajet.ville_arrivee)
     agence_arrivee = None
-    for a in Agence.objects.filter(latitude__isnull=False, longitude__isnull=False):
+    for a in Agence.objects.filter(compagnie=voyage.bus.compagnie, latitude__isnull=False, longitude__isnull=False):
         if normaliser(a.ville) == ville_cible:
             agence_arrivee = a
             break
@@ -923,7 +923,7 @@ def api_enregistrer_position(request):
                 distance_max = max(distance_max, d)
 
             proche_agence = False
-            for a in Agence.objects.filter(latitude__isnull=False, longitude__isnull=False):
+            for a in Agence.objects.filter(compagnie=voyage.bus.compagnie, latitude__isnull=False, longitude__isnull=False):
                 if distance_km(latitude, longitude, a.latitude, a.longitude) <= 2:
                     proche_agence = True
                     break
@@ -957,7 +957,7 @@ def api_positions_voyage(request, voyage_id):
         texte = unicodedata.normalize('NFD', texte)
         return ''.join(c for c in texte if unicodedata.category(c) != 'Mn').lower().strip()
 
-    voyage = Voyage.objects.filter(id=voyage_id).select_related('trajet').first()
+    voyage = Voyage.objects.filter(id=voyage_id, bus__compagnie=compagnie_requete(request)).select_related('trajet', 'bus').first()
     if not voyage:
         return Response({'erreur': 'Voyage introuvable.'}, status=404)
 
@@ -970,7 +970,7 @@ def api_positions_voyage(request, voyage_id):
     estimation = None
     ville_cible = normaliser(voyage.trajet.ville_arrivee)
     agence_arrivee = None
-    for a in Agence.objects.filter(latitude__isnull=False, longitude__isnull=False):
+    for a in Agence.objects.filter(compagnie=voyage.bus.compagnie, latitude__isnull=False, longitude__isnull=False):
         if normaliser(a.ville) == ville_cible:
             agence_arrivee = a
             break
@@ -1085,7 +1085,7 @@ def api_scanner_billet(request):
     if not numero_reservation:
         return Response({'erreur': 'Numero de reservation obligatoire.'}, status=400)
 
-    reservation = Reservation.objects.filter(numero_reservation=numero_reservation).select_related('voyage__bus__agence', 'client').first()
+    reservation = Reservation.objects.filter(numero_reservation=numero_reservation, voyage__bus__compagnie=employe.compagnie).select_related('voyage__bus__agence', 'client').first()
     if not reservation:
         return Response({'erreur': 'Billet introuvable.', 'valide': False}, status=404)
 
@@ -1144,7 +1144,7 @@ def api_historique_positions_voyage(request, voyage_id):
     Historique complet des positions d'un voyage (pour affichage
     du trajet reel parcouru, cote client, apres la fin du voyage).
     """
-    voyage = Voyage.objects.filter(id=voyage_id).first()
+    voyage = Voyage.objects.filter(id=voyage_id, bus__compagnie=compagnie_requete(request)).first()
     if not voyage:
         return Response({'erreur': 'Voyage introuvable.'}, status=404)
 
@@ -1171,7 +1171,7 @@ def api_donner_avis(request):
     """
     from .models import AvisVoyage
 
-    client = Client.objects.filter(user=request.user).first()
+    client = fiche_client(request)
     if not client:
         return Response({'erreur': 'Client introuvable.'}, status=404)
 
@@ -1229,7 +1229,7 @@ def api_faq(request):
     """Liste des questions frequentes actives, pour l'ecran Aide."""
     from .models import QuestionFAQ
     from .serializers import QuestionFAQSerializer
-    questions = QuestionFAQ.objects.filter(actif=True)
+    questions = QuestionFAQ.objects.filter(compagnie=compagnie_requete(request), actif=True)
     return Response(QuestionFAQSerializer(questions, many=True).data)
 
 
@@ -1239,7 +1239,7 @@ def api_creer_plainte(request):
     """Le client envoie une plainte/reclamation depuis l'app."""
     from .models import Plainte
 
-    client = Client.objects.filter(user=request.user).first()
+    client = fiche_client(request)
     if not client:
         return Response({'erreur': 'Compte client introuvable.'}, status=404)
 
@@ -1248,7 +1248,7 @@ def api_creer_plainte(request):
     if not sujet or not message:
         return Response({'erreur': 'Sujet et message obligatoires.'}, status=400)
 
-    plainte = Plainte.objects.create(client=client, sujet=sujet, message=message)
+    plainte = Plainte.objects.create(compagnie=client.compagnie, client=client, sujet=sujet, message=message)
     return Response({'message': 'Plainte envoyee. Vous recevrez une reponse ici des que possible.', 'id': plainte.id}, status=201)
 
 
@@ -1258,7 +1258,7 @@ def api_mes_plaintes(request):
     """Liste des plaintes envoyees par le client connecte, avec statut et reponse."""
     from .models import Plainte
 
-    client = Client.objects.filter(user=request.user).first()
+    client = fiche_client(request)
     if not client:
         return Response([])
 
@@ -1287,3 +1287,33 @@ def api_enregistrer_push_token(request):
 
     PushToken.objects.update_or_create(token=token, defaults={'user': request.user})
     return Response({'message': 'Jeton enregistre avec succes.'})
+
+
+@api_view(['GET'])
+def api_compagnies(request):
+    """Liste des compagnies disponibles dans l'application (ecran de choix de la compagnie)."""
+    from .models import Compagnie
+    return Response([
+        {'code': c.code, 'nom': c.nom, 'sigle': c.sigle}
+        for c in Compagnie.objects.filter(actif=True).order_by('nom')
+    ])
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def api_mes_compagnies(request):
+    """Compagnies que le compte connecte a deja rejointes."""
+    return Response(compagnies_du_compte(request.user))
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def api_rejoindre_compagnie(request):
+    """
+    Le voyageur rejoint la compagnie de l'appel (en-tete X-Compagnie) : une fiche client
+    y est creee avec ses informations, uniquement vers cette compagnie.
+    """
+    if compagnie_requete(request) is None:
+        return reponse_compagnie_inconnue()
+    fiche = fiche_client_ou_creer(request)
+    return Response({'message': 'Compagnie rejointe.', 'compagnie': fiche.compagnie.nom, 'compagnies': compagnies_du_compte(request.user)}, status=201)

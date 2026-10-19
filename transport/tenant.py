@@ -47,10 +47,10 @@ CHEMINS_COMPAGNIE = {
     'transport.sessioncaisse': ['agence__compagnie'],
     'transport.mouvementcaisse': ['session__agence__compagnie'],
     # Comptes de connexion : rattaches a une compagnie par leur fiche employe ou client
-    'auth.user': ['employe__compagnie', 'client__compagnie'],
-    'transport.pushtoken': ['user__employe__compagnie', 'user__client__compagnie'],
-    'transport.appareilconfirme': ['user__employe__compagnie', 'user__client__compagnie'],
-    'transport.demandeconfirmationappareil': ['user__employe__compagnie', 'user__client__compagnie'],
+    'auth.user': ['employe__compagnie', 'fiches_client__compagnie'],
+    'transport.pushtoken': ['user__employe__compagnie', 'user__fiches_client__compagnie'],
+    'transport.appareilconfirme': ['user__employe__compagnie', 'user__fiches_client__compagnie'],
+    'transport.demandeconfirmationappareil': ['user__employe__compagnie', 'user__fiches_client__compagnie'],
 }
 
 

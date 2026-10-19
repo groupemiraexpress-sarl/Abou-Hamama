@@ -2,6 +2,12 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
+def _prefixe_numero(type_doc, compagnie, annee):
+    """Prefixe d'un numero de document, propre a chaque compagnie (ex : RES-AH-2026-) : les compteurs ne se melangent pas."""
+    code = (compagnie.code if compagnie is not None and compagnie.code else '').upper()
+    return f"{type_doc}-{code}-{annee}-" if code else f"{type_doc}-{annee}-"
+
+
 class Compagnie(models.Model):
     code = models.SlugField(_("Code"), max_length=20, unique=True, help_text=_("Code court en minuscules (ex : ah). Sert de prefixe aux identifiants des employes et d'adresse web."))
     nom = models.CharField(_("Nom"), max_length=100)
@@ -193,7 +199,7 @@ class Client(models.Model):
         ('or', _('Or')),
     ]
 
-    user = models.OneToOneField('auth.User', on_delete=models.SET_NULL, null=True, blank=True, related_name='client', verbose_name=_("Compte de connexion"), help_text=_("Compte de connexion lie a cette fiche client (app mobile)"))
+    user = models.ForeignKey('auth.User', on_delete=models.SET_NULL, null=True, blank=True, related_name='fiches_client', verbose_name=_("Compte de connexion"), help_text=_("Compte de connexion lie a cette fiche client (app mobile)"))
     nom = models.CharField(_("Nom"), max_length=100)
     prenom = models.CharField(_("Prenom"), max_length=100, blank=True)
     compagnie = models.ForeignKey(Compagnie, on_delete=models.PROTECT, related_name='clients', verbose_name=_("Compagnie"))
@@ -238,7 +244,8 @@ class Client(models.Model):
         verbose_name = _("Client")
         verbose_name_plural = _("Clients")
         ordering = ['nom', 'prenom']
-        constraints = [models.UniqueConstraint(fields=['compagnie', 'telephone'], name='client_telephone_unique_par_compagnie')]
+        constraints = [models.UniqueConstraint(fields=['compagnie', 'telephone'], name='client_telephone_unique_par_compagnie'),
+                       models.UniqueConstraint(fields=['user', 'compagnie'], condition=models.Q(user__isnull=False), name='client_un_seul_par_compte_et_compagnie')]
 
 
 class Reservation(models.Model):
@@ -256,7 +263,7 @@ class Reservation(models.Model):
         ('carte', _('Carte bancaire')),
     ]
 
-    numero_reservation = models.CharField(_("Numero de reservation"), max_length=20, unique=True, blank=True)
+    numero_reservation = models.CharField(_("Numero de reservation"), max_length=40, unique=True, blank=True)
     client = models.ForeignKey(Client, on_delete=models.PROTECT, related_name='reservations', verbose_name=_("Client"))
     voyage = models.ForeignKey(Voyage, on_delete=models.PROTECT, related_name='reservations', verbose_name=_("Voyage"))
     agence = models.ForeignKey(Agence, on_delete=models.PROTECT, related_name='reservations', null=True, blank=True, verbose_name=_("Agence"), help_text=_("Agence ou la reservation a ete faite"))
@@ -300,11 +307,10 @@ class Reservation(models.Model):
             if not self.numero_reservation:
                 from datetime import datetime
                 annee = datetime.now().year
-                dernier_numero = Reservation.objects.filter(
-                    numero_reservation__startswith=f"RES-{annee}-"
-                ).count()
+                prefixe = _prefixe_numero('RES', self.voyage.bus.compagnie, annee)
+                dernier_numero = Reservation.objects.filter(numero_reservation__startswith=prefixe).count()
                 nouveau_numero = dernier_numero + 1
-                self.numero_reservation = f"RES-{annee}-{nouveau_numero:04d}"
+                self.numero_reservation = f"{prefixe}{nouveau_numero:04d}"
             if self.siege_id and self.statut not in ('annulee', 'remboursee'):
                 ordre_montee = self.arret_montee.ordre if self.arret_montee_id else 1
                 ordre_descente = self.arret_descente.ordre if self.arret_descente_id else 999999
@@ -357,7 +363,7 @@ class Colis(models.Model):
         ('retourne', _('Retourne')),
     ]
 
-    code_suivi = models.CharField(_("Code de suivi"), max_length=20, unique=True, blank=True)
+    code_suivi = models.CharField(_("Code de suivi"), max_length=40, unique=True, blank=True)
     compagnie = models.ForeignKey(Compagnie, on_delete=models.PROTECT, related_name='colis', verbose_name=_("Compagnie"))
 
     expediteur_nom = models.CharField(_("Nom de l'expediteur"), max_length=100)
@@ -397,11 +403,10 @@ class Colis(models.Model):
         if not self.code_suivi:
             from datetime import datetime
             annee = datetime.now().year
-            dernier_numero = Colis.objects.filter(
-                code_suivi__startswith=f"COL-{annee}-"
-            ).count()
+            prefixe = _prefixe_numero('COL', self.compagnie, annee)
+            dernier_numero = Colis.objects.filter(code_suivi__startswith=prefixe).count()
             nouveau_numero = dernier_numero + 1
-            self.code_suivi = f"COL-{annee}-{nouveau_numero:04d}"
+            self.code_suivi = f"{prefixe}{nouveau_numero:04d}"
 
         if not self.code_retrait:
             import random
@@ -473,7 +478,7 @@ class TransfertArgent(models.Model):
         ('rembourse', _('Rembourse')),
     ]
 
-    code_transfert = models.CharField(_("Code de transfert"), max_length=20, unique=True, blank=True)
+    code_transfert = models.CharField(_("Code de transfert"), max_length=40, unique=True, blank=True)
     compagnie = models.ForeignKey(Compagnie, on_delete=models.PROTECT, related_name='transferts', verbose_name=_("Compagnie"))
 
     expediteur_nom = models.CharField(_("Nom de l'expediteur"), max_length=100)
@@ -509,11 +514,10 @@ class TransfertArgent(models.Model):
         if not self.code_transfert:
             from datetime import datetime
             annee = datetime.now().year
-            dernier_numero = TransfertArgent.objects.filter(
-                code_transfert__startswith=f"TRF-{annee}-"
-            ).count()
+            prefixe = _prefixe_numero('TRF', self.compagnie, annee)
+            dernier_numero = TransfertArgent.objects.filter(code_transfert__startswith=prefixe).count()
             nouveau_numero = dernier_numero + 1
-            self.code_transfert = f"TRF-{annee}-{nouveau_numero:04d}"
+            self.code_transfert = f"{prefixe}{nouveau_numero:04d}"
 
         if not self.code_retrait:
             import random
@@ -710,7 +714,7 @@ class DemandeColis(models.Model):
         ('validee', _('Validee (colis cree)')),
         ('annulee', _('Annulee')),
     ]
-    numero_demande = models.CharField(_("Numero de demande"), max_length=20, unique=True, blank=True)
+    numero_demande = models.CharField(_("Numero de demande"), max_length=40, unique=True, blank=True)
     client = models.ForeignKey('Client', on_delete=models.SET_NULL, null=True, blank=True, related_name='demandes_colis', verbose_name=_("Client"))
     expediteur_nom = models.CharField(_("Nom de l'expediteur"), max_length=100)
     expediteur_telephone = models.CharField(_("Telephone de l'expediteur"), max_length=20)
@@ -742,8 +746,9 @@ class DemandeColis(models.Model):
         if not self.numero_demande:
             from datetime import datetime
             annee = datetime.now().year
-            dernier = DemandeColis.objects.filter(numero_demande__startswith=f"DC-{annee}-").count()
-            self.numero_demande = f"DC-{annee}-{dernier + 1:04d}"
+            prefixe = _prefixe_numero('DC', self.agence_depart.compagnie, annee)
+            dernier = DemandeColis.objects.filter(numero_demande__startswith=prefixe).count()
+            self.numero_demande = f"{prefixe}{dernier + 1:04d}"
         super().save(*args, **kwargs)
 
     class Meta:
@@ -758,7 +763,7 @@ class DemandeTransfert(models.Model):
         ('validee', _('Validee (transfert cree)')),
         ('annulee', _('Annulee')),
     ]
-    numero_demande = models.CharField(_("Numero de demande"), max_length=20, unique=True, blank=True)
+    numero_demande = models.CharField(_("Numero de demande"), max_length=40, unique=True, blank=True)
     client = models.ForeignKey('Client', on_delete=models.SET_NULL, null=True, blank=True, related_name='demandes_transfert', verbose_name=_("Client"))
     expediteur_nom = models.CharField(_("Nom de l'expediteur"), max_length=100)
     expediteur_telephone = models.CharField(_("Telephone de l'expediteur"), max_length=20)
@@ -787,8 +792,9 @@ class DemandeTransfert(models.Model):
         if not self.numero_demande:
             from datetime import datetime
             annee = datetime.now().year
-            dernier = DemandeTransfert.objects.filter(numero_demande__startswith=f"DT-{annee}-").count()
-            self.numero_demande = f"DT-{annee}-{dernier + 1:04d}"
+            prefixe = _prefixe_numero('DT', self.agence_depart.compagnie, annee)
+            dernier = DemandeTransfert.objects.filter(numero_demande__startswith=prefixe).count()
+            self.numero_demande = f"{prefixe}{dernier + 1:04d}"
         super().save(*args, **kwargs)
 
     class Meta:

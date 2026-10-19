@@ -275,3 +275,20 @@ class IsolationPagesTests(TestCase):
         r = self.client.post(f"/espace/voyage/{B['voyage'].pk}/changer-bus/", {'bus_id': self.A['bus'].pk}, **H)
         self.assertNotEqual(r.status_code, 200)
         self.assertEqual(Voyage.objects.get(pk=B['voyage'].pk).bus_id, B['bus'].pk)
+
+
+class NumerotationTests(TestCase):
+    """Les numeros de billet, colis, transfert et demande ne se melangent pas entre compagnies."""
+
+    def test_compteurs_independants_et_prefixes_par_compagnie(self):
+        A = construire_monde('aa', 'Alpha')
+        B = construire_monde('bb', 'Beta')
+        self.assertTrue(A['reservation'].numero_reservation.startswith('RES-AA-'), A['reservation'].numero_reservation)
+        self.assertTrue(B['reservation'].numero_reservation.startswith('RES-BB-'), B['reservation'].numero_reservation)
+        # chacun commence a 0001 : B ne devine rien du volume de A
+        self.assertTrue(A['reservation'].numero_reservation.endswith('-0001'))
+        self.assertTrue(B['reservation'].numero_reservation.endswith('-0001'))
+        self.assertTrue(B['colis'].code_suivi.startswith('COL-BB-') and B['colis'].code_suivi.endswith('-0001'))
+        self.assertTrue(B['transfert'].code_transfert.startswith('TRF-BB-') and B['transfert'].code_transfert.endswith('-0001'))
+        self.assertTrue(B['demande_colis'].numero_demande.startswith('DC-BB-'))
+        self.assertTrue(B['demande_transfert'].numero_demande.startswith('DT-BB-'))

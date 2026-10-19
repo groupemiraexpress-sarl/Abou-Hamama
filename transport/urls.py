@@ -41,6 +41,9 @@ urlpatterns = [
     # API (pour l'application mobile)
     path('api/voyages/', api_views.api_voyages, name='api_voyages'),
     path('api/promotions/', api_views.api_promotions, name='api_promotions'),
+    path('api/compagnies/', api_views.api_compagnies, name='api_compagnies'),
+    path('api/mes-compagnies/', api_views.api_mes_compagnies, name='api_mes_compagnies'),
+    path('api/rejoindre-compagnie/', api_views.api_rejoindre_compagnie, name='api_rejoindre_compagnie'),
     path('api/agences/', api_views.api_agences, name='api_agences'),
     path('api/demande-colis/', api_views.api_creer_demande_colis, name='api_creer_demande_colis'),
     path('api/mes-demandes-colis/', api_views.api_mes_demandes_colis, name='api_mes_demandes_colis'),
