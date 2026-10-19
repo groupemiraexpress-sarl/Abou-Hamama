@@ -1,0 +1,21 @@
+{% extends "transport/base.html" %}
+{% load i18n %}
+{% block titre %}{{ titre_page }} — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}{{ titre_page }}{% endblock %}
+{% block classe_container %}etroit{% endblock %}
+{% block contenu %}
+<div class="card" style="text-align:center;">
+    <i class="fa-solid fa-circle-check" style="font-size:2.5rem; color:#10b981;"></i>
+    <h2 style="margin:10px 0 4px;">{{ compagnie.nom_affiche|default:compagnie.nom }}</h2>
+    <p style="color:#6b7280; margin-bottom:18px;">{% trans "Remettez ces informations au PDG. Elles ne seront plus affichees : notez-les maintenant." %}</p>
+    <table style="width:100%; font-size:1.05rem; border-collapse:collapse; text-align:left;">
+        <tr><td style="color:#6b7280; padding:8px 0;">{% trans "Identifiant" %}</td><td style="font-weight:700; text-align:right; font-family:monospace;">{{ identifiant }}</td></tr>
+        <tr><td style="color:#6b7280; padding:8px 0;">{% trans "Mot de passe temporaire" %}</td><td style="font-weight:700; text-align:right; font-family:monospace;">{{ mot_de_passe }}</td></tr>
+    </table>
+    <p style="color:#b45309; font-size:.85rem; margin-top:16px;">{% trans "Le PDG doit changer ce mot de passe des sa premiere connexion." %}</p>
+</div>
+<div class="barre-actions no-print">
+    <button onclick="window.print()" class="btn btn-vert"><i class="fa-solid fa-print"></i> {% trans "Imprimer" %}</button>
+    <a href="{% url 'transport:plateforme' %}" class="btn btn-gris">{% trans "Retour a la plateforme" %}</a>
+</div>
+{% endblock %}

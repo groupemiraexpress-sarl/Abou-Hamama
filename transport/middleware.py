@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth import logout
 from django.shortcuts import redirect
 
@@ -26,5 +27,12 @@ class CompagnieDomaineMiddleware:
             employe = getattr(user, 'employe', None)
             if employe is not None and employe.compagnie_id != compagnie.id:
                 logout(request)
+                return redirect('admin:login')
+        # Compagnie suspendue par l'administrateur de la plateforme : plus d'acces pour ses employes.
+        if user is not None and user.is_authenticated and not user.is_superuser and not request.path.startswith(('/api/', '/static/', '/media/')):
+            employe = getattr(user, 'employe', None)
+            if employe is not None and not employe.compagnie.actif:
+                logout(request)
+                messages.error(request, "Cette compagnie est suspendue. Contactez l'administrateur de la plateforme.")
                 return redirect('admin:login')
         return self.get_response(request)

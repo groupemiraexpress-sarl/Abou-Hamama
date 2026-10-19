@@ -11,6 +11,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
 
+msgid "%(nom)s est reactivee."
+msgstr "تمت إعادة تفعيل %(nom)s."
+
+msgid "%(nom)s est suspendue : ses employes ne peuvent plus se connecter."
+msgstr "تم تعليق %(nom)s: لم يعد موظفوها قادرين على تسجيل الدخول."
+
 msgid "1 = ville de depart, puis 2, 3, 4..."
 msgstr "1 = مدينة الانطلاق، ثم 2، 3، 4..."
 
@@ -37,6 +43,9 @@ msgstr "الإجراء غير ممكن في الحالة الحالية للصن
 
 msgid "Action non autorisee pour votre poste."
 msgstr "إجراء غير مسموح به لوظيفتك."
+
+msgid "Active"
+msgstr "نشطة"
 
 msgid "Activite"
 msgstr "النشاط"
@@ -292,6 +301,9 @@ msgstr "لا توجد مصاريف لهذه الرحلة."
 msgid "Aucune depense."
 msgstr "لا توجد مصاريف."
 
+msgid "Aucune entreprise."
+msgstr "لا توجد شركة."
+
 msgid "Aucune fiche employe liee a ce compte."
 msgstr "لا توجد بطاقة موظف مرتبطة بهذا الحساب."
 
@@ -466,6 +478,9 @@ msgstr "هذه الوظيفة لا تسجل تذاكر أو طرودا أو حو
 msgid "Ce transfert n'est plus disponible pour retrait."
 msgstr "هذا التحويل لم يعد متاحًا للاستلام."
 
+msgid "Cette entreprise n'a pas de PDG avec un compte de connexion."
+msgstr "هذه الشركة ليس لديها مدير عام بحساب دخول."
+
 msgid "Chauffeur"
 msgstr "السائق"
 
@@ -552,6 +567,11 @@ msgid ""
 msgstr ""
 "رمز قصير بأحرف صغيرة (مثال: ah). يُستخدم كبادئة لمعرّفات الموظفين وكعنوان "
 "إلكتروني."
+
+msgid ""
+"Code court en minuscules (lettres et chiffres), unique. Il commence "
+"l'identifiant des employes."
+msgstr "رمز قصير بأحرف صغيرة (حروف وأرقام)، فريد. يبدأ به معرّف الموظفين."
 
 msgid "Code de parrainage"
 msgstr "رمز الإحالة"
@@ -718,6 +738,12 @@ msgstr "التكلفة (فرنك)"
 
 msgid "Cree par"
 msgstr "أنشأه"
+
+msgid "Creer l'entreprise"
+msgstr "إنشاء الشركة"
+
+msgid "Creer une entreprise"
+msgstr "إنشاء شركة"
 
 msgid "Date"
 msgstr "التاريخ"
@@ -888,6 +914,9 @@ msgstr "مصاريف الرحلات"
 msgid "Depenses du voyage"
 msgstr "مصاريف الرحلة"
 
+msgid "Derniere connexion"
+msgstr "آخر تسجيل دخول"
+
 msgid "Derniere mise a jour"
 msgstr "آخر تحديث"
 
@@ -1049,6 +1078,9 @@ msgstr "احفظ تعديلاتك أولا، ثم اطبع الإيصال."
 msgid "Entreprise"
 msgstr "شركة"
 
+msgid "Entreprise creee"
+msgstr "تم إنشاء الشركة"
+
 msgid "Entretien"
 msgstr "الصيانة"
 
@@ -1087,6 +1119,15 @@ msgstr "المرسل"
 
 msgid "Exploitation"
 msgstr "التشغيل"
+
+msgid "Facultatif : vous pourrez l'ajouter plus tard."
+msgstr "اختياري: يمكنك إضافته لاحقا."
+
+msgid "Facultatif."
+msgstr "اختياري."
+
+msgid "Facultatif. Ex : Express Ben Siam."
+msgstr "اختياري. مثال: Express Ben Siam."
 
 msgid "Fermer"
 msgstr "إغلاق"
@@ -1133,6 +1174,9 @@ msgstr "الرسوم المحددة من الوكالة"
 msgid "Freins"
 msgstr "الفرامل"
 
+msgid "Generer un nouveau mot de passe pour le PDG de cette entreprise ?"
+msgstr "إنشاء كلمة مرور جديدة للمدير العام لهذه الشركة؟"
+
 msgid "Gratuit"
 msgstr "مجاني"
 
@@ -1163,6 +1207,9 @@ msgstr "الوقت والتاريخ"
 msgid "Hors service"
 msgstr "خارج الخدمة"
 
+msgid "Identifiant"
+msgstr "المعرّف"
+
 msgid "Identifiant de l'appareil"
 msgstr "معرّف الجهاز"
 
@@ -1183,6 +1230,9 @@ msgstr "لا يمكن تأكيد تسليم طرد لم يتم تسجيله بع
 
 msgid "Impossible de confirmer un transfert pas encore enregistre."
 msgstr "لا يمكن تأكيد تحويل لم يتم تسجيله بعد."
+
+msgid "Impossible de suspendre la seule entreprise active."
+msgstr "لا يمكن تعليق الشركة النشطة الوحيدة."
 
 msgid "Imprimer"
 msgstr "طباعة"
@@ -1226,6 +1276,9 @@ msgstr "لقد تحققت من وثيقة هوية المستفيد"
 msgid "J'ai verifie la piece d'identite du destinataire"
 msgstr "لقد تحققت من وثيقة هوية المستلم"
 
+msgid "Jamais"
+msgstr "أبدا"
+
 msgid "Jeton"
 msgstr "الرمز المميز"
 
@@ -1246,6 +1299,9 @@ msgstr "عدد كيلومترات الحافلة"
 
 msgid "L'accompagnateur etait-il aimable ?"
 msgstr "هل كان المرافق لطيفا؟"
+
+msgid "L'entreprise"
+msgstr "الشركة"
 
 msgid "La Maison vous remercie de votre fidelite"
 msgstr "الشركة تشكركم على ولائكم"
@@ -1294,6 +1350,12 @@ msgstr ""
 
 msgid "Latitude"
 msgstr "خط العرض"
+
+msgid "Le PDG (premier compte)"
+msgstr "المدير العام (الحساب الأول)"
+
+msgid "Le PDG doit changer ce mot de passe des sa premiere connexion."
+msgstr "يجب على المدير العام تغيير كلمة المرور هذه عند أول تسجيل دخول."
 
 msgid "Le bus etait-il propre ?"
 msgstr "هل كانت الحافلة نظيفة؟"
@@ -1479,6 +1541,9 @@ msgstr "تم تغيير كلمة المرور"
 msgid "Mot de passe requis pour creer le compte."
 msgstr "كلمة المرور مطلوبة لإنشاء الحساب."
 
+msgid "Mot de passe temporaire"
+msgstr "كلمة مرور مؤقتة"
+
 msgid "Motif"
 msgstr "السبب"
 
@@ -1630,6 +1695,9 @@ msgstr "كلمة مرور جديدة"
 msgid "Nouveau statut"
 msgstr "الحالة الجديدة"
 
+msgid "Nouvel acces du PDG"
+msgstr "وصول جديد للمدير العام"
+
 msgid "Nouvelle"
 msgstr "جديدة"
 
@@ -1701,6 +1769,9 @@ msgstr "الافتتاح"
 msgid "Ouvrir la caisse"
 msgstr "فتح الصندوق"
 
+msgid "PDG"
+msgstr "المدير العام"
+
 msgid "PDG / Directeur general"
 msgstr "المدير العام"
 
@@ -1769,6 +1840,15 @@ msgstr "الشكاوى"
 
 msgid "Plan du bus"
 msgstr "مخطط الحافلة"
+
+msgid "Plateforme"
+msgstr "المنصة"
+
+msgid "Plateforme (entreprises)"
+msgstr "المنصة (الشركات)"
+
+msgid "Plateforme : toutes les entreprises"
+msgstr "المنصة: كل الشركات"
 
 msgid "Plein de carburant"
 msgstr "تعبئة الوقود"
@@ -1917,6 +1997,12 @@ msgstr "تقرير الصيانة حسب الوكالة"
 msgid "Rapport par agence"
 msgstr "تقرير حسب الوكالة"
 
+msgid "Reactiver"
+msgstr "إعادة التفعيل"
+
+msgid "Reactiver cette entreprise ?"
+msgstr "إعادة تفعيل هذه الشركة؟"
+
 msgid "Recette du jour (FCFA)"
 msgstr "إيرادات اليوم (فرنك)"
 
@@ -1950,11 +2036,19 @@ msgstr "مرفوضة"
 msgid "Registre des ventes"
 msgstr "سجل المبيعات"
 
+msgid "Reinitialiser le PDG"
+msgstr "إعادة تعيين المدير العام"
+
 msgid "Rembourse"
 msgstr "مسترد"
 
 msgid "Remboursee"
 msgstr "مستردة"
+
+msgid ""
+"Remettez ces informations au PDG. Elles ne seront plus affichees : notez-les"
+" maintenant."
+msgstr "سلّم هذه المعلومات إلى المدير العام. لن تظهر مرة أخرى: دوّنها الآن."
 
 msgid "Remplissage moyen"
 msgstr "متوسط الإشغال"
@@ -1999,6 +2093,9 @@ msgstr "حجز رحلة"
 msgid "Reservations"
 msgstr "الحجوزات"
 
+msgid "Reservations (30 jours)"
+msgstr "الحجوزات (30 يوما)"
+
 msgid "Reservations du jour"
 msgstr "حجوزات اليوم"
 
@@ -2041,6 +2138,9 @@ msgstr "العودة إلى قائمة طلبات المواد"
 msgid "Retour a la liste des transferts"
 msgstr "العودة إلى قائمة الحوالات"
 
+msgid "Retour a la plateforme"
+msgstr "العودة إلى المنصة"
+
 msgid "Retour a la vente"
 msgstr "العودة إلى البيع"
 
@@ -2076,6 +2176,9 @@ msgstr "محدد"
 
 msgid "Selectionner"
 msgstr "اختيار"
+
+msgid "Sert a fabriquer son identifiant (code.telephone)."
+msgstr "يُستخدم لتكوين معرّفه (الرمز.الهاتف)."
 
 msgid "Service"
 msgstr "الخدمة"
@@ -2152,6 +2255,16 @@ msgstr "المتابعة التقنية"
 
 msgid "Sujet"
 msgstr "الموضوع"
+
+msgid "Suspendre"
+msgstr "تعليق"
+
+msgid ""
+"Suspendre cette entreprise ? Ses employes ne pourront plus se connecter."
+msgstr "تعليق هذه الشركة؟ لن يتمكن موظفوها من تسجيل الدخول."
+
+msgid "Suspendue"
+msgstr "معلّقة"
 
 msgid "Tableau de bord PDG"
 msgstr "لوحة تحكم المدير العام"
@@ -2433,6 +2546,11 @@ msgid ""
 "Vous pouvez retourner sur l'application et vous connecter avec votre nouveau"
 " mot de passe."
 msgstr "يمكنك العودة إلى التطبيق وتسجيل الدخول بكلمة المرور الجديدة."
+
+msgid ""
+"Vous voyez ici toutes les entreprises. Chacune ne voit que ses propres "
+"donnees."
+msgstr "ترى هنا كل الشركات. كل واحدة ترى بياناتها فقط."
 
 msgid "Voyage"
 msgstr "الرحلة"

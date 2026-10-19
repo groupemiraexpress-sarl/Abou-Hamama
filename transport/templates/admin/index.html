@@ -117,8 +117,11 @@
 {% block content %}
 <div id="content-main">
 
-  {% if stats_profil.voit_raccourci_vente or stats_profil.voit_raccourci_caisse or stats_profil.voit_raccourci_dettes or stats_profil.voit_historique_employe %}
+  {% if stats_profil.voit_raccourci_vente or stats_profil.voit_raccourci_caisse or stats_profil.voit_raccourci_dettes or stats_profil.voit_historique_employe or request.user.is_superuser %}
   <div class="raccourci-vente">
+    {% if request.user.is_superuser %}
+    <a href="{% url 'transport:plateforme' %}" class="btn-vente">🏢 {% trans "Plateforme (entreprises)" %}</a>
+    {% endif %}
     {% if stats_profil.voit_raccourci_vente %}
     <a href="{% url 'transport:vendre_billet' %}" class="btn-vente">
       🎫 {% trans "Vendre un billet" %}

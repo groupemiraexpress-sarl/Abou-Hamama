@@ -27,6 +27,8 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'testserver', '.onrender.com', '.pyth
 # Adresses web des compagnies : sous-domaine <code>.<PLATEFORME_DOMAINE> (ex : ah.tonlogiciel.com),
 # et domaines propres a chaque compagnie (separes par des virgules dans ALLOWED_HOSTS_EXTRA).
 PLATEFORME_DOMAINE = os.environ.get('PLATEFORME_DOMAINE', '').strip().lower().strip('.')
+# Nom affiche sur l'ecran de connexion quand l'adresse web ne designe aucune compagnie precise
+PLATEFORME_NOM = os.environ.get('PLATEFORME_NOM', "Gestion d'agence")
 if PLATEFORME_DOMAINE:
     ALLOWED_HOSTS.append('.' + PLATEFORME_DOMAINE)
 ALLOWED_HOSTS += [h.strip() for h in os.environ.get('ALLOWED_HOSTS_EXTRA', '').split(',') if h.strip()]
@@ -54,8 +56,8 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'transport.middleware.CompagnieDomaineMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'transport.middleware.CompagnieDomaineMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 

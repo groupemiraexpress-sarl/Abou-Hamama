@@ -1,0 +1,49 @@
+{% extends "transport/base.html" %}
+{% load i18n %}
+{% block titre %}{% trans "Creer une entreprise" %} — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}{% trans "Creer une entreprise" %}{% endblock %}
+{% block classe_container %}large{% endblock %}
+{% block extra_head %}
+<style>
+    .grille-champs { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:14px 20px; }
+    .grille-champs label { display:block; font-size:.78rem; font-weight:700; text-transform:uppercase; color:#4b5563; margin-bottom:5px; }
+    .grille-champs input { margin-bottom:0; }
+    .aide { font-size:.8rem; color:#6b7280; margin-top:4px; }
+    .erreur-champ { color:#b91c1c; font-size:.85rem; margin-top:4px; }
+</style>
+{% endblock %}
+{% block contenu %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% for cle, texte in erreurs.items %}{% if cle == '' %}<div style="background:#fef2f2; color:#b91c1c; padding:12px; border-radius:10px; margin-bottom:12px;">{{ texte }}</div>{% endif %}{% endfor %}
+
+    <div class="card" style="margin-bottom:16px;">
+        <h3 style="color:var(--couleur-principale); margin-bottom:14px;">{% trans "L'entreprise" %}</h3>
+        <div class="grille-champs">
+            <div><label>{% trans "Nom" %} *</label><input type="text" name="nom" value="{{ valeurs.nom }}" required>{% if erreurs.nom %}<div class="erreur-champ">{{ erreurs.nom }}</div>{% endif %}</div>
+            <div><label>{% trans "Code" %} *</label><input type="text" name="code" value="{{ valeurs.code }}" required maxlength="20" pattern="[a-z0-9_-]+" placeholder="bs">
+                <div class="aide">{% trans "Code court en minuscules (lettres et chiffres), unique. Il commence l'identifiant des employes." %}</div>{% if erreurs.code %}<div class="erreur-champ">{{ erreurs.code }}</div>{% endif %}</div>
+            <div><label>{% trans "Siege social" %} *</label><input type="text" name="siege" value="{{ valeurs.siege }}" required>{% if erreurs.siege %}<div class="erreur-champ">{{ erreurs.siege }}</div>{% endif %}</div>
+            <div><label>{% trans "Telephone" %} *</label><input type="text" name="telephone" value="{{ valeurs.telephone }}" required>{% if erreurs.telephone %}<div class="erreur-champ">{{ erreurs.telephone }}</div>{% endif %}</div>
+            <div><label>{% trans "Nom complet affiche" %}</label><input type="text" name="nom_affiche" value="{{ valeurs.nom_affiche }}"><div class="aide">{% trans "Facultatif. Ex : Express Ben Siam." %}</div></div>
+            <div><label>{% trans "Couleur principale" %}</label><input type="color" name="couleur" value="{{ valeurs.couleur|default:'#261F64' }}" style="height:46px; padding:4px;">{% if erreurs.couleur_principale %}<div class="erreur-champ">{{ erreurs.couleur_principale }}</div>{% endif %}</div>
+            <div><label>{% trans "Logo" %}</label><input type="file" name="logo" accept="image/*"><div class="aide">{% trans "Facultatif : vous pourrez l'ajouter plus tard." %}</div></div>
+            <div><label>{% trans "Adresse web propre" %}</label><input type="text" name="domaine" value="{{ valeurs.domaine }}" placeholder="gestion.exemple.td"><div class="aide">{% trans "Facultatif." %}</div>{% if erreurs.domaine %}<div class="erreur-champ">{{ erreurs.domaine }}</div>{% endif %}</div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px;">
+        <h3 style="color:var(--couleur-principale); margin-bottom:14px;">{% trans "Le PDG (premier compte)" %}</h3>
+        <div class="grille-champs">
+            <div><label>{% trans "Nom" %} *</label><input type="text" name="pdg_nom" value="{{ valeurs.pdg_nom }}" required>{% if erreurs.pdg_nom %}<div class="erreur-champ">{{ erreurs.pdg_nom }}</div>{% endif %}</div>
+            <div><label>{% trans "Prenom" %} *</label><input type="text" name="pdg_prenom" value="{{ valeurs.pdg_prenom }}" required>{% if erreurs.pdg_prenom %}<div class="erreur-champ">{{ erreurs.pdg_prenom }}</div>{% endif %}</div>
+            <div><label>{% trans "Telephone" %} *</label><input type="text" name="pdg_telephone" value="{{ valeurs.pdg_telephone }}" required><div class="aide">{% trans "Sert a fabriquer son identifiant (code.telephone)." %}</div>{% if erreurs.pdg_telephone %}<div class="erreur-champ">{{ erreurs.pdg_telephone }}</div>{% endif %}</div>
+        </div>
+    </div>
+
+    <div class="barre-actions">
+        <button type="submit" class="btn btn-vert"><i class="fa-solid fa-check"></i> {% trans "Creer l'entreprise" %}</button>
+        <a href="{% url 'transport:plateforme' %}" class="btn btn-gris">{% trans "Annuler" %}</a>
+    </div>
+</form>
+{% endblock %}

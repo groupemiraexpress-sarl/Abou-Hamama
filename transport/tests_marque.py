@@ -71,7 +71,14 @@ class MarqueEtDomaineTests(TestCase):
         r = self.client.get('/api/voyages/', HTTP_HOST='aa.plateforme.test', HTTP_X_COMPAGNIE='bb')
         self.assertEqual({v['id'] for v in r.json()}, {self.B['voyage'].pk})
 
-    def test_adresse_inconnue_garde_la_premiere_compagnie(self):
+    def test_adresse_inconnue_avec_plusieurs_compagnies_marque_neutre(self):
+        page = self.page('localhost').content.decode()
+        self.assertNotIn('Alpha', page)
+        self.assertNotIn('Beta', page)
+        self.assertIn('Gestion d&#x27;agence', page)
+
+    def test_adresse_inconnue_avec_une_seule_compagnie_garde_sa_marque(self):
+        Compagnie.objects.filter(code='bb').update(actif=False)
         self.assertIn('Alpha', self.page('localhost').content.decode())
 
 
@@ -118,3 +125,17 @@ class AdministrationCompagnieTests(TestCase):
         from django.core.management.base import CommandError
         with self.assertRaises(CommandError):
             call_command('creer_compagnie', nom='Autre', code='bs', siege='x', telephone='1', pdg_nom='a', pdg_prenom='b', pdg_telephone='66554434')
+
+
+@override_settings(**REGLAGES)
+class MarqueApresConnexionTests(TestCase):
+    def test_l_employe_connecte_voit_la_marque_de_sa_compagnie_meme_sans_adresse_propre(self):
+        A = construire_monde('aa', 'Alpha')
+        B = construire_monde('bb', 'Beta')
+        Compagnie.objects.filter(code='bb').update(nom_affiche='Beta Voyages Express', couleur_principale='#0a7d4b')
+        pdg_b, _e = creer_employe(B, 'pdg', agence=False)
+        self.client.force_login(pdg_b)
+        page = self.client.get('/admin/', HTTP_HOST='localhost').content.decode()
+        self.assertIn('Beta Voyages Express', page)
+        self.assertIn('#0a7d4b', page)
+        self.assertNotIn('Alpha', page)

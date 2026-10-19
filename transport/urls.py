@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from . import api_views
 from . import views_caisse
+from . import views_plateforme
 from rest_framework_simplejwt.views import TokenRefreshView
 
 app_name = 'transport'
@@ -30,6 +31,10 @@ urlpatterns = [
     path('espace/voyage/<int:voyage_id>/depenses/', views_caisse.depenses_voyage, name='depenses_voyage'),
     path('espace/voyage/<int:voyage_id>/changer-bus/', views_caisse.changer_bus_voyage, name='changer_bus_voyage'),
     path('espace/voyage/<int:voyage_id>/feuille-chauffeur/', views_caisse.feuille_chauffeur, name='feuille_chauffeur'),
+    path('espace/plateforme/', views_plateforme.plateforme, name='plateforme'),
+    path('espace/plateforme/nouvelle/', views_plateforme.nouvelle_compagnie, name='nouvelle_compagnie'),
+    path('espace/plateforme/<int:pk>/reinitialiser-pdg/', views_plateforme.reinitialiser_pdg, name='reinitialiser_pdg'),
+    path('espace/plateforme/<int:pk>/basculer/', views_plateforme.basculer, name='basculer_compagnie'),
     path('espace/caisse/', views_caisse.caisse, name='caisse'),
     path('espace/dettes/', views_caisse.dettes, name='dettes'),
     path('espace/api-stats-tableau-bord/', views.api_stats_tableau_bord, name='api_stats_tableau_bord'),

@@ -10,10 +10,18 @@ def branding(request):
     from .models import Compagnie
     from .tenant import compagnie_courante
 
+    from django.conf import settings
+
     marque = dict(BRANDING)
     compagnie = compagnie_courante(request)
     marque['nom_complet'] = marque['nom_entreprise']
     marque['logo_url'] = static('transport/logo_abou_hamama.png')
+    if compagnie is None and Compagnie.objects.filter(actif=True).count() > 1:
+        # plusieurs compagnies et adresse non reconnue : marque neutre de la plateforme
+        nom = getattr(settings, 'PLATEFORME_NOM', "Gestion d'agence")
+        marque.update(nom_entreprise=nom, nom_complet=nom, slogan='', pied_de_page='', code='',
+                      logo_url=logo_par_defaut(nom, marque['couleur_principale']))
+        return {'branding': marque}
     if compagnie is not None:
         couleur = compagnie.couleur_principale or marque['couleur_principale']
         marque.update(

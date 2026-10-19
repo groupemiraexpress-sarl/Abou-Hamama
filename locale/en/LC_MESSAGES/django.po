@@ -10,6 +10,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "%(nom)s est reactivee."
+msgstr "%(nom)s has been reactivated."
+
+msgid "%(nom)s est suspendue : ses employes ne peuvent plus se connecter."
+msgstr "%(nom)s is suspended: its employees can no longer sign in."
+
 msgid "1 = ville de depart, puis 2, 3, 4..."
 msgstr "1 = departure city, then 2, 3, 4..."
 
@@ -36,6 +42,9 @@ msgstr "Action not possible in the current state of the cash desk."
 
 msgid "Action non autorisee pour votre poste."
 msgstr "Action not authorized for your position."
+
+msgid "Active"
+msgstr "Active"
 
 msgid "Activite"
 msgstr "Activity"
@@ -291,6 +300,9 @@ msgstr "No expense for this trip."
 msgid "Aucune depense."
 msgstr "No expense."
 
+msgid "Aucune entreprise."
+msgstr "No company."
+
 msgid "Aucune fiche employe liee a ce compte."
 msgstr "No employee record linked to this account."
 
@@ -468,6 +480,9 @@ msgstr ""
 msgid "Ce transfert n'est plus disponible pour retrait."
 msgstr "This transfer is no longer available for pickup."
 
+msgid "Cette entreprise n'a pas de PDG avec un compte de connexion."
+msgstr "This company has no CEO with a login account."
+
 msgid "Chauffeur"
 msgstr "Driver"
 
@@ -555,6 +570,13 @@ msgid ""
 msgstr ""
 "Short lowercase code (e.g. ah). Used as a prefix for employee logins and as "
 "web address."
+
+msgid ""
+"Code court en minuscules (lettres et chiffres), unique. Il commence "
+"l'identifiant des employes."
+msgstr ""
+"Short lowercase code (letters and digits), unique. It starts the employees' "
+"logins."
 
 msgid "Code de parrainage"
 msgstr "Referral code"
@@ -721,6 +743,12 @@ msgstr "Cost (FCFA)"
 
 msgid "Cree par"
 msgstr "Created by"
+
+msgid "Creer l'entreprise"
+msgstr "Create the company"
+
+msgid "Creer une entreprise"
+msgstr "Create a company"
 
 msgid "Date"
 msgstr "Date"
@@ -895,6 +923,9 @@ msgstr "Trip expenses"
 msgid "Depenses du voyage"
 msgstr "Trip expenses"
 
+msgid "Derniere connexion"
+msgstr "Last sign-in"
+
 msgid "Derniere mise a jour"
 msgstr "Last update"
 
@@ -1056,6 +1087,9 @@ msgstr "Save your changes first, then print the receipt."
 msgid "Entreprise"
 msgstr "Business"
 
+msgid "Entreprise creee"
+msgstr "Company created"
+
 msgid "Entretien"
 msgstr "Maintenance"
 
@@ -1094,6 +1128,15 @@ msgstr "Sender"
 
 msgid "Exploitation"
 msgstr "Operations"
+
+msgid "Facultatif : vous pourrez l'ajouter plus tard."
+msgstr "Optional: you can add it later."
+
+msgid "Facultatif."
+msgstr "Optional."
+
+msgid "Facultatif. Ex : Express Ben Siam."
+msgstr "Optional. E.g.: Express Ben Siam."
 
 msgid "Fermer"
 msgstr "Close"
@@ -1140,6 +1183,9 @@ msgstr "Fee set by the agency"
 msgid "Freins"
 msgstr "Brakes"
 
+msgid "Generer un nouveau mot de passe pour le PDG de cette entreprise ?"
+msgstr "Generate a new password for this company's CEO?"
+
 msgid "Gratuit"
 msgstr "Free"
 
@@ -1170,6 +1216,9 @@ msgstr "Timestamp"
 msgid "Hors service"
 msgstr "Out of service"
 
+msgid "Identifiant"
+msgstr "Login"
+
 msgid "Identifiant de l'appareil"
 msgstr "Device identifier"
 
@@ -1190,6 +1239,9 @@ msgstr "Cannot confirm delivery of a parcel that is not registered yet."
 
 msgid "Impossible de confirmer un transfert pas encore enregistre."
 msgstr "Cannot confirm a transfer that is not registered yet."
+
+msgid "Impossible de suspendre la seule entreprise active."
+msgstr "Cannot suspend the only active company."
 
 msgid "Imprimer"
 msgstr "Print"
@@ -1233,6 +1285,9 @@ msgstr "I have verified the recipient's ID document"
 msgid "J'ai verifie la piece d'identite du destinataire"
 msgstr "I have verified the recipient's ID document"
 
+msgid "Jamais"
+msgstr "Never"
+
 msgid "Jeton"
 msgstr "Token"
 
@@ -1253,6 +1308,9 @@ msgstr "Bus mileage"
 
 msgid "L'accompagnateur etait-il aimable ?"
 msgstr "Was the attendant friendly?"
+
+msgid "L'entreprise"
+msgstr "The company"
 
 msgid "La Maison vous remercie de votre fidelite"
 msgstr "The Company thanks you for your loyalty"
@@ -1304,6 +1362,12 @@ msgstr ""
 
 msgid "Latitude"
 msgstr "Latitude"
+
+msgid "Le PDG (premier compte)"
+msgstr "The CEO (first account)"
+
+msgid "Le PDG doit changer ce mot de passe des sa premiere connexion."
+msgstr "The CEO must change this password at first sign-in."
 
 msgid "Le bus etait-il propre ?"
 msgstr "Was the bus clean?"
@@ -1491,6 +1555,9 @@ msgstr "Password changed"
 msgid "Mot de passe requis pour creer le compte."
 msgstr "Password required to create the account."
 
+msgid "Mot de passe temporaire"
+msgstr "Temporary password"
+
 msgid "Motif"
 msgstr "Reason"
 
@@ -1644,6 +1711,9 @@ msgstr "New password"
 msgid "Nouveau statut"
 msgstr "New status"
 
+msgid "Nouvel acces du PDG"
+msgstr "New CEO access"
+
 msgid "Nouvelle"
 msgstr "New"
 
@@ -1715,6 +1785,9 @@ msgstr "Opening"
 msgid "Ouvrir la caisse"
 msgstr "Open the cash desk"
 
+msgid "PDG"
+msgstr "CEO"
+
 msgid "PDG / Directeur general"
 msgstr "CEO / General manager"
 
@@ -1783,6 +1856,15 @@ msgstr "Complaints"
 
 msgid "Plan du bus"
 msgstr "Bus plan"
+
+msgid "Plateforme"
+msgstr "Platform"
+
+msgid "Plateforme (entreprises)"
+msgstr "Platform (companies)"
+
+msgid "Plateforme : toutes les entreprises"
+msgstr "Platform: all companies"
 
 msgid "Plein de carburant"
 msgstr "Refueling"
@@ -1931,6 +2013,12 @@ msgstr "Maintenance report by agency"
 msgid "Rapport par agence"
 msgstr "Report by agency"
 
+msgid "Reactiver"
+msgstr "Reactivate"
+
+msgid "Reactiver cette entreprise ?"
+msgstr "Reactivate this company?"
+
 msgid "Recette du jour (FCFA)"
 msgstr "Today's revenue (FCFA)"
 
@@ -1964,11 +2052,21 @@ msgstr "Refused"
 msgid "Registre des ventes"
 msgstr "Sales register"
 
+msgid "Reinitialiser le PDG"
+msgstr "Reset the CEO"
+
 msgid "Rembourse"
 msgstr "Refunded"
 
 msgid "Remboursee"
 msgstr "Refunded"
+
+msgid ""
+"Remettez ces informations au PDG. Elles ne seront plus affichees : notez-les"
+" maintenant."
+msgstr ""
+"Give this information to the CEO. It will not be shown again: write it down "
+"now."
 
 msgid "Remplissage moyen"
 msgstr "Average occupancy"
@@ -2013,6 +2111,9 @@ msgstr "Trip booking"
 msgid "Reservations"
 msgstr "Bookings"
 
+msgid "Reservations (30 jours)"
+msgstr "Reservations (30 days)"
+
 msgid "Reservations du jour"
 msgstr "Today's bookings"
 
@@ -2055,6 +2156,9 @@ msgstr "Back to the material request list"
 msgid "Retour a la liste des transferts"
 msgstr "Back to the transfer list"
 
+msgid "Retour a la plateforme"
+msgstr "Back to the platform"
+
 msgid "Retour a la vente"
 msgstr "Back to sales"
 
@@ -2090,6 +2194,9 @@ msgstr "Selected"
 
 msgid "Selectionner"
 msgstr "Select"
+
+msgid "Sert a fabriquer son identifiant (code.telephone)."
+msgstr "Used to build the login (code.phone)."
 
 msgid "Service"
 msgstr "Service"
@@ -2166,6 +2273,17 @@ msgstr "Technical tracking"
 
 msgid "Sujet"
 msgstr "Subject"
+
+msgid "Suspendre"
+msgstr "Suspend"
+
+msgid ""
+"Suspendre cette entreprise ? Ses employes ne pourront plus se connecter."
+msgstr ""
+"Suspend this company? Its employees will no longer be able to sign in."
+
+msgid "Suspendue"
+msgstr "Suspended"
 
 msgid "Tableau de bord PDG"
 msgstr "CEO Dashboard"
@@ -2448,6 +2566,11 @@ msgid ""
 "Vous pouvez retourner sur l'application et vous connecter avec votre nouveau"
 " mot de passe."
 msgstr "You can go back to the app and sign in with your new password."
+
+msgid ""
+"Vous voyez ici toutes les entreprises. Chacune ne voit que ses propres "
+"donnees."
+msgstr "You see all companies here. Each one only sees its own data."
 
 msgid "Voyage"
 msgstr "Trip"

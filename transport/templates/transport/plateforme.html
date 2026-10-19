@@ -1,0 +1,50 @@
+{% extends "transport/base.html" %}
+{% load i18n %}
+{% block titre %}{% trans "Plateforme" %} — {{ branding.nom_entreprise }}{% endblock %}
+{% block entete %}{% trans "Plateforme : toutes les entreprises" %}{% endblock %}
+{% block classe_container %}large{% endblock %}
+{% block contenu %}
+{% if messages %}
+{% for m in messages %}
+<div style="padding:12px 16px; border-radius:10px; margin-bottom:12px; {% if m.tags == 'error' %}background:#fef2f2; color:#b91c1c;{% else %}background:#f0fdf4; color:#166534;{% endif %}">{{ m }}</div>
+{% endfor %}
+{% endif %}
+<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+    <p style="color:#4b5563;">{% trans "Vous voyez ici toutes les entreprises. Chacune ne voit que ses propres donnees." %}</p>
+    <a href="{% url 'transport:nouvelle_compagnie' %}" class="btn btn-vert"><i class="fa-solid fa-plus"></i> {% trans "Creer une entreprise" %}</a>
+</div>
+<div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(380px, 1fr)); gap:16px;">
+{% for l in lignes %}
+    <div class="card" style="{% if not l.c.actif %}opacity:.75; border:2px solid #f59e0b;{% endif %}">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+            <div>
+                <h3 style="color:var(--couleur-principale); margin:0;">{{ l.c.nom_affiche|default:l.c.nom }}</h3>
+                <p style="color:#6b7280; font-size:.85rem;">{% trans "Code" %} : <strong>{{ l.c.code }}</strong>{% if l.c.domaine %} · {{ l.c.domaine }}{% endif %}</p>
+            </div>
+            <span style="padding:4px 12px; border-radius:99px; font-size:.8rem; font-weight:700; {% if l.c.actif %}background:#dcfce7; color:#166534;{% else %}background:#fef3c7; color:#92400e;{% endif %}">{% if l.c.actif %}{% trans "Active" %}{% else %}{% trans "Suspendue" %}{% endif %}</span>
+        </div>
+        <table style="width:100%; font-size:.9rem; margin:12px 0; border-collapse:collapse;">
+            <tr><td style="color:#6b7280; padding:3px 0;">{% trans "PDG" %}</td><td style="text-align:right; font-weight:600;">{% if l.pdg %}{{ l.pdg.prenom }} {{ l.pdg.nom }} ({{ l.pdg.user.username|default:"—" }}){% else %}—{% endif %}</td></tr>
+            <tr><td style="color:#6b7280; padding:3px 0;">{% trans "Agences" %} / {% trans "Employes" %} / {% trans "Bus" %}</td><td style="text-align:right;">{{ l.agences }} / {{ l.employes }} / {{ l.bus }}</td></tr>
+            <tr><td style="color:#6b7280; padding:3px 0;">{% trans "Voyages a venir" %}</td><td style="text-align:right;">{{ l.voyages_a_venir }}</td></tr>
+            <tr><td style="color:#6b7280; padding:3px 0;">{% trans "Reservations (30 jours)" %}</td><td style="text-align:right;">{{ l.reservations_30j }}</td></tr>
+            <tr><td style="color:#6b7280; padding:3px 0;">{% trans "Derniere connexion" %}</td><td style="text-align:right;">{% if l.derniere_connexion %}{{ l.derniere_connexion|date:"d/m/Y H:i" }}{% else %}{% trans "Jamais" %}{% endif %}</td></tr>
+        </table>
+        <div class="barre-actions" style="margin-top:8px; justify-content:flex-start;">
+            <a href="{% url 'admin:transport_compagnie_change' l.c.pk %}" class="btn">{% trans "Modifier" %}</a>
+            <form method="post" action="{% url 'transport:reinitialiser_pdg' l.c.pk %}" style="display:inline;" onsubmit="return confirm('{% trans "Generer un nouveau mot de passe pour le PDG de cette entreprise ?" %}');">
+                {% csrf_token %}<button type="submit" class="btn btn-orange">{% trans "Reinitialiser le PDG" %}</button>
+            </form>
+            <form method="post" action="{% url 'transport:basculer_compagnie' l.c.pk %}" style="display:inline;" onsubmit="return confirm('{% if l.c.actif %}{% trans "Suspendre cette entreprise ? Ses employes ne pourront plus se connecter." %}{% else %}{% trans "Reactiver cette entreprise ?" %}{% endif %}');">
+                {% csrf_token %}<button type="submit" class="btn {% if l.c.actif %}btn-rouge{% else %}btn-vert{% endif %}">{% if l.c.actif %}{% trans "Suspendre" %}{% else %}{% trans "Reactiver" %}{% endif %}</button>
+            </form>
+        </div>
+    </div>
+{% empty %}
+    <div class="card" style="text-align:center; color:#6b7280;">{% trans "Aucune entreprise." %}</div>
+{% endfor %}
+</div>
+<div class="barre-actions no-print">
+    <a href="{% url 'admin:index' %}" class="btn btn-gris"><i class="fa-solid fa-arrow-left"></i> {% trans "Retour au tableau de bord" %}</a>
+</div>
+{% endblock %}

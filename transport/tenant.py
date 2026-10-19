@@ -134,4 +134,7 @@ def compagnie_courante(request):
     compagnie = getattr(request, 'compagnie_domaine', None)
     if compagnie is not None:
         return compagnie
-    return Compagnie.objects.filter(actif=True).order_by('id').first()
+    actives = list(Compagnie.objects.filter(actif=True).order_by('id')[:2])
+    # Adresse non reconnue alors que plusieurs compagnies existent : marque neutre (None), pour ne
+    # montrer le nom ni le logo d'une compagnie a l'employe d'une autre (ex : ecran de connexion).
+    return actives[0] if len(actives) == 1 else None
