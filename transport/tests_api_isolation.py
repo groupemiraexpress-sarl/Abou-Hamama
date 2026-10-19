@@ -51,8 +51,10 @@ class ApiIsolationTests(TestCase):
         self.assertEqual(self.api(compagnie='nexiste-pas').get('/api/voyages/').status_code, 404)
 
     def test_liste_des_compagnies(self):
-        codes = {c['code'] for c in self.api().get('/api/compagnies/').json()}
-        self.assertTrue({'aa', 'bb'} <= codes)
+        compagnies = {c['code']: c for c in self.api().get('/api/compagnies/').json()}
+        self.assertTrue({'aa', 'bb'} <= set(compagnies))
+        for champ in ('nom', 'nom_affiche', 'slogan', 'couleur', 'logo_url'):
+            self.assertIn(champ, compagnies['aa'])
 
     # --- un compte, une fiche par compagnie
     def test_compte_unique_une_fiche_par_compagnie(self):

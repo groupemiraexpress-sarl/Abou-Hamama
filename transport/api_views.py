@@ -1295,7 +1295,11 @@ def api_compagnies(request):
     """Liste des compagnies disponibles dans l'application (ecran de choix de la compagnie)."""
     from .models import Compagnie
     return Response([
-        {'code': c.code, 'nom': c.nom, 'sigle': c.sigle}
+        {
+            'code': c.code, 'nom': c.nom, 'sigle': c.sigle, 'nom_affiche': c.nom_affiche or c.nom,
+            'slogan': c.slogan, 'couleur': c.couleur_principale,
+            'logo_url': request.build_absolute_uri(c.logo.url) if c.logo else None,
+        }
         for c in Compagnie.objects.filter(actif=True).order_by('nom')
     ])
 
