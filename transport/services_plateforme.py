@@ -11,7 +11,12 @@ from django.core.exceptions import ValidationError
 from django.db import transaction
 
 from .admin_filtres import assigner_groupe_selon_poste
-from .models import Compagnie, Employe
+from datetime import timedelta
+
+from django.db.models import Max
+from django.utils import timezone
+
+from .models import Agence, Bus, Compagnie, Employe, Reservation, Voyage
 from .tenant import identifiant_employe
 
 
@@ -73,3 +78,29 @@ def basculer_compagnie(compagnie):
     compagnie.actif = not compagnie.actif
     compagnie.save(update_fields=['actif'])
     return compagnie.actif
+
+
+def resume_entreprises():
+    """Une ligne par entreprise (activite des 30 derniers jours, derniere connexion...) et des totaux pour toute la plateforme."""
+    aujourd_hui = timezone.now().date()
+    il_y_a_30_jours = timezone.now() - timedelta(days=30)
+    lignes = []
+    for c in Compagnie.objects.order_by('nom'):
+        lignes.append({
+            'c': c,
+            'pdg': Employe.objects.filter(compagnie=c, poste='pdg').select_related('user').first(),
+            'agences': Agence.objects.filter(compagnie=c).count(),
+            'employes': Employe.objects.filter(compagnie=c, actif=True).count(),
+            'bus': Bus.objects.filter(compagnie=c).count(),
+            'voyages_a_venir': Voyage.objects.filter(bus__compagnie=c, date_depart__gte=aujourd_hui).count(),
+            'reservations_30j': Reservation.objects.filter(voyage__bus__compagnie=c, date_reservation__gte=il_y_a_30_jours).count(),
+            'derniere_connexion': User.objects.filter(employe__compagnie=c).aggregate(d=Max('last_login'))['d'],
+        })
+    totaux = {
+        'actives': sum(1 for l in lignes if l['c'].actif),
+        'suspendues': sum(1 for l in lignes if not l['c'].actif),
+        'employes': sum(l['employes'] for l in lignes),
+        'voyages_a_venir': sum(l['voyages_a_venir'] for l in lignes),
+        'reservations_30j': sum(l['reservations_30j'] for l in lignes),
+    }
+    return lignes, totaux

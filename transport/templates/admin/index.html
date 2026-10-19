@@ -121,7 +121,8 @@
   <div class="raccourci-vente">
     {% if request.user.is_superuser %}
     <a href="{% url 'transport:plateforme' %}" class="btn-vente">🏢 {% trans "Plateforme (entreprises)" %}</a>
-    {% endif %}
+    <a href="{% url 'transport:nouvelle_compagnie' %}" class="btn-vente-secondaire">➕ {% trans "Creer une entreprise" %}</a>
+    {% else %}
     {% if stats_profil.voit_raccourci_vente %}
     <a href="{% url 'transport:vendre_billet' %}" class="btn-vente">
       🎫 {% trans "Vendre un billet" %}
@@ -141,9 +142,32 @@
       {% trans "Mon activite / Historique par employe" %}
     </a>
     {% endif %}
+    {% endif %}
   </div>
   {% endif %}
 
+  {% if vue_plateforme %}
+  <div class="stats-zone">
+    <h2 class="stats-titre">{% trans "Vue d'ensemble de la plateforme" %}</h2>
+    <div class="stats-grille">
+      <div class="stat-carte"><div class="stat-valeur">{{ vue_plateforme.totaux.actives }}</div><div class="stat-label">{% trans "Entreprises actives" %}</div></div>
+      <div class="stat-carte"><div class="stat-valeur">{{ vue_plateforme.totaux.suspendues }}</div><div class="stat-label">{% trans "Entreprises suspendues" %}</div></div>
+      <div class="stat-carte"><div class="stat-valeur">{{ vue_plateforme.totaux.employes }}</div><div class="stat-label">{% trans "Employes (toutes entreprises)" %}</div></div>
+      <div class="stat-carte"><div class="stat-valeur">{{ vue_plateforme.totaux.voyages_a_venir }}</div><div class="stat-label">{% trans "Voyages a venir" %}</div></div>
+      <div class="stat-carte"><div class="stat-valeur">{{ vue_plateforme.totaux.reservations_30j }}</div><div class="stat-label">{% trans "Reservations (30 jours)" %}</div></div>
+    </div>
+    <h2 class="stats-titre">{% trans "Entreprises" %}</h2>
+    <div style="background:#fff; border-radius:12px; padding:6px 16px; margin-bottom:24px; color:#1f2937;">
+      {% for l in vue_plateforme.lignes %}
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:12px 0; {% if not forloop.last %}border-bottom:1px solid #eef0f3;{% endif %}">
+        <div><strong>{{ l.c.nom_affiche|default:l.c.nom }}</strong> <span style="color:#6b7280;">({{ l.c.code }})</span></div>
+        <div style="color:#6b7280; font-size:.9em;">{{ l.reservations_30j }} {% trans "reservations" %} · {% trans "Derniere connexion" %} : {% if l.derniere_connexion %}{{ l.derniere_connexion|date:"d/m/Y H:i" }}{% else %}{% trans "Jamais" %}{% endif %}</div>
+        <span style="padding:3px 12px; border-radius:99px; font-size:.8em; font-weight:700; {% if l.c.actif %}background:#dcfce7; color:#166534;{% else %}background:#fef3c7; color:#92400e;{% endif %}">{% if l.c.actif %}{% trans "Active" %}{% else %}{% trans "Suspendue" %}{% endif %}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% else %}
   <div class="stats-zone">
 
     {% if stats_profil.voit_voyages_aujourd_hui or stats_profil.voit_reservations_jour or stats_profil.voit_recette_jour or stats_profil.voit_voyages_a_venir %}
@@ -296,6 +320,7 @@
     </p>
 
   </div>
+  {% endif %}
 
 {% if app_list %}
   {% for app in app_list %}

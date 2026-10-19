@@ -1569,7 +1569,14 @@ _ancien_index = AdminSite.index
 
 def _index_avec_stats(self, request, extra_context=None):
     extra_context = extra_context or {}
-    extra_context['stats'] = statistiques_tableau_bord(request.user)
+    if request.user.is_superuser:
+        # Administrateur de la plateforme : vue d'ensemble de toutes les entreprises (pas les chiffres d'une agence)
+        from .services_plateforme import resume_entreprises
+        lignes, totaux = resume_entreprises()
+        extra_context['stats'] = {}
+        extra_context['vue_plateforme'] = {'lignes': lignes, 'totaux': totaux}
+    else:
+        extra_context['stats'] = statistiques_tableau_bord(request.user)
     extra_context['stats_profil'] = profil_tableau_bord(request.user)
     return _ancien_index(self, request, extra_context)
 

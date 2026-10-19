@@ -17,7 +17,7 @@ from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
 from .models import Agence, Bus, Compagnie, Employe, Reservation, Voyage
-from .services_plateforme import basculer_compagnie, creer_compagnie_avec_pdg, reinitialiser_acces_pdg
+from .services_plateforme import basculer_compagnie, creer_compagnie_avec_pdg, reinitialiser_acces_pdg, resume_entreprises
 
 
 def superutilisateur_requis(vue):
@@ -32,21 +32,8 @@ def superutilisateur_requis(vue):
 
 @superutilisateur_requis
 def plateforme(request):
-    aujourd_hui = timezone.now().date()
-    il_y_a_30_jours = timezone.now() - timedelta(days=30)
-    lignes = []
-    for c in Compagnie.objects.order_by('nom'):
-        lignes.append({
-            'c': c,
-            'pdg': Employe.objects.filter(compagnie=c, poste='pdg').select_related('user').first(),
-            'agences': Agence.objects.filter(compagnie=c).count(),
-            'employes': Employe.objects.filter(compagnie=c, actif=True).count(),
-            'bus': Bus.objects.filter(compagnie=c).count(),
-            'voyages_a_venir': Voyage.objects.filter(bus__compagnie=c, date_depart__gte=aujourd_hui).count(),
-            'reservations_30j': Reservation.objects.filter(voyage__bus__compagnie=c, date_reservation__gte=il_y_a_30_jours).count(),
-            'derniere_connexion': User.objects.filter(employe__compagnie=c).aggregate(d=Max('last_login'))['d'],
-        })
-    return render(request, 'transport/plateforme.html', {'lignes': lignes})
+    lignes, totaux = resume_entreprises()
+    return render(request, 'transport/plateforme.html', {'lignes': lignes, 'totaux': totaux})
 
 
 @superutilisateur_requis

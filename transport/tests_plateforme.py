@@ -115,3 +115,32 @@ class ConsolePlateformeTests(TestCase):
         self.client.force_login(self.su)
         self.client.post(f"/espace/plateforme/{self.A['compagnie'].pk}/basculer/", **H)
         self.assertTrue(Compagnie.objects.get(code='aa').actif)
+
+
+@override_settings(ALLOWED_HOSTS=['*'])
+class TableauDeBordSuperviseurTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.A = construire_monde('aa', 'Alpha')
+        cls.B = construire_monde('bb', 'Beta')
+        cls.su = User.objects.create_superuser('plateforme', password='x')
+        cls.pdg_a, _e = creer_employe(cls.A, 'pdg', agence=False)
+
+    def test_le_superviseur_voit_la_vue_d_ensemble_pas_les_chiffres_d_une_agence(self):
+        self.client.force_login(self.su)
+        r = self.client.get('/admin/', **H)
+        self.assertEqual(r.status_code, 200)
+        self.assertContains(r, "Vue d'ensemble de la plateforme")
+        self.assertContains(r, 'Alpha')
+        self.assertContains(r, 'Beta')
+        self.assertContains(r, 'Creer une entreprise')
+        self.assertNotContains(r, '/espace/vendre-billet/')
+        self.assertNotContains(r, 'Voyages du jour')
+        self.assertEqual(r.context['vue_plateforme']['totaux']['actives'], 2)
+
+    def test_le_pdg_garde_son_tableau_de_bord_d_agence(self):
+        self.client.force_login(self.pdg_a)
+        r = self.client.get('/admin/', **H)
+        self.assertContains(r, 'Voyages du jour')
+        self.assertNotContains(r, "Vue d'ensemble de la plateforme")
+        self.assertNotContains(r, 'Plateforme (entreprises)')

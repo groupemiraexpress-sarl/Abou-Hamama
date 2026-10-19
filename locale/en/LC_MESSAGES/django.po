@@ -1006,6 +1006,9 @@ msgstr "Employee"
 msgid "Employes"
 msgstr "Employees"
 
+msgid "Employes (toutes entreprises)"
+msgstr "Employees (all companies)"
+
 msgid "Employes actifs"
 msgstr "Active employees"
 
@@ -1089,6 +1092,15 @@ msgstr "Business"
 
 msgid "Entreprise creee"
 msgstr "Company created"
+
+msgid "Entreprises"
+msgstr "Companies"
+
+msgid "Entreprises actives"
+msgstr "Active companies"
+
+msgid "Entreprises suspendues"
+msgstr "Suspended companies"
 
 msgid "Entretien"
 msgstr "Maintenance"
@@ -2625,6 +2637,9 @@ msgstr "Overview"
 msgid "Vue d'ensemble PDG"
 msgstr "CEO overview"
 
+msgid "Vue d'ensemble de la plateforme"
+msgstr "Platform overview"
+
 msgid "Wi-Fi"
 msgstr "Wi-Fi"
 
@@ -2693,6 +2708,9 @@ msgstr "seat(s)"
 
 msgid "places"
 msgstr "seats"
+
+msgid "reservations"
+msgstr "reservations"
 
 msgid "transfert(s)"
 msgstr "transfer(s)"

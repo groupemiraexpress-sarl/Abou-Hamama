@@ -997,6 +997,9 @@ msgstr "الموظف"
 msgid "Employes"
 msgstr "الموظفون"
 
+msgid "Employes (toutes entreprises)"
+msgstr "الموظفون (كل الشركات)"
+
 msgid "Employes actifs"
 msgstr "الموظفون"
 
@@ -1080,6 +1083,15 @@ msgstr "شركة"
 
 msgid "Entreprise creee"
 msgstr "تم إنشاء الشركة"
+
+msgid "Entreprises"
+msgstr "الشركات"
+
+msgid "Entreprises actives"
+msgstr "الشركات النشطة"
+
+msgid "Entreprises suspendues"
+msgstr "الشركات المعلقة"
 
 msgid "Entretien"
 msgstr "الصيانة"
@@ -2602,6 +2614,9 @@ msgstr "نظرة عامة"
 msgid "Vue d'ensemble PDG"
 msgstr "نظرة عامة للمدير العام"
 
+msgid "Vue d'ensemble de la plateforme"
+msgstr "نظرة عامة على المنصة"
+
 msgid "Wi-Fi"
 msgstr "واي فاي"
 
@@ -2670,6 +2685,9 @@ msgstr "مقعد (مقاعد)"
 
 msgid "places"
 msgstr "مقعدا"
+
+msgid "reservations"
+msgstr "حجوزات"
 
 msgid "transfert(s)"
 msgstr "حوالة (حوالات)"
