@@ -16,4 +16,7 @@ def compagnie_info(request):
     Modifiable depuis l'admin (fiche Compagnie), sans toucher au code.
     """
     from .models import Compagnie
-    return {'compagnie_info': Compagnie.objects.filter(actif=True).first()}
+    from .tenant import compagnie_de
+    # Employe connecte : sa compagnie. Sinon (page de connexion, superutilisateur) : la premiere compagnie active.
+    compagnie = compagnie_de(getattr(request, 'user', None))
+    return {'compagnie_info': compagnie or Compagnie.objects.filter(actif=True).first()}

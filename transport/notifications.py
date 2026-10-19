@@ -82,7 +82,8 @@ def notifier_telephone(telephone, titre, corps, data=None):
     """Trouve le compte client lie a ce numero de telephone (s'il existe) et lui envoie une notification."""
     if not telephone:
         return
-    client = Client.objects.filter(telephone=telephone, user__isnull=False).select_related("user").first()
-    if client is None:
-        return
-    notifier_utilisateur(client.user, titre, corps, data)
+    # Une meme personne peut avoir une fiche client dans plusieurs compagnies : on la notifie une seule fois.
+    clients = Client.objects.filter(telephone=telephone, user__isnull=False).select_related("user")
+    utilisateurs = {c.user_id: c.user for c in clients}
+    for utilisateur in utilisateurs.values():
+        notifier_utilisateur(utilisateur, titre, corps, data)

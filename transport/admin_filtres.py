@@ -44,6 +44,7 @@ assigner_groupe_selon_poste() plus bas met automatiquement chaque nouvel
 employe dans le bon groupe selon son poste.
 """
 from django.db.models import Q
+from .tenant import portee
 from django.contrib import admin
 
 # Postes qui ne voient que ce qu'ils ont eux-memes enregistre (dans leur agence)
@@ -212,16 +213,16 @@ class FiltreAgenceListFilter(admin.SimpleListFilter):
     def lookups(self, request, model_admin):
         from .models import Agence
         if voit_tout(request.user):
-            agences = Agence.objects.filter(actif=True).order_by('ville', 'nom')
+            agences = portee(request.user, Agence).filter(actif=True).order_by('ville', 'nom')
         else:
             employe = getattr(request.user, 'employe', None)
             poste = employe.poste if employe else None
             if poste == 'resp_planning':
                 zone = zone_de(request.user)
-                agences = Agence.objects.filter(actif=True, zone=zone).order_by('ville', 'nom') if zone else Agence.objects.none()
+                agences = portee(request.user, Agence).filter(actif=True, zone=zone).order_by('ville', 'nom') if zone else Agence.objects.none()
             else:
                 agence = agence_de(request.user)
-                agences = Agence.objects.filter(id=agence.id) if agence else Agence.objects.none()
+                agences = portee(request.user, Agence).filter(id=agence.id) if agence else Agence.objects.none()
         return [(a.id, str(a)) for a in agences]
 
     def queryset(self, request, queryset):
@@ -254,16 +255,16 @@ class FiltreAgenceMultiListFilter(admin.SimpleListFilter):
     def lookups(self, request, model_admin):
         from .models import Agence
         if voit_tout(request.user):
-            agences = Agence.objects.filter(actif=True).order_by('ville', 'nom')
+            agences = portee(request.user, Agence).filter(actif=True).order_by('ville', 'nom')
         else:
             employe = getattr(request.user, 'employe', None)
             poste = employe.poste if employe else None
             if poste == 'resp_planning':
                 zone = zone_de(request.user)
-                agences = Agence.objects.filter(actif=True, zone=zone).order_by('ville', 'nom') if zone else Agence.objects.none()
+                agences = portee(request.user, Agence).filter(actif=True, zone=zone).order_by('ville', 'nom') if zone else Agence.objects.none()
             else:
                 agence = agence_de(request.user)
-                agences = Agence.objects.filter(id=agence.id) if agence else Agence.objects.none()
+                agences = portee(request.user, Agence).filter(id=agence.id) if agence else Agence.objects.none()
         return [(a.id, str(a)) for a in agences]
 
     def queryset(self, request, queryset):

@@ -11,6 +11,7 @@ from .models import (
     ArticleStock, DemandeMateriel, Commissionnaire, Depense, SessionCaisse, MouvementCaisse,
 )
 from django import forms
+from .tenant import compagnie_de, limiter_a_compagnie, identifiant_employe
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 import secrets
@@ -475,10 +476,11 @@ class ReservationAdminForm(forms.ModelForm):
         # Aucune erreur plus haut : on peut maintenant creer/retrouver le client.
         if not cleaned.get('client') and not self.errors:
             telephone = cleaned['voyageur_telephone'].strip()
-            client = Client.objects.filter(telephone=telephone).first()
+            compagnie_voyage = cleaned['voyage'].bus.compagnie
+            client = Client.objects.filter(telephone=telephone, compagnie=compagnie_voyage).first()
             if client is None:
                 nom_complet = f"{cleaned.get('voyageur_prenom', '').strip()} {cleaned['voyageur_nom'].strip()}".strip()
-                client = Client.objects.create(nom=nom_complet, telephone=telephone)
+                client = Client.objects.create(nom=nom_complet, telephone=telephone, compagnie=compagnie_voyage)
             cleaned['client'] = client
         elif not cleaned.get('client'):
             raise forms.ValidationError(_("Choisissez un client, ou laissez le champ vide apres avoir corrige les autres erreurs."))
@@ -784,7 +786,7 @@ class ColisAdmin(BoutonImprimerMixin, TypePieceListeMixin, AgenceDepartLimiteeMi
 class EmployeAdminForm(forms.ModelForm):
     nom_utilisateur = forms.CharField(
         label=_("Nom d'utilisateur (connexion)"), max_length=150, required=False,
-        help_text=_("Laisser vide pour utiliser le telephone comme identifiant. "
+        help_text=_("Laisser vide pour generer l'identifiant (code de la compagnie + telephone). "
                      "En modification, laisser vide pour ne pas toucher au compte existant.")
     )
     mot_de_passe = forms.CharField(
@@ -799,12 +801,12 @@ class EmployeAdminForm(forms.ModelForm):
     def clean(self):
         cleaned = super().clean()
 
-        # Un seul PDG autorise dans tout le logiciel
+        # Un seul PDG par compagnie
         poste = cleaned.get('poste')
         if poste == 'pdg':
-            deja_pdg = Employe.objects.filter(poste='pdg').exclude(pk=self.instance.pk).exists()
+            deja_pdg = Employe.objects.filter(poste='pdg', compagnie=cleaned.get('compagnie')).exclude(pk=self.instance.pk).exists()
             if deja_pdg:
-                self.add_error('poste', _("Un seul compte PDG est autorise dans le logiciel. Un PDG existe deja."))
+                self.add_error('poste', _("Un seul compte PDG est autorise par compagnie. Un PDG existe deja."))
 
         nom_utilisateur = cleaned.get('nom_utilisateur')
 
@@ -819,7 +821,7 @@ class EmployeAdminForm(forms.ModelForm):
             return cleaned  # le reste de la gestion du compte se fait dans save_model
 
         telephone = cleaned.get('telephone')
-        identifiant = nom_utilisateur or telephone
+        identifiant = nom_utilisateur or (identifiant_employe(cleaned.get('compagnie'), telephone) if telephone else '')
         if not identifiant:
             raise forms.ValidationError(_("Renseignez un telephone ou un nom d'utilisateur pour creer le compte."))
         if User.objects.filter(username=identifiant).exists():
@@ -898,7 +900,7 @@ class EmployeAdmin(GroupesChampsMixin, FiltreAgenceMixin, admin.ModelAdmin):
         mot_de_passe = form.cleaned_data.get('mot_de_passe')
 
         if not change:
-            username = nom_utilisateur or obj.telephone
+            username = nom_utilisateur or identifiant_employe(obj.compagnie, obj.telephone)
             mdp_genere = mot_de_passe or _generer_mot_de_passe()
             user = User.objects.create_user(
                 username=username, password=mdp_genere,
@@ -1784,3 +1786,60 @@ class MouvementCaisseAdmin(_LectureSeule, FiltreAgenceMixin, admin.ModelAdmin):
     champ_createur = None
     list_display = ('session', 'type_mouvement', 'montant', 'motif', 'cree_par', 'date_creation')
     list_filter = ('type_mouvement', 'date_creation')
+
+
+# ======================================================================
+# CLOISONNEMENT PAR ENTREPRISE : protections appliquees a TOUS les admins
+# (voir transport/tenant.py). Un compte ne voit que sa compagnie ; un modele
+# non declare dans tenant.CHEMINS_COMPAGNIE n'est visible que du superutilisateur.
+# ======================================================================
+_get_queryset_origine = admin.ModelAdmin.get_queryset
+_formfield_fk_origine = admin.ModelAdmin.formfield_for_foreignkey
+_formfield_m2m_origine = admin.ModelAdmin.formfield_for_manytomany
+_get_form_origine = admin.ModelAdmin.get_form
+
+
+def _get_queryset_isole(self, request):
+    return limiter_a_compagnie(_get_queryset_origine(self, request), request.user)
+
+
+def _formfield_fk_isole(self, db_field, request, **kwargs):
+    champ = _formfield_fk_origine(self, db_field, request, **kwargs)
+    if champ is not None and hasattr(champ, 'queryset') and not request.user.is_superuser:
+        champ.queryset = limiter_a_compagnie(champ.queryset, request.user)
+    return champ
+
+
+def _formfield_m2m_isole(self, db_field, request, **kwargs):
+    champ = _formfield_m2m_origine(self, db_field, request, **kwargs)
+    if champ is not None and hasattr(champ, 'queryset') and not request.user.is_superuser:
+        champ.queryset = limiter_a_compagnie(champ.queryset, request.user)
+    return champ
+
+
+def _get_form_isole(self, request, obj=None, change=False, **kwargs):
+    """Pour un non-superutilisateur, la compagnie d'une fiche est toujours la sienne (champ cache, impose cote serveur)."""
+    Form = _get_form_origine(self, request, obj, change=change, **kwargs)
+    compagnie = compagnie_de(request.user)
+    if request.user.is_superuser or compagnie is None or 'compagnie' not in Form.base_fields:
+        return Form
+
+    class FormCompagnieImposee(Form):
+        def __init__(self, *args, **inner_kwargs):
+            super().__init__(*args, **inner_kwargs)
+            champ = self.fields['compagnie']
+            champ.queryset = Compagnie.objects.filter(pk=compagnie.pk)
+            champ.initial = compagnie.pk
+            champ.required = False
+            champ.widget = forms.HiddenInput()
+
+        def clean_compagnie(self):
+            return compagnie
+
+    return FormCompagnieImposee
+
+
+admin.ModelAdmin.get_queryset = _get_queryset_isole
+admin.ModelAdmin.formfield_for_foreignkey = _formfield_fk_isole
+admin.ModelAdmin.formfield_for_manytomany = _formfield_m2m_isole
+admin.ModelAdmin.get_form = _get_form_isole

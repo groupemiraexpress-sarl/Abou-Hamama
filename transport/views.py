@@ -9,6 +9,7 @@ from django.views.decorators.http import require_GET
 from .models import Voyage, Client, Reservation, Agence, Chauffeur, Employe, Colis, TransfertArgent, Siege, DemandeMateriel, ArticleStock, Commissionnaire
 from django.urls import reverse
 from .admin_filtres import agence_de, voit_tout
+from .tenant import portee
 
 
 @staff_member_required
@@ -68,7 +69,7 @@ def vendre_billet(request):
     # Un agent ne vend que les voyages de sa propre agence (le PDG et le
     # superutilisateur voient toutes les agences, comme partout ailleurs
     # dans l'admin - voir admin_filtres.voit_tout).
-    voyages = Voyage.objects.filter(
+    voyages = portee(request.user, Voyage).filter(
         statut='programme',
         date_depart__gte=timezone.now().date(),
         places_disponibles__gt=0,
@@ -80,7 +81,7 @@ def vendre_billet(request):
 
     voyages = voyages.order_by('date_depart', 'heure_depart')
 
-    commissionnaires = Commissionnaire.objects.filter(actif=True)
+    commissionnaires = portee(request.user, Commissionnaire).filter(actif=True)
     if not voit_tout(request.user):
         agence_c = agence_de(request.user)
         commissionnaires = commissionnaires.filter(agence=agence_c) if agence_c else commissionnaires.none()
@@ -167,14 +168,14 @@ def vendre_billet(request):
             })
 
         client, cree = Client.objects.get_or_create(
-            telephone=client_telephone,
+            telephone=client_telephone, compagnie=voyage.bus.compagnie,
             defaults={'nom': client_nom},
         )
 
         reservations_creees = []
         try:
             for p in passagers:
-                siege_obj = Siege.objects.filter(voyage=voyage, numero=p['siege']).first()
+                siege_obj = portee(request.user, Siege).filter(voyage=voyage, numero=p['siege']).first()
                 if not siege_obj:
                     raise ValueError(_("Siege %(s)s introuvable pour ce voyage.") % {'s': p['siege']})
                 reservation = Reservation.objects.create(
@@ -197,7 +198,7 @@ def vendre_billet(request):
                 if statut_paiement == 'gratuit':
                     # Billet offert : comptabilise a 0 FCFA (apres creation,
                     # car save() recalcule le montant depuis le prix du voyage).
-                    Reservation.objects.filter(pk=reservation.pk).update(montant_total=0, notes='Gratuit')
+                    portee(request.user, Reservation).filter(pk=reservation.pk).update(montant_total=0, notes='Gratuit')
                     reservation.montant_total = 0
                 reservations_creees.append(reservation)
         except ValueError as e:
@@ -217,7 +218,7 @@ def plan_voyage(request, voyage_id):
     poste = employe.poste if employe else None
     if not (request.user.is_superuser or poste in ('pdg', 'responsable', 'secretaire', 'guichetier', 'caissier')):
         return JsonResponse({'erreur': 'interdit'}, status=403)
-    voyage = Voyage.objects.filter(id=voyage_id).select_related('bus__agence').first()
+    voyage = portee(request.user, Voyage).filter(id=voyage_id).select_related('bus__agence').first()
     if not voyage:
         return JsonResponse({'erreur': 'introuvable'}, status=404)
     if not voit_tout(request.user):
@@ -226,7 +227,7 @@ def plan_voyage(request, voyage_id):
             return JsonResponse({'erreur': 'interdit'}, status=403)
 
     reservations = list(
-        Reservation.objects.filter(voyage=voyage)
+        portee(request.user, Reservation).filter(voyage=voyage)
         .select_related('siege', 'cree_par')
         .order_by('siege__numero', 'date_reservation')
     )
@@ -246,7 +247,7 @@ def plan_voyage(request, voyage_id):
         etat_par_siege[r.siege.numero] = etat
     sieges = [
         {'numero': sg.numero, 'etat': etat_par_siege.get(sg.numero, 'libre')}
-        for sg in Siege.objects.filter(voyage=voyage).order_by('numero')
+        for sg in portee(request.user, Siege).filter(voyage=voyage).order_by('numero')
     ]
 
     actives = [r for r in reservations if r.statut not in ('annulee', 'remboursee')]
@@ -286,7 +287,7 @@ def billets_confirmes(request):
     """Affiche le recu apres la vente d'un ou plusieurs billets."""
     ids_param = request.GET.get('ids', '')
     ids = [int(i) for i in ids_param.split(',') if i.isdigit()]
-    reservations = Reservation.objects.filter(id__in=ids).select_related(
+    reservations = portee(request.user, Reservation).filter(id__in=ids).select_related(
         'voyage', 'voyage__trajet', 'client'
     )
     montant_total = sum(r.montant_total for r in reservations)
@@ -299,7 +300,7 @@ def billets_confirmes(request):
 @staff_member_required
 def billet_confirme(request, reservation_id):
     """Affiche le recu apres la vente d'un billet (ancienne route, gardee par securite)."""
-    reservation = Reservation.objects.filter(id=reservation_id).select_related('voyage__bus', 'voyage__trajet', 'client').first()
+    reservation = portee(request.user, Reservation).filter(id=reservation_id).select_related('voyage__bus', 'voyage__trajet', 'client').first()
     reservations = [reservation] if reservation else []
     return render(request, 'transport/billet_confirme.html', {
         'reservation': reservation, 'reservations': reservations,
@@ -310,21 +311,21 @@ def billet_confirme(request, reservation_id):
 @staff_member_required
 def recu_colis(request, colis_id):
     """Affiche un recu imprimable pour un colis (comme le recu de billet)."""
-    colis = Colis.objects.filter(id=colis_id).select_related('agence_depart', 'agence_arrivee').first()
+    colis = portee(request.user, Colis).filter(id=colis_id).select_related('agence_depart', 'agence_arrivee').first()
     return render(request, 'transport/recu_colis.html', {'colis': colis})
 
 
 @staff_member_required
 def recu_transfert(request, transfert_id):
     """Affiche un recu imprimable pour un transfert d'argent (comme le recu de billet)."""
-    transfert = TransfertArgent.objects.filter(id=transfert_id).select_related('agence_depart', 'agence_retrait').first()
+    transfert = portee(request.user, TransfertArgent).filter(id=transfert_id).select_related('agence_depart', 'agence_retrait').first()
     return render(request, 'transport/recu_transfert.html', {'transfert': transfert})
 
 
 @staff_member_required
 def recu_demande_materiel(request, demande_id):
     """Affiche un recu imprimable pour une demande de materiel (remise au magasin)."""
-    demande = DemandeMateriel.objects.filter(id=demande_id).select_related('bus', 'article', 'demande_par', 'traite_par').first()
+    demande = portee(request.user, DemandeMateriel).filter(id=demande_id).select_related('bus', 'article', 'demande_par', 'traite_par').first()
     return render(request, 'transport/recu_demande_materiel.html', {'demande': demande})
 
 
@@ -335,7 +336,7 @@ def etat_stock(request):
     poste = employe.poste if employe else None
     if not (request.user.is_superuser or poste in ('pdg', 'magasinier')):
         return render(request, 'transport/etat_stock.html', {'articles': None})
-    articles = ArticleStock.objects.filter(actif=True).order_by('nom')
+    articles = portee(request.user, ArticleStock).filter(actif=True).order_by('nom')
     valeur_totale = sum(a.valeur_stock for a in articles)
     return render(request, 'transport/etat_stock.html', {'articles': articles, 'valeur_totale': valeur_totale})
 
@@ -386,12 +387,12 @@ def historique_employe(request):
     peut_superviser = tout_voir or poste_connecte == 'responsable'
 
     if tout_voir:
-        employes_visibles = Employe.objects.filter(actif=True).order_by('agence__ville', 'nom')
+        employes_visibles = portee(request.user, Employe).filter(actif=True).order_by('agence__ville', 'nom')
     elif poste_connecte == 'responsable':
         agence = agence_de(request.user)
-        employes_visibles = Employe.objects.filter(actif=True, agence=agence).order_by('nom') if agence else Employe.objects.none()
+        employes_visibles = portee(request.user, Employe).filter(actif=True, agence=agence).order_by('nom') if agence else Employe.objects.none()
     else:
-        employes_visibles = Employe.objects.filter(pk=employe_connecte.pk) if employe_connecte else Employe.objects.none()
+        employes_visibles = portee(request.user, Employe).filter(pk=employe_connecte.pk) if employe_connecte else Employe.objects.none()
 
     employe_id = request.GET.get('employe')
     employe_cible = None
@@ -425,19 +426,19 @@ def historique_employe(request):
     if not employe_cible:
         return render(request, 'transport/historique_employe.html', contexte)
 
-    reservations = Reservation.objects.filter(
+    reservations = portee(request.user, Reservation).filter(
         cree_par=employe_cible, date_reservation__date=date_choisie
     ).select_related('voyage', 'voyage__trajet', 'client').order_by('date_reservation')
-    colis_enregistres = Colis.objects.filter(
+    colis_enregistres = portee(request.user, Colis).filter(
         cree_par=employe_cible, date_enregistrement__date=date_choisie
     ).order_by('date_enregistrement')
-    colis_remis = Colis.objects.filter(
+    colis_remis = portee(request.user, Colis).filter(
         modifie_par=employe_cible, statut='livre', date_livraison__date=date_choisie
     ).order_by('date_livraison')
-    transferts_enregistres = TransfertArgent.objects.filter(
+    transferts_enregistres = portee(request.user, TransfertArgent).filter(
         cree_par=employe_cible, date_envoi__date=date_choisie
     ).order_by('date_envoi')
-    transferts_retires = TransfertArgent.objects.filter(
+    transferts_retires = portee(request.user, TransfertArgent).filter(
         modifie_par=employe_cible, statut='retire', date_retrait__date=date_choisie
     ).order_by('date_retrait')
 
@@ -474,7 +475,7 @@ def liste_billets(request):
 
     peut_modifier = est_superuser or poste in ('pdg', 'responsable')
 
-    billets = Reservation.objects.filter(statut='payee').select_related(
+    billets = portee(request.user, Reservation).filter(statut='payee').select_related(
         'client', 'voyage', 'voyage__trajet', 'agence', 'cree_par'
     )
 
@@ -523,7 +524,7 @@ def modifier_billet(request, reservation_id):
     if not peut_modifier:
         return redirect('transport:liste_billets')
 
-    reservation = Reservation.objects.filter(id=reservation_id).first()
+    reservation = portee(request.user, Reservation).filter(id=reservation_id).first()
     if not reservation:
         return redirect('transport:liste_billets')
 
@@ -573,7 +574,7 @@ def rapport_agence(request):
     if not autorise:
         return redirect('admin:index')
 
-    agences = Agence.objects.filter(actif=True).order_by('ville', 'nom')
+    agences = portee(request.user, Agence).filter(actif=True).order_by('ville', 'nom')
     agence_choisie = None
     employes_agence = []
     chauffeurs_agence = []
@@ -582,10 +583,10 @@ def rapport_agence(request):
 
     agence_id = request.GET.get('agence')
     if agence_id:
-        agence_choisie = Agence.objects.filter(id=agence_id).first()
+        agence_choisie = portee(request.user, Agence).filter(id=agence_id).first()
         if agence_choisie:
-            employes_agence = Employe.objects.filter(agence=agence_choisie, actif=True).order_by('poste', 'nom')
-            chauffeurs_agence = Chauffeur.objects.filter(agence=agence_choisie, actif=True).order_by('nom')
+            employes_agence = portee(request.user, Employe).filter(agence=agence_choisie, actif=True).order_by('poste', 'nom')
+            chauffeurs_agence = portee(request.user, Chauffeur).filter(agence=agence_choisie, actif=True).order_by('nom')
 
             employe_id = request.GET.get('employe')
             if employe_id:
@@ -595,7 +596,7 @@ def rapport_agence(request):
 
             from django.db.models import Count
             effectifs_poste = list(
-                Employe.objects.filter(agence=agence_choisie, actif=True)
+                portee(request.user, Employe).filter(agence=agence_choisie, actif=True)
                 .values('poste')
                 .annotate(total=Count('id'))
                 .order_by('poste')
@@ -616,7 +617,7 @@ def rapport_agence(request):
         'chauffeurs_agence': chauffeurs_agence,
         'effectifs_poste': effectifs_poste,
         'employe_cible': employe_cible,
-        'tous_employes_agence': Employe.objects.filter(agence=agence_choisie, actif=True).order_by('nom') if agence_choisie else [],
+        'tous_employes_agence': portee(request.user, Employe).filter(agence=agence_choisie, actif=True).order_by('nom') if agence_choisie else [],
         'sections': sections,
     })
 
@@ -634,13 +635,13 @@ def rapport_finances_agence(request):
     if not autorise:
         return redirect('admin:index')
 
-    agences = Agence.objects.filter(actif=True).order_by('ville', 'nom')
+    agences = portee(request.user, Agence).filter(actif=True).order_by('ville', 'nom')
     agence_choisie = None
     donnees = None
 
     agence_id = request.GET.get('agence')
     if agence_id:
-        agence_choisie = Agence.objects.filter(id=agence_id).first()
+        agence_choisie = portee(request.user, Agence).filter(id=agence_id).first()
         if agence_choisie:
             aujourd_hui = timezone.now().date()
             debut_mois = aujourd_hui.replace(day=1)
@@ -648,15 +649,15 @@ def rapport_finances_agence(request):
             def val(x):
                 return x or 0
 
-            billets = Reservation.objects.filter(
+            billets = portee(request.user, Reservation).filter(
                 statut='payee', agence=agence_choisie, date_reservation__date__gte=debut_mois
             ).aggregate(total=Sum('montant_total'), nb=Count('id'))
 
-            colis = Colis.objects.filter(
+            colis = portee(request.user, Colis).filter(
                 agence_depart=agence_choisie, date_enregistrement__date__gte=debut_mois
             ).aggregate(total=Sum('prix'), nb=Count('id'))
 
-            transferts = TransfertArgent.objects.filter(
+            transferts = portee(request.user, TransfertArgent).filter(
                 agence_depart=agence_choisie, date_envoi__date__gte=debut_mois
             ).aggregate(total=Sum('frais'), nb=Count('id'))
 
@@ -690,7 +691,7 @@ def rapport_maintenance_agence(request):
     if not autorise:
         return redirect('admin:index')
 
-    agences = Agence.objects.filter(actif=True).order_by('ville', 'nom')
+    agences = portee(request.user, Agence).filter(actif=True).order_by('ville', 'nom')
     agence_choisie = None
     bus_agence = []
     entretiens_agence = []
@@ -699,11 +700,11 @@ def rapport_maintenance_agence(request):
 
     agence_id = request.GET.get('agence')
     if agence_id:
-        agence_choisie = Agence.objects.filter(id=agence_id).first()
+        agence_choisie = portee(request.user, Agence).filter(id=agence_id).first()
         if agence_choisie:
-            bus_agence = Bus.objects.filter(agence=agence_choisie).order_by('immatriculation')
-            entretiens_agence = Entretien.objects.filter(bus__agence=agence_choisie).select_related('bus').order_by('-date_entretien')
-            total_carburant_qs = PleinCarburant.objects.filter(bus__agence=agence_choisie)
+            bus_agence = portee(request.user, Bus).filter(agence=agence_choisie).order_by('immatriculation')
+            entretiens_agence = portee(request.user, Entretien).filter(bus__agence=agence_choisie).select_related('bus').order_by('-date_entretien')
+            total_carburant_qs = portee(request.user, PleinCarburant).filter(bus__agence=agence_choisie)
 
             bus_id = request.GET.get('bus')
             if bus_id:
@@ -729,7 +730,7 @@ def rapport_maintenance_agence(request):
         'entretiens_agence': entretiens_agence,
         'total_carburant': total_carburant,
         'bus_cible': bus_cible,
-        'tous_bus_agence': Bus.objects.filter(agence=agence_choisie).order_by('immatriculation') if agence_choisie else [],
+        'tous_bus_agence': portee(request.user, Bus).filter(agence=agence_choisie).order_by('immatriculation') if agence_choisie else [],
         'sections': sections,
     })
 
@@ -755,12 +756,12 @@ def rapport_mon_agence(request):
         # Un superuser sans fiche employe peut choisir via ?agence=
         agence_id = request.GET.get('agence')
         if agence_id:
-            agence = Agence.objects.filter(id=agence_id).first()
+            agence = portee(request.user, Agence).filter(id=agence_id).first()
 
     if not agence:
         return render(request, 'transport/rapport_mon_agence.html', {
             'agence': None,
-            'agences_dispo': Agence.objects.filter(actif=True).order_by('nom') if request.user.is_superuser else None,
+            'agences_dispo': portee(request.user, Agence).filter(actif=True).order_by('nom') if request.user.is_superuser else None,
         })
 
     aujourd_hui = timezone.now().date()
@@ -769,12 +770,12 @@ def rapport_mon_agence(request):
     def val(x):
         return x or 0
 
-    employes_agence = Employe.objects.filter(agence=agence, actif=True).order_by('poste', 'nom')
-    chauffeurs_agence = Chauffeur.objects.filter(agence=agence, actif=True).order_by('nom')
-    bus_agence = Bus.objects.filter(agence=agence).order_by('immatriculation')
+    employes_agence = portee(request.user, Employe).filter(agence=agence, actif=True).order_by('poste', 'nom')
+    chauffeurs_agence = portee(request.user, Chauffeur).filter(agence=agence, actif=True).order_by('nom')
+    bus_agence = portee(request.user, Bus).filter(agence=agence).order_by('immatriculation')
 
     effectifs_poste = list(
-        Employe.objects.filter(agence=agence, actif=True)
+        portee(request.user, Employe).filter(agence=agence, actif=True)
         .values('poste')
         .annotate(total=Count('id'))
         .order_by('poste')
@@ -782,13 +783,13 @@ def rapport_mon_agence(request):
     for e in effectifs_poste:
         e['poste_libelle'] = dict(Employe.POSTE_CHOICES).get(e['poste'], e['poste'])
 
-    billets = Reservation.objects.filter(
+    billets = portee(request.user, Reservation).filter(
         statut='payee', agence=agence, date_reservation__date__gte=debut_mois
     ).aggregate(total=Sum('montant_total'), nb=Count('id'))
-    colis = Colis.objects.filter(
+    colis = portee(request.user, Colis).filter(
         agence_depart=agence, date_enregistrement__date__gte=debut_mois
     ).aggregate(total=Sum('prix'), nb=Count('id'))
-    transferts = TransfertArgent.objects.filter(
+    transferts = portee(request.user, TransfertArgent).filter(
         agence_depart=agence, date_envoi__date__gte=debut_mois
     ).aggregate(total=Sum('frais'), nb=Count('id'))
 
@@ -802,8 +803,8 @@ def rapport_mon_agence(request):
         'total_general': val(billets['total']) + val(colis['total']) + val(transferts['total']),
     }
 
-    total_carburant = PleinCarburant.objects.filter(bus__agence=agence).aggregate(total=Sum('montant'))['total'] or 0
-    entretiens_agence = Entretien.objects.filter(bus__agence=agence).select_related('bus').order_by('-date_entretien')[:30]
+    total_carburant = portee(request.user, PleinCarburant).filter(bus__agence=agence).aggregate(total=Sum('montant'))['total'] or 0
+    entretiens_agence = portee(request.user, Entretien).filter(bus__agence=agence).select_related('bus').order_by('-date_entretien')[:30]
 
     return render(request, 'transport/rapport_mon_agence.html', {
         'agence': agence,
@@ -831,7 +832,7 @@ def carte_bus_temps_reel(request):
     if not autorise:
         return redirect('admin:index')
 
-    voyages_en_cours = Voyage.objects.filter(statut='en_cours').select_related('trajet', 'bus', 'chauffeur')
+    voyages_en_cours = portee(request.user, Voyage).filter(statut='en_cours').select_related('trajet', 'bus', 'chauffeur')
 
     if not (request.user.is_superuser or poste == 'pdg'):
         agence = employe.agence if employe else None
@@ -843,7 +844,7 @@ def carte_bus_temps_reel(request):
     voyages_data = []
     voyages_json = []
     for v in voyages_en_cours:
-        derniere = PositionBus.objects.filter(voyage=v).order_by('-horodatage').first()
+        derniere = portee(request.user, PositionBus).filter(voyage=v).order_by('-horodatage').first()
         voyages_data.append({
             'voyage': v,
             'derniere_position': derniere,
@@ -880,7 +881,7 @@ def manifeste_bord(request):
     voyage_choisi = None
     reservations = []
 
-    voyages_disponibles = Voyage.objects.filter(
+    voyages_disponibles = portee(request.user, Voyage).filter(
         statut__in=['programme', 'en_cours', 'termine']
     ).select_related('trajet', 'bus').order_by('-date_depart', '-heure_depart')
 
@@ -895,9 +896,9 @@ def manifeste_bord(request):
 
     voyage_id = request.GET.get('voyage')
     if voyage_id:
-        voyage_choisi = Voyage.objects.filter(id=voyage_id).select_related('trajet', 'bus', 'chauffeur').first()
+        voyage_choisi = portee(request.user, Voyage).filter(id=voyage_id).select_related('trajet', 'bus', 'chauffeur').first()
         if voyage_choisi:
-            reservations = Reservation.objects.filter(
+            reservations = portee(request.user, Reservation).filter(
                 voyage=voyage_choisi, statut='payee'
             ).select_related('client', 'siege').order_by('embarque', 'voyageur_nom')
 
@@ -932,31 +933,31 @@ def tableau_bord_pdg(request):
         return x or 0
 
     # Recette du jour, toutes agences
-    recette_billets = Reservation.objects.filter(
+    recette_billets = portee(request.user, Reservation).filter(
         statut='payee', date_reservation__date=aujourd_hui
     ).aggregate(total=Sum('montant_total'))['total']
-    recette_colis = Colis.objects.filter(
+    recette_colis = portee(request.user, Colis).filter(
         date_enregistrement__date=aujourd_hui
     ).aggregate(total=Sum('prix'))['total']
-    recette_transferts = TransfertArgent.objects.filter(
+    recette_transferts = portee(request.user, TransfertArgent).filter(
         date_envoi__date=aujourd_hui
     ).aggregate(total=Sum('frais'))['total']
 
     recette_totale = val(recette_billets) + val(recette_colis) + val(recette_transferts)
 
     # Bus en circulation
-    bus_en_circulation = Voyage.objects.filter(statut='en_cours').count()
+    bus_en_circulation = portee(request.user, Voyage).filter(statut='en_cours').count()
 
     # Alertes non resolues
-    alertes_actives = AlerteVoyage.objects.filter(resolue=False).count()
+    alertes_actives = portee(request.user, AlerteVoyage).filter(resolue=False).count()
 
     # Taux de remplissage moyen du jour (voyages du jour uniquement)
-    voyages_jour = Voyage.objects.filter(date_depart=aujourd_hui).select_related('bus')
+    voyages_jour = portee(request.user, Voyage).filter(date_depart=aujourd_hui).select_related('bus')
     taux_total = 0
     nb_voyages_calcules = 0
     for v in voyages_jour:
         if v.bus and v.bus.capacite:
-            places_vendues = Reservation.objects.filter(voyage=v, statut='payee').count()
+            places_vendues = portee(request.user, Reservation).filter(voyage=v, statut='payee').count()
             taux = (places_vendues / v.bus.capacite) * 100
             taux_total += taux
             nb_voyages_calcules += 1
@@ -964,7 +965,7 @@ def tableau_bord_pdg(request):
 
     # Top 3 agences par recette du jour (billets)
     top_agences = (
-        Reservation.objects.filter(statut='payee', date_reservation__date=aujourd_hui, agence__isnull=False)
+        portee(request.user, Reservation).filter(statut='payee', date_reservation__date=aujourd_hui, agence__isnull=False)
         .values('agence__nom')
         .annotate(total=Sum('montant_total'))
         .order_by('-total')[:3]
@@ -972,15 +973,15 @@ def tableau_bord_pdg(request):
 
     # Repartition Nord/Sud (billets du jour, via agence de vente)
     repartition = (
-        Reservation.objects.filter(statut='payee', date_reservation__date=aujourd_hui, agence__zone__in=['nord', 'sud'])
+        portee(request.user, Reservation).filter(statut='payee', date_reservation__date=aujourd_hui, agence__zone__in=['nord', 'sud'])
         .values('agence__zone')
         .annotate(total=Sum('montant_total'), nb=Count('id'))
     )
     repartition_dict = {r['agence__zone']: {'total': r['total'], 'nb': r['nb']} for r in repartition}
 
     # Colis et transferts du jour
-    colis_jour = Colis.objects.filter(date_enregistrement__date=aujourd_hui).count()
-    transferts_jour = TransfertArgent.objects.filter(date_envoi__date=aujourd_hui).count()
+    colis_jour = portee(request.user, Colis).filter(date_enregistrement__date=aujourd_hui).count()
+    transferts_jour = portee(request.user, TransfertArgent).filter(date_envoi__date=aujourd_hui).count()
 
     return render(request, 'transport/tableau_bord_pdg.html', {
         'recette_totale': recette_totale,

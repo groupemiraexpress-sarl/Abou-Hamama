@@ -8,6 +8,7 @@ from .models import (
     DemandeMateriel, ArticleStock,
 )
 from .admin_filtres import voit_tout, agence_de, zone_de, POSTES_PERSONNEL
+from .tenant import portee
 
 
 def statistiques_tableau_bord(user=None):
@@ -23,12 +24,12 @@ def statistiques_tableau_bord(user=None):
     # il faut donc filtrer par zone plutot que par agence pour lui.
     scope_zone = (not scope_global) and poste == 'resp_planning' and bool(zone)
 
-    reservations_qs = Reservation.objects.all()
-    colis_qs = Colis.objects.all()
-    transferts_qs = TransfertArgent.objects.all()
-    demandes_colis_qs = DemandeColis.objects.all()
-    demandes_transfert_qs = DemandeTransfert.objects.all()
-    chauffeurs_qs = Chauffeur.objects.filter(actif=True)
+    reservations_qs = portee(user, Reservation).all()
+    colis_qs = portee(user, Colis).all()
+    transferts_qs = portee(user, TransfertArgent).all()
+    demandes_colis_qs = portee(user, DemandeColis).all()
+    demandes_transfert_qs = portee(user, DemandeTransfert).all()
+    chauffeurs_qs = portee(user, Chauffeur).filter(actif=True)
 
     if not scope_global:
         if scope_zone:
@@ -66,12 +67,12 @@ def statistiques_tableau_bord(user=None):
             chauffeurs_qs = chauffeurs_qs.filter(agence=agence)
 
     # Voyages et parc (pas de notion d'agence sur ces modeles, restent globaux)
-    voyages_aujourd_hui = Voyage.objects.filter(date_depart=aujourd_hui).count()
-    voyages_a_venir = Voyage.objects.filter(date_depart__gt=aujourd_hui).count()
-    bus_service = Bus.objects.filter(statut='en_service').count()
-    bus_maintenance = Bus.objects.filter(statut='maintenance').count()
-    total_clients = Client.objects.filter(actif=True).count()
-    total_employes = Employe.objects.filter(actif=True).count()
+    voyages_aujourd_hui = portee(user, Voyage).filter(date_depart=aujourd_hui).count()
+    voyages_a_venir = portee(user, Voyage).filter(date_depart__gt=aujourd_hui).count()
+    bus_service = portee(user, Bus).filter(statut='en_service').count()
+    bus_maintenance = portee(user, Bus).filter(statut='maintenance').count()
+    total_clients = portee(user, Client).filter(actif=True).count()
+    total_employes = portee(user, Employe).filter(actif=True).count()
 
     # Reservations (filtrees)
     reservations_jour = reservations_qs.filter(date_reservation__date=aujourd_hui).count()
@@ -93,7 +94,7 @@ def statistiques_tableau_bord(user=None):
     colis_livres_jour = colis_qs.filter(statut='livre', date_livraison__date=aujourd_hui).count()
     transferts_retires_jour = transferts_qs.filter(statut='retire', date_retrait__date=aujourd_hui).count()
 
-    alertes_non_resolues = AlerteVoyage.objects.filter(resolue=False).count()
+    alertes_non_resolues = portee(user, AlerteVoyage).filter(resolue=False).count()
 
     # Permis de conduire deja expires ou expirant dans les 30 prochains jours (filtres)
     date_limite_permis = aujourd_hui + timedelta(days=30)
@@ -101,7 +102,7 @@ def statistiques_tableau_bord(user=None):
 
     # Demandes de materiel (filtrees) : le magasinier n'a pas d'agence propre
     # (magasin unique pour toute la compagnie), il voit donc toujours tout.
-    demandes_materiel_qs = DemandeMateriel.objects.all()
+    demandes_materiel_qs = portee(user, DemandeMateriel).all()
     if not scope_global and poste != 'magasinier':
         demandes_materiel_qs = demandes_materiel_qs.filter(bus__agence=agence) if agence else demandes_materiel_qs.none()
     demandes_materiel_attente = demandes_materiel_qs.filter(statut='en_attente').count()
@@ -114,8 +115,8 @@ def statistiques_tableau_bord(user=None):
         demandes_materiel_reponses_a_voir = demandes_materiel_qs.exclude(statut='en_attente').filter(vu_par_demandeur=False).count()
 
     # Stock (global, un seul magasin pour toute la compagnie)
-    total_articles_stock = ArticleStock.objects.filter(actif=True).count()
-    articles_stock_faible = ArticleStock.objects.filter(actif=True, quantite_stock__lte=F('seuil_alerte')).count()
+    total_articles_stock = portee(user, ArticleStock).filter(actif=True).count()
+    articles_stock_faible = portee(user, ArticleStock).filter(actif=True, quantite_stock__lte=F('seuil_alerte')).count()
 
     return {
         'voyages_aujourd_hui': voyages_aujourd_hui,

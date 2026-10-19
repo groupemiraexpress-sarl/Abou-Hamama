@@ -20,6 +20,7 @@ from .admin_filtres import agence_de, voit_tout
 from .models import (
     Agence, Bus, Depense, MouvementCaisse, Reservation, SessionCaisse, Siege, Voyage,
 )
+from .tenant import portee
 
 POSTES_VENTE = ('pdg', 'responsable', 'secretaire', 'guichetier', 'caissier')
 POSTES_CAISSE = ('pdg', 'responsable', 'secretaire', 'caissier')
@@ -41,7 +42,7 @@ def _a_le_droit(user, postes):
 
 def _voyage_autorise(user, voyage_id):
     """Le voyage demande, s'il appartient a l'agence de l'utilisateur (sinon None)."""
-    voyage = Voyage.objects.filter(id=voyage_id).select_related('bus__agence', 'trajet', 'chauffeur').first()
+    voyage = portee(user, Voyage).filter(id=voyage_id).select_related('bus__agence', 'trajet', 'chauffeur').first()
     if not voyage:
         return None
     if not voit_tout(user):
@@ -116,7 +117,7 @@ def changer_bus_voyage(request, voyage_id):
     if not voyage:
         return JsonResponse({'erreur': _("Voyage introuvable (ou ne fait pas partie de votre agence).")}, status=404)
 
-    candidats = Bus.objects.filter(agence_id=voyage.bus.agence_id, statut='en_service').order_by('immatriculation')
+    candidats = portee(request.user, Bus).filter(agence_id=voyage.bus.agence_id, statut='en_service').order_by('immatriculation')
 
     if request.method == 'GET':
         return JsonResponse({
@@ -138,8 +139,8 @@ def changer_bus_voyage(request, voyage_id):
         if reservations.filter(siege__numero__gt=nouveau.capacite).exists():
             return JsonResponse({'erreur': _("Des billets existent deja sur des places au-dela de %(n)s : impossible de reduire le bus.") % {'n': nouveau.capacite}}, status=400)
 
-        Siege.objects.filter(voyage=voyage, numero__gt=nouveau.capacite).delete()
-        existants = set(Siege.objects.filter(voyage=voyage).values_list('numero', flat=True))
+        portee(request.user, Siege).filter(voyage=voyage, numero__gt=nouveau.capacite).delete()
+        existants = set(portee(request.user, Siege).filter(voyage=voyage).values_list('numero', flat=True))
         Siege.objects.bulk_create([
             Siege(voyage=voyage, numero=n) for n in range(1, nouveau.capacite + 1) if n not in existants
         ])
@@ -190,7 +191,7 @@ def dettes(request):
         return redirect('admin:index')
     employe = _employe(request.user)
 
-    billets = Reservation.objects.filter(statut='en_attente').select_related('voyage__trajet', 'voyage__bus', 'siege', 'cree_par')
+    billets = portee(request.user, Reservation).filter(statut='en_attente').select_related('voyage__trajet', 'voyage__bus', 'siege', 'cree_par')
     if not voit_tout(request.user):
         agence = agence_de(request.user)
         billets = billets.filter(agence=agence) if agence else billets.none()
@@ -220,7 +221,7 @@ def dettes(request):
             billet.modifie_par = employe
             billet.save()
             if not billet.voyage.ligne_id:
-                Voyage.objects.filter(pk=billet.voyage_id).update(
+                portee(request.user, Voyage).filter(pk=billet.voyage_id).update(
                     places_disponibles=billet.voyage.places_disponibles + billet.nombre_places)
             message = _("Billet %(n)s annule.") % {'n': billet.numero_reservation}
         billets = billets.exclude(statut__in=['payee', 'annulee'])
@@ -306,14 +307,14 @@ def caisse(request):
     employe = _employe(request.user)
 
     # Agence : celle de l'employe ; le PDG / superutilisateur choisit.
-    agences = Agence.objects.filter(actif=True).order_by('ville', 'nom') if voit_tout(request.user) else None
+    agences = portee(request.user, Agence).filter(actif=True).order_by('ville', 'nom') if voit_tout(request.user) else None
     agence = agence_de(request.user)
     if voit_tout(request.user):
         agence = agences.filter(id=request.GET.get('agence') or request.POST.get('agence')).first() or agence or agences.first()
     if not agence:
         return render(request, 'transport/caisse.html', {'sans_agence': True})
 
-    session = SessionCaisse.objects.filter(agence=agence).exclude(statut='cloturee').order_by('-ouverte_le').first()
+    session = portee(request.user, SessionCaisse).filter(agence=agence).exclude(statut='cloturee').order_by('-ouverte_le').first()
     erreur = message = ''
 
     if request.method == 'POST':
@@ -367,10 +368,10 @@ def caisse(request):
             erreur = _("Action impossible dans l'etat actuel de la caisse.")
 
     # Session affichee : la session en cours, sinon la derniere cloturee.
-    affichee = session or SessionCaisse.objects.filter(agence=agence).order_by('-ouverte_le').first()
+    affichee = session or portee(request.user, SessionCaisse).filter(agence=agence).order_by('-ouverte_le').first()
     return render(request, 'transport/caisse.html', {
         'agence': agence, 'agences': agences, 'session': session, 'affichee': affichee,
         'resume': resume_session(affichee) if affichee else None,
-        'historique': SessionCaisse.objects.filter(agence=agence, statut='cloturee').select_related('employe').order_by('-ouverte_le')[:10],
+        'historique': portee(request.user, SessionCaisse).filter(agence=agence, statut='cloturee').select_related('employe').order_by('-ouverte_le')[:10],
         'erreur': erreur, 'message': message,
     })

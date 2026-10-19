@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Compagnie(models.Model):
+    code = models.SlugField(_("Code"), max_length=20, unique=True, help_text=_("Code court en minuscules (ex : ah). Sert de prefixe aux identifiants des employes et d'adresse web."))
     nom = models.CharField(_("Nom"), max_length=100)
     sigle = models.CharField(_("Sigle"), max_length=20, blank=True)
     siege_social = models.CharField(_("Siege social"), max_length=200)
@@ -195,7 +196,8 @@ class Client(models.Model):
     user = models.OneToOneField('auth.User', on_delete=models.SET_NULL, null=True, blank=True, related_name='client', verbose_name=_("Compte de connexion"), help_text=_("Compte de connexion lie a cette fiche client (app mobile)"))
     nom = models.CharField(_("Nom"), max_length=100)
     prenom = models.CharField(_("Prenom"), max_length=100, blank=True)
-    telephone = models.CharField(_("Telephone"), max_length=20, unique=True)
+    compagnie = models.ForeignKey(Compagnie, on_delete=models.PROTECT, related_name='clients', verbose_name=_("Compagnie"))
+    telephone = models.CharField(_("Telephone"), max_length=20)
     email = models.EmailField(_("Email"), blank=True)
     type_client = models.CharField(_("Type de client"), max_length=20, choices=TYPE_CHOICES, default='particulier')
     type_piece = models.CharField(_("Type de piece"), max_length=20, choices=TYPE_PIECE_CHOICES, blank=True, help_text=_("Type de piece d'identite"))
@@ -236,6 +238,7 @@ class Client(models.Model):
         verbose_name = _("Client")
         verbose_name_plural = _("Clients")
         ordering = ['nom', 'prenom']
+        constraints = [models.UniqueConstraint(fields=['compagnie', 'telephone'], name='client_telephone_unique_par_compagnie')]
 
 
 class Reservation(models.Model):
@@ -561,7 +564,8 @@ class ArticleStock(models.Model):
     """Catalogue des pieces/materiel geres par le magasin (unique pour toute
     la compagnie). La quantite en stock est decrementee automatiquement
     quand une DemandeMateriel est marquee comme livree."""
-    nom = models.CharField(_("Nom de l'article"), max_length=150, unique=True)
+    compagnie = models.ForeignKey(Compagnie, on_delete=models.PROTECT, related_name='articles_stock', verbose_name=_("Compagnie"))
+    nom = models.CharField(_("Nom de l'article"), max_length=150)
     reference = models.CharField(_("Reference"), max_length=50, blank=True)
     unite = models.CharField(_("Unite"), max_length=20, default='piece', help_text=_("Ex : piece, litre, kg..."))
     prix_unitaire = models.PositiveIntegerField(_("Prix unitaire (FCFA)"), default=0, help_text=_("Prix d'un seul exemplaire de cet article"))
@@ -573,6 +577,7 @@ class ArticleStock(models.Model):
         verbose_name = _("Article de stock")
         verbose_name_plural = _("Articles de stock")
         ordering = ['nom']
+        constraints = [models.UniqueConstraint(fields=['compagnie', 'nom'], name='article_nom_unique_par_compagnie')]
 
     def __str__(self):
         return self.nom
@@ -680,6 +685,7 @@ class Promotion(models.Model):
         ('aucun', _('Aucun')),
     ]
 
+    compagnie = models.ForeignKey(Compagnie, on_delete=models.PROTECT, related_name='promotions', verbose_name=_("Compagnie"))
     titre = models.CharField(_("Titre"), max_length=120, help_text=_("Titre de la promotion"))
     texte = models.TextField(_("Texte"), help_text=_("Description de la promotion"))
     image = models.ImageField(_("Image"), upload_to='promotions/', null=True, blank=True, help_text=_("Image de la promotion"))
@@ -953,6 +959,7 @@ class AvisVoyage(models.Model):
 
 class QuestionFAQ(models.Model):
     """Question frequente affichee dans l'ecran Aide de l'app mobile."""
+    compagnie = models.ForeignKey(Compagnie, on_delete=models.PROTECT, related_name='questions_faq', verbose_name=_("Compagnie"))
     question = models.CharField(_("Question"), max_length=200, help_text=_("La question posee"))
     reponse = models.TextField(_("Reponse"), help_text=_("La reponse affichee au client"))
     ordre = models.IntegerField(_("Ordre"), default=0, help_text=_("Ordre d'affichage (petit numero = en haut)"))
@@ -976,6 +983,7 @@ class Plainte(models.Model):
         ('traitee', _('Traitee')),
     ]
 
+    compagnie = models.ForeignKey(Compagnie, on_delete=models.PROTECT, related_name='plaintes', verbose_name=_("Compagnie"))
     client = models.ForeignKey('Client', on_delete=models.SET_NULL, null=True, blank=True, related_name='plaintes', verbose_name=_("Client"))
     sujet = models.CharField(_("Sujet"), max_length=150)
     message = models.TextField(_("Message"))
@@ -995,7 +1003,7 @@ class Plainte(models.Model):
 
 
 class Commissionnaire(models.Model):
-    agence = models.ForeignKey(Agence, on_delete=models.CASCADE, related_name='commissionnaires', null=True, blank=True, verbose_name=_("Agence"))
+    agence = models.ForeignKey(Agence, on_delete=models.CASCADE, related_name='commissionnaires', verbose_name=_("Agence"))
     nom = models.CharField(_("Nom"), max_length=100)
     telephone = models.CharField(_("Telephone"), max_length=20, blank=True)
     commission_par_billet = models.PositiveIntegerField(_("Commission par billet (FCFA)"), default=0, help_text=_("Montant verse au commissionnaire pour chaque billet apporte"))
