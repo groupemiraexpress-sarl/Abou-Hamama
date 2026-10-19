@@ -176,6 +176,7 @@ def api_inscription(request):
         email,
         'Validez votre compte ' + compagnie.nom,
         'Bienvenue ' + username + ' ! Cliquez sur ce lien pour valider votre compte : ' + lien,
+        nom_expediteur=compagnie.nom_affiche or compagnie.nom,
     )
     return Response({'message': 'Compte cree. Email de validation envoye.'}, status=201)
 
@@ -1317,3 +1318,45 @@ def api_rejoindre_compagnie(request):
         return reponse_compagnie_inconnue()
     fiche = fiche_client_ou_creer(request)
     return Response({'message': 'Compagnie rejointe.', 'compagnie': fiche.compagnie.nom, 'compagnies': compagnies_du_compte(request.user)}, status=201)
+
+
+from rest_framework.decorators import throttle_classes
+from rest_framework.throttling import AnonRateThrottle
+
+
+class LimiteMotDePasseOublie(AnonRateThrottle):
+    """Pas plus de 5 demandes par heure et par adresse IP (evite l'envoi massif d'e-mails)."""
+    rate = '5/hour'
+    scope = 'mot_de_passe_oublie'
+
+
+@api_view(['POST'])
+@throttle_classes([LimiteMotDePasseOublie])
+def api_mot_de_passe_oublie(request):
+    """
+    "Mot de passe oublie" : envoie par e-mail un lien pour choisir un nouveau mot de passe.
+    La reponse est toujours la meme, que l'adresse existe ou non (on ne revele pas quels comptes existent).
+    Reserve aux comptes voyageurs : un compte employe ne se reinitialise pas par ce moyen.
+    """
+    email = request.data.get('email', '').strip().lower()
+    message = {'message': "Si un compte existe avec cette adresse e-mail, un lien de reinitialisation vient d'etre envoye."}
+    if not email or valider_email_strict(email):
+        return Response(message)
+
+    user = User.objects.filter(email__iexact=email, is_active=True, is_staff=False, is_superuser=False,
+                               fiches_client__isnull=False).distinct().first()
+    if user is not None:
+        compagnie = compagnie_requete(request)
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = default_token_generator.make_token(user)
+        lien = settings.SITE_URL + '/mot-de-passe/reinitialiser/' + uid + '/' + token + '/'
+        from .email_brevo import envoyer_email
+        nom = (compagnie.nom_affiche or compagnie.nom) if compagnie else 'votre compagnie'
+        envoyer_email(
+            user.email,
+            'Reinitialisation de votre mot de passe - ' + nom,
+            'Bonjour ' + user.username + ',\n\nPour choisir un nouveau mot de passe, ouvrez ce lien (valable quelques heures) :\n'
+            + lien + '\n\nSi vous n\'etes pas a l\'origine de cette demande, ignorez ce message : votre mot de passe reste inchange.',
+            nom_expediteur=nom if compagnie else None,
+        )
+    return Response(message)

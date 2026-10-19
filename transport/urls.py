@@ -10,6 +10,7 @@ urlpatterns = [
     # Guichetier - vente de billets (connexion via admin Django)
     path('espace/vendre-billet/', views.vendre_billet, name='vendre_billet'),
     path('espace/mon-profil/', views.mon_profil, name='mon_profil'),
+    path('mot-de-passe/reinitialiser/<str:uidb64>/<str:token>/', views.reinitialiser_mot_de_passe, name='reinitialiser_mot_de_passe'),
     path('espace/rapport-agence/', views.rapport_agence, name='rapport_agence'),
     path('espace/rapport-finances/', views.rapport_finances_agence, name='rapport_finances_agence'),
     path('espace/rapport-maintenance/', views.rapport_maintenance_agence, name='rapport_maintenance_agence'),
@@ -42,6 +43,7 @@ urlpatterns = [
     path('api/voyages/', api_views.api_voyages, name='api_voyages'),
     path('api/promotions/', api_views.api_promotions, name='api_promotions'),
     path('api/compagnies/', api_views.api_compagnies, name='api_compagnies'),
+    path('api/mot-de-passe-oublie/', api_views.api_mot_de_passe_oublie, name='api_mot_de_passe_oublie'),
     path('api/mes-compagnies/', api_views.api_mes_compagnies, name='api_mes_compagnies'),
     path('api/rejoindre-compagnie/', api_views.api_rejoindre_compagnie, name='api_rejoindre_compagnie'),
     path('api/agences/', api_views.api_agences, name='api_agences'),

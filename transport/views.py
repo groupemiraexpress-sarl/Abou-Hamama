@@ -997,3 +997,30 @@ def tableau_bord_pdg(request):
         'colis_jour': colis_jour,
         'transferts_jour': transferts_jour,
     })
+
+
+def reinitialiser_mot_de_passe(request, uidb64, token):
+    """Page (ouverte depuis le lien recu par e-mail) ou le voyageur choisit un nouveau mot de passe."""
+    from django.contrib.auth.models import User
+    from django.contrib.auth.tokens import default_token_generator
+    from django.utils.encoding import force_str
+    from django.utils.http import urlsafe_base64_decode
+
+    try:
+        user = User.objects.get(pk=force_str(urlsafe_base64_decode(uidb64)))
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    valide = user is not None and not user.is_staff and default_token_generator.check_token(user, token)
+    contexte = {'lien_valide': valide, 'termine': False, 'erreur': ''}
+    if valide and request.method == 'POST':
+        mot_de_passe = request.POST.get('mot_de_passe', '')
+        confirmation = request.POST.get('confirmation', '')
+        if len(mot_de_passe) < 6:
+            contexte['erreur'] = _("Le mot de passe doit contenir au moins 6 caracteres.")
+        elif mot_de_passe != confirmation:
+            contexte['erreur'] = _("Les deux mots de passe ne sont pas identiques.")
+        else:
+            user.set_password(mot_de_passe)
+            user.save()
+            contexte['termine'] = True
+    return render(request, 'transport/reinitialiser_mot_de_passe.html', contexte)

@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 BREVO_API_URL = "https://api.brevo.com/v3/smtp/email"
 
 
-def envoyer_email(destinataire, sujet, corps_texte):
+def envoyer_email(destinataire, sujet, corps_texte, nom_expediteur=None):
     """
     Envoie un email transactionnel via l'API Brevo.
     Ne leve jamais d'exception : renvoie True/False.
@@ -36,7 +36,7 @@ def envoyer_email(destinataire, sujet, corps_texte):
 
     try:
         data = json.dumps({
-            "sender": {"name": "Express Abou Hamama", "email": settings.EMAIL_FROM_ADDRESS},
+            "sender": {"name": nom_expediteur or "Express Abou Hamama", "email": settings.EMAIL_FROM_ADDRESS},
             "to": [{"email": destinataire}],
             "subject": sujet,
             "textContent": corps_texte,

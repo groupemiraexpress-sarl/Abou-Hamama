@@ -498,6 +498,9 @@ msgid ""
 msgstr ""
 "Choose a customer, or leave the field empty after fixing the other errors."
 
+msgid "Choisissez un nouveau mot de passe"
+msgstr "Choose a new password"
+
 msgid "Client"
 msgstr "Client"
 
@@ -685,6 +688,9 @@ msgstr "Handover confirmation"
 
 msgid "Confirmee (materiel disponible)"
 msgstr "Confirmed (material available)"
+
+msgid "Confirmer le mot de passe"
+msgstr "Confirm the password"
 
 msgid "Connexion OK"
 msgstr "Login OK"
@@ -1305,6 +1311,9 @@ msgstr "Was the bus clean?"
 msgid "Le chauffeur etait-il poli ?"
 msgstr "Was the driver polite?"
 
+msgid "Le mot de passe doit contenir au moins 6 caracteres."
+msgstr "The password must contain at least 6 characters."
+
 msgid "Le nom et le telephone du voyageur sont obligatoires."
 msgstr "The passenger's name and phone number are required."
 
@@ -1321,12 +1330,18 @@ msgstr ""
 msgid "Le siege %(s)s a ete choisi pour plusieurs passagers."
 msgstr "Seat %(s)s was selected for multiple passengers."
 
+msgid "Les deux mots de passe ne sont pas identiques."
+msgstr "The two passwords do not match."
+
 msgid ""
 "Les places annulees peuvent etre reaffectees. Cliquez pour les revendre."
 msgstr "Cancelled seats can be reassigned. Click to sell them again."
 
 msgid "Libre"
 msgstr "Free"
+
+msgid "Lien invalide ou expire"
+msgstr "Invalid or expired link"
 
 msgid "Ligne"
 msgstr "Route"
@@ -1469,6 +1484,9 @@ msgstr "Password"
 
 msgid "Mot de passe du Wi-Fi du bus (imprime sur le billet)"
 msgstr "Bus Wi-Fi password (printed on the ticket)"
+
+msgid "Mot de passe modifie"
+msgstr "Password changed"
 
 msgid "Mot de passe requis pour creer le compte."
 msgstr "Password required to create the account."
@@ -1619,6 +1637,9 @@ msgstr "Overall rating from 1 to 5 stars"
 
 msgid "Notes"
 msgstr "Notes"
+
+msgid "Nouveau mot de passe"
+msgstr "New password"
 
 msgid "Nouveau statut"
 msgstr "New status"
@@ -1930,6 +1951,9 @@ msgstr "Material request receipt"
 
 msgid "Recu transfert"
 msgstr "Transfer receipt"
+
+msgid "Refaites une demande de reinitialisation depuis l'application."
+msgstr "Make a new reset request from the app."
 
 msgid "Reference"
 msgstr "Reference"
@@ -2419,6 +2443,11 @@ msgstr "You must confirm you have verified the recipient's ID document."
 msgid ""
 "Vous devez confirmer avoir verifie la piece d'identite du destinataire."
 msgstr "You must confirm you have verified the recipient's ID document."
+
+msgid ""
+"Vous pouvez retourner sur l'application et vous connecter avec votre nouveau"
+" mot de passe."
+msgstr "You can go back to the app and sign in with your new password."
 
 msgid "Voyage"
 msgstr "Trip"
