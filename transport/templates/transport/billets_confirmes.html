@@ -19,7 +19,7 @@
 {% if reservations %}
 <div class="card">
     <div style="text-align:center; margin-bottom:20px;">
-        <img src="{% static 'transport/logo_abou_hamama.png' %}" alt="Express Abou Hamama" style="width:60px; height:60px; border-radius:50%; box-shadow:0 2px 6px rgba(0,0,0,.2); margin-bottom:10px;">
+        <img src="{{ branding.logo_url }}" alt="{{ branding.nom_complet }}" style="width:60px; height:60px; border-radius:50%; box-shadow:0 2px 6px rgba(0,0,0,.2); margin-bottom:10px;">
         <br>
         <i class="fa-solid fa-circle-check" style="font-size:2.5rem; color:#16a34a;"></i>
         <h2 style="color:#16a34a; margin-top:8px;">{% trans "Vente reussie" %}</h2>
@@ -30,7 +30,7 @@
     </div>
     {% for reservation in reservations %}
     <div class="bloc-billet" style="border-top:1px solid #e5e7eb; padding-top:14px; margin-top:14px;">
-        <img src="{% static 'transport/logo_abou_hamama.png' %}" alt="" class="filigrane">
+        <img src="{{ branding.logo_url }}" alt="" class="filigrane">
         <p style="font-weight:600; color:#1F3864;">{% trans "Reservation" %} {{ reservation.numero_reservation }}</p>
         <table style="width:100%; border-collapse:collapse; font-size:.9rem;">
             <tr><td style="padding:4px 0; color:#6b7280;">{% trans "Passager" %}</td>

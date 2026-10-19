@@ -21,6 +21,9 @@ def compagnie_requete(request):
     code = (request.META.get('HTTP_X_COMPAGNIE') or request.GET.get('compagnie') or '').strip().lower()
     if code:
         return Compagnie.objects.filter(code=code, actif=True).first()
+    domaine = getattr(request, 'compagnie_domaine', None)
+    if domaine is not None:
+        return domaine
     return Compagnie.objects.filter(actif=True).order_by('id').first()
 
 

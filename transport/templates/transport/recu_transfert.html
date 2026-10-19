@@ -19,9 +19,9 @@
 {% block contenu %}
 {% if transfert %}
 <div class="card carte-filigrane">
-    <img src="{% static 'transport/logo_abou_hamama.png' %}" alt="" class="filigrane">
+    <img src="{{ branding.logo_url }}" alt="" class="filigrane">
     <div style="text-align:center; margin-bottom:20px;">
-        <img src="{% static 'transport/logo_abou_hamama.png' %}" alt="Express Abou Hamama" style="width:60px; height:60px; border-radius:50%; box-shadow:0 2px 6px rgba(0,0,0,.2); margin-bottom:10px;">
+        <img src="{{ branding.logo_url }}" alt="{{ branding.nom_complet }}" style="width:60px; height:60px; border-radius:50%; box-shadow:0 2px 6px rgba(0,0,0,.2); margin-bottom:10px;">
         <br>
         <i class="fa-solid fa-money-bill-transfer" style="font-size:2.5rem; color:#1F3864;"></i>
         <h2 style="color:#1F3864; margin-top:8px;">{% trans "Transfert enregistre" %}</h2>

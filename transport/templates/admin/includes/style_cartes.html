@@ -5,7 +5,7 @@
     .carte-ah, #content-main form fieldset.module.aligned, #changelist-filter, #changelist .results, #toolbar,
     .inline-group, .submit-row, #content-main > .module, #changelist .paginator, .delete-confirmation #content-main form > div, form .actions {
         --body-fg:#1f2937; --body-bg:#fff; --body-quiet-color:#6b7280; --body-loud-color:#111827;
-        --link-fg:#1F3864; --link-hover-color:#2563eb; --link-selected-fg:#1F3864;
+        --link-fg:var(--primary,#1F3864); --link-hover-color:#2563eb; --link-selected-fg:var(--primary,#1F3864);
         --hairline-color:#eef0f3; --border-color:#e5e7eb; --darkened-bg:#f4f6f9; --selected-bg:#eff6ff; --selected-row:#eff6ff;
         --error-fg:#b91c1c; --message-success-bg:#dcfce7; --message-warning-bg:#fef3c7; --message-error-bg:#fee2e2;
         color:#1f2937; color-scheme:light;
@@ -36,7 +36,7 @@
         display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:14px 20px; align-items:start;
     }
     fieldset.module.aligned > h2 {
-        grid-column:1 / -1; margin:0 0 4px; padding:0 0 12px; background:none; color:#1F3864;
+        grid-column:1 / -1; margin:0 0 4px; padding:0 0 12px; background:none; color:var(--primary,#1F3864);
         font-size:1.1rem; font-weight:700; text-transform:none; letter-spacing:0; border:0; border-bottom:1px solid #eef0f3; border-radius:0; box-shadow:none;
     }
     fieldset.module.aligned > .description, fieldset.module.aligned > .errornote { grid-column:1 / -1; }
@@ -60,7 +60,7 @@
         border:1px solid #d1d5db; border-radius:10px; background:#fff; color:#111827;
     }
     fieldset.module.aligned input:focus, fieldset.module.aligned select:focus, fieldset.module.aligned textarea:focus {
-        outline:none; border-color:#1F3864; box-shadow:0 0 0 3px rgba(31,56,100,.12);
+        outline:none; border-color:var(--primary,#1F3864); box-shadow:0 0 0 3px rgba(31,56,100,.12);
     }
     fieldset.module.aligned .readonly { display:block; padding:11px 12px; background:#f3f4f6; border-radius:10px; color:#374151; min-height:1.2em; }
     fieldset.module.aligned .help, fieldset.module.aligned div.help { margin:5px 0 0; padding:0; font-size:.78rem; color:#6b7280; }
@@ -83,7 +83,7 @@
 
     /* Blocs en ligne (inlines), barre d'enregistrement */
     .inline-group { background:#fff; border-radius:16px; padding:16px 18px; margin:0 0 16px; box-shadow:0 4px 14px rgba(31,56,100,.08); border:none; overflow-x:auto; }
-    .inline-group h2 { background:none; color:#1F3864; font-size:1.05rem; text-transform:none; border:0; padding:0 0 8px; }
+    .inline-group h2 { background:none; color:var(--primary,#1F3864); font-size:1.05rem; text-transform:none; border:0; padding:0 0 8px; }
     .submit-row { border:none; border-radius:16px; background:#fff; box-shadow:0 4px 14px rgba(31,56,100,.08); padding:14px 20px; }
     .submit-row input[type=submit], .submit-row .button { border-radius:10px; padding:11px 20px; font-weight:700; }
 
@@ -101,10 +101,10 @@
     #changelist tbody tr.selected td, #changelist tbody tr.selected th { background:#eff6ff; }
     #changelist .paginator { background:#fff; border:none; border-radius:12px; margin-top:12px; padding:10px 14px; box-shadow:0 4px 14px rgba(31,56,100,.06); }
     #changelist-filter { background:#fff; border:none; border-radius:16px; box-shadow:0 4px 14px rgba(31,56,100,.08); overflow:hidden; }
-    #changelist-filter h2 { background:#1F3864; color:#fff; text-transform:uppercase; font-size:.78rem; letter-spacing:.5px; padding:12px 16px; border:0; }
+    #changelist-filter h2 { background:var(--primary,#1F3864); color:#fff; text-transform:uppercase; font-size:.78rem; letter-spacing:.5px; padding:12px 16px; border:0; }
     #changelist-filter h3 { color:#374151; font-size:.82rem; margin:12px 16px 4px; }
     #changelist-filter ul { padding:0 16px 8px; }
-    #changelist-filter li a { color:#1F3864; }
+    #changelist-filter li a { color:var(--primary,#1F3864); }
     #changelist-filter li.selected a { color:#2563eb; font-weight:700; }
     ul.object-tools a, ul.object-tools a:link, ul.object-tools a:visited { border-radius:10px; padding:9px 16px; font-weight:700; }
 

@@ -26,7 +26,7 @@
 
 <div class="card" id="zone-impression">
     <div style="text-align:center; margin-bottom:20px;">
-        <img src="{% static 'transport/logo_abou_hamama.png' %}" alt="Express Abou Hamama" style="width:60px; height:60px; border-radius:50%; box-shadow:0 2px 6px rgba(0,0,0,.2);">
+        <img src="{{ branding.logo_url }}" alt="{{ branding.nom_complet }}" style="width:60px; height:60px; border-radius:50%; box-shadow:0 2px 6px rgba(0,0,0,.2);">
         <h2 style="color:#1F3864; margin-top:10px;">{% trans "Rapport complet" %} — {{ agence.nom }}</h2>
         <p style="color:#6b7280; font-size:.85rem;">{{ agence.ville }} — {% trans "genere le" %} {% now "d/m/Y a H:i" %}</p>
     </div>

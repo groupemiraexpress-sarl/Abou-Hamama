@@ -14,7 +14,7 @@
 {% block contenu %}
 <div class="card" id="zone-impression">
     <div style="text-align:center; margin-bottom:18px;">
-        <img src="{% static 'transport/logo_abou_hamama.png' %}" alt="" style="width:60px; height:60px; border-radius:50%;">
+        <img src="{{ branding.logo_url }}" alt="" style="width:60px; height:60px; border-radius:50%;">
         <h2 style="color:#1F3864; margin-top:8px;">{% trans "Feuille chauffeur" %}</h2>
         <p style="color:#6b7280; font-size:.85rem;">{% trans "genere le" %} {% now "d/m/Y a H:i" %}</p>
     </div>

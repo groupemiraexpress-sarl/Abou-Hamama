@@ -101,3 +101,37 @@ def identifiant_employe(compagnie, telephone):
 def portee(user, modele):
     """Tous les objets du modele qui appartiennent a la compagnie de l'utilisateur (superutilisateur : tous)."""
     return limiter_a_compagnie(modele._default_manager.all(), user)
+
+
+def compagnie_du_domaine(hote):
+    """Compagnie reconnue d'apres l'adresse web : domaine propre, ou sous-domaine <code>.<PLATEFORME_DOMAINE>."""
+    from django.conf import settings
+    from .models import Compagnie
+    hote = (hote or '').split(':')[0].strip().lower()
+    if not hote:
+        return None
+    compagnie = Compagnie.objects.filter(domaine=hote, actif=True).first()
+    if compagnie is not None:
+        return compagnie
+    base = (getattr(settings, 'PLATEFORME_DOMAINE', '') or '').strip().lower().strip('.')
+    if base and hote.endswith('.' + base):
+        etiquette = hote[:-(len(base) + 1)].split('.')[-1]
+        return Compagnie.objects.filter(code=etiquette, actif=True).first()
+    return None
+
+
+def compagnie_courante(request):
+    """
+    Compagnie "affichee" pour cette requete (marque, telephones des recus) :
+    celle de l'employe connecte ; sinon celle de l'adresse web ; sinon la premiere compagnie active.
+    """
+    from .models import Compagnie
+    user = getattr(request, 'user', None)
+    if user is not None and getattr(user, 'is_authenticated', False) and not user.is_superuser:
+        compagnie = compagnie_de(user)
+        if compagnie is not None:
+            return compagnie
+    compagnie = getattr(request, 'compagnie_domaine', None)
+    if compagnie is not None:
+        return compagnie
+    return Compagnie.objects.filter(actif=True).order_by('id').first()

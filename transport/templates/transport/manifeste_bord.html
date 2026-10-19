@@ -23,7 +23,7 @@
 {% if voyage_choisi %}
 <div class="card" id="zone-impression">
     <div style="text-align:center; margin-bottom:20px;">
-        <img src="{% static 'transport/logo_abou_hamama.png' %}" alt="Express Abou Hamama" style="width:60px; height:60px; border-radius:50%; box-shadow:0 2px 6px rgba(0,0,0,.2);">
+        <img src="{{ branding.logo_url }}" alt="{{ branding.nom_complet }}" style="width:60px; height:60px; border-radius:50%; box-shadow:0 2px 6px rgba(0,0,0,.2);">
         <h2 style="color:#1F3864; margin-top:10px;">{% trans "Manifeste de bord" %}</h2>
         <p style="color:#6b7280; font-size:.9rem;">{{ voyage_choisi.trajet.ville_depart }} → {{ voyage_choisi.trajet.ville_arrivee }}</p>
         <p style="color:#6b7280; font-size:.85rem;">{{ voyage_choisi.date_depart|date:"d/m/Y" }} {% trans "a" %} {{ voyage_choisi.heure_depart|time:"H:i" }} — {% trans "Bus" %} {{ voyage_choisi.bus.immatriculation }}</p>

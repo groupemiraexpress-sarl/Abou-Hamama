@@ -87,7 +87,7 @@
             left: 50%;
             width: 700px;
             height: 700px;
-            background-image: url('{% static "transport/logo_abou_hamama.png" %}');
+            background-image: url('{{ branding.logo_url }}');
             background-repeat: no-repeat;
             background-position: center;
             background-size: contain;
@@ -108,7 +108,7 @@
     {% block extra_head %}{% endblock %}
 
     <link rel="manifest" href="{% static 'transport/manifest.json' %}">
-    <meta name="theme-color" content="#1F3864">
+    <meta name="theme-color" content="{{ branding.couleur_principale }}">
     <link rel="apple-touch-icon" href="{% static 'transport/icon-192.png' %}">
     <script>
         if ('serviceWorker' in navigator) {

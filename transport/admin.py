@@ -173,21 +173,33 @@ class GroupesChampsMixin:
 
 
 @admin.register(Compagnie)
-class CompagnieAdmin(admin.ModelAdmin):
-    list_display = ('nom', 'sigle', 'siege_social', 'telephone', 'actif')
+class CompagnieAdmin(GroupesChampsMixin, admin.ModelAdmin):
+    """Seul le superutilisateur (administrateur de la plateforme) cree une compagnie et regle son code et son adresse web ; le PDG regle la marque de la sienne."""
+    groupes_champs = [
+        (_("Identite"), ['nom', 'nom_affiche', 'sigle', 'code', 'siege_social', 'telephone', 'email', 'date_creation', 'actif']),
+        (_("Marque (affichee sur le site, les billets et l'application)"), ['logo', 'couleur_principale', 'slogan', 'pied_de_page', 'telephones_recus']),
+        (_("Adresse web"), ['domaine']),
+    ]
+    list_display = ('nom', 'code', 'domaine', 'siege_social', 'telephone', 'actif')
     list_filter = ('actif',)
-    search_fields = ('nom', 'sigle', 'siege_social')
-    list_editable = ('actif',)
+    search_fields = ('nom', 'sigle', 'code', 'siege_social')
     ordering = ('nom',)
 
-    def has_add_permission(self, request):
-        return _config_modifiable_uniquement_par_pdg(request)
+    def _est_pdg(self, request):
+        employe = getattr(request.user, 'employe', None)
+        return employe is not None and employe.poste == 'pdg'
 
-    def has_change_permission(self, request, obj=None):
-        return _config_modifiable_uniquement_par_pdg(request)
+    def has_add_permission(self, request):
+        return request.user.is_superuser
 
     def has_delete_permission(self, request, obj=None):
-        return _config_modifiable_uniquement_par_pdg(request)
+        return request.user.is_superuser
+
+    def has_change_permission(self, request, obj=None):
+        return request.user.is_superuser or self._est_pdg(request)
+
+    def get_readonly_fields(self, request, obj=None):
+        return () if request.user.is_superuser else ('code', 'domaine', 'actif')
 
 
 @admin.register(Agence)
