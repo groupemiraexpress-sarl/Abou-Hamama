@@ -6,13 +6,14 @@ def branding(request):
     tous les templates : {{ branding.nom_entreprise }}, {{ branding.logo_url }}, etc.
     """
     from django.templatetags.static import static
-    from .branding import BRANDING, assombrir, logo_par_defaut
+    from .branding import BRANDING, assombrir, logo_par_defaut, palette
     from .models import Compagnie
     from .tenant import compagnie_courante
 
     from django.conf import settings
 
     marque = dict(BRANDING)
+    marque.update(palette(marque['couleur_principale']))
     compagnie = compagnie_courante(request)
     marque['nom_complet'] = marque['nom_entreprise']
     marque['logo_url'] = static('transport/logo_abou_hamama.png')
@@ -21,8 +22,8 @@ def branding(request):
         nom = getattr(settings, 'PLATEFORME_NOM', "Gestion d'agence")
         from .branding import PLATEFORME
         couleur = PLATEFORME['couleur_principale']
+        marque.update(palette(couleur, PLATEFORME['couleur_secondaire']))
         marque.update(nom_entreprise=nom, nom_complet=nom, slogan=PLATEFORME['slogan'], pied_de_page='', code='',
-                      couleur_principale=couleur, couleur_hover=assombrir(couleur),
                       logo_url=static('transport/logo_mira_embleme.png'),
                       logo_complet_url=static('transport/logo_mira.png'),
                       filigrane_url=static('transport/logo_mira_filigrane.png'))
@@ -33,11 +34,10 @@ def branding(request):
             nom_entreprise=compagnie.nom,
             nom_complet=compagnie.nom_affiche or compagnie.nom,
             slogan=compagnie.slogan or marque['slogan'],
-            couleur_principale=couleur,
-            couleur_hover=assombrir(couleur),
             pied_de_page=compagnie.pied_de_page or f"Agence {compagnie.nom}",
             code=compagnie.code,
         )
+        marque.update(palette(couleur, compagnie.couleur_secondaire))
         if compagnie.logo:
             marque['logo_url'] = compagnie.logo.url
         elif Compagnie.objects.order_by('id').values_list('pk', flat=True).first() != compagnie.pk:
@@ -55,3 +55,8 @@ def compagnie_info(request):
     from .models import Compagnie
     from .tenant import compagnie_courante
     return {'compagnie_info': compagnie_courante(request)}
+
+def menu_lateral(request):
+    """Menu lateral de l'administration, calcule seulement si une page l'affiche (valeur paresseuse)."""
+    from .menu import construire_menu
+    return {'menu_lateral': lambda: construire_menu(request)}

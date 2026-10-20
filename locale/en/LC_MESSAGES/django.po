@@ -65,6 +65,9 @@ msgstr "Monthly subscription (FCFA)"
 msgid "Accompagnateur aimable"
 msgstr "Friendly attendant"
 
+msgid "Accueil"
+msgstr "Home"
+
 msgid "Acte de naissance"
 msgstr "Birth certificate"
 
@@ -88,6 +91,9 @@ msgstr "Activity"
 
 msgid "Administrateur"
 msgstr "Administrator"
+
+msgid "Administration"
+msgstr "Administration"
 
 msgid "Adresse"
 msgstr "Address"
@@ -371,6 +377,9 @@ msgstr "Other"
 msgid "Autre piece"
 msgstr "Other document"
 
+msgid "Autres"
+msgstr "Other"
+
 msgid "Autres informations"
 msgstr "Other information"
 
@@ -390,6 +399,9 @@ msgstr "Battery"
 
 msgid "Beneficiaire"
 msgstr "Beneficiary"
+
+msgid "Bienvenue"
+msgstr "Welcome"
 
 msgid "Billet"
 msgstr "Ticket"
@@ -781,6 +793,9 @@ msgstr "Parcel contents"
 
 msgid "Couleur au format #RRGGBB"
 msgstr "Color in #RRGGBB format"
+
+msgid "Couleur d'accent"
+msgstr "Accent color"
 
 msgid "Couleur de l'en-tete et des boutons, au format #RRGGBB"
 msgstr "Header and button color, in #RRGGBB format"
@@ -1595,6 +1610,9 @@ msgstr "Brand"
 msgid "Marque (affichee sur le site, les billets et l'application)"
 msgstr "Brand (shown on the site, tickets and app)"
 
+msgid "Menu"
+msgstr "Menu"
+
 msgid ""
 "Merci de regulariser votre situation pour continuer a utiliser la "
 "plateforme."
@@ -2401,6 +2419,15 @@ msgstr "Monthly salary in FCFA"
 
 msgid "Scanne par"
 msgstr "Scanned by"
+
+msgid ""
+"Seconde couleur (traits dores, pastilles, element actif du menu), au format "
+"#RRGGBB"
+msgstr ""
+"Second color (gold lines, badges, active menu item), in #RRGGBB format"
+
+msgid "Seconde couleur : traits dores, pastilles, element actif du menu."
+msgstr "Second color: gold lines, badges, active menu item."
 
 msgid "Secretaire d'agence"
 msgstr "Agency secretary"

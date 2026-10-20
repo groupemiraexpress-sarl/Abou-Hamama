@@ -76,6 +76,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'transport.context_processors.branding',
                 'transport.context_processors.compagnie_info',
+                'transport.context_processors.menu_lateral',
             ],
         },
     },

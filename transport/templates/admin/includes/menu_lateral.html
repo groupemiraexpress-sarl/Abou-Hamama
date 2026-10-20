@@ -1,0 +1,41 @@
+{% load i18n %}
+{% if request.user.is_authenticated and request.user.is_staff %}
+{% with menu=menu_lateral %}
+<div id="menu-voile"></div>
+<aside id="menu-lateral" aria-label="{% trans 'Menu' %}">
+  <a class="menu-marque" href="{% url 'admin:index' %}">
+    <img src="{{ branding.logo_url }}" alt="" class="menu-logo">
+    <span class="menu-nom">{{ branding.nom_complet }}</span>
+  </a>
+  <nav class="menu-liens">
+    {% for l in menu.principal %}
+    <a href="{{ l.url }}" class="menu-lien{% if l.actif %} actif{% endif %}"><i class="fa-solid {{ l.icone }}"></i><span>{{ l.libelle }}</span></a>
+    {% endfor %}
+    {% if menu.autres %}
+    <details class="menu-autres"{% if menu.autre_ouvert %} open{% endif %}>
+      <summary class="menu-lien"><i class="fa-solid fa-ellipsis"></i><span>{{ menu.titre_autres }}</span><i class="fa-solid fa-chevron-down menu-chevron"></i></summary>
+      {% for titre, liens in menu.autres %}
+      <div class="menu-groupe-titre">{{ titre }}</div>
+      {% for l in liens %}
+      <a href="{{ l.url }}" class="menu-lien petit{% if l.actif %} actif{% endif %}"><span>{{ l.libelle }}</span></a>
+      {% endfor %}
+      {% endfor %}
+    </details>
+    {% endif %}
+  </nav>
+</aside>
+{% endwith %}
+<script>
+  (function () {
+    var corps = document.body;
+    function basculer() { corps.classList.toggle('menu-ouvert'); }
+    document.addEventListener('click', function (e) {
+      if (e.target.closest('#bouton-menu')) { basculer(); }
+      else if (e.target.closest('#menu-voile') || e.target.closest('#menu-lateral a')) { corps.classList.remove('menu-ouvert'); }
+    });
+    // l'element actif du menu reste visible dans la liste
+    var actif = document.querySelector('#menu-lateral .menu-lien.actif');
+    if (actif && actif.scrollIntoView) { actif.scrollIntoView({block: 'nearest'}); }
+  })();
+</script>
+{% endif %}

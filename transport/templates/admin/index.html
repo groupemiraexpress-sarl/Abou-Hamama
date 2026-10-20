@@ -4,11 +4,34 @@
 {% block extrastyle %}
   {{ block.super }}
   <style>
+    /* ---------- Accueil : grand logo, vague, raccourcis ronds (couleurs de l'entreprise) ---------- */
+    .accueil-hero { text-align: center; padding: 6px 0 22px; }
+    .hero-logo { max-width: min(520px, 86%); max-height: 200px; width: auto; height: auto; object-fit: contain; filter: drop-shadow(0 10px 22px rgba(0,0,0,.18)); }
+    .hero-nom { margin: 10px 0 4px; font-size: 1.7rem; font-weight: 800; color: var(--c-principale); background: none !important; letter-spacing: .3px; text-transform: none; padding: 0; }
+    .hero-slogan { margin: 0; display: inline-flex; align-items: center; gap: 12px; color: var(--c-fonce); font-weight: 700; font-size: .95rem; letter-spacing: .6px; text-transform: uppercase; }
+    .hero-slogan span { width: 38px; height: 2px; background: var(--c-accent); display: inline-block; }
+    .accueil-vague {
+      margin: 0 -28px 26px; padding: 34px 28px 30px; position: relative;
+      background: linear-gradient(180deg, var(--c-principale) 0%, var(--c-fonce) 100%);
+      border-radius: 50% 50% 0 0 / 46px 46px 0 0;
+      box-shadow: 0 -2px 0 var(--c-accent), 0 12px 30px rgba(0,0,0,.18);
+    }
+    .tuiles-acces { display: flex; flex-wrap: wrap; justify-content: center; gap: 22px 34px; }
+    .tuile-acces, .tuile-acces:link, .tuile-acces:visited {
+      display: flex; flex-direction: column; align-items: center; gap: 10px; width: 118px; text-align: center;
+      color: #fff !important; font-weight: 700; font-size: .88rem; line-height: 1.25; text-decoration: none !important;
+    }
+    .tuile-acces .rond { width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; color: #fff; box-shadow: 0 0 0 4px rgba(255,255,255,.28), 0 8px 18px rgba(0,0,0,.3); transition: transform .15s; }
+    .tuile-acces:hover .rond { transform: translateY(-3px) scale(1.05); }
+    .c-rouge { background: linear-gradient(145deg, #f87171, #dc2626); } .c-vert { background: linear-gradient(145deg, #4ade80, #16a34a); }
+    .c-bleu { background: linear-gradient(145deg, #60a5fa, #2563eb); } .c-violet { background: linear-gradient(145deg, #a78bfa, #7c3aed); }
+    .c-orange { background: linear-gradient(145deg, #fbbf24, #d97706); } .c-turquoise { background: linear-gradient(145deg, #2dd4bf, #0d9488); }
+    @media (max-width: 700px) { .accueil-vague { margin: 0 -16px 22px; padding: 28px 12px 24px; } .tuile-acces { width: 96px; font-size: .82rem; } .tuile-acces .rond { width: 62px; height: 62px; font-size: 24px; } .hero-logo { max-height: 160px; } }
     .stats-zone { margin-bottom: 30px; }
     .stats-titre {
       font-size: 15px;
       font-weight: bold;
-      color: #1F3864;
+      color: var(--c-principale);
       margin: 0 0 12px 0;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -22,7 +45,7 @@
     .stat-carte {
       background: #ffffff;
       border: 1px solid #dfe3e8;
-      border-left: 4px solid #1F3864;
+      border-left: 4px solid var(--c-principale);
       border-radius: 6px;
       padding: 14px 16px;
     }
@@ -31,7 +54,7 @@
     .stat-valeur {
       font-size: 26px;
       font-weight: bold;
-      color: #1F3864;
+      color: var(--c-principale);
       line-height: 1.1;
     }
     .stat-carte.alerte .stat-valeur { color: #b45309; }
@@ -45,7 +68,7 @@
     }
     .groupe-metier { margin-bottom: 26px; }
     .groupe-titre {
-      background: #1F3864;
+      background: var(--c-principale);
       color: #ffffff;
       padding: 10px 14px;
       font-size: 15px;
@@ -114,6 +137,8 @@
   </style>
 {% endblock %}
 
+{% block content_title %}{% endblock %}
+
 {% block content %}
 <div id="content-main">
 
@@ -125,37 +150,39 @@
   </div>
   {% endif %}
 
+  <section class="accueil-hero">
+    <img class="hero-logo" src="{{ branding.logo_complet_url|default:branding.logo_url }}" alt="{{ branding.nom_complet }}">
+    <h2 class="hero-nom">{{ branding.nom_complet }}</h2>
+    {% if branding.slogan %}<p class="hero-slogan"><span></span>{{ branding.slogan }}<span></span></p>{% endif %}
+  </section>
+
   {% if stats_profil.voit_raccourci_vente or stats_profil.voit_raccourci_caisse or stats_profil.voit_raccourci_dettes or stats_profil.voit_historique_employe or request.user.is_superuser %}
-  <div class="raccourci-vente">
+  <section class="accueil-vague">
+    <div class="tuiles-acces">
     {% if request.user.is_superuser %}
-    <a href="{% url 'transport:plateforme' %}" class="btn-vente">🏢 {% trans "Plateforme (entreprises)" %}</a>
-    <a href="{% url 'transport:facturation' %}" class="btn-vente-secondaire">💳 {% trans "Facturation" %}</a>
-    <a href="{% url 'transport:nouvelle_compagnie' %}" class="btn-vente-secondaire">➕ {% trans "Creer une entreprise" %}</a>
+      <a href="{% url 'transport:plateforme' %}" class="tuile-acces"><span class="rond c-bleu"><i class="fa-solid fa-layer-group"></i></span>{% trans "Plateforme (entreprises)" %}</a>
+      <a href="{% url 'transport:facturation' %}" class="tuile-acces"><span class="rond c-vert"><i class="fa-solid fa-file-invoice-dollar"></i></span>{% trans "Facturation" %}</a>
+      <a href="{% url 'transport:nouvelle_compagnie' %}" class="tuile-acces"><span class="rond c-violet"><i class="fa-solid fa-circle-plus"></i></span>{% trans "Creer une entreprise" %}</a>
     {% else %}
-    {% if stats_profil.voit_raccourci_vente %}
-    <a href="{% url 'transport:vendre_billet' %}" class="btn-vente">
-      🎫 {% trans "Vendre un billet" %}
-    </a>
-    <a href="{% url 'transport:liste_billets' %}" class="btn-vente-secondaire">
-      {% trans "Voir les billets vendus" %}
-    </a>
+      {% if stats_profil.voit_raccourci_vente %}
+      <a href="{% url 'transport:vendre_billet' %}" class="tuile-acces"><span class="rond c-rouge"><i class="fa-solid fa-ticket"></i></span>{% trans "Vendre un billet" %}</a>
+      <a href="{% url 'transport:liste_billets' %}" class="tuile-acces"><span class="rond c-bleu"><i class="fa-solid fa-list-check"></i></span>{% trans "Voir les billets vendus" %}</a>
+      {% endif %}
+      {% if stats_profil.voit_raccourci_caisse %}
+      <a href="{% url 'transport:caisse' %}" class="tuile-acces"><span class="rond c-vert"><i class="fa-solid fa-cash-register"></i></span>{% trans "Caisse" %}</a>
+      {% endif %}
+      {% if stats_profil.voit_raccourci_dettes %}
+      <a href="{% url 'transport:dettes' %}" class="tuile-acces"><span class="rond c-orange"><i class="fa-solid fa-file-invoice"></i></span>{% trans "Dettes (billets non payes)" %}</a>
+      {% endif %}
+      {% if stats_profil.voit_historique_employe %}
+      <a href="{% url 'transport:historique_employe' %}" class="tuile-acces"><span class="rond c-violet"><i class="fa-solid fa-clock-rotate-left"></i></span>{% trans "Mon activite / Historique par employe" %}</a>
+      {% endif %}
+      {% if request.user.employe.poste == 'pdg' %}
+      <a href="{% url 'transport:mon_abonnement' %}" class="tuile-acces"><span class="rond c-turquoise"><i class="fa-solid fa-file-invoice-dollar"></i></span>{% trans "Mon abonnement" %}</a>
+      {% endif %}
     {% endif %}
-    {% if stats_profil.voit_raccourci_caisse %}
-    <a href="{% url 'transport:caisse' %}" class="btn-vente-secondaire">💰 {% trans "Caisse" %}</a>
-    {% endif %}
-    {% if stats_profil.voit_raccourci_dettes %}
-    <a href="{% url 'transport:dettes' %}" class="btn-vente-secondaire">🧾 {% trans "Dettes (billets non payes)" %}</a>
-    {% endif %}
-    {% if stats_profil.voit_historique_employe %}
-    <a href="{% url 'transport:historique_employe' %}" class="btn-vente-secondaire">
-      {% trans "Mon activite / Historique par employe" %}
-    </a>
-    {% endif %}
-    {% if request.user.employe.poste == 'pdg' %}
-    <a href="{% url 'transport:mon_abonnement' %}" class="btn-vente-secondaire">🧾 {% trans "Mon abonnement" %}</a>
-    {% endif %}
-    {% endif %}
-  </div>
+    </div>
+  </section>
   {% endif %}
 
   {% if vue_plateforme %}

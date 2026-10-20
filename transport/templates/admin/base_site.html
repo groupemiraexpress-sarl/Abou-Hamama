@@ -9,6 +9,11 @@
 
 {% block title %}{{ title }} | {{ branding.nom_complet }}{% endblock %}
 
+{% block header %}
+{% include "admin/includes/menu_lateral.html" %}
+<header id="header">
+  {% if request.user.is_authenticated and request.user.is_staff %}<button type="button" id="bouton-menu" aria-label="{% trans 'Menu' %}"><i class="fa-solid fa-bars"></i></button>{% endif %}
+  <div id="branding">
 {% block branding %}
 <h1 id="site-name" style="float:none; width:100%; height:auto; line-height:normal; margin:0; padding:0; display:flex; justify-content:center;">
   <a href="{% url 'admin:index' %}" style="float:none; display:flex !important; flex-direction:column; align-items:center; justify-content:center; gap:8px; color:#ffffff !important; text-align:center;">
@@ -17,6 +22,7 @@
   </a>
 </h1>
 {% endblock %}
+  </div>
 
 {% block usertools %}
   {% if has_permission %}
@@ -29,7 +35,7 @@
         {% else %}
           <span class="avatar-initiales">{{ request.user.username|slice:":2"|upper }}</span>
         {% endif %}
-        <span class="menu-compte-nom">{{ request.user.get_short_name|default:request.user.get_username }}</span>
+        <span class="menu-compte-nom"><small>{% trans "Bienvenue" %}</small> {{ request.user.get_short_name|default:request.user.get_username }}</span>
         <span class="menu-compte-fleche">&#9662;</span>
       </summary>
       <div class="menu-compte-liste">
@@ -102,6 +108,9 @@
     </details>
   </div>
   {% endif %}
+{% endblock %}
+  {% block nav-global %}{% endblock %}
+</header>
 {% endblock %}
 
 {% block extrahead %}
@@ -197,5 +206,6 @@
       background: linear-gradient(270deg, #261F64 0%, #2c4a82 100%);
     }
   </style>
+  {% include "admin/includes/interface.html" %}
   {% include "transport/includes/indicateur_chargement.html" %}
 {% endblock %}

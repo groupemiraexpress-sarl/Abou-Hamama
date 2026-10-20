@@ -42,7 +42,7 @@ def nouvelle_compagnie(request):
     if request.method == 'POST':
         valeurs = {k: request.POST.get(k, '').strip() for k in (
             'nom', 'code', 'siege', 'telephone', 'nom_affiche', 'couleur', 'domaine',
-            'pdg_nom', 'pdg_prenom', 'pdg_telephone', 'abonnement')}
+            'pdg_nom', 'pdg_prenom', 'pdg_telephone', 'abonnement', 'accent')}
         try:
             abonnement = int(valeurs['abonnement'] or 0)
             if abonnement < 0:
@@ -55,7 +55,7 @@ def nouvelle_compagnie(request):
                 nom=valeurs['nom'], code=valeurs['code'], siege=valeurs['siege'], telephone=valeurs['telephone'],
                 pdg_nom=valeurs['pdg_nom'], pdg_prenom=valeurs['pdg_prenom'], pdg_telephone=valeurs['pdg_telephone'],
                 nom_affiche=valeurs['nom_affiche'], couleur=valeurs['couleur'] or '#261F64', domaine=valeurs['domaine'],
-                logo=request.FILES.get('logo'), abonnement=abonnement,
+                logo=request.FILES.get('logo'), abonnement=abonnement, couleur_accent=valeurs['accent'] or '#F2B01E',
             )
         except ValidationError as e:
             erreurs = {k: ' '.join(v) for k, v in e.message_dict.items()} if hasattr(e, 'error_dict') else {'': ' '.join(e.messages)}

@@ -66,6 +66,9 @@ msgstr "الاشتراك الشهري (فرنك)"
 msgid "Accompagnateur aimable"
 msgstr "المرافق لطيف"
 
+msgid "Accueil"
+msgstr "الرئيسية"
+
 msgid "Acte de naissance"
 msgstr "شهادة الميلاد"
 
@@ -89,6 +92,9 @@ msgstr "النشاط"
 
 msgid "Administrateur"
 msgstr "المدير"
+
+msgid "Administration"
+msgstr "الإدارة"
 
 msgid "Adresse"
 msgstr "العنوان"
@@ -372,6 +378,9 @@ msgstr "آخر"
 msgid "Autre piece"
 msgstr "وثيقة أخرى"
 
+msgid "Autres"
+msgstr "أخرى"
+
 msgid "Autres informations"
 msgstr "معلومات أخرى"
 
@@ -390,6 +399,9 @@ msgstr "البطارية"
 
 msgid "Beneficiaire"
 msgstr "المستفيد"
+
+msgid "Bienvenue"
+msgstr "مرحبًا"
 
 msgid "Billet"
 msgstr "تذكرة"
@@ -776,6 +788,9 @@ msgstr "محتوى الطرد"
 
 msgid "Couleur au format #RRGGBB"
 msgstr "اللون بصيغة #RRGGBB"
+
+msgid "Couleur d'accent"
+msgstr "لون التمييز"
 
 msgid "Couleur de l'en-tete et des boutons, au format #RRGGBB"
 msgstr "لون الترويسة والأزرار بصيغة #RRGGBB"
@@ -1582,6 +1597,9 @@ msgstr "الماركة"
 msgid "Marque (affichee sur le site, les billets et l'application)"
 msgstr "العلامة (تظهر على الموقع والتذاكر والتطبيق)"
 
+msgid "Menu"
+msgstr "القائمة"
+
 msgid ""
 "Merci de regulariser votre situation pour continuer a utiliser la "
 "plateforme."
@@ -2381,6 +2399,15 @@ msgstr "الراتب الشهري بالفرنك"
 
 msgid "Scanne par"
 msgstr "مسحه"
+
+msgid ""
+"Seconde couleur (traits dores, pastilles, element actif du menu), au format "
+"#RRGGBB"
+msgstr ""
+"اللون الثاني (الخطوط الذهبية، الشارات، عنصر القائمة النشط)، بصيغة #RRGGBB"
+
+msgid "Seconde couleur : traits dores, pastilles, element actif du menu."
+msgstr "اللون الثاني: الخطوط الذهبية، الشارات، عنصر القائمة النشط."
 
 msgid "Secretaire d'agence"
 msgstr "سكرتير الوكالة"

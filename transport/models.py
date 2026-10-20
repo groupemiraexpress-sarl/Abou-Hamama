@@ -21,6 +21,7 @@ class Compagnie(models.Model):
     domaine = models.CharField(_("Adresse web propre"), max_length=100, unique=True, null=True, blank=True, help_text=_("Adresse web propre a cette compagnie, sans https (ex : gestion.abouhamama.td). Facultatif."))
     logo = models.ImageField(_("Logo"), upload_to='compagnies/', null=True, blank=True)
     couleur_principale = models.CharField(_("Couleur principale"), max_length=7, default='#261F64', validators=[RegexValidator(r'^#[0-9a-fA-F]{6}$', _('Couleur au format #RRGGBB'))], help_text=_("Couleur de l'en-tete et des boutons, au format #RRGGBB"))
+    couleur_secondaire = models.CharField(_("Couleur d'accent"), max_length=7, default='#F2B01E', validators=[RegexValidator(r'^#[0-9a-fA-F]{6}$', _('Couleur au format #RRGGBB'))], help_text=_("Seconde couleur (traits dores, pastilles, element actif du menu), au format #RRGGBB"))
     slogan = models.CharField(_("Slogan"), max_length=120, blank=True, default="Transport · Colis · Transfert d'argent")
     pied_de_page = models.CharField(_("Texte du pied de page"), max_length=120, blank=True)
     telephones_recus = models.CharField(_("Telephones affiches sur les billets/recus"), max_length=200, blank=True, help_text=_("Un ou plusieurs numeros separes par ' / ', ex : 60 10 06 88 / 66 66 27 27"))

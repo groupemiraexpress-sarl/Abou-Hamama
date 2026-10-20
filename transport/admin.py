@@ -177,7 +177,7 @@ class CompagnieAdmin(GroupesChampsMixin, admin.ModelAdmin):
     """Seul le superutilisateur (administrateur de la plateforme) cree une compagnie et regle son code et son adresse web ; le PDG regle la marque de la sienne."""
     groupes_champs = [
         (_("Identite"), ['nom', 'nom_affiche', 'sigle', 'code', 'siege_social', 'telephone', 'email', 'date_creation', 'actif']),
-        (_("Marque (affichee sur le site, les billets et l'application)"), ['logo', 'couleur_principale', 'slogan', 'pied_de_page', 'telephones_recus']),
+        (_("Marque (affichee sur le site, les billets et l'application)"), ['logo', 'couleur_principale', 'couleur_secondaire', 'slogan', 'pied_de_page', 'telephones_recus']),
         (_("Adresse web"), ['domaine']),
         (_("Abonnement a la plateforme"), ['abonnement_montant']),
     ]
@@ -189,6 +189,12 @@ class CompagnieAdmin(GroupesChampsMixin, admin.ModelAdmin):
     def _est_pdg(self, request):
         employe = getattr(request.user, 'employe', None)
         return employe is not None and employe.poste == 'pdg'
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        champ = super().formfield_for_dbfield(db_field, request, **kwargs)
+        if db_field.name in ('couleur_principale', 'couleur_secondaire') and champ is not None:
+            champ.widget = forms.TextInput(attrs={'type': 'color'})   # vrai selecteur de couleur
+        return champ
 
     def has_add_permission(self, request):
         return request.user.is_superuser
@@ -1890,4 +1896,7 @@ def _get_form_isole(self, request, obj=None, change=False, **kwargs):
 admin.ModelAdmin.get_queryset = _get_queryset_isole
 admin.ModelAdmin.formfield_for_foreignkey = _formfield_fk_isole
 admin.ModelAdmin.formfield_for_manytomany = _formfield_m2m_isole
-admin.ModelAdmin.get_form = _get_form_isole
+admin.ModelAdmin.get_form = _get_form_isole
+
+# Le menu lateral de Django est remplace par le menu de l'interface (transport/menu.py)
+admin.site.enable_nav_sidebar = False

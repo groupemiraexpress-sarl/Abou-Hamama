@@ -27,7 +27,7 @@ def mot_de_passe_temporaire(longueur=10):
 
 @transaction.atomic
 def creer_compagnie_avec_pdg(*, nom, code, siege, telephone, pdg_nom, pdg_prenom, pdg_telephone,
-                             nom_affiche='', couleur='#261F64', domaine='', logo=None, abonnement=0):
+                             nom_affiche='', couleur='#261F64', domaine='', logo=None, abonnement=0, couleur_accent='#F2B01E'):
     """Cree la compagnie et son PDG. Renvoie (compagnie, identifiant, mot_de_passe_temporaire). Leve ValidationError."""
     erreurs = {}
     for champ, valeur in (('nom', nom), ('code', code), ('siege', siege), ('telephone', telephone),
@@ -41,6 +41,7 @@ def creer_compagnie_avec_pdg(*, nom, code, siege, telephone, pdg_nom, pdg_prenom
         nom=nom.strip(), code=code.strip().lower(), nom_affiche=nom_affiche.strip(), siege_social=siege.strip(),
         telephone=telephone.strip(), couleur_principale=couleur or '#261F64', domaine=domaine,
         pied_de_page=f"Agence {nom.strip()}", abonnement_montant=abonnement,
+        couleur_secondaire=couleur_accent or '#F2B01E',
     )
     if logo:
         compagnie.logo = logo
