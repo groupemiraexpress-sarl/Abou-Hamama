@@ -1900,3 +1900,19 @@ admin.ModelAdmin.get_form = _get_form_isole
 
 # Le menu lateral de Django est remplace par le menu de l'interface (transport/menu.py)
 admin.site.enable_nav_sidebar = False
+
+# En-tete des listes (chiffres + onglets) : ajoute les donnees a toutes les pages de liste
+_ancien_changelist_view = admin.ModelAdmin.changelist_view
+
+
+def _changelist_view_avec_en_tete(self, request, extra_context=None):
+    from .liste_ui import donnees_liste
+    extra_context = dict(extra_context or {})
+    try:
+        extra_context['liste_ui'] = donnees_liste(self, request)
+    except Exception:
+        extra_context['liste_ui'] = None        # l'en-tete est un plus : la liste doit toujours s'afficher
+    return _ancien_changelist_view(self, request, extra_context)
+
+
+admin.ModelAdmin.changelist_view = _changelist_view_avec_en_tete

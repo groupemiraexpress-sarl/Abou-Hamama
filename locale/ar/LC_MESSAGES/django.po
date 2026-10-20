@@ -75,6 +75,9 @@ msgstr "شهادة الميلاد"
 msgid "Actif"
 msgstr "نشط"
 
+msgid "Actifs"
+msgstr "النشطون"
+
 msgid "Action"
 msgstr "إجراء"
 
@@ -593,9 +596,6 @@ msgstr "العملاء"
 msgid "Clients actifs"
 msgstr "العملاء النشطون"
 
-msgid "Clients et personnel"
-msgstr "العملاء والموظفون"
-
 msgid "Climatisation"
 msgstr "التكييف"
 
@@ -698,9 +698,6 @@ msgstr "تم تسجيل الطرد"
 msgid "Colis enregistres"
 msgstr "الطرود المسجلة"
 
-msgid "Colis et transferts"
-msgstr "الطرود والتحويلات"
-
 msgid "Colis introuvable."
 msgstr "الطرد غير موجود."
 
@@ -764,9 +761,6 @@ msgstr "حساب الدخول المرتبط بهذا الموظف"
 
 msgid "Compte de connexion lie a cette fiche client (app mobile)"
 msgstr "حساب الدخول المرتبط ببطاقة العميل (تطبيق الجوال)"
-
-msgid "Configuration"
-msgstr "الإعدادات"
 
 msgid "Confirmation de la remise"
 msgstr "تأكيد التسليم"
@@ -1238,9 +1232,6 @@ msgstr "مثال: قطعة، لتر، كغ..."
 msgid "Expediteur"
 msgstr "المرسل"
 
-msgid "Exploitation"
-msgstr "التشغيل"
-
 msgid "FACTURE"
 msgstr "فاتورة"
 
@@ -1294,6 +1285,9 @@ msgstr "بطاقة فردية"
 
 msgid "Fidelite"
 msgstr "الولاء"
+
+msgid "Filtres rapides"
+msgstr "عوامل تصفية سريعة"
 
 msgid "Finances du mois"
 msgstr "الشؤون المالية للشهر"
@@ -1581,9 +1575,6 @@ msgstr "خط الطول"
 
 msgid "Magasinier"
 msgstr "أمين المخزن"
-
-msgid "Maintenance du parc"
-msgstr "صيانة الأسطول"
 
 msgid "Manifeste de bord"
 msgstr "بيان الركاب"
@@ -2415,9 +2406,6 @@ msgstr "سكرتير الوكالة"
 msgid "Sections a inclure"
 msgstr "الأقسام المراد تضمينها"
 
-msgid "Securite"
-msgstr "الأمن"
-
 msgid "Selectionne"
 msgstr "محدد"
 
@@ -2584,6 +2572,9 @@ msgstr "المجموع العام"
 
 msgid "Total genere"
 msgstr "إجمالي المبلغ المحقق"
+
+msgid "Tous"
+msgstr "الكل"
 
 msgid "Tous les bus"
 msgstr "جميع الحافلات"
@@ -2787,9 +2778,6 @@ msgstr "السرعة بالكم/س إن وجدت"
 msgid "Voici les factures d'abonnement de %(nom)s qui restent a payer :"
 msgstr "فيما يلي فواتير اشتراك %(nom)s التي لم تُدفع بعد:"
 
-msgid "Voir"
-msgstr "عرض"
-
 msgid "Voir les billets vendus"
 msgstr "عرض التذاكر المباعة"
 
@@ -2893,6 +2881,12 @@ msgstr "المنطقة الجغرافية المدارة (لمسؤول التخ�
 
 msgid "a"
 msgstr "في"
+
+msgid "affiches"
+msgstr "معروضة"
+
+msgid "au total"
+msgstr "في المجموع"
 
 msgid "billet(s)"
 msgstr "تذكرة (تذاكر)"

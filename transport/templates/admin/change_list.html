@@ -1,0 +1,333 @@
+{% extends "admin/change_list.html" %}
+{% load i18n admin_urls %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <style>
+    /* =====================================================================
+       Listes : en-tete, chiffres, onglets, recherche, cartes (ou tableau)
+       ===================================================================== */
+    body.change-list:not(.popup) .object-tools { display: none; }
+    body.change-list:not(.popup) #content > h1, body.change-list:not(.popup) #content > h2 { display: none; }
+
+    .liste-entete { display: flex; justify-content: space-between; align-items: flex-end; gap: 14px; flex-wrap: wrap; margin: 4px 0 14px; }
+    .liste-entete h1 { margin: 0; font-size: 1.9rem; font-weight: 800; color: #1f2937; letter-spacing: -.2px; }
+    .liste-entete p { margin: 2px 0 0; color: #6b7280; font-size: .95rem; }
+    .liste-entete .bouton-ajout, .liste-entete .bouton-ajout:link, .liste-entete .bouton-ajout:visited {
+      display: inline-flex; align-items: center; gap: 8px; background: var(--c-principale); color: #fff !important; text-decoration: none !important;
+      padding: 11px 20px; border-radius: 12px; font-weight: 700; font-size: .95rem; box-shadow: 0 6px 16px rgba(0,0,0,.18);
+    }
+    .liste-entete .bouton-ajout:hover { background: var(--c-hover); }
+
+    .liste-tuiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 0 0 14px; }
+    .liste-tuiles > div { background: #fff; border-radius: 14px; border-left: 4px solid var(--c-accent); padding: 12px 16px; box-shadow: 0 4px 14px rgba(31,56,100,.08); }
+    .liste-tuiles b { display: block; font-size: 1.7rem; line-height: 1.15; font-weight: 800; color: var(--c-principale); }
+    .liste-tuiles span { font-size: .82rem; color: #6b7280; font-weight: 600; text-transform: uppercase; letter-spacing: .3px; }
+
+    .liste-onglets { display: flex; flex-wrap: wrap; gap: 4px; background: #fff; border-radius: 14px; padding: 5px; box-shadow: 0 4px 14px rgba(31,56,100,.08); margin: 0 0 14px; }
+    .liste-onglets a, .liste-onglets a:link, .liste-onglets a:visited { padding: 8px 14px; border-radius: 10px; color: #4b5563; font-weight: 600; font-size: .9rem; text-decoration: none !important; }
+    .liste-onglets a:hover { background: var(--c-tres-clair); }
+    .liste-onglets a.actif { background: var(--c-principale); color: #fff !important; }
+    .liste-onglets.nombreux { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; }
+    .liste-onglets.nombreux a { white-space: nowrap; flex-shrink: 0; }
+    .carte-l .pied label { display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+    .carte-l .ligne .relais { min-height: 34px; padding: 4px 8px; border-radius: 8px; max-width: 150px; }
+    /* theme sombre : titres lisibles sur fond fonce */
+    html[data-theme="dark"] .liste-entete h1 { color: #f1f5f9; } html[data-theme="dark"] .liste-entete p { color: #cbd5e1; }
+    @media (prefers-color-scheme: dark) { html:not([data-theme="light"]) .liste-entete h1 { color: #f1f5f9; } html:not([data-theme="light"]) .liste-entete p { color: #cbd5e1; } }
+    .liste-onglets em { font-style: normal; opacity: .7; margin-left: 6px; font-size: .85em; }
+
+    body.change-list:not(.popup) .changelist-form-container { display: block; }
+    body.change-list:not(.popup) #changelist .changelist-form-container > div { min-width: 0; max-width: none !important; width: 100%; }
+    body.change-list:not(.popup) #toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    body.change-list:not(.popup) #toolbar form#changelist-search { flex: 1 1 260px; margin: 0; }
+    body.change-list:not(.popup) #toolbar form#changelist-search > div { display: flex; align-items: center; gap: 8px; }
+    body.change-list:not(.popup) #toolbar #searchbar { flex: 1; min-width: 120px; }
+    body.change-list:not(.popup) #toolbar .small.quiet { display: none; }
+    .barre-outils { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .barre-outils button, .barre-outils select {
+      border: 1px solid #d1d5db; background: #fff; color: #374151; border-radius: 11px; padding: 8px 13px; font-size: .9rem; font-weight: 600; cursor: pointer; min-height: 40px; height: auto;
+    }
+    .barre-outils button.actif { background: var(--c-tres-clair); border-color: var(--c-principale); color: var(--c-principale); }
+    .barre-outils .nb { background: var(--c-accent); color: #111827; border-radius: 99px; padding: 0 7px; margin-left: 6px; font-size: .78rem; }
+    .barre-outils .groupe-vue { display: inline-flex; border: 1px solid #d1d5db; border-radius: 11px; overflow: hidden; background: #fff; }
+    .barre-outils .groupe-vue button { border: 0; border-radius: 0; padding: 8px 12px; }
+    .barre-outils .groupe-vue button.actif { background: var(--c-principale); color: #fff; }
+
+    /* filtres : un panneau replie, ouvert par le bouton */
+    body.change-list:not(.popup) #changelist-filter { display: none; float: none; width: auto; margin: 0 0 14px; }
+    body.change-list:not(.popup) #changelist.filtres-ouverts #changelist-filter { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 0 10px; padding-bottom: 8px; }
+    #changelist.filtres-ouverts #changelist-filter > h2, #changelist.filtres-ouverts #changelist-filter > #changelist-filter-extra-actions { grid-column: 1 / -1; }
+
+    /* actions groupees : seulement quand des lignes sont cochees */
+    body.change-list:not(.popup) #changelist .actions { display: none; }
+    body.change-list:not(.popup) #changelist.avec-selection .actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+    /* cartes */
+    .cartes-liste { display: none; grid-template-columns: repeat(auto-fill, minmax(255px, 1fr)); gap: 12px; margin: 0 0 14px; }
+    #changelist.vue-cartes .cartes-liste { display: grid; }
+    #changelist.vue-cartes .results { display: none; }
+    .carte-l { position: relative; background: #fff; border-radius: 16px; padding: 14px 15px; box-shadow: 0 4px 14px rgba(31,56,100,.08); border: 1px solid transparent; min-width: 0; }
+    .carte-l.cochee { border-color: var(--c-principale); background: var(--c-tres-clair); }
+    .carte-l .tete { display: flex; align-items: center; gap: 11px; margin-bottom: 10px; padding-right: 26px; }
+    .carte-l .av { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: .95rem; flex-shrink: 0; }
+    .carte-l .titre, .carte-l .titre:link, .carte-l .titre:visited { font-weight: 700; font-size: 1rem; color: #111827; text-decoration: none !important; line-height: 1.25; overflow-wrap: anywhere; }
+    .carte-l .titre:hover { color: var(--c-principale); }
+    .carte-l .sous { font-size: .85rem; color: #6b7280; line-height: 1.3; }
+    .carte-l .cb { position: absolute; top: 14px; right: 14px; width: 18px; height: 18px; cursor: pointer; }
+    .carte-l .ligne { display: flex; justify-content: space-between; gap: 10px; font-size: .88rem; padding: 3px 0; align-items: baseline; }
+    .carte-l .ligne .k { color: #6b7280; flex-shrink: 0; }
+    .carte-l .ligne .v { text-align: right; font-weight: 600; color: #1f2937; min-width: 0; overflow-wrap: anywhere; }
+    .carte-l .ligne .v a { font-weight: 600; }
+    .carte-l .pied { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid #eef0f3; font-size: .85rem; color: #6b7280; }
+    .carte-l .pied .point { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; background: #9ca3af; }
+    .carte-l .pied .point.oui { background: #16a34a; }
+    .carte-l .pied a.modifier, .carte-l .pied a.modifier:link, .carte-l .pied a.modifier:visited { color: var(--c-principale); font-weight: 700; text-decoration: none !important; display: inline-flex; gap: 6px; align-items: center; }
+    .cartes-vide { grid-column: 1 / -1; text-align: center; color: #6b7280; padding: 30px 10px; }
+  </style>
+{% endblock %}
+
+{% block pretitle %}
+  {{ block.super }}
+  {% if not is_popup %}
+  <div class="liste-entete">
+    <div>
+      <h1>{{ cl.opts.verbose_name_plural|capfirst }}</h1>
+      {% if liste_ui %}<p>{{ liste_ui.total }} {% trans "au total" %}{% if cl.result_count != liste_ui.total %} — {{ cl.result_count }} {% trans "affiches" %}{% endif %}</p>{% endif %}
+    </div>
+    {% if has_add_permission %}
+    {% url cl.opts|admin_urlname:'add' as add_url %}
+    <a href="{% add_preserved_filters add_url is_popup to_field %}" class="bouton-ajout"><i class="fa-solid fa-plus"></i>{% blocktranslate with name=cl.opts.verbose_name %}Add {{ name }}{% endblocktranslate %}</a>
+    {% endif %}
+  </div>
+  {% if liste_ui %}
+  <div class="liste-tuiles">
+    {% for t in liste_ui.tuiles %}<div><b>{{ t.valeur }}</b><span>{{ t.libelle }}</span></div>{% endfor %}
+  </div>
+  {% if liste_ui.onglets %}
+  <nav class="liste-onglets{% if liste_ui.onglets|length > 8 %} nombreux{% endif %}" aria-label="{% trans 'Filtres rapides' %}">
+    {% for o in liste_ui.onglets %}<a href="{{ o.url }}"{% if o.actif %} class="actif"{% endif %}>{{ o.libelle }}<em>{{ o.n }}</em></a>{% endfor %}
+  </nav>
+  {% endif %}
+  {% endif %}
+  {% endif %}
+{% endblock %}
+
+{% block content_title %}{% endblock %}
+
+{% block extrabody %}
+{{ block.super }}
+{% if not is_popup %}
+<script>
+(function () {
+  "use strict";
+  var racine = document.getElementById('changelist');
+  var table = document.getElementById('result_list');
+  if (!racine) { return; }
+  {% trans "Actif" as t_actif %}{% trans "Inactif" as t_inactif %}{% trans "Filtres" as t_filtres %}{% trans "Trier par" as t_trier %}{% trans "Cartes" as t_cartes %}{% trans "Tableau" as t_tableau %}{% trans "Modifier" as t_modifier %}{% trans "Aucun resultat." as t_vide %}
+  var T = {actif: "{{ t_actif|escapejs }}", inactif: "{{ t_inactif|escapejs }}", filtres: "{{ t_filtres|escapejs }}", trier: "{{ t_trier|escapejs }}",
+           cartes: "{{ t_cartes|escapejs }}", tableau: "{{ t_tableau|escapejs }}", modifier: "{{ t_modifier|escapejs }}", vide: "{{ t_vide|escapejs }}"};
+  var COULEURS = [['#e6e3ff', '#261F64'], ['#fff1d6', '#7a4a05'], ['#d9f3e4', '#14532d'], ['#dbeafe', '#1e3a8a'], ['#fde2e2', '#7f1d1d'], ['#fce7f3', '#831843'], ['#ccfbf1', '#134e4a']];
+
+  function texte(el) { return (el.textContent || '').replace(/\s+/g, ' ').trim(); }
+  function creer(balise, classe, contenu) {
+    var e = document.createElement(balise);
+    if (classe) { e.className = classe; }
+    if (contenu !== undefined) { e.textContent = contenu; }
+    return e;
+  }
+
+  // ---------- barre d'outils (a cote de la recherche) ----------
+  var barre = document.getElementById('toolbar');
+  if (!barre) {
+    barre = creer('div', '');
+    barre.id = 'toolbar';
+    var conteneur = racine.querySelector('.changelist-form-container > div');
+    if (conteneur) { conteneur.insertBefore(barre, conteneur.firstChild); }
+  }
+  var outils = creer('div', 'barre-outils');
+  barre.appendChild(outils);
+
+  var panneauFiltres = document.getElementById('changelist-filter');
+  if (panneauFiltres) {
+    var bFiltres = creer('button', '', T.filtres);
+    bFiltres.type = 'button';
+    var params = new URLSearchParams(location.search), actifs = 0;
+    params.forEach(function (v, k) { if (['q', 'p', 'o', 'e', '_changelist_filters', '_facets'].indexOf(k) < 0 && v !== '') { actifs++; } });
+    if (actifs) { bFiltres.appendChild(creer('span', 'nb', String(actifs))); racine.classList.add('filtres-ouverts'); bFiltres.classList.add('actif'); }
+    bFiltres.addEventListener('click', function () { bFiltres.classList.toggle('actif', racine.classList.toggle('filtres-ouverts')); });
+    outils.appendChild(bFiltres);
+  }
+
+  if (!table) { return; }
+
+  // ---------- actions groupees : visibles seulement si une ligne est cochee ----------
+  function majSelection() {
+    racine.classList.toggle('avec-selection', !!table.querySelector('input.action-select:checked'));
+  }
+  racine.addEventListener('click', function () { setTimeout(majSelection, 0); });
+  racine.addEventListener('change', function () { setTimeout(majSelection, 0); });
+  majSelection();
+
+
+  // ---------- cartes construites a partir du tableau ----------
+  var etiquettes = [];
+  table.querySelectorAll('thead th').forEach(function (th) { etiquettes.push(texte(th.querySelector('.text') || th)); });
+  var lignes = table.querySelectorAll('tbody tr');
+  var colonnes = etiquettes.length;
+
+  var liste = creer('div', 'cartes-liste');
+  var zoneTableau = racine.querySelector('.results');
+  if (zoneTableau && zoneTableau.parentNode) { zoneTableau.parentNode.insertBefore(liste, zoneTableau); }
+
+  // Champ modifiable du tableau (liste a modifier sur place) : la carte montre un relais qui pilote le vrai champ
+  // (le vrai champ reste dans le tableau, seul envoye par le formulaire : pas de doublon).
+  function relais(orig) {
+    var r;
+    if (orig.tagName === 'SELECT') {
+      r = document.createElement('select');
+      Array.prototype.forEach.call(orig.options, function (o) { r.appendChild(new Option(o.text, o.value, false, o.selected)); });
+      r.addEventListener('change', function () { orig.value = r.value; orig.dispatchEvent(new Event('change', {bubbles: true})); });
+    } else {
+      r = document.createElement(orig.tagName === 'TEXTAREA' ? 'textarea' : 'input');
+      if (orig.tagName === 'INPUT') { r.type = orig.type; }
+      if (orig.type === 'checkbox') {
+        r.checked = orig.checked;
+        r.addEventListener('change', function () { orig.checked = r.checked; orig.dispatchEvent(new Event('change', {bubbles: true})); });
+      } else {
+        r.value = orig.value;
+        r.addEventListener('input', function () { orig.value = r.value; orig.dispatchEvent(new Event('input', {bubbles: true})); });
+      }
+    }
+    r.className = 'relais';
+    return r;
+  }
+  function copier(cellule, cible) {
+    var originaux = cellule.querySelectorAll('input:not([type=hidden]), select, textarea');
+    var copie = cellule.cloneNode(true);
+    var clones = copie.querySelectorAll('input:not([type=hidden]), select, textarea');
+    Array.prototype.forEach.call(copie.querySelectorAll('input[type=hidden]'), function (h) { h.parentNode.removeChild(h); });
+    Array.prototype.forEach.call(clones, function (c, i) { if (originaux[i]) { c.parentNode.replaceChild(relais(originaux[i]), c); } });
+    Array.prototype.forEach.call(copie.childNodes, function (n) { cible.appendChild(n); });
+  }
+
+  function aClasse(d, nom) { return (' ' + d.el.className + ' ').indexOf(' field-' + nom + ' ') > -1; }
+  function vide(d) { var t = texte(d.el); return (t === '' || t === '-' || t === '—') && !d.el.querySelector('img,svg,span'); }
+  function cochee(img) { return img && (img.getAttribute('alt') === 'True' || /yes/i.test(img.getAttribute('src') || '')); }
+
+  lignes.forEach(function (tr) {
+    var cb = tr.querySelector('input.action-select');
+    var donnees = [];
+    Array.prototype.forEach.call(tr.children, function (c, i) {
+      if (c.classList.contains('action-checkbox')) { return; }
+      donnees.push({el: c, etiquette: etiquettes[i] || ''});
+    });
+    if (!donnees.length) { return; }
+    var nom = donnees.filter(function (d) { return aClasse(d, 'nom'); })[0];
+    var prenom = donnees.filter(function (d) { return aClasse(d, 'prenom'); })[0];
+    var agence = donnees.filter(function (d) { return aClasse(d, 'agence'); })[0];
+    var actif = donnees.filter(function (d) { return aClasse(d, 'actif') || aClasse(d, 'resolue'); })[0];
+    var cellTitre = nom || donnees[0];
+    var titre = texte(cellTitre.el);
+    if (prenom && prenom !== cellTitre) { titre = texte(prenom.el) + ' ' + titre; }
+    var lien = tr.querySelector('th a, td a');
+    var utilise = [cellTitre, prenom, actif];
+    var sousCell = agence && agence !== cellTitre && !vide(agence) ? agence : donnees.filter(function (d) {
+      return utilise.indexOf(d) < 0 && d !== agence && !vide(d) && texte(d.el).length <= 40 && !d.el.querySelector('span,img,a,input,select');
+    })[0];
+    if (sousCell) { utilise.push(sousCell); }
+    if (agence && utilise.indexOf(agence) < 0) { utilise.push(agence); }
+
+    var carte = creer('div', 'carte-l');
+    var tete = creer('div', 'tete');
+    var mots = titre.replace(/[^A-Za-z0-9À-ɏ؀-ۿ ]/g, ' ').split(/\s+/).filter(Boolean);
+    var ini = ((mots[0] || '?').charAt(0) + (mots.length > 1 ? mots[1].charAt(0) : '')).toUpperCase();
+    var paire = COULEURS[(titre.length + (titre.charCodeAt(0) || 0)) % COULEURS.length];
+    var av = creer('div', 'av', ini);
+    av.style.background = paire[0]; av.style.color = paire[1];
+    var bloc = creer('div', '');
+    var t = creer(lien ? 'a' : 'div', 'titre', titre || '—');
+    if (lien) { t.href = lien.href; }
+    bloc.appendChild(t);
+    if (sousCell) { bloc.appendChild(creer('div', 'sous', texte(sousCell.el))); }
+    tete.appendChild(av); tete.appendChild(bloc);
+    carte.appendChild(tete);
+
+    if (cb) {
+      var c2 = creer('input', 'cb');
+      c2.type = 'checkbox'; c2.checked = cb.checked;
+      c2.addEventListener('click', function () { cb.click(); });
+      carte.appendChild(c2);
+      cb.addEventListener('change', function () { c2.checked = cb.checked; carte.classList.toggle('cochee', cb.checked); });
+    }
+
+    var extras = 0;
+    donnees.forEach(function (d) {
+      if (utilise.indexOf(d) > -1 || vide(d) || extras >= 5) { return; }
+      var l = creer('div', 'ligne');
+      l.appendChild(creer('span', 'k', d.etiquette));
+      var v = creer('span', 'v');
+      copier(d.el, v);
+      l.appendChild(v);
+      carte.appendChild(l);
+      extras++;
+    });
+
+    var pied = creer('div', 'pied');
+    var etat = creer('span', '');
+    var champActif = actif ? actif.el.querySelector('input[type=checkbox]') : null;
+    if (champActif) {
+      var libelle = creer('label', '');
+      libelle.appendChild(relais(champActif));
+      libelle.appendChild(document.createTextNode(' ' + T.actif));
+      etat.appendChild(libelle);
+    } else if (actif) {
+      var oui = cochee(actif.el.querySelector('img')) || /^(oui|yes|true|actif)$/i.test(texte(actif.el));
+      var point = creer('span', 'point' + (oui ? ' oui' : ''));
+      etat.appendChild(point); etat.appendChild(document.createTextNode(oui ? T.actif : T.inactif));
+    }
+    pied.appendChild(etat);
+    if (lien) {
+      var m = creer('a', 'modifier');
+      m.href = lien.href;
+      var ic = creer('i', 'fa-solid fa-pen');
+      m.appendChild(ic); m.appendChild(document.createTextNode(T.modifier));
+      pied.appendChild(m);
+    }
+    carte.appendChild(pied);
+    liste.appendChild(carte);
+  });
+  if (!liste.children.length) { liste.appendChild(creer('div', 'cartes-vide', T.vide)); }
+
+  // ---------- choix de la vue (cartes / tableau), memorise par liste ----------
+  var cle = 'vue_liste:' + location.pathname;
+  var vue = null;
+  try { vue = localStorage.getItem(cle); } catch (e) {}
+  if (vue !== 'cartes' && vue !== 'tableau') { vue = (colonnes > 9 && window.innerWidth >= 700) ? 'tableau' : 'cartes'; }
+  var groupe = creer('div', 'groupe-vue');
+  var bC = creer('button', '', T.cartes), bT = creer('button', '', T.tableau);
+  bC.type = 'button'; bT.type = 'button';
+  groupe.appendChild(bC); groupe.appendChild(bT);
+  outils.appendChild(groupe);
+
+  var tri = table.querySelectorAll('thead th.sortable a');
+  var selectTri = null;
+  if (tri.length) {
+    selectTri = creer('select', '');
+    selectTri.appendChild(new Option(T.trier + '…', ''));
+    tri.forEach(function (a) { selectTri.appendChild(new Option(texte(a), a.href)); });
+    selectTri.addEventListener('change', function () { if (selectTri.value) { location.href = selectTri.value; } });
+    outils.insertBefore(selectTri, groupe);
+  }
+  function appliquer(v) {
+    racine.classList.toggle('vue-cartes', v === 'cartes');
+    bC.classList.toggle('actif', v === 'cartes'); bT.classList.toggle('actif', v === 'tableau');
+    if (selectTri) { selectTri.style.display = v === 'cartes' ? '' : 'none'; }
+  }
+  bC.addEventListener('click', function () { try { localStorage.setItem(cle, 'cartes'); } catch (e) {} appliquer('cartes'); });
+  bT.addEventListener('click', function () { try { localStorage.setItem(cle, 'tableau'); } catch (e) {} appliquer('tableau'); });
+  appliquer(vue);
+})();
+</script>
+{% endif %}
+{% endblock %}

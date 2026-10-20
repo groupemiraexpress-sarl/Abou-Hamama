@@ -74,6 +74,9 @@ msgstr "Birth certificate"
 msgid "Actif"
 msgstr "Active"
 
+msgid "Actifs"
+msgstr "Active"
+
 msgid "Action"
 msgstr "Action"
 
@@ -596,9 +599,6 @@ msgstr "Clients"
 msgid "Clients actifs"
 msgstr "Active clients"
 
-msgid "Clients et personnel"
-msgstr "Clients and staff"
-
 msgid "Climatisation"
 msgstr "Air conditioning"
 
@@ -703,9 +703,6 @@ msgstr "Parcel registered"
 msgid "Colis enregistres"
 msgstr "Parcels registered"
 
-msgid "Colis et transferts"
-msgstr "Parcels and transfers"
-
 msgid "Colis introuvable."
 msgstr "Parcel not found."
 
@@ -769,9 +766,6 @@ msgstr "Login account linked to this employee"
 
 msgid "Compte de connexion lie a cette fiche client (app mobile)"
 msgstr "Login account linked to this client record (mobile app)"
-
-msgid "Configuration"
-msgstr "Settings"
 
 msgid "Confirmation de la remise"
 msgstr "Handover confirmation"
@@ -1248,9 +1242,6 @@ msgstr "E.g.: piece, liter, kg..."
 msgid "Expediteur"
 msgstr "Sender"
 
-msgid "Exploitation"
-msgstr "Operations"
-
 msgid "FACTURE"
 msgstr "INVOICE"
 
@@ -1304,6 +1295,9 @@ msgstr "Individual record"
 
 msgid "Fidelite"
 msgstr "Loyalty"
+
+msgid "Filtres rapides"
+msgstr "Quick filters"
 
 msgid "Finances du mois"
 msgstr "This month's finances"
@@ -1594,9 +1588,6 @@ msgstr "Longitude"
 
 msgid "Magasinier"
 msgstr "Storekeeper"
-
-msgid "Maintenance du parc"
-msgstr "Fleet maintenance"
 
 msgid "Manifeste de bord"
 msgstr "Boarding manifest"
@@ -2435,9 +2426,6 @@ msgstr "Agency secretary"
 msgid "Sections a inclure"
 msgstr "Sections to include"
 
-msgid "Securite"
-msgstr "Security"
-
 msgid "Selectionne"
 msgstr "Selected"
 
@@ -2605,6 +2593,9 @@ msgstr "Grand total"
 
 msgid "Total genere"
 msgstr "Total generated"
+
+msgid "Tous"
+msgstr "All"
 
 msgid "Tous les bus"
 msgstr "All buses"
@@ -2809,9 +2800,6 @@ msgstr "Speed in km/h if available"
 msgid "Voici les factures d'abonnement de %(nom)s qui restent a payer :"
 msgstr "Here are the subscription invoices of %(nom)s that remain to be paid:"
 
-msgid "Voir"
-msgstr "View"
-
 msgid "Voir les billets vendus"
 msgstr "View sold tickets"
 
@@ -2918,6 +2906,12 @@ msgstr "Geographic zone managed (Scheduling manager only)"
 
 msgid "a"
 msgstr "at"
+
+msgid "affiches"
+msgstr "shown"
+
+msgid "au total"
+msgstr "in total"
 
 msgid "billet(s)"
 msgstr "ticket(s)"

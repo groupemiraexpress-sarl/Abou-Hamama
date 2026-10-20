@@ -99,3 +99,49 @@ class MenuLateralTests(TestCase):
         r = self.client.post('/espace/plateforme/nouvelle/', dict(donnees, code='bt', pdg_telephone='1', accent='vert'), **H)
         self.assertIn('couleur_secondaire', r.context['erreurs'])
         self.assertFalse(Compagnie.objects.filter(code='bt').exists())
+
+
+@override_settings(ALLOWED_HOSTS=['*'])
+class EnTeteDesListesTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.A = construire_monde('aa', 'Alpha')
+        cls.B = construire_monde('bb', 'Beta')
+        cls.pdg_a, _e = creer_employe(cls.A, 'pdg', agence=False)
+        cls.pdg_b, _e = creer_employe(cls.B, 'pdg', agence=False)
+        cls.guichetier_a, _e = creer_employe(cls.A, 'guichetier')
+        creer_employe(cls.B, 'guichetier')
+        creer_employe(cls.B, 'caissier')
+
+    def page(self, user, url='/admin/transport/employe/'):
+        self.client.force_login(user)
+        return self.client.get(url, **H)
+
+    def test_chiffres_et_onglets_limites_a_son_entreprise(self):
+        r = self.page(self.pdg_a)
+        self.assertContains(r, 'class="liste-entete"')
+        ui = r.context['liste_ui']
+        self.assertEqual(ui['total'], 2)                                   # Alpha : le PDG et le guichetier, pas ceux de Beta
+        postes = {o['libelle']: o['n'] for o in ui['onglets']}
+        self.assertEqual(postes.get('Guichetier / billettiste'), 1)
+        self.assertNotIn('Caissier', postes)                               # le caissier est chez Beta
+        r = self.page(self.pdg_b)
+        self.assertEqual(r.context['liste_ui']['total'], 3)
+
+    def test_un_onglet_filtre_la_liste(self):
+        r = self.page(self.pdg_a, '/admin/transport/employe/?poste__exact=guichetier')
+        self.assertEqual(r.context['cl'].result_count, 1)
+        onglets = r.context['liste_ui']['onglets']
+        self.assertTrue([o for o in onglets if o['actif']][0]['libelle'].startswith('Guichetier'))
+
+    def test_page_de_liste_contient_les_cartes_et_les_outils(self):
+        r = self.page(self.pdg_a, '/admin/transport/client/')
+        self.assertContains(r, 'class="liste-tuiles"')
+        self.assertContains(r, 'cartes-liste')
+        self.assertContains(r, 'Ajouter')
+
+    def test_les_listes_se_chargent_meme_si_l_en_tete_echoue(self):
+        from unittest import mock
+        with mock.patch('transport.liste_ui.donnees_liste', side_effect=RuntimeError('boom')):
+            r = self.page(self.pdg_a)
+        self.assertEqual(r.status_code, 200)
