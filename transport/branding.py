@@ -18,6 +18,13 @@ BRANDING = {
 }
 
 
+# Marque de la PLATEFORME (administrateur, ecran de connexion general) : logo MIRA, bleu du logo
+PLATEFORME = {
+    'couleur_principale': '#0B3A94',
+    'slogan': "Voyage · Colis · Confiance · Partout",
+}
+
+
 def assombrir(couleur, facteur=0.82):
     """Couleur #RRGGBB un peu plus foncee (survol des boutons)."""
     if not re.fullmatch(r'#[0-9a-fA-F]{6}', couleur or ''):

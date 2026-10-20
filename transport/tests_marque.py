@@ -75,7 +75,9 @@ class MarqueEtDomaineTests(TestCase):
         page = self.page('localhost').content.decode()
         self.assertNotIn('Alpha', page)
         self.assertNotIn('Beta', page)
-        self.assertIn('Gestion d&#x27;agence', page)
+        self.assertIn('MIRA Transport Platform', page)
+        self.assertIn('transport/logo_mira_embleme.png', page)
+        self.assertNotIn('logo_abou_hamama', page)
 
     def test_adresse_inconnue_avec_une_seule_compagnie_garde_sa_marque(self):
         Compagnie.objects.filter(code='bb').update(actif=False)

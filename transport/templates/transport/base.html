@@ -87,7 +87,7 @@
             left: 50%;
             width: 700px;
             height: 700px;
-            background-image: url('{{ branding.logo_url }}');
+            background-image: url('{{ branding.filigrane_url|default:branding.logo_url }}');
             background-repeat: no-repeat;
             background-position: center;
             background-size: contain;

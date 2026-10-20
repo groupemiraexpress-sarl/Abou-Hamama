@@ -28,7 +28,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'testserver', '.onrender.com', '.pyth
 # et domaines propres a chaque compagnie (separes par des virgules dans ALLOWED_HOSTS_EXTRA).
 PLATEFORME_DOMAINE = os.environ.get('PLATEFORME_DOMAINE', '').strip().lower().strip('.')
 # Nom affiche sur l'ecran de connexion quand l'adresse web ne designe aucune compagnie precise
-PLATEFORME_NOM = os.environ.get('PLATEFORME_NOM', "Gestion d'agence")
+PLATEFORME_NOM = os.environ.get('PLATEFORME_NOM', "MIRA Transport Platform")
 if PLATEFORME_DOMAINE:
     ALLOWED_HOSTS.append('.' + PLATEFORME_DOMAINE)
 ALLOWED_HOSTS += [h.strip() for h in os.environ.get('ALLOWED_HOSTS_EXTRA', '').split(',') if h.strip()]
